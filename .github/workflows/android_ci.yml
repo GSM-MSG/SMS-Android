@@ -34,10 +34,6 @@ jobs:
           restore-keys: |
             ${{runner.os}}-gradle-
 
-      - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-
       - name: Build with Gradle
         run: ./gradlew build
 
