@@ -4,9 +4,9 @@ object Versions {
     const val GRADLE = "7.4.2"
     const val KOTLIN = "1.7.0"
 
-    const val compileSdk = 33
-    const val minSdk = 24
-    const val targetSdk = 33
+    const val COMPILESDK = 33
+    const val MINSDK = 24
+    const val TARGETSDK = 33
 
     val JAVAVERSION = JavaVersion.VERSION_1_8
 

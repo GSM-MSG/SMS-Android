@@ -1,24 +1,19 @@
 plugins {
-    id(Dependency.Gradle.APPLICATION)
+    id(Dependency.Gradle.LIBRARY)
     id(Dependency.Gradle.KOTLIN)
 }
 
 @Suppress("UnstableApiUsage")
 android {
-    namespace = "com.msg.sms_android"
+    namespace = "com.sms.data"
     compileSdk = Versions.COMPILESDK
 
     defaultConfig {
-        applicationId = "com.msg.sms_android"
         minSdk = Versions.MINSDK
         targetSdk = Versions.TARGETSDK
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {

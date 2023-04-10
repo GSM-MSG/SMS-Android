@@ -8,6 +8,7 @@ object Dependency {
     object AndroidX {
         const val CORE_KTX = "androidx.core:core-ktx:${Versions.CORE_KTX}"
         const val LIFECYCLE = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.LIFECYCLE}"
+        const val APPCOMPAT = "androidx.appcompat:appcompat:1.6.1"
     }
 
     object Compose {
@@ -16,6 +17,10 @@ object Dependency {
         const val COMPOSE_PREVIEW = "androidx.compose.ui:ui-tooling-preview:${Versions.COMPOSE}"
         const val COMPOSE_MATERIAL = "androidx.compose.material:material:${Versions.COMPOSE_MATERIAL}"
         const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling:${Versions.COMPOSE}"
+    }
+
+    object Google {
+        const val MATERIAL = "com.google.android.material:material:1.8.0"
     }
 
     object Test {

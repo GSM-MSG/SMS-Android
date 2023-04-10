@@ -1,4 +1,4 @@
-package com.msg.sms_android.ui.theme
+package com.sms.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.msg.sms_android.ui.theme
+package com.sms.presentation.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
