@@ -34,11 +34,21 @@ jobs:
           restore-keys: |
             ${{runner.os}}-gradle-
 
-      - name: Run ktlint
-        run: ./gradlew ktlintCheck
-
-      - name: Run Lint
-        run: ./gradlew lint
-
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: CI Discord Notification
+          uses: sarisia/actions-status-discord@v1
+          if: ${{ success() }}
+          with:
+            title: ✅CI success ✅
+            webhook: ${{ secrets.DISCORD_WEBHOOK }}
+            color: 00FF00
+
+      - name: CI Discord Notification
+          uses: sarisia/actions-status-discord@v1
+          if: ${{ failure() }}
+          with:
+            title: ❗️ CI failed ❗️
+            webhook: ${{ secrets.DISCORD_WEBHOOK }}
+            color: FF0000
