@@ -3,6 +3,7 @@ object Dependency {
         const val APPLICATION = "com.android.application"
         const val LIBRARY = "com.android.library"
         const val KOTLIN = "org.jetbrains.kotlin.android"
+        const val KAPT = "kapt"
     }
 
     object AndroidX {
@@ -20,7 +21,11 @@ object Dependency {
     }
 
     object Google {
-        const val MATERIAL = "com.google.android.material:material:1.8.0"
+        const val MATERIAL = "com.google.android.material:material:${Versions.MATERIAL}"
+
+        const val HILT_PLUGIN = "com.google.dagger.hilt.android"
+        const val HILT = "com.google.dagger:hilt-android:${Versions.HILT}"
+        const val HILT_COMPILER = "com.google.dagger:hilt-android-compiler:${Versions.HILT}"
     }
 
     object Test {

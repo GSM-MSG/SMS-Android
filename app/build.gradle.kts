@@ -1,6 +1,8 @@
 plugins {
     id(Dependency.Gradle.APPLICATION)
     id(Dependency.Gradle.KOTLIN)
+    id(Dependency.Google.HILT_PLUGIN)
+    kotlin(Dependency.Gradle.KAPT)
 }
 
 @Suppress("UnstableApiUsage")
@@ -50,4 +52,7 @@ dependencies {
     testImplementation(Dependency.Test.JUNIT)
     androidTestImplementation(Dependency.Test.ANDROID_JUNIT)
     androidTestImplementation(Dependency.Test.ESPRESSO)
+
+    implementation(Dependency.Google.HILT)
+    kapt(Dependency.Google.HILT_COMPILER)
 }
