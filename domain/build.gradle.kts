@@ -5,23 +5,23 @@ plugins {
 
 @Suppress("UnstableApiUsage")
 android {
-    namespace = "com.sms.domain"
+    namespace = ProjectProperties.NameSpace.DOMAIN
     compileSdk = ProjectProperties.COMPILE_SDK
 
     defaultConfig {
         minSdk = ProjectProperties.MIN_SDK
         targetSdk = ProjectProperties.TARGET_SDK
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+        testInstrumentationRunner = ProjectProperties.TEST_RUNNER
+        consumerProguardFiles(ProjectProperties.CONSUMER_PROGUARDFILES)
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile(ProjectProperties.DEFAULT_PROGUARDFILES),
+                ProjectProperties.PROGUARDFILES
             )
         }
     }
@@ -30,7 +30,7 @@ android {
         targetCompatibility = ProjectProperties.JAVA_VERSION
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = ProjectProperties.JVM_TARGET
     }
 }
 

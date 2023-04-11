@@ -5,7 +5,7 @@ plugins {
 
 @Suppress("UnstableApiUsage")
 android {
-    namespace = "com.msg.sms_android"
+    namespace = ProjectProperties.NameSpace.APP
     compileSdk = ProjectProperties.COMPILE_SDK
 
     defaultConfig {
@@ -15,7 +15,7 @@ android {
         versionCode = ProjectProperties.VERSION_CODE
         versionName = ProjectProperties.VERSION_NAME
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = ProjectProperties.TEST_RUNNER
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -25,8 +25,8 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile(ProjectProperties.DEFAULT_PROGUARDFILES),
+                ProjectProperties.PROGUARDFILES
             )
         }
     }
@@ -35,7 +35,7 @@ android {
         targetCompatibility = ProjectProperties.JAVA_VERSION
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = ProjectProperties.JVM_TARGET
     }
 }
 
