@@ -47,4 +47,8 @@ dependencies {
 
     implementation(Dependency.Google.HILT)
     kapt(Dependency.Google.HILT_COMPILER)
+
+    implementation(Dependency.Libraries.RETROFIT)
+    implementation(Dependency.Libraries.OKHTTP)
+    implementation(Dependency.Libraries.OKHTTP_LOGGING_INTERCEPTOR)
 }
