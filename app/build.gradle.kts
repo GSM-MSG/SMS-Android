@@ -6,16 +6,16 @@ plugins {
 @Suppress("UnstableApiUsage")
 android {
     namespace = ProjectProperties.NameSpace.APP
-    compileSdk = ProjectProperties.COMPILE_SDK
+    compileSdk = ProjectProperties.Versions.COMPILE_SDK
 
     defaultConfig {
-        applicationId = ProjectProperties.APPLICATION_ID
-        minSdk = ProjectProperties.MIN_SDK
-        targetSdk = ProjectProperties.TARGET_SDK
-        versionCode = ProjectProperties.VERSION_CODE
-        versionName = ProjectProperties.VERSION_NAME
+        applicationId = ProjectProperties.Id.APPLICATION_ID
+        minSdk = ProjectProperties.Versions.MIN_SDK
+        targetSdk = ProjectProperties.Versions.TARGET_SDK
+        versionCode = ProjectProperties.Versions.VERSION_CODE
+        versionName = ProjectProperties.Versions.VERSION_NAME
 
-        testInstrumentationRunner = ProjectProperties.TEST_RUNNER
+        testInstrumentationRunner = ProjectProperties.Test.TEST_RUNNER
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -25,17 +25,17 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile(ProjectProperties.DEFAULT_PROGUARDFILES),
-                ProjectProperties.PROGUARDFILES
+                getDefaultProguardFile(ProjectProperties.Files.DEFAULT_PROGUARDFILES),
+                ProjectProperties.Files.PROGUARDFILES
             )
         }
     }
     compileOptions {
-        sourceCompatibility = ProjectProperties.JAVA_VERSION
-        targetCompatibility = ProjectProperties.JAVA_VERSION
+        sourceCompatibility = ProjectProperties.Versions.JAVA_VERSION
+        targetCompatibility = ProjectProperties.Versions.JAVA_VERSION
     }
     kotlinOptions {
-        jvmTarget = ProjectProperties.JVM_TARGET
+        jvmTarget = ProjectProperties.Versions.JVM_TARGET
     }
 }
 

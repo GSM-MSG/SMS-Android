@@ -6,31 +6,31 @@ plugins {
 @Suppress("UnstableApiUsage")
 android {
     namespace = ProjectProperties.NameSpace.PRESENTATION
-    compileSdk = ProjectProperties.COMPILE_SDK
+    compileSdk = ProjectProperties.Versions.COMPILE_SDK
 
     defaultConfig {
-        minSdk = ProjectProperties.MIN_SDK
-        targetSdk = ProjectProperties.TARGET_SDK
+        minSdk = ProjectProperties.Versions.MIN_SDK
+        targetSdk = ProjectProperties.Versions.TARGET_SDK
 
-        testInstrumentationRunner = ProjectProperties.TEST_RUNNER
-        consumerProguardFiles(ProjectProperties.CONSUMER_PROGUARDFILES)
+        testInstrumentationRunner = ProjectProperties.Test.TEST_RUNNER
+        consumerProguardFiles(ProjectProperties.Files.CONSUMER_PROGUARDFILES)
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile(ProjectProperties.DEFAULT_PROGUARDFILES),
-                ProjectProperties.PROGUARDFILES
+                getDefaultProguardFile(ProjectProperties.Files.DEFAULT_PROGUARDFILES),
+                ProjectProperties.Files.PROGUARDFILES
             )
         }
     }
     compileOptions {
-        sourceCompatibility = ProjectProperties.JAVA_VERSION
-        targetCompatibility = ProjectProperties.JAVA_VERSION
+        sourceCompatibility = ProjectProperties.Versions.JAVA_VERSION
+        targetCompatibility = ProjectProperties.Versions.JAVA_VERSION
     }
     kotlinOptions {
-        jvmTarget = ProjectProperties.JVM_TARGET
+        jvmTarget = ProjectProperties.Versions.JVM_TARGET
     }
     buildFeatures {
         compose = true

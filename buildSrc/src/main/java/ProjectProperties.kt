@@ -1,23 +1,29 @@
 import org.gradle.api.JavaVersion
 
 object ProjectProperties {
-    const val VERSION_CODE = 1
-    const val VERSION_NAME = "1.0"
+    object Test {
+        const val TEST_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
+    }
 
-    const val APPLICATION_ID = "com.msg.sms_android"
+    object Id {
+        const val APPLICATION_ID = "com.msg.sms_android"
+    }
 
-    const val COMPILE_SDK = 33
-    const val MIN_SDK = 24
-    const val TARGET_SDK = 33
+    object Files {
+        const val CONSUMER_PROGUARDFILES = "consumer-rules.pro"
+        const val DEFAULT_PROGUARDFILES = "proguard-android-optimize.txt"
+        const val PROGUARDFILES = "proguard-rules.pro"
+    }
 
-    val JAVA_VERSION = JavaVersion.VERSION_1_8
-
-    const val TEST_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
-    const val CONSUMER_PROGUARDFILES = "consumer-rules.pro"
-    const val DEFAULT_PROGUARDFILES = "proguard-android-optimize.txt"
-    const val PROGUARDFILES = "proguard-rules.pro"
-
-    const val JVM_TARGET = "1.8"
+    object Versions {
+        const val COMPILE_SDK = 33
+        const val MIN_SDK = 24
+        const val TARGET_SDK = 33
+        const val JVM_TARGET = "1.8"
+        const val VERSION_CODE = 1
+        const val VERSION_NAME = "1.0"
+        val JAVA_VERSION = JavaVersion.VERSION_1_8
+    }
 
     object NameSpace {
         const val PRESENTATION = "com.sms.presentation"
