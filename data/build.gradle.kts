@@ -6,11 +6,11 @@ plugins {
 @Suppress("UnstableApiUsage")
 android {
     namespace = "com.sms.data"
-    compileSdk = Versions.COMPILESDK
+    compileSdk = ProjectProperties.COMPILE_SDK
 
     defaultConfig {
-        minSdk = Versions.MINSDK
-        targetSdk = Versions.TARGETSDK
+        minSdk = ProjectProperties.MIN_SDK
+        targetSdk = ProjectProperties.TARGET_SDK
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -26,8 +26,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = Versions.JAVAVERSION
-        targetCompatibility = Versions.JAVAVERSION
+        sourceCompatibility = ProjectProperties.JAVA_VERSION
+        targetCompatibility = ProjectProperties.JAVA_VERSION
     }
     kotlinOptions {
         jvmTarget = "1.8"

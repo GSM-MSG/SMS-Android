@@ -6,14 +6,14 @@ plugins {
 @Suppress("UnstableApiUsage")
 android {
     namespace = "com.msg.sms_android"
-    compileSdk = Versions.COMPILESDK
+    compileSdk = ProjectProperties.COMPILE_SDK
 
     defaultConfig {
-        applicationId = "com.msg.sms_android"
-        minSdk = Versions.MINSDK
-        targetSdk = Versions.TARGETSDK
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = ProjectProperties.APPLICATION_ID
+        minSdk = ProjectProperties.MIN_SDK
+        targetSdk = ProjectProperties.TARGET_SDK
+        versionCode = ProjectProperties.VERSION_CODE
+        versionName = ProjectProperties.VERSION_NAME
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -31,8 +31,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = Versions.JAVAVERSION
-        targetCompatibility = Versions.JAVAVERSION
+        sourceCompatibility = ProjectProperties.JAVA_VERSION
+        targetCompatibility = ProjectProperties.JAVA_VERSION
     }
     kotlinOptions {
         jvmTarget = "1.8"
