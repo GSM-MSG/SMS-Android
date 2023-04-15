@@ -37,6 +37,10 @@ object Dependency {
             "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
     }
 
+    object Msg {
+        const val GAUTH = "com.github.GSM-MSG:GAuth-Signin-Android:v${Versions.GAUTH}"
+    }
+
     object Test {
         const val JUNIT = "junit:junit:${Versions.JUNIT}"
         const val ANDROID_JUNIT = "androidx.test.ext:junit:${Versions.ANDROID_JUNIT}"
