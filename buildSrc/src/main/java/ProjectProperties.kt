@@ -30,5 +30,6 @@ object ProjectProperties {
         const val DOMAIN = "com.sms.domain"
         const val DATA = "com.sms.data"
         const val APP = "com.msg.sms_android"
+        const val DESIGN_SYSTEM = "com.sms.design_system"
     }
 }
