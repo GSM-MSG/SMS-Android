@@ -20,4 +20,5 @@ object Versions {
 
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.10.0"
+    const val GAUTH = "1.0.7"
 }

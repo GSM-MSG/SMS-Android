@@ -56,6 +56,7 @@ dependencies {
     implementation(Dependency.Compose.COMPOSE_TOOLING)
     implementation(Dependency.Compose.COMPOSE_MATERIAL)
     implementation(Dependency.Compose.COMPOSE_PREVIEW)
+    implementation(Dependency.Libraries.GAUTH)
     testImplementation(Dependency.Test.JUNIT)
     androidTestImplementation(Dependency.Test.ANDROID_JUNIT)
     androidTestImplementation(Dependency.Test.ESPRESSO)
