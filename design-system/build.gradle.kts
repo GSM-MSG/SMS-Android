@@ -1,44 +1,66 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    id(Dependency.Gradle.LIBRARY)
+    id(Dependency.Gradle.KOTLIN)
+    kotlin(Dependency.Gradle.KAPT)
 }
 
+@Suppress("UnstableApiUsage")
 android {
-    namespace = "com.sms.design_system"
-    compileSdk = 33
+    namespace = ProjectProperties.NameSpace.DESIGN_SYSTEM
+    compileSdk = ProjectProperties.Versions.COMPILE_SDK
 
     defaultConfig {
-        minSdk = 24
-        targetSdk = 33
+        minSdk = ProjectProperties.Versions.MIN_SDK
+        targetSdk = ProjectProperties.Versions.TARGET_SDK
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+        testInstrumentationRunner = ProjectProperties.Test.TEST_RUNNER
+        consumerProguardFiles(ProjectProperties.Files.CONSUMER_PROGUARDFILES)
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile(ProjectProperties.Files.DEFAULT_PROGUARDFILES),
+                ProjectProperties.Files.PROGUARDFILES
             )
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = ProjectProperties.Versions.JAVA_VERSION
+        targetCompatibility = ProjectProperties.Versions.JAVA_VERSION
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = ProjectProperties.Versions.JVM_TARGET
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.COMPOSE
+    }
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 
 dependencies {
+    implementation(Dependency.AndroidX.CORE_KTX)
+    implementation(Dependency.AndroidX.LIFECYCLE)
+    implementation(Dependency.Compose.ACTIVITY_COMPOSE)
+    implementation(Dependency.Compose.COMPOSE)
+    implementation(Dependency.Compose.COMPOSE_TOOLING)
+    implementation(Dependency.Compose.COMPOSE_MATERIAL)
+    implementation(Dependency.Compose.COMPOSE_PREVIEW)
+    testImplementation(Dependency.Test.JUNIT)
+    androidTestImplementation(Dependency.Test.ANDROID_JUNIT)
+    androidTestImplementation(Dependency.Test.ESPRESSO)
+    androidTestImplementation(Dependency.Test.COMPOSE_JUNIT)
+    debugImplementation(Dependency.Compose.COMPOSE_TOOLING)
+    debugImplementation(Dependency.Test.COMPOSE_MANIFEST)
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.8.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(Dependency.Google.HILT)
+    kapt(Dependency.Google.HILT_COMPILER)
 }
