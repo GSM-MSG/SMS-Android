@@ -1,6 +1,6 @@
 package com.msg.sms.data.remote.dto.auth.response
 
-import com.msg.sms.domain.model.auth.response.GAuthLoginResponseData
+import com.msg.sms.domain.model.auth.response.GAuthLoginResponseModel
 
 data class GAuthLoginResponse(
     val accessToken: String,
@@ -9,10 +9,10 @@ data class GAuthLoginResponse(
     val refreshTokenExp: String
 )
 
-fun GAuthLoginResponse.toLoginData() =
-    GAuthLoginResponseData(
-        accessToken = accessToken,
-        refreshToken = refreshToken,
-        accessTokenExp = accessTokenExp,
-        refreshTokenExp = refreshTokenExp
+fun GAuthLoginResponse.toLoginModel() =
+    GAuthLoginResponseModel(
+        accessToken = this.accessToken,
+        refreshToken = this.refreshToken,
+        accessTokenExp = this.accessTokenExp,
+        refreshTokenExp = this.refreshTokenExp
     )

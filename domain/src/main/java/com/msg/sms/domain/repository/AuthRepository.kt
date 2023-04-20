@@ -1,8 +1,8 @@
 package com.msg.sms.domain.repository
 
-import com.msg.sms.domain.model.auth.request.GAuthLoginRequestData
-import com.msg.sms.domain.model.auth.response.GAuthLoginResponseData
+import com.msg.sms.domain.model.auth.request.GAuthLoginRequestModel
+import com.msg.sms.domain.model.auth.response.GAuthLoginResponseModel
 
 interface AuthRepository {
-    suspend fun gAuthLogin(body: GAuthLoginRequestData): GAuthLoginResponseData
+    suspend fun gAuthLogin(body: GAuthLoginRequestModel): GAuthLoginResponseModel
 }
