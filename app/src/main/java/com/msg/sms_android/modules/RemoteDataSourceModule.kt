@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class RemoteDataSourceModule {
     @Binds
-    abstract fun provideAuthDataSource(
-        authDataSourceImpl: RemoteAuthDataSourceImpl
+    abstract fun provideRemoteAuthDataSource(
+        remoteAuthDataSourceImpl: RemoteAuthDataSourceImpl
     ): RemoteAuthDataSource
 }
