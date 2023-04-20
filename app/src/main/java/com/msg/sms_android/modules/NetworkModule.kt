@@ -1,5 +1,6 @@
 package com.msg.sms_android.modules
 
+import com.msg.sms.data.remote.network.api.AuthAPI
 import com.msg.sms_android.BuildConfig
 import dagger.Module
 import dagger.Provides
@@ -42,5 +43,11 @@ object NetworkModule {
     @Singleton
     fun provideConverterFactory(): GsonConverterFactory {
         return GsonConverterFactory.create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthAPI {
+        return retrofit.create(AuthAPI::class.java)
     }
 }
