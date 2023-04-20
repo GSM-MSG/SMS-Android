@@ -51,4 +51,6 @@ dependencies {
     implementation(Dependency.Libraries.RETROFIT)
     implementation(Dependency.Libraries.OKHTTP)
     implementation(Dependency.Libraries.OKHTTP_LOGGING_INTERCEPTOR)
+
+    implementation(Dependency.DataStore.PREFERENCES)
 }
