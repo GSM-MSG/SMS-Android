@@ -5,7 +5,7 @@ import com.msg.sms.design.theme.color.LightColor
 
 @Composable
 fun SMSTheme(
-    colors: ColorTheme = if(true) LightColor else LightColor,
+    colors: ColorTheme = if (true) LightColor else LightColor,
     typography: SMSTypography = SMSTypography,
     content: @Composable (colors: ColorTheme, typography: SMSTypography) -> Unit
 ) {

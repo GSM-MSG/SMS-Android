@@ -10,7 +10,10 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun ThemeGuide() {
     SMSTheme() { colors, typography ->
-        Button(onClick = { /* anything ... */ }, colors = ButtonDefaults.buttonColors(colors.POSITIVE)) {
+        Button(
+            onClick = { /* anything ... */ },
+            colors = ButtonDefaults.buttonColors(colors.POSITIVE)
+        ) {
             Text(text = "text", style = typography.body1)
         }
     }
