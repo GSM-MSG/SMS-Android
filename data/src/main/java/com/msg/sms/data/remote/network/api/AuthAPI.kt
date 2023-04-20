@@ -6,7 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface AuthAPI {
-    @POST("/")
+    @POST("auth")
     suspend fun gAuthLogin(
         @Body body: GAuthLoginRequest
     ): GAuthLoginResponse
