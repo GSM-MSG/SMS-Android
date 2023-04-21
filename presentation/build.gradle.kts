@@ -1,6 +1,7 @@
 plugins {
     id(Dependency.Gradle.LIBRARY)
     id(Dependency.Gradle.KOTLIN)
+    id(Dependency.Google.HILT_PLUGIN)
     kotlin(Dependency.Gradle.KAPT)
 }
 

@@ -3,41 +3,35 @@ package com.sms.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.sms.presentation.ui.theme.SMSAndroidTheme
+import androidx.activity.viewModels
+import androidx.compose.ui.unit.dp
+import com.msg.gauthsignin.GAuthSigninWebView
+import com.msg.gauthsignin.component.GAuthButton
+import com.msg.gauthsignin.component.utils.Types
+import com.sms.presentation.viewmodel.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val authViewModel by viewModels<AuthViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SMSAndroidTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
+            GAuthButton(
+                style = Types.Style.DEFAULT,
+                actionType = Types.ActionType.SIGNIN,
+                colors = Types.Colors.OUTLINE,
+                horizontalPaddingValue = 70.dp
+            ) {
+                setContent {
+                    GAuthSigninWebView(
+                        clientId = "dfeb634a690a4f76ba9148829171338e2817e94461c34b1794bb3e586b4296bf",
+                        redirectUri = "https://sms.msg-team.com/login"
+                    ) {
+                        authViewModel.gAuthLogin(code = it)
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    SMSAndroidTheme {
-        Greeting("Android")
     }
 }
