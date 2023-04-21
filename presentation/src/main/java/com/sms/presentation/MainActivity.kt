@@ -25,8 +25,8 @@ class MainActivity : ComponentActivity() {
             ) {
                 setContent {
                     GAuthSigninWebView(
-                        clientId = "dfeb634a690a4f76ba9148829171338e2817e94461c34b1794bb3e586b4296bf",
-                        redirectUri = "https://sms.msg-team.com/login"
+                        clientId = BuildConfig.CLIENT_ID,
+                        redirectUri = BuildConfig.REDIRECT_URI
                     ) {
                         authViewModel.gAuthLogin(code = it)
                     }
