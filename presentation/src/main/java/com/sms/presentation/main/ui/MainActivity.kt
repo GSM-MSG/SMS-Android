@@ -1,4 +1,4 @@
-package com.sms.presentation
+package com.sms.presentation.main.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,12 +8,13 @@ import androidx.compose.ui.unit.dp
 import com.msg.gauthsignin.GAuthSigninWebView
 import com.msg.gauthsignin.component.GAuthButton
 import com.msg.gauthsignin.component.utils.Types
-import com.sms.presentation.viewmodel.AuthViewModel
+import com.sms.presentation.BuildConfig
+import com.sms.presentation.main.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val authViewModel by viewModels<AuthViewModel>()
+    private val viewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
                         clientId = BuildConfig.CLIENT_ID,
                         redirectUri = BuildConfig.REDIRECT_URI
                     ) {
-                        authViewModel.gAuthLogin(code = it)
+                        viewModel.gAuthLogin(code = it)
                     }
                 }
             }

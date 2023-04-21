@@ -1,4 +1,4 @@
-package com.sms.presentation.viewmodel
+package com.sms.presentation.main.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(
+class MainViewModel @Inject constructor(
     private val gAuthLoginUseCase: GAuthLoginUseCase
 ) : ViewModel() {
     fun gAuthLogin(code: String) = viewModelScope.launch {
