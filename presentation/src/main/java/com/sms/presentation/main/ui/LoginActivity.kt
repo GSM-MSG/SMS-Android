@@ -8,12 +8,13 @@ import android.view.Display
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,6 +26,7 @@ import com.sms.presentation.BuildConfig
 import com.sms.presentation.main.viewmodel.LoginViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
+import com.sms.presentation.R
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
@@ -41,49 +43,56 @@ class LoginActivity : ComponentActivity() {
             val dpWidth = outMetrics.widthPixels / density
 
             SMSTheme { colors, typography ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Blue),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Spacer(modifier = Modifier.fillMaxHeight(0.15f))
-                    Text(
-                        text = "Student\nManagement\nService",
-                        style = typography.headline1,
-                        fontWeight = FontWeight(700),
-                        color = colors.WHITE,
-                        textAlign = TextAlign.Center
+                Box {
+                    Image(
+                        painter = painterResource(id = R.drawable.login_page_bg),
+                        contentDescription = "login page background",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
                     )
-                    Spacer(modifier = Modifier.size(12.dp))
-                    Text(
-                        text = "학생 정보 통합관리 서비스",
-                        style = typography.title2,
-                        fontWeight = FontWeight(600),
-                        color = colors.N20
-                    )
-                }
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Bottom,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    GAuthButton(
-                        style = Types.Style.ROUNDED,
-                        actionType = Types.ActionType.SIGNIN,
-                        colors = Types.Colors.WHITE,
-                        horizontalPaddingValue = (dpWidth / 2 - 110).dp
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        setContent {
-                            GAuthSigninWebView(
-                                clientId = BuildConfig.CLIENT_ID,
-                                redirectUri = BuildConfig.REDIRECT_URI
-                            ) {
-                                viewModel.gAuthLogin(code = it)
+                        Spacer(modifier = Modifier.fillMaxHeight(0.15f))
+                        Text(
+                            text = "Student\nManagement\nService",
+                            style = typography.headline1,
+                            fontWeight = FontWeight(700),
+                            color = colors.WHITE,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.size(12.dp))
+                        Text(
+                            text = "학생 정보 통합관리 서비스",
+                            style = typography.title2,
+                            fontWeight = FontWeight(600),
+                            color = colors.N20
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Bottom,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        GAuthButton(
+                            style = Types.Style.ROUNDED,
+                            actionType = Types.ActionType.SIGNIN,
+                            colors = Types.Colors.WHITE,
+                            horizontalPaddingValue = (dpWidth / 2 - 110).dp
+                        ) {
+                            setContent {
+                                GAuthSigninWebView(
+                                    clientId = BuildConfig.CLIENT_ID,
+                                    redirectUri = BuildConfig.REDIRECT_URI
+                                ) {
+                                    viewModel.gAuthLogin(code = it)
+                                }
                             }
                         }
+                        Spacer(modifier = Modifier.fillMaxHeight(0.1f))
                     }
-                    Spacer(modifier = Modifier.fillMaxHeight(0.1f))
                 }
             }
         }
