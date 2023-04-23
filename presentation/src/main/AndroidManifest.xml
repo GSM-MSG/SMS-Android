@@ -3,14 +3,19 @@
 
     <application>
         <activity
-            android:name=".main.ui.MainActivity"
+            android:name=".main.ui.LoginActivity"
             android:exported="true"
-            android:label="@string/title_activity_main">
+            android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".main.ui.MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main">
         </activity>
     </application>
 

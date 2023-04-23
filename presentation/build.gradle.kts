@@ -64,6 +64,7 @@ android {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":design-system"))
 
     implementation(Dependency.AndroidX.CORE_KTX)
     implementation(Dependency.AndroidX.LIFECYCLE)
