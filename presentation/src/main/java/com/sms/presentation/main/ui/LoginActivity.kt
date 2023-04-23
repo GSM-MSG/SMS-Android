@@ -1,10 +1,13 @@
 package com.sms.presentation.main.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Display
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -19,12 +22,17 @@ import com.msg.gauthsignin.component.GAuthButton
 import com.msg.gauthsignin.component.utils.Types
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.BuildConfig
+import com.sms.presentation.main.viewmodel.LoginViewModel
+import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
+    private val viewModel by viewModels<LoginViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        observeEvent()
         setContent {
             val display: Display = windowManager.defaultDisplay
             val outMetrics = DisplayMetrics()
@@ -32,7 +40,7 @@ class LoginActivity : ComponentActivity() {
             val density = resources.displayMetrics.density
             val dpWidth = outMetrics.widthPixels / density
 
-            SMSTheme() { colors, typography ->
+            SMSTheme { colors, typography ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -71,11 +79,29 @@ class LoginActivity : ComponentActivity() {
                                 clientId = BuildConfig.CLIENT_ID,
                                 redirectUri = BuildConfig.REDIRECT_URI
                             ) {
-
+                                viewModel.gAuthLogin(code = it)
                             }
                         }
                     }
                     Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+                }
+            }
+        }
+    }
+
+    private fun observeEvent() {
+        observeLoginEvent()
+    }
+
+    private fun observeLoginEvent() {
+        viewModel.gAuthLoginRequest.observe(this) { event ->
+            when (event) {
+                Event.Success -> {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
+                else -> {
+                    Log.d("login", event.toString())
                 }
             }
         }

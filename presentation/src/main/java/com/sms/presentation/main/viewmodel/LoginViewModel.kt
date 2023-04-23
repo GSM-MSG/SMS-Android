@@ -1,25 +1,31 @@
 package com.sms.presentation.main.viewmodel
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.auth.request.GAuthLoginRequestModel
 import com.msg.sms.domain.usecase.GAuthLoginUseCase
+import com.sms.presentation.main.viewmodel.util.Event
+import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class LoginViewModel @Inject constructor(
     private val gAuthLoginUseCase: GAuthLoginUseCase
 ) : ViewModel() {
+    private val _gAuthLoginRequest = MutableLiveData<Event>()
+    val gAuthLoginRequest: LiveData<Event> get() = _gAuthLoginRequest
+
     fun gAuthLogin(code: String) = viewModelScope.launch {
         gAuthLoginUseCase(
             GAuthLoginRequestModel(code = code)
         ).onSuccess {
-            Log.d("LoginResponse", it.toString())
+            _gAuthLoginRequest.value = Event.Success
         }.onFailure {
-            Log.d("LoginResponse", it.toString())
+            _gAuthLoginRequest.value = it.errorHandling()
         }
     }
 }
