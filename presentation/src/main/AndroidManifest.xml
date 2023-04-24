@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".main.ui.LoginActivity"
+            android:name=".main.ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login">
             <intent-filter>
