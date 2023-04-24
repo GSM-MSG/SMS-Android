@@ -20,9 +20,20 @@ class AuthInterceptor @Inject constructor(
 ) : Interceptor {
     @SuppressLint("SimpleDateFormat")
     override fun intercept(chain: Interceptor.Chain): Response {
-        val builder = chain.request().newBuilder()
+        val request = chain.request()
+        val builder = request.newBuilder()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd`T`HH:mm:ss")
         val currentTime = dateFormat.format(System.currentTimeMillis()).toString()
+        val ignorePath = listOf("/auth")
+        val ignoreMethod = listOf("POST")
+        val path = request.url.encodedPath
+        val method = request.method
+
+        ignorePath.forEachIndexed { index, s ->
+            if (s == path && ignoreMethod[index] == method) {
+                return chain.proceed(request)
+            }
+        }
         runBlocking {
             val refreshTime = dataSource.getRefreshTime().first()
             val accessTime = dataSource.getAccessTime().first()
