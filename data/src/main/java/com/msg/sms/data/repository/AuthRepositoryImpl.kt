@@ -14,4 +14,3 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteDataSource.gAuthLogin(body = body).toLoginModel()
     }
 }
-
