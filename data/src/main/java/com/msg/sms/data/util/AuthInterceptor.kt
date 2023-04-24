@@ -8,10 +8,9 @@ import com.msg.sms.domain.exception.NeedLoginException
 import com.sms.data.BuildConfig
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
@@ -39,10 +38,12 @@ class AuthInterceptor @Inject constructor(
             val accessTime = dataSource.getAccessTime().first()
 
             if (refreshTime >= currentTime) throw NeedLoginException()
+//            access 토큰 재 발급
             if (accessTime >= currentTime) {
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")
+                    .patch("".toRequestBody("application/json".toMediaTypeOrNull()))
                     .addHeader("Refresh-Token", "Bearer ${dataSource.getRefreshToken().first()}")
                     .build()
                 val jsonParser = JsonParser()
