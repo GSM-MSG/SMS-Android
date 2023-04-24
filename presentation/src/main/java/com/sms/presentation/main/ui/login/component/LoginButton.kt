@@ -9,7 +9,7 @@ import com.msg.gauthsignin.component.GAuthButton
 import com.msg.gauthsignin.component.utils.Types
 
 @Composable
-fun LoginButton(dpWidth: Float, onClick: () -> Unit) {
+fun LoginButton(dpWidth: Int, onClick: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
@@ -19,7 +19,7 @@ fun LoginButton(dpWidth: Float, onClick: () -> Unit) {
             style = Types.Style.ROUNDED,
             actionType = Types.ActionType.SIGNIN,
             colors = Types.Colors.WHITE,
-            horizontalPaddingValue = (dpWidth / 2 - 110).dp
+            horizontalPaddingValue = (dpWidth / 2 - 450).dp
         ) {
             onClick()
         }

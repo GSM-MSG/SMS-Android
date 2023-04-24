@@ -1,13 +1,16 @@
 package com.sms.presentation.main.ui.login
 
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Display
+import android.view.WindowInsets
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import com.msg.gauthsignin.GAuthSigninWebView
 import com.sms.presentation.BuildConfig
@@ -23,15 +26,17 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
     private val viewModel by viewModels<LoginViewModel>()
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeEvent()
         setContent {
-            val display: Display = windowManager.defaultDisplay
-            val outMetrics = DisplayMetrics()
-            display.getMetrics(outMetrics)
-            val density = resources.displayMetrics.density
-            val dpWidth = outMetrics.widthPixels / density
+            val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val windowMetrics = wm.currentWindowMetrics
+            val insets = windowMetrics.windowInsets
+                .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+            val dpWidth = windowMetrics.bounds.width() - insets.left - insets.right
+            Log.d("dp", dpWidth.toString())
 
             Box {
                 LoginPageBackGround()
