@@ -1,13 +1,11 @@
 package com.sms.presentation.main.ui.login
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import com.msg.gauthsignin.GAuthSigninWebView
 import com.sms.presentation.BuildConfig
@@ -23,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
     private val viewModel by viewModels<LoginViewModel>()
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeEvent()
