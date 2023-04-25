@@ -1,12 +1,9 @@
 package com.sms.presentation.main.ui.login
 
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.WindowInsets
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -31,17 +28,10 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         observeEvent()
         setContent {
-            val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            val windowMetrics = wm.currentWindowMetrics
-            val insets = windowMetrics.windowInsets
-                .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
-            val dpWidth = windowMetrics.bounds.width() - insets.left - insets.right
-            Log.d("dp", dpWidth.toString())
-
             Box {
                 LoginPageBackGround()
                 TopComponent()
-                LoginButton(dpWidth = dpWidth) {
+                LoginButton {
                     setContent {
                         GAuthSigninWebView(
                             clientId = BuildConfig.CLIENT_ID,
