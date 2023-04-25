@@ -25,8 +25,8 @@ object SMSTypography {
     @Stable
     val headline1 = TextStyle(
         fontFamily = pretendard,
-        fontSize = 48.sp,
-        lineHeight = 40.sp,
+        fontSize = 40.sp,
+        lineHeight = 48.sp,
     )
 
     @Stable
