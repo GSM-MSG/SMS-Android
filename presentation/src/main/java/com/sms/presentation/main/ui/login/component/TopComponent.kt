@@ -20,7 +20,7 @@ fun TopComponent() {
         ) {
             Spacer(modifier = Modifier.fillMaxHeight(0.15f))
             Text(
-                text = "Student\nManagement\nService",
+                text = "STUDENT\nMANAGEMENT\nSERVICE",
                 style = typography.headline1,
                 fontWeight = FontWeight(700),
                 color = colors.WHITE,
