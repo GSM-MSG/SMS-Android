@@ -22,7 +22,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         observeEvent()
         setContent {
-            LoginScreen {
+            LoginScreen(context = this@LoginActivity) {
                 setContent {
                     GAuthSigninWebView(
                         clientId = BuildConfig.CLIENT_ID,
