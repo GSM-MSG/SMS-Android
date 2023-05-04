@@ -15,13 +15,14 @@ import com.sms.design_system.R
 
 @Composable
 fun SmsChip(
+    modifier: Modifier = Modifier,
     icon: Int = R.drawable.plus_btn_icon,
     text: String,
     onClick: () -> Unit
 ) {
     SMSTheme { colors, typography ->
         Row(
-            modifier = Modifier.clickable { onClick() },
+            modifier = modifier.clickable { onClick() },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
