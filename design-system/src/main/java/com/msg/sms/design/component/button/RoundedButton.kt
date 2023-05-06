@@ -37,8 +37,8 @@ fun SmsRoundedButton(
 
         val backgroundFor: (buttonState: ButtonState) -> Color = {
             when (it) {
-                ButtonState.OutLine -> colors.WHITE
-                ButtonState.Normal -> colors.P2
+                ButtonState.OutLine -> if(isPressed) colors.N10 else colors.WHITE
+                ButtonState.Normal -> if(isPressed) colors.P3 else colors.P2
             }
         }
 
@@ -55,13 +55,14 @@ fun SmsRoundedButton(
                     width = 1.dp,
                     color =
                     if (state == ButtonState.OutLine)
-                        colors.N20
+                        if(isPressed) colors.N30 else colors.N20
                     else colors.WHITE.copy(
                         alpha = 0f
                     ),
                     shape = RoundedCornerShape(8.dp)
                 )
                 .clip(RoundedCornerShape(8.dp)),
+            interactionSource = interactionSource,
             onClick = onClick,
             enabled = enabled,
             colors = ButtonDefaults.buttonColors(
