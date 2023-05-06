@@ -23,7 +23,7 @@ import com.sms.design_system.R
 @Composable
 fun SmsChip(
     modifier: Modifier = Modifier,
-    icon: Int = R.drawable.plus_btn_icon,
+    icon: Int = R.drawable.ic_plus_btn_gray,
     text: String,
     onClick: () -> Unit
 ) {
