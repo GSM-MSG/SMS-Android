@@ -80,7 +80,7 @@ fun SmsRoundedButton(
 
 @Preview
 @Composable
-fun Main() {
+fun RoundedButtonPre() {
     Column(
         modifier = Modifier.height(200.dp),
         verticalArrangement = Arrangement.SpaceEvenly
