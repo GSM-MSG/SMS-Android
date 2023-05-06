@@ -1,6 +1,7 @@
 package com.msg.sms_android.modules
 
 import com.msg.sms.data.remote.network.api.AuthAPI
+import com.msg.sms.data.util.AuthInterceptor
 import com.msg.sms_android.BuildConfig
 import dagger.Module
 import dagger.Provides
@@ -18,11 +19,14 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkhttpClient(): OkHttpClient {
+    fun provideOkhttpClient(
+        authInterceptor: AuthInterceptor
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(authInterceptor)
             .build()
     }
 
