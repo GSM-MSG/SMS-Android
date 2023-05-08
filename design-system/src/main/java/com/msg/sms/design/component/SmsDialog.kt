@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.msg.sms.design.component.button.ButtonState
-import com.msg.sms.design.component.button.SmsBoxButton
+import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.theme.SMSTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -84,19 +84,21 @@ fun SmsDialog(
                         .padding(24.dp)
                         .align(Alignment.BottomCenter)
                 ) {
-                    SmsBoxButton(
+                    SmsRoundedButton(
                         text = "Text",
                         state = ButtonState.OutLine,
                         modifier = Modifier
                             .fillMaxWidth(0.485f)
+                            .height(48.dp)
                             .align(Alignment.CenterStart)
                     ) {
                         outlineButtonOnClick()
                     }
-                    SmsBoxButton(
+                    SmsRoundedButton(
                         text = "Text",
                         modifier = Modifier
                             .fillMaxWidth(0.485f)
+                            .height(48.dp)
                             .align(Alignment.CenterEnd)
                     ) {
                         normalButtonOnClick()
