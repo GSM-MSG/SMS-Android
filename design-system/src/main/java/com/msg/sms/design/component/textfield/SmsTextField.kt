@@ -7,13 +7,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.DeleteButtonIcon
@@ -30,9 +32,10 @@ fun SmsTextField(
     onValueChange: (String) -> Unit = {}
 ) {
     var text by remember { mutableStateOf("") }
+    val isFocused = remember { mutableStateOf(false) }
     SMSTheme { colors, typography ->
         Column {
-            TextField(
+            OutlinedTextField(
                 value = text,
                 onValueChange = {
                     text = it
@@ -42,14 +45,21 @@ fun SmsTextField(
                     Text(text = placeHolder, style = typography.body1)
                 },
                 modifier = modifier
-                    .border(width = 1.dp, shape = RoundedCornerShape(8.dp), color = colors.N10)
-                    .focusRequester(focusRequester),
+                    .focusRequester(focusRequester)
+                    .border(
+                        width = 1.dp,
+                        color = if (isFocused.value) colors.P2 else colors.N10,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .onFocusChanged {
+                        isFocused.value = it.isFocused
+                    },
                 textStyle = typography.body1,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     backgroundColor = colors.N10,
                     placeholderColor = colors.N30,
-                    focusedBorderColor = colors.P2,
-                    unfocusedBorderColor = colors.N10
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent
                 ),
                 trailingIcon = {
                     IconButton(onClick = { text = "" }) {
