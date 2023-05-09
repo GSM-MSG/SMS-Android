@@ -29,7 +29,7 @@ fun SmsDialog(
     msg: String,
     outlineButtonOnClick: () -> Unit,
     normalButtonOnClick: () -> Unit,
-    onDissMissRequest: () -> Unit
+    onDissMissRequest: () -> Unit = {}
 ) {
     val modifier = when {
         widthPercent != null && heightPercent != null -> {
