@@ -26,7 +26,7 @@ fun SmsTextField(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     placeHolder: String = "",
-    readOnly: Boolean = true,
+    readOnly: Boolean = false,
     focusRequester: FocusRequester = FocusRequester(),
     errorText: String = "Error",
     onValueChange: (String) -> Unit = {}
@@ -65,7 +65,8 @@ fun SmsTextField(
                     IconButton(onClick = { text = "" }) {
                         DeleteButtonIcon()
                     }
-                }
+                },
+                readOnly = readOnly
             )
             if (isError) {
                 Spacer(modifier = Modifier.height(8.dp))
