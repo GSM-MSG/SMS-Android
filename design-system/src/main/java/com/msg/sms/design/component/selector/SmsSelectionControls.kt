@@ -3,10 +3,9 @@ package com.msg.sms.design.component.selector
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +28,10 @@ fun SmsSelectionControls(
             modifier = modifier
                 .width(32.dp)
                 .height(32.dp)
-                .clickable {
+                .clickable(
+                    interactionSource = MutableInteractionSource(),
+                    indication = rememberRipple(bounded = false)
+                ) {
                     if (onClick != null && enabled) {
                         onClick()
                     }
@@ -55,7 +57,7 @@ fun SelectionControlPre() {
     val selected = remember {
         mutableStateOf("0")
     }
-    Column(Modifier.background(Color.White)) {
+    Column(Modifier.background(Color.White).fillMaxSize()) {
         SmsSelectionControls(selected = selected.value == "0", onClick = { selected.value = "0" })
         Spacer(modifier = Modifier.height(10.dp))
         SmsSelectionControls(selected = selected.value == "1", onClick = { selected.value = "1" })
