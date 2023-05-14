@@ -37,13 +37,13 @@ fun SmsSelectionControls(
         ) {
             drawCircle(
                 color = if (selected) colors.P2 else colors.N20,
-                radius = 10f,
-                style = Stroke(width = 2f)
+                radius = 10.dp.toPx(),
+                style = Stroke(width = 2.dp.toPx())
             )
 
             drawCircle(
                 color = if (selected) colors.P2 else Color.Transparent,
-                radius = 6f
+                radius = 6.dp.toPx()
             )
         }
     }
