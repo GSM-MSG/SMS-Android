@@ -27,6 +27,8 @@ fun SmsDialog(
     heightDp: Dp? = null,
     title: String,
     msg: String,
+    outLineButtonText: String,
+    normalButtonText: String,
     outlineButtonOnClick: () -> Unit,
     normalButtonOnClick: () -> Unit,
     onDissMissRequest: () -> Unit
@@ -58,7 +60,7 @@ fun SmsDialog(
         ) {
             Box(
                 modifier = modifier
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(16.dp))
                     .background(colors.WHITE)
             ) {
                 Column(
@@ -85,7 +87,7 @@ fun SmsDialog(
                         .align(Alignment.BottomCenter)
                 ) {
                     SmsRoundedButton(
-                        text = "Text",
+                        text = outLineButtonText,
                         state = ButtonState.OutLine,
                         modifier = Modifier
                             .fillMaxWidth(0.485f)
@@ -95,7 +97,7 @@ fun SmsDialog(
                         outlineButtonOnClick()
                     }
                     SmsRoundedButton(
-                        text = "Text",
+                        text = normalButtonText,
                         modifier = Modifier
                             .fillMaxWidth(0.485f)
                             .height(48.dp)
