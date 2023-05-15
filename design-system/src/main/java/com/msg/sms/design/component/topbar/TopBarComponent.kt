@@ -16,10 +16,14 @@ import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun TopBarComponent(onClickBackButton: () -> Unit, text: String) {
+fun TopBarComponent(
+    modifier: Modifier = Modifier,
+    text: String,
+    onClickBackButton: () -> Unit
+) {
     SMSTheme { colors, typography ->
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .height(44.dp)
                 .background(colors.WHITE)
@@ -30,7 +34,12 @@ fun TopBarComponent(onClickBackButton: () -> Unit, text: String) {
             ) {
                 BackButtonIcon()
             }
-            Text(text = text, style = typography.title2, fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.Center))
+            Text(
+                text = text,
+                style = typography.title2,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }
