@@ -19,10 +19,10 @@ import com.msg.sms.design.theme.SMSTheme
 fun TopBarComponent(
     modifier: Modifier = Modifier,
     text: String,
-    leftIcon: @Composable () -> Unit = {},
-    rightIcon: @Composable () -> Unit = {},
-    onClickLeftButton: () -> Unit = {},
-    onClickRightButton: () -> Unit = {}
+    leftIcon: @Composable (() -> Unit)?,
+    rightIcon: @Composable (() -> Unit)?,
+    onClickLeftButton: (() -> Unit) = {},
+    onClickRightButton: (() -> Unit) = {}
 ) {
     SMSTheme { colors, typography ->
         Box(
@@ -31,11 +31,13 @@ fun TopBarComponent(
                 .height(44.dp)
                 .background(colors.WHITE)
         ) {
-            IconButton(
-                onClick = onClickLeftButton,
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
-                leftIcon()
+            if (leftIcon != null) {
+                IconButton(
+                    onClick = onClickLeftButton,
+                    modifier = Modifier.align(Alignment.CenterStart)
+                ) {
+                    leftIcon()
+                }
             }
             Text(
                 text = text,
@@ -43,11 +45,13 @@ fun TopBarComponent(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.Center)
             )
-            IconButton(
-                onClick = onClickRightButton,
-                modifier = Modifier.align(Alignment.CenterEnd)
-            ) {
-                rightIcon()
+            if (rightIcon != null) {
+                IconButton(
+                    onClick = onClickRightButton,
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                ) {
+                    rightIcon()
+                }
             }
         }
     }
@@ -56,5 +60,10 @@ fun TopBarComponent(
 @Preview
 @Composable
 fun TopBarPre() {
-    TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, onClickRightButton = { })
+    TopBarComponent(
+        text = "정보입력",
+        leftIcon = { BackButtonIcon() },
+        onClickRightButton = { },
+        rightIcon = null
+    )
 }
