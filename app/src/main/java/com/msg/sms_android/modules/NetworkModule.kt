@@ -1,6 +1,7 @@
 package com.msg.sms_android.modules
 
 import com.msg.sms.data.remote.network.api.AuthAPI
+import com.msg.sms.data.remote.network.api.StudentAPI
 import com.msg.sms.data.util.AuthInterceptor
 import com.msg.sms_android.BuildConfig
 import dagger.Module
@@ -53,5 +54,11 @@ object NetworkModule {
     @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthAPI {
         return retrofit.create(AuthAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStudentService(retrofit: Retrofit): StudentAPI {
+        return retrofit.create(StudentAPI::class.java)
     }
 }
