@@ -19,7 +19,10 @@ import com.msg.sms.design.theme.SMSTheme
 fun TopBarComponent(
     modifier: Modifier = Modifier,
     text: String,
-    onClickBackButton: () -> Unit
+    leftIcon: @Composable () -> Unit = {},
+    rightIcon: @Composable () -> Unit = {},
+    onClickLeftButton: () -> Unit = {},
+    onClickRightButton: () -> Unit = {}
 ) {
     SMSTheme { colors, typography ->
         Box(
@@ -29,10 +32,10 @@ fun TopBarComponent(
                 .background(colors.WHITE)
         ) {
             IconButton(
-                onClick = onClickBackButton,
+                onClick = onClickLeftButton,
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
-                BackButtonIcon()
+                leftIcon()
             }
             Text(
                 text = text,
@@ -40,6 +43,12 @@ fun TopBarComponent(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.Center)
             )
+            IconButton(
+                onClick = onClickRightButton,
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                rightIcon()
+            }
         }
     }
 }
@@ -47,5 +56,5 @@ fun TopBarComponent(
 @Preview
 @Composable
 fun TopBarPre() {
-    TopBarComponent(onClickBackButton = { /*TODO*/ }, text = "정보입력")
+    TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, onClickRightButton = { })
 }
