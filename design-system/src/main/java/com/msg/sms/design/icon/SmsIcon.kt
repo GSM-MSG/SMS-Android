@@ -94,5 +94,17 @@ fun PlusButtonGrayIcon(
     )
 }
 
+@Composable
+fun ProfileIcon(
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_profile_btn),
+        contentDescription = "ProfileButton",
+        modifier = modifier
+    )
+}
+
+
 
 
