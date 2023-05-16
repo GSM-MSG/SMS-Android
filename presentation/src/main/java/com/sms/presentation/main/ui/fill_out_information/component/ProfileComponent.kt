@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.msg.sms.design.component.indicator.PagerIndicator
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
@@ -36,6 +37,13 @@ fun ProfileComponent() {
                         color = colors.S2
                     )
                 }
+                PagerIndicator(
+                    modifier = Modifier.align(
+                        Alignment.CenterEnd
+                    ),
+                    indexOfPointingNumber = 0,
+                    size = 6
+                )
             }
         }
     }
