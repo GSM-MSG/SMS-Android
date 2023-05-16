@@ -1,4 +1,4 @@
-package com.msg.sms.design.component
+package com.msg.sms.design.component.spacer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer

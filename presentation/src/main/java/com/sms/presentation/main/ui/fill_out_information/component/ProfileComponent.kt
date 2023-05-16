@@ -25,8 +25,9 @@ fun ProfileComponent() {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White)
-                .padding(20.dp)
+                .padding(start = 20.dp, end = 20.dp)
         ) {
+            Spacer(modifier = Modifier.height(20.dp))
             Box(modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.align(Alignment.CenterStart)) {
                     Text(
@@ -69,7 +70,7 @@ fun ProfileComponent() {
                 placeHolder = "FrondEnd", modifier = Modifier.fillMaxWidth(),
                 endIcon = { OpenButtonIcon() },
                 readOnly = true,
-                clickAction = {  },
+                clickAction = { },
                 setChangeText = ""
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -87,6 +88,7 @@ fun ProfileComponent() {
             ) {
 
             }
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }
