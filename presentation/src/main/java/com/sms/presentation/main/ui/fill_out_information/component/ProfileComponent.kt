@@ -12,6 +12,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.indicator.PagerIndicator
+import com.msg.sms.design.component.textfield.SmsCustomTextField
+import com.msg.sms.design.component.textfield.SmsTextField
+import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.icon.ProfileIcon
 import com.msg.sms.design.theme.SMSTheme
 
@@ -54,20 +57,35 @@ fun ProfileComponent() {
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "자기소개", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
+            SmsTextField(placeHolder = "1줄 자기소개 입력", modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "이메일", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
+            SmsTextField(placeHolder = "공개용 이메일 입력", modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "분야", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
+            SmsCustomTextField(
+                placeHolder = "FrondEnd", modifier = Modifier.fillMaxWidth(),
+                endIcon = { OpenButtonIcon() },
+                readOnly = true,
+                clickAction = {  },
+                setChangeText = ""
+            )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "포트폴리오 URL", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
+            SmsTextField(placeHolder = "https://", modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "세부스택", style = typography.body2)
+            SmsTextField(placeHolder = "예시) HTML, CSS, C#", modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(32.dp))
-            SmsRoundedButton(text = "다음", modifier = Modifier.fillMaxWidth().height(48.dp)) {
-                
+            SmsRoundedButton(
+                text = "다음", modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+
             }
         }
     }

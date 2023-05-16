@@ -76,6 +76,65 @@ fun SmsTextField(
     }
 }
 
+@Composable
+fun SmsCustomTextField(
+    modifier: Modifier = Modifier,
+    endIcon: @Composable () -> Unit,
+    clickAction: () -> Unit,
+    isError: Boolean = false,
+    placeHolder: String = "",
+    readOnly: Boolean = false,
+    focusRequester: FocusRequester = FocusRequester(),
+    errorText: String = "Error",
+    setChangeText: String,
+    onValueChange: (String) -> Unit = {}
+) {
+    var text by remember { mutableStateOf("") }
+    val isFocused = remember { mutableStateOf(false) }
+    text = setChangeText
+    SMSTheme { colors, typography ->
+        Column {
+            OutlinedTextField(
+                value = text,
+                onValueChange = {
+                    text = it
+                    onValueChange(it)
+                },
+                placeholder = {
+                    Text(text = placeHolder, style = typography.body1)
+                },
+                modifier = modifier
+                    .focusRequester(focusRequester)
+                    .border(
+                        width = 1.dp,
+                        color = if (isFocused.value) colors.P2 else colors.N10,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .onFocusChanged {
+                        isFocused.value = it.isFocused
+                    },
+                textStyle = typography.body1,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    backgroundColor = colors.N10,
+                    placeholderColor = colors.N30,
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent
+                ),
+                trailingIcon = {
+                    IconButton(onClick = { clickAction() }) {
+                        endIcon()
+                    }
+                },
+                readOnly = readOnly
+            )
+            if (isError) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = errorText, color = colors.ERROR, style = typography.caption1)
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 fun SmsTextFieldPre() {
