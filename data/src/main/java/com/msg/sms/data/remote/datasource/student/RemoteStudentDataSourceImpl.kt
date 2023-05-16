@@ -12,12 +12,13 @@ import javax.inject.Inject
 class RemoteStudentDataSourceImpl @Inject constructor(
     private val service: StudentAPI
 ) : RemoteStudentDataSource {
-    override suspend fun enterStudentInformation(body: EnterStudentInformationRequest): Flow<Unit> =
-        flow {
+    override suspend fun enterStudentInformation(body: EnterStudentInformationRequest): Flow<Unit> {
+        return flow {
             emit(
                 SMSApiHandler<Unit>()
                     .httpRequest { service.enterStudentInformation(body = body) }
                     .sendRequest()
             )
         }.flowOn(Dispatchers.IO)
+    }
 }
