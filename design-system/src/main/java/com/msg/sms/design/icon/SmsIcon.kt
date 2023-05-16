@@ -1,5 +1,6 @@
 package com.msg.sms.design.icon
 
+import androidx.compose.foundation.Image
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.LocalContentColor
@@ -110,6 +111,17 @@ fun PlusButtonGrayIcon(
         contentDescription = "Plus Button Gray Icon",
         modifier = modifier,
         tint = tint
+    )
+}
+
+@Composable
+fun ProfileIcon(
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_profile_btn),
+        contentDescription = "ProfileButton",
+        modifier = modifier
     )
 }
 
