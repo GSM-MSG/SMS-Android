@@ -1,4 +1,4 @@
-package com.msg.sms.domain.usecase
+package com.msg.sms.domain.usecase.auth
 
 import com.msg.sms.domain.model.auth.request.GAuthLoginRequestModel
 import com.msg.sms.domain.repository.AuthRepository
