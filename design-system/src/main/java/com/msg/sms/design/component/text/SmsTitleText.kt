@@ -11,11 +11,14 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun SmsTitleText(text: String, isRequired: Boolean) {
+fun SmsTitleText(
+    modifier: Modifier = Modifier,
+    text: String,
+    isRequired: Boolean) {
     SMSTheme { colors, typography ->
-        Row {
+        Row(modifier) {
             Text(text = text, style = typography.title1, fontWeight = FontWeight.Bold)
-            if(isRequired) {
+            if (isRequired) {
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
                     text = "*",
