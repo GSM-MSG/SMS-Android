@@ -9,6 +9,7 @@ import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -54,11 +55,13 @@ class EnterInformationViewModel @Inject constructor(
                 certificate = certificate
             )
         ).onSuccess {
-            it.collect {
+            it.catch { remoteError ->
+                _enterInformationResponse.value = remoteError.errorHandling()
+            }.collect {
                 _enterInformationResponse.value = Event.Success
             }
-        }.onFailure {
-            _enterInformationResponse.value = it.errorHandling()
+        }.onFailure { error ->
+            _enterInformationResponse.value = error.errorHandling()
         }
     }
 }
