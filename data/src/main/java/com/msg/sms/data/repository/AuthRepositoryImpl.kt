@@ -1,6 +1,7 @@
 package com.msg.sms.data.repository
 
 import com.msg.sms.data.remote.datasource.auth.RemoteAuthDataSource
+import com.msg.sms.data.remote.dto.auth.request.GAuthLoginRequest
 import com.msg.sms.data.remote.dto.auth.response.toLoginModel
 import com.msg.sms.domain.model.auth.request.GAuthLoginRequestModel
 import com.msg.sms.domain.model.auth.response.GAuthLoginResponseModel
@@ -11,6 +12,10 @@ class AuthRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteAuthDataSource
 ) : AuthRepository {
     override suspend fun gAuthLogin(body: GAuthLoginRequestModel): GAuthLoginResponseModel {
-        return remoteDataSource.gAuthLogin(body = body).toLoginModel()
+        return remoteDataSource.gAuthLogin(
+            body = GAuthLoginRequest(
+                code = body.code
+            )
+        ).toLoginModel()
     }
 }

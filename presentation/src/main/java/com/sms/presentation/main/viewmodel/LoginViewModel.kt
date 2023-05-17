@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.auth.request.GAuthLoginRequestModel
-import com.msg.sms.domain.usecase.GAuthLoginUseCase
+import com.msg.sms.domain.usecase.auth.GAuthLoginUseCase
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
