@@ -39,20 +39,6 @@ fun ProfileComponent(
         ) {
             Spacer(modifier = Modifier.height(20.dp))
             Box(modifier = Modifier.fillMaxWidth()) {
-//                Row(modifier = Modifier.align(Alignment.CenterStart)) {
-//                    Text(
-//                        text = "프로필",
-//                        style = typography.title1,
-//                        fontWeight = FontWeight.Bold,
-//                    )
-//                    Spacer(modifier = Modifier.width(5.dp))
-//                    Text(
-//                        text = "*",
-//                        style = typography.title1,
-//                        fontWeight = FontWeight.Bold,
-//                        color = colors.S2
-//                    )
-//                }
                 SmsTitleText(text = "프로필", isRequired = true)
                 PagerIndicator(
                     modifier = Modifier.align(
