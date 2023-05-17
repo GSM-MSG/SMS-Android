@@ -14,7 +14,8 @@ import com.msg.sms.design.theme.SMSTheme
 fun SmsTitleText(
     modifier: Modifier = Modifier,
     text: String,
-    isRequired: Boolean) {
+    isRequired: Boolean,
+) {
     SMSTheme { colors, typography ->
         Row(modifier) {
             Text(text = text, style = typography.title1, fontWeight = FontWeight.Bold)
