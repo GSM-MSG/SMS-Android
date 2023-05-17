@@ -1,10 +1,7 @@
 package com.msg.sms.design.component.textfield
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
@@ -63,8 +60,9 @@ fun SmsTextField(
                     cursorColor = colors.P2
                 ),
                 trailingIcon = {
-                    IconButton(onClick = { text = "" }) {
-                        DeleteButtonIcon()
+                    IconButton(onClick = { text = "" }, enabled = text.isNotEmpty())
+                    {
+                        if (text.isNotEmpty()) DeleteButtonIcon()
                     }
                 },
                 readOnly = readOnly
