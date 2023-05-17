@@ -16,7 +16,7 @@ fun PagerIndicator(
     indexOfPointingNumber: Int,
     size: Int
 ) {
-    SMSTheme { colors, typography ->
+    SMSTheme { colors, _ ->
         LazyRow(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(size) {
                 Canvas(modifier = Modifier.size(8.dp)) {

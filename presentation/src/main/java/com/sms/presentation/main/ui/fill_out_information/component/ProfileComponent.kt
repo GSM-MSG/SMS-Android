@@ -2,8 +2,10 @@ package com.sms.presentation.main.ui.fill_out_information.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,10 +19,17 @@ import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.icon.ProfileIcon
 import com.msg.sms.design.theme.SMSTheme
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ProfileComponent() {
+fun ProfileComponent(
+    bottomSheetScaffoldState: ModalBottomSheetState,
+    selectedMajor: String
+) {
     SMSTheme { colors, typography ->
+        val coroutineScope = rememberCoroutineScope()
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,8 +79,12 @@ fun ProfileComponent() {
                 placeHolder = "FrondEnd", modifier = Modifier.fillMaxWidth(),
                 endIcon = { OpenButtonIcon() },
                 readOnly = true,
-                clickAction = { },
-                setChangeText = ""
+                clickAction = {
+                    coroutineScope.launch {
+                        bottomSheetScaffoldState.show()
+                    }
+                },
+                setChangeText = selectedMajor
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "포트폴리오 URL", style = typography.body2)
@@ -93,8 +106,12 @@ fun ProfileComponent() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun ProfileComponentPre() {
-    ProfileComponent()
+    ProfileComponent(
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+        "FrontEnd"
+    )
 }

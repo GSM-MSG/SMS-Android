@@ -3,7 +3,7 @@ package com.msg.sms.design.component.topbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +28,6 @@ fun TopBarComponent(
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .height(44.dp)
                 .background(colors.WHITE)
         ) {
             if (leftIcon != null) {
@@ -43,7 +42,9 @@ fun TopBarComponent(
                 text = text,
                 style = typography.title2,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(vertical = 16.dp)
             )
             if (rightIcon != null) {
                 IconButton(
