@@ -56,10 +56,7 @@ fun SchoolLifeComponent(addDreamBook: () -> Unit) {
                 ) {
 
                 }
-                Spacer(
-                    modifier = Modifier
-                        .width(8.dp)
-                )
+                Spacer(modifier = Modifier.width(8.dp))
                 SmsRoundedButton(
                     text = "다음",
                     modifier = Modifier
