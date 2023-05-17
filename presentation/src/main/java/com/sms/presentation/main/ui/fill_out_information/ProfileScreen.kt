@@ -61,7 +61,7 @@ fun ProfileScreen() {
                 leftIcon = { BackButtonIcon() },
                 rightIcon = null,
                 onClickLeftButton = {
-
+                    /* Todo(LeeHyeonbin) 버튼 클릭 시 뒤로 가기 기능 구현 */
                 }) {
             }
             SmsSpacer()
