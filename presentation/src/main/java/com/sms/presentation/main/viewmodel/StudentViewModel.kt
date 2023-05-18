@@ -59,12 +59,12 @@ class StudentViewModel @Inject constructor(
             )
         ).onSuccess {
             it.catch { remoteError ->
-                _enterInformationResponse.update { remoteError.errorHandling() }
+                _enterInformationResponse.value = remoteError.errorHandling()
             }.collect {
-                _enterInformationResponse.update { Event.Success }
+                _enterInformationResponse.value = Event.Success
             }
         }.onFailure { error ->
-            _enterInformationResponse.update { error.errorHandling() }
+            _enterInformationResponse.value = error.errorHandling()
         }
     }
 }
