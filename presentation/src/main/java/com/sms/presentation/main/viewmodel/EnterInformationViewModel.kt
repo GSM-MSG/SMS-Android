@@ -9,10 +9,12 @@ import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class EnterInformationViewModel @Inject constructor(
     private val enterStudentInformationUseCase: EnterStudentInformationUseCase
 ) : ViewModel() {
