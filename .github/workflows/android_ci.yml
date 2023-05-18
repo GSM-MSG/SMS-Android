@@ -49,7 +49,7 @@ jobs:
           title: ✅ SMS-Android-CI 성공! ✅
           webhook: ${{ secrets.SMS_DISCORD_WEBHOOK }}
           color: 00FF00
-          image: ${{ secret.SUCCESS_IMAGE }}
+          image: ${{ secrets.SUCCESS_IMAGE }}
           
 
       - name: SMS Android CI Discord Notification
@@ -59,4 +59,4 @@ jobs:
           title: ❗️ SMS-Android-CI 실패! ❗️
           webhook: ${{ secrets.SMS_DISCORD_WEBHOOK }}
           color: FF0000
-          image: ${{ secret.FAILED_IMAGE }}
+          image: ${{ secrets.FAILED_IMAGE }}
