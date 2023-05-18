@@ -48,9 +48,13 @@ jobs:
         with:
           title: ✅ SMS-Android-CI 성공! ✅
           webhook: ${{ secrets.SMS_DISCORD_WEBHOOK }}
-          color: 00FF00
+          status: ${{ job.status }}
+          content : "✅ SMS-Android-CI 성공! ✅"
           image: ${{ secrets.SUCCESS_IMAGE }}
-          
+          description: ✅ SMS-Android-CI 성공! ✅
+          color: 00FF00
+          url: "https://github.com/sarisia/actions-status-discord"
+          username: GitHub Actions
 
       - name: SMS Android CI Discord Notification
         uses: sarisia/actions-status-discord@v1
@@ -58,5 +62,10 @@ jobs:
         with:
           title: ❗️ SMS-Android-CI 실패! ❗️
           webhook: ${{ secrets.SMS_DISCORD_WEBHOOK }}
-          color: FF0000
+          status: ${{ job.status }}
+          content : ❗️ SMS-Android-CI 실패! ❗️
           image: ${{ secrets.FAILED_IMAGE }}
+          description: ❗️ SMS-Android-CI 실패! ❗️
+          color: 00FF00
+          url: "https://github.com/sarisia/actions-status-discord"
+          username: GitHub Actions
