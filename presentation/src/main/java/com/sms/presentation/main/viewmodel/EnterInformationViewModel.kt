@@ -1,7 +1,5 @@
 package com.sms.presentation.main.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
@@ -10,6 +8,8 @@ import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,8 +18,8 @@ import javax.inject.Inject
 class EnterInformationViewModel @Inject constructor(
     private val enterStudentInformationUseCase: EnterStudentInformationUseCase
 ) : ViewModel() {
-    private val _enterInformationResponse = MutableLiveData<Event>()
-    val enterInformationResponse: LiveData<Event> get() = _enterInformationResponse
+    private val _enterInformationResponse = MutableStateFlow<Event>(Event.UnKnown)
+    val enterInformationResponse: StateFlow<Event> get() = _enterInformationResponse
 
     fun enterStudentInformation(
         major: String,
