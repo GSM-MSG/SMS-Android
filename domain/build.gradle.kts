@@ -36,6 +36,9 @@ android {
 }
 
 dependencies {
+
+    testImplementation(Dependency.Test.JUNIT)
+
     implementation(Dependency.Google.HILT)
     kapt(Dependency.Google.HILT_COMPILER)
 }
