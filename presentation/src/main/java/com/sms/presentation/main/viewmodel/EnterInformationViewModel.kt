@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -58,12 +59,12 @@ class EnterInformationViewModel @Inject constructor(
             )
         ).onSuccess {
             it.catch { remoteError ->
-                _enterInformationResponse.value = remoteError.errorHandling()
+                _enterInformationResponse.update { remoteError.errorHandling() }
             }.collect {
-                _enterInformationResponse.value = Event.Success
+                _enterInformationResponse.update { Event.Success }
             }
         }.onFailure { error ->
-            _enterInformationResponse.value = error.errorHandling()
+            _enterInformationResponse.update { error.errorHandling() }
         }
     }
 }
