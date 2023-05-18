@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.indicator.PagerIndicator
+import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.OpenButtonIcon
@@ -27,7 +28,7 @@ fun ProfileComponent(
     bottomSheetScaffoldState: ModalBottomSheetState,
     selectedMajor: String
 ) {
-    SMSTheme { colors, typography ->
+    SMSTheme { _, typography ->
         val coroutineScope = rememberCoroutineScope()
 
         Column(
@@ -38,20 +39,7 @@ fun ProfileComponent(
         ) {
             Spacer(modifier = Modifier.height(20.dp))
             Box(modifier = Modifier.fillMaxWidth()) {
-                Row(modifier = Modifier.align(Alignment.CenterStart)) {
-                    Text(
-                        text = "프로필",
-                        style = typography.title1,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Text(
-                        text = "*",
-                        style = typography.title1,
-                        fontWeight = FontWeight.Bold,
-                        color = colors.S2
-                    )
-                }
+                SmsTitleText(text = "프로필", isRequired = true)
                 PagerIndicator(
                     modifier = Modifier.align(
                         Alignment.CenterEnd
