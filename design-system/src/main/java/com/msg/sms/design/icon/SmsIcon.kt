@@ -8,7 +8,7 @@ import com.sms.design_system.R
 
 @Composable
 fun BackButtonIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_back_btn),
@@ -19,7 +19,7 @@ fun BackButtonIcon(
 
 @Composable
 fun CameraIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_camera),
@@ -30,7 +30,7 @@ fun CameraIcon(
 
 @Composable
 fun CheckButtonIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_check_btn),
@@ -41,7 +41,7 @@ fun CheckButtonIcon(
 
 @Composable
 fun DeleteButtonIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_delete_btn),
@@ -52,7 +52,7 @@ fun DeleteButtonIcon(
 
 @Composable
 fun FilledPlusButtonIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_filled_plus_btn),
@@ -63,7 +63,7 @@ fun FilledPlusButtonIcon(
 
 @Composable
 fun OpenButtonIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_open_btn),
@@ -74,7 +74,7 @@ fun OpenButtonIcon(
 
 @Composable
 fun PlusButtonIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_plus_btn),
@@ -85,7 +85,7 @@ fun PlusButtonIcon(
 
 @Composable
 fun PlusButtonGrayIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_plus_btn_gray),
@@ -96,11 +96,22 @@ fun PlusButtonGrayIcon(
 
 @Composable
 fun ProfileIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_profile_btn),
         contentDescription = "ProfileButton",
+        modifier = modifier
+    )
+}
+
+@Composable
+fun TrashCanIcon(
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_trash_can),
+        contentDescription = "Trash Can Icon Button",
         modifier = modifier
     )
 }
