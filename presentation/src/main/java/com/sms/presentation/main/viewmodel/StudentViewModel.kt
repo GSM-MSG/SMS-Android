@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EnterInformationViewModel @Inject constructor(
+class StudentViewModel @Inject constructor(
     private val enterStudentInformationUseCase: EnterStudentInformationUseCase
 ) : ViewModel() {
     private val _enterInformationResponse = MutableStateFlow<Event>(Event.Loading)

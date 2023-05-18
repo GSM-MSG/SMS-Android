@@ -10,13 +10,13 @@ import com.msg.gauthsignin.GAuthSigninWebView
 import com.sms.presentation.BuildConfig
 import com.sms.presentation.main.ui.MainActivity
 import com.sms.presentation.main.ui.login.component.LoginScreen
-import com.sms.presentation.main.viewmodel.LoginViewModel
+import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
-    private val viewModel by viewModels<LoginViewModel>()
+    private val viewModel by viewModels<AuthViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
