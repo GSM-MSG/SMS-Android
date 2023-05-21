@@ -26,7 +26,7 @@ fun SmsTextField(
     readOnly: Boolean = false,
     focusRequester: FocusRequester = FocusRequester(),
     errorText: String = "Error",
-    onValueChange: (String) -> Unit = {}
+    onValueChange: (String) -> Unit = {},
 ) {
     var text by remember { mutableStateOf("") }
     val isFocused = remember { mutableStateOf(false) }
@@ -78,7 +78,7 @@ fun SmsTextField(
 @Composable
 fun SmsCustomTextField(
     modifier: Modifier = Modifier,
-    endIcon: @Composable () -> Unit,
+    endIcon: @Composable (() -> Unit)?,
     clickAction: () -> Unit,
     isError: Boolean = false,
     placeHolder: String = "",
@@ -86,13 +86,13 @@ fun SmsCustomTextField(
     focusRequester: FocusRequester = FocusRequester(),
     errorText: String = "Error",
     setChangeText: String,
-    onValueChange: (String) -> Unit = {}
+    onValueChange: (String) -> Unit = {},
 ) {
     var text by remember { mutableStateOf("") }
     val isFocused = remember { mutableStateOf(false) }
     text = setChangeText
     SMSTheme { colors, typography ->
-        Column {
+        Column(modifier = modifier) {
             OutlinedTextField(
                 value = text,
                 onValueChange = {
@@ -102,7 +102,7 @@ fun SmsCustomTextField(
                 placeholder = {
                     Text(text = placeHolder, style = typography.body1)
                 },
-                modifier = modifier
+                modifier = Modifier
                     .focusRequester(focusRequester)
                     .border(
                         width = 1.dp,
@@ -111,7 +111,8 @@ fun SmsCustomTextField(
                     )
                     .onFocusChanged {
                         isFocused.value = it.isFocused
-                    },
+                    }
+                    .fillMaxWidth(),
                 textStyle = typography.body1,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     backgroundColor = colors.N10,
@@ -120,8 +121,10 @@ fun SmsCustomTextField(
                     unfocusedBorderColor = Color.Transparent
                 ),
                 trailingIcon = {
-                    IconButton(onClick = { clickAction() }) {
-                        endIcon()
+                    if (endIcon != null) {
+                        IconButton(onClick = { clickAction() }) {
+                            endIcon()
+                        }
                     }
                 },
                 readOnly = readOnly
