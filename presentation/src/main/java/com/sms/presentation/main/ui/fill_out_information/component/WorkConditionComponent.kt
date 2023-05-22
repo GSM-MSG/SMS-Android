@@ -81,6 +81,7 @@ fun WorkConditionComponent(
                     SmsTextField(
                         modifier = Modifier.fillMaxWidth(),
                         placeHolder = "희망 연봉 (10,000원 단위)",
+                        maxLines = 1,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                     Spacer(modifier = Modifier.height(24.dp))

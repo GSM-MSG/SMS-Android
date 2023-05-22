@@ -29,6 +29,7 @@ fun SmsTextField(
     focusRequester: FocusRequester = FocusRequester(),
     errorText: String = "Error",
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    maxLines: Int = Int.MAX_VALUE,
     onValueChange: (String) -> Unit = {},
 ) {
     var text by remember { mutableStateOf("") }
@@ -55,6 +56,7 @@ fun SmsTextField(
                     .onFocusChanged {
                         isFocused.value = it.isFocused
                     },
+                maxLines = maxLines,
                 textStyle = typography.body1,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     backgroundColor = colors.N10,
