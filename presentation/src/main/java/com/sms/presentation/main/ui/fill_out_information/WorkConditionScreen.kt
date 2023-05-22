@@ -51,12 +51,9 @@ fun WorkConditionScreen() {
             TopBarComponent(text = "정보 입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
             }
             SmsSpacer()
-            val workCondition = remember {
-                mutableStateOf("")
-            }
             WorkConditionComponent(
                 bottomSheetState = bottomSheetState,
-                wantWorkingCondition = workCondition.value,
+                wantWorkingCondition = selectedWorkingCondition.value,
             )
         }
     }
