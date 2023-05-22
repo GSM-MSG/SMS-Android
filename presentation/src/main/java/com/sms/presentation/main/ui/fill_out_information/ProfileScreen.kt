@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.component.bottomsheet.MajorBottomSheet
+import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
@@ -43,10 +43,10 @@ fun ProfileScreen() {
     )
     ModalBottomSheetLayout(
         sheetContent = {
-            MajorBottomSheet(
+            SelectorBottomSheet(
                 list = list,
                 bottomSheetState = bottomSheetState,
-                selectedMajor = selectedMajor.value,
+                selected = selectedMajor.value,
                 itemChange = {
                     selectedMajor.value = it
                 }

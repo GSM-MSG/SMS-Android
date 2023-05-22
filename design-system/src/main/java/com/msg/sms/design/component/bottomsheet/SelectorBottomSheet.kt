@@ -9,17 +9,17 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MajorBottomSheet(
+fun SelectorBottomSheet(
     list: List<String>,
     bottomSheetState: ModalBottomSheetState,
-    selectedMajor: String,
+    selected: String,
     itemChange: (String) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     LazyColumn {
         items(list.size) {
-            MajorSelector(major = list[it], selected = selectedMajor == list[it]) {
+            MajorSelector(major = list[it], selected = selected == list[it]) {
                 itemChange(list[it])
                 coroutineScope.launch {
                     bottomSheetState.hide()
