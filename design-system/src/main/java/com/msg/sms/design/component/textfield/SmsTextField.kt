@@ -3,6 +3,7 @@ package com.msg.sms.design.component.textfield
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -13,6 +14,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.DeleteButtonIcon
@@ -26,7 +28,9 @@ fun SmsTextField(
     readOnly: Boolean = false,
     focusRequester: FocusRequester = FocusRequester(),
     errorText: String = "Error",
-    onValueChange: (String) -> Unit = {}
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    maxLines: Int = Int.MAX_VALUE,
+    onValueChange: (String) -> Unit = {},
 ) {
     var text by remember { mutableStateOf("") }
     val isFocused = remember { mutableStateOf(false) }
@@ -38,6 +42,7 @@ fun SmsTextField(
                     text = it
                     onValueChange(it)
                 },
+                keyboardOptions = keyboardOptions,
                 placeholder = {
                     Text(text = placeHolder, style = typography.body1)
                 },
@@ -51,6 +56,7 @@ fun SmsTextField(
                     .onFocusChanged {
                         isFocused.value = it.isFocused
                     },
+                maxLines = maxLines,
                 textStyle = typography.body1,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     backgroundColor = colors.N10,
@@ -78,7 +84,7 @@ fun SmsTextField(
 @Composable
 fun SmsCustomTextField(
     modifier: Modifier = Modifier,
-    endIcon: @Composable () -> Unit,
+    endIcon: @Composable (() -> Unit)?,
     clickAction: () -> Unit,
     isError: Boolean = false,
     placeHolder: String = "",
@@ -86,13 +92,13 @@ fun SmsCustomTextField(
     focusRequester: FocusRequester = FocusRequester(),
     errorText: String = "Error",
     setChangeText: String,
-    onValueChange: (String) -> Unit = {}
+    onValueChange: (String) -> Unit = {},
 ) {
     var text by remember { mutableStateOf("") }
     val isFocused = remember { mutableStateOf(false) }
     text = setChangeText
     SMSTheme { colors, typography ->
-        Column {
+        Column(modifier = modifier) {
             OutlinedTextField(
                 value = text,
                 onValueChange = {
@@ -102,7 +108,7 @@ fun SmsCustomTextField(
                 placeholder = {
                     Text(text = placeHolder, style = typography.body1)
                 },
-                modifier = modifier
+                modifier = Modifier
                     .focusRequester(focusRequester)
                     .border(
                         width = 1.dp,
@@ -111,7 +117,8 @@ fun SmsCustomTextField(
                     )
                     .onFocusChanged {
                         isFocused.value = it.isFocused
-                    },
+                    }
+                    .fillMaxWidth(),
                 textStyle = typography.body1,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     backgroundColor = colors.N10,
@@ -120,8 +127,10 @@ fun SmsCustomTextField(
                     unfocusedBorderColor = Color.Transparent
                 ),
                 trailingIcon = {
-                    IconButton(onClick = { clickAction() }) {
-                        endIcon()
+                    if (endIcon != null) {
+                        IconButton(onClick = { clickAction() }) {
+                            endIcon()
+                        }
                     }
                 },
                 readOnly = readOnly
