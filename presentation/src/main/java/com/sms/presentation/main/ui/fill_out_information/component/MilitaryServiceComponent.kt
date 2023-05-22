@@ -53,7 +53,7 @@ fun MilitaryServiceComponent(
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                placeHolder = "현역",
+                placeHolder = "병특 희망",
                 setChangeText = selectedMilitaryService,
                 readOnly = true
                 )
