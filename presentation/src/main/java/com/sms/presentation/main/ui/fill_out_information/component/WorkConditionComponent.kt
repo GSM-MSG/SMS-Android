@@ -1,15 +1,14 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,15 +22,20 @@ import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WorkConditionComponent(
     wantWorkingCondition: String,
+    bottomSheetState: ModalBottomSheetState,
 ) {
     SMSTheme { colors, typography ->
         val wantWorkingArea = remember {
             mutableStateListOf("")
         }
+        val coroutineScope = rememberCoroutineScope()
+
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceAround
@@ -59,10 +63,14 @@ fun WorkConditionComponent(
                     Spacer(modifier = Modifier.height(8.dp))
                     SmsCustomTextField(
                         modifier = Modifier.fillMaxWidth(),
+                        endIcon = { OpenButtonIcon() },
                         placeHolder = "정규직",
                         readOnly = true,
-                        endIcon = { OpenButtonIcon() },
-                        clickAction = { /* TODO(LeeHyeonbin) Bottom Sheet 띄우기*/ },
+                        clickAction = {
+                            coroutineScope.launch {
+                                bottomSheetState.show()
+                            }
+                        },
                         setChangeText = wantWorkingCondition
                     )
                     Spacer(modifier = Modifier.height(24.dp))
@@ -146,8 +154,12 @@ fun WorkConditionComponent(
 
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun WorkConditionComponentPre() {
-    WorkConditionComponent(wantWorkingCondition = "")
+    WorkConditionComponent(
+        wantWorkingCondition = "",
+        bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    )
 }
