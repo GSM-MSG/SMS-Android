@@ -56,7 +56,7 @@ fun MilitaryServiceComponent(
                 placeHolder = "병특 희망",
                 setChangeText = selectedMilitaryService,
                 readOnly = true
-                )
+            )
             Spacer(modifier = Modifier.weight(1f))
             Row(modifier = Modifier.fillMaxWidth()) {
                 SmsRoundedButton(
