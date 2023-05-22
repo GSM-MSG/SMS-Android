@@ -1,4 +1,4 @@
-package com.msg.sms.data.remote.dto.file.response
+package com.msg.sms.data.remote.dto.fileupload.response
 
 data class FileUploadResponse(
     val fileUrl: String
