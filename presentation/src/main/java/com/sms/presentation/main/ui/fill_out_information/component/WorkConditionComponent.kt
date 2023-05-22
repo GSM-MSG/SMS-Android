@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -82,7 +83,10 @@ fun WorkConditionComponent(
                         modifier = Modifier.fillMaxWidth(),
                         placeHolder = "희망 연봉 (10,000원 단위)",
                         maxLines = 1,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        )
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(text = "근무 지역", style = typography.body2)
