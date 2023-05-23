@@ -11,8 +11,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.indicator.PagerIndicator
@@ -21,9 +21,10 @@ import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 
-@Preview
 @Composable
-fun CertificationComponent() {
+fun CertificationComponent(
+    navController: NavController
+) {
     SMSTheme { colors, typography ->
         val certificationList = remember {
             mutableStateListOf("")
@@ -99,7 +100,7 @@ fun CertificationComponent() {
                         text = "이전",
                         state = ButtonState.OutLine
                     ) {
-
+                        navController.popBackStack()
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     SmsRoundedButton(
@@ -109,7 +110,7 @@ fun CertificationComponent() {
                         text = "다음",
                         state = ButtonState.Normal
                     ) {
-
+                        navController.navigate("ForeignLanguage")
                     }
                 }
                 Spacer(modifier = Modifier.height(48.dp))

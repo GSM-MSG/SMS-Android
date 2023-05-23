@@ -13,8 +13,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
@@ -22,9 +22,10 @@ import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.WorkConditionComponent
 
 @OptIn(ExperimentalMaterialApi::class)
-@Preview
 @Composable
-fun WorkConditionScreen() {
+fun WorkConditionScreen(
+    navController: NavController
+) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
@@ -54,6 +55,7 @@ fun WorkConditionScreen() {
             WorkConditionComponent(
                 bottomSheetState = bottomSheetState,
                 wantWorkingCondition = selectedWorkingCondition.value,
+                navController = navController
             )
         }
     }

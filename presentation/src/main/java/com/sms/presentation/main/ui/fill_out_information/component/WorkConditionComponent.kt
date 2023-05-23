@@ -14,8 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.indicator.PagerIndicator
@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 fun WorkConditionComponent(
     wantWorkingCondition: String,
     bottomSheetState: ModalBottomSheetState,
+    navController: NavController
 ) {
     SMSTheme { colors, typography ->
         val wantWorkingArea = remember {
@@ -142,7 +143,7 @@ fun WorkConditionComponent(
                         text = "이전",
                         state = ButtonState.OutLine
                     ) {
-
+                        navController.popBackStack()
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     SmsRoundedButton(
@@ -152,22 +153,11 @@ fun WorkConditionComponent(
                         text = "다음",
                         state = ButtonState.Normal
                     ) {
-
+                        navController.navigate("MilitaryService")
                     }
                 }
                 Spacer(modifier = Modifier.height(48.dp))
             }
         }
     }
-
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Preview
-@Composable
-fun WorkConditionComponentPre() {
-    WorkConditionComponent(
-        wantWorkingCondition = "",
-        bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    )
 }
