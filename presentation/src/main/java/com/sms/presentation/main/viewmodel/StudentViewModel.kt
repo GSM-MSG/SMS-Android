@@ -1,5 +1,8 @@
 package com.sms.presentation.main.viewmodel
 
+import android.net.Uri
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
@@ -16,10 +19,44 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StudentViewModel @Inject constructor(
-    private val enterStudentInformationUseCase: EnterStudentInformationUseCase
+    private val enterStudentInformationUseCase: EnterStudentInformationUseCase,
 ) : ViewModel() {
     private val _enterInformationResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val enterInformationResponse: StateFlow<Event<Unit>> get() = _enterInformationResponse
+
+    private val major = mutableStateOf("")
+    private val techStack = mutableStateListOf("")
+    private val profileImageUri = mutableStateOf(Uri.EMPTY)
+    private val introduce = mutableStateOf("")
+    private val stuNum = mutableStateOf("")
+    private val portfolioUrl = mutableStateOf("")
+    private val contactEmail = mutableStateOf("")
+    private val formOfEmployment = mutableStateOf("")
+    private val gsmAuthenticationScore = mutableStateOf(0)
+    private val salary = mutableStateOf(0)
+    private val region = mutableStateListOf("")
+    private val languageCertificate = mutableStateListOf<CertificateInformationModel>()
+    private val dreamBookFileUrl = mutableStateListOf("")
+    private val militaryService = mutableStateOf("")
+    private val certificate = mutableStateListOf("")
+
+
+    fun setEnteredProfileInformation(
+        major: String,
+        techStack: List<String>,
+        profileImgUri: Uri,
+        introduce: String,
+        contactEmail: String,
+        portfolioUrl: String,
+    ) {
+        this.major.value = major
+        this.techStack.removeAll { true }
+        this.techStack.addAll(techStack)
+        this.profileImageUri.value = profileImgUri
+        this.introduce.value = introduce
+        this.contactEmail.value = contactEmail
+        this.portfolioUrl.value = portfolioUrl
+    }
 
     fun enterStudentInformation(
         major: String,
@@ -36,7 +73,7 @@ class StudentViewModel @Inject constructor(
         languageCertificate: List<CertificateInformationModel>,
         dreamBookFileUrl: String,
         militaryService: String,
-        certificate: List<String>
+        certificate: List<String>,
     ) = viewModelScope.launch {
         enterStudentInformationUseCase(
             EnterStudentInformationModel(
