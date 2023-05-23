@@ -1,8 +1,10 @@
 package com.msg.sms_android.modules
 
 import com.msg.sms.data.repository.AuthRepositoryImpl
+import com.msg.sms.data.repository.FileUploadRepositoryImpl
 import com.msg.sms.data.repository.StudentRepositoryImpl
 import com.msg.sms.domain.repository.AuthRepository
+import com.msg.sms.domain.repository.FileUploadRepository
 import com.msg.sms.domain.repository.StudentRepository
 import dagger.Binds
 import dagger.Module
@@ -22,4 +24,9 @@ abstract class RepositoryModule {
     abstract fun provideStudentRepository(
         studentRepositoryImpl: StudentRepositoryImpl
     ): StudentRepository
+
+    @Binds
+    abstract fun provideFileUploadRepository(
+        fileUploadRepositoryImpl: FileUploadRepositoryImpl
+    ): FileUploadRepository
 }
