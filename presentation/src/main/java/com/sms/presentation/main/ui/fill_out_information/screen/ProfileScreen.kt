@@ -1,6 +1,6 @@
-package com.sms.presentation.main.ui.fill_out_information
+package com.sms.presentation.main.ui.fill_out_information.screen
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -9,18 +9,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
+import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.ProfileComponent
 
 @OptIn(ExperimentalMaterialApi::class)
-@Preview
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    navController: NavController,
+) {
     val scrollState = rememberScrollState()
 
     val bottomSheetState =
@@ -61,12 +63,22 @@ fun ProfileScreen() {
                 leftIcon = { BackButtonIcon() },
                 rightIcon = null,
                 onClickLeftButton = {
-                    /* Todo(LeeHyeonbin) 버튼 클릭 시 뒤로 가기 기능 구현 */
                 }) {
             }
             SmsSpacer()
             Column(Modifier.verticalScroll(scrollState)) {
                 ProfileComponent(bottomSheetState, selectedMajor.value)
+                Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    SmsRoundedButton(
+                        text = "다음", modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                    ) {
+                        navController.navigate("SchoolLife")
+                    }
+                    Spacer(modifier = Modifier.height(48.dp))
+                }
             }
         }
     }

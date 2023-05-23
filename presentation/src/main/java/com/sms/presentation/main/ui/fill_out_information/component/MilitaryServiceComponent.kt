@@ -9,8 +9,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.component.button.ButtonState
-import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.indicator.PagerIndicator
 import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsCustomTextField
@@ -57,29 +55,6 @@ fun MilitaryServiceComponent(
                 setChangeText = selectedMilitaryService,
                 readOnly = true
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Row(modifier = Modifier.fillMaxWidth()) {
-                SmsRoundedButton(
-                    text = "이전",
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(48.dp),
-                    state = ButtonState.OutLine
-                ) {
-
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-                SmsRoundedButton(
-                    text = "다음",
-                    modifier = Modifier
-                        .weight(4f)
-                        .height(48.dp),
-                    state = ButtonState.Normal
-                ) {
-
-                }
-            }
-            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }

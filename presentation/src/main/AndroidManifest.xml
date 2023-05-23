@@ -3,6 +3,10 @@
 
     <application>
         <activity
+            android:name=".main.ui.fill_out_information.FillOutInformationActivity"
+            android:exported="false"
+            android:label="@string/title_activity_fill_out_information" />
+        <activity
             android:name=".main.ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login">
@@ -15,8 +19,7 @@
         <activity
             android:name=".main.ui.MainActivity"
             android:exported="false"
-            android:label="@string/title_activity_main">
-        </activity>
+            android:label="@string/title_activity_main" />
     </application>
 
 </manifest>
