@@ -42,7 +42,7 @@ class LoginActivity : ComponentActivity() {
     private fun observeLoginEvent() {
         viewModel.gAuthLoginRequest.observe(this) { event ->
             when (event) {
-                is Event.Success -> {
+                Event.Success -> {
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }

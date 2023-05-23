@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,8 +19,8 @@ import javax.inject.Inject
 class StudentViewModel @Inject constructor(
     private val enterStudentInformationUseCase: EnterStudentInformationUseCase
 ) : ViewModel() {
-    private val _enterInformationResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
-    val enterInformationResponse: StateFlow<Event<Unit>> get() = _enterInformationResponse
+    private val _enterInformationResponse = MutableStateFlow<Event>(Event.Loading)
+    val enterInformationResponse: StateFlow<Event> get() = _enterInformationResponse
 
     fun enterStudentInformation(
         major: String,
@@ -60,7 +61,7 @@ class StudentViewModel @Inject constructor(
             it.catch { remoteError ->
                 _enterInformationResponse.value = remoteError.errorHandling()
             }.collect {
-                _enterInformationResponse.value = Event.Success()
+                _enterInformationResponse.value = Event.Success
             }
         }.onFailure { error ->
             _enterInformationResponse.value = error.errorHandling()

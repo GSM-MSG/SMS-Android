@@ -1,59 +1,58 @@
 package com.sms.presentation.main.viewmodel.util
 
-sealed class Event<out T>(
-    val data: T? = null
+sealed class Event (
 ) {
 
-    object Loading : Event<Nothing>()
+    object Loading: Event()
 
     /**
      * 성공
      */
-    class Success<T>(data: T? = null) : Event<T>(data = data)
+    object Success: Event()
 
     /**
      * 400번 요청이 올바르지 않은 경우
      */
-    object BadRequest : Event<Nothing>()
+    object BadRequest: Event()
 
     /**
      * 401번 비인증 요청
      */
-    object Unauthorized : Event<Nothing>()
+    object Unauthorized: Event()
 
     /**
      * 403번 권한이 없음
      */
-    object ForBidden : Event<Nothing>()
+    object ForBidden: Event()
 
     /**
      * 404 찾을 수 없는 경우
      */
-    object NotFound : Event<Nothing>()
+    object NotFound: Event()
 
     /**
      * 406 맞는 규격이 없는 경우
      */
-    object NotAcceptable : Event<Nothing>()
+    object  NotAcceptable: Event()
 
     /**
      * 408 요청이 너무 오래 걸리는 경우
      */
-    object TimeOut : Event<Nothing>()
+    object TimeOut: Event()
 
     /**
      * 409 권한이 없을 때
      */
-    object Conflict : Event<Nothing>()
+    object Conflict: Event()
 
     /**
      * 50X 서버에러
      */
-    object Server : Event<Nothing>()
+    object Server: Event()
 
     /**
      * 예상치 못한 에러
      */
-    object UnKnown : Event<Nothing>()
+    object UnKnown: Event()
 
 }

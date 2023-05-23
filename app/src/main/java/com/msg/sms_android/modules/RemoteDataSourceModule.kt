@@ -2,8 +2,6 @@ package com.msg.sms_android.modules
 
 import com.msg.sms.data.remote.datasource.auth.RemoteAuthDataSource
 import com.msg.sms.data.remote.datasource.auth.RemoteAuthDataSourceImpl
-import com.msg.sms.data.remote.datasource.fileupload.RemoteFileUploadDataSource
-import com.msg.sms.data.remote.datasource.fileupload.RemoteFileUploadDataSourceImpl
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSource
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSourceImpl
 import dagger.Binds
@@ -21,11 +19,6 @@ abstract class RemoteDataSourceModule {
 
     @Binds
     abstract fun provideRemoteStudentDataSource(
-        remoteStudentDataSourceImpl: RemoteStudentDataSourceImpl
+        remoteStudentDataSource: RemoteStudentDataSourceImpl
     ): RemoteStudentDataSource
-
-    @Binds
-    abstract fun provideRemoteFileUploadDataSource(
-        remoteFileUploadDataSourceImpl: RemoteFileUploadDataSourceImpl
-    ): RemoteFileUploadDataSource
 }
