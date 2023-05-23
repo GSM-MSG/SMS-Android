@@ -6,4 +6,6 @@ import okhttp3.MultipartBody
 
 interface RemoteFileUploadDataSource {
     suspend fun imageUpload(file: MultipartBody.Part): Flow<FileUploadResponse>
+
+    suspend fun dreamBookUpload(file: MultipartBody.Part): Flow<FileUploadResponse>
 }
