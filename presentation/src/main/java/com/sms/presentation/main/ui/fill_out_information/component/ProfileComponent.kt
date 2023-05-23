@@ -4,15 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.indicator.PagerIndicator
 import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsCustomTextField
@@ -81,15 +78,6 @@ fun ProfileComponent(
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "세부스택", style = typography.body2)
             SmsTextField(placeHolder = "예시) HTML, CSS, C#", modifier = Modifier.fillMaxWidth())
-            Spacer(modifier = Modifier.height(32.dp))
-            SmsRoundedButton(
-                text = "다음", modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-            ) {
-
-            }
-            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }
@@ -100,6 +88,6 @@ fun ProfileComponent(
 fun ProfileComponentPre() {
     ProfileComponent(
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
-        "FrontEnd"
+        "FrontEnd",
     )
 }
