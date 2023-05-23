@@ -68,7 +68,7 @@ fun ProfileComponent(
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "사진", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            if (profileImageUri.value == null)
+            if (profileImageUri.value == Uri.EMPTY)
                 ProfileIcon(modifier = Modifier.clickable {
                     galleryLauncher.launch("image/*")
                 })
