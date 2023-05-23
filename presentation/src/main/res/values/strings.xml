@@ -3,4 +3,5 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_page_topcomponent_text_english">STUDENT\nMANAGEMENT\nSERVICE</string>
     <string name="login_page_topcomponent_text_korean">학생 정보 통합관리 서비스</string>
+    <string name="title_activity_fill_out_information">FillOutInformationActivity</string>
 </resources>

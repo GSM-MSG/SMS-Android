@@ -23,4 +23,6 @@ object Versions {
     const val GAUTH = "1.1.0"
 
     const val PREFERENCES = "1.0.0"
+
+    const val NAVIGATION = "2.5.3"
 }
