@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sms.presentation.main.ui.fill_out_information.screen.*
 
 class FillOutInformationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

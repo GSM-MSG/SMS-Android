@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.fill_out_information
+package com.sms.presentation.main.ui.fill_out_information.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
