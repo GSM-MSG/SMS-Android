@@ -63,7 +63,6 @@ fun ProfileScreen(
                 leftIcon = { BackButtonIcon() },
                 rightIcon = null,
                 onClickLeftButton = {
-
                 }) {
             }
             SmsSpacer()
