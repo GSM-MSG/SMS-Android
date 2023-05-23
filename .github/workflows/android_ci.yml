@@ -50,7 +50,7 @@ jobs:
           webhook: ${{ secrets.SMS_DISCORD_WEBHOOK }}
           status: ${{ job.status }}
           image: ${{ secrets.SUCCESS_IMAGE }}
-          description: CI 성공하였습니당 ~
+          description: 정답이다, 연금술사!
           color: 00FF00
           url: "https://github.com/sarisia/actions-status-discord"
           username: SMS CI 봇
