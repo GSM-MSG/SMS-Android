@@ -88,6 +88,6 @@ fun ProfileComponent(
 fun ProfileComponentPre() {
     ProfileComponent(
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
-        "FrontEnd",
+        "FrontEnd"
     )
 }
