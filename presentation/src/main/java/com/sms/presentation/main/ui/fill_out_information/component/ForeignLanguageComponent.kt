@@ -105,11 +105,7 @@ fun ForeignLanguageComponent(
                 }
             }
             Spacer(modifier = Modifier.height(48.dp))
-            Column(
-                modifier = Modifier.padding(
-                    horizontal = 20.dp
-                )
-            ) {
+            Column {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
