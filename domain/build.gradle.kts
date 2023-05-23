@@ -41,4 +41,6 @@ dependencies {
 
     implementation(Dependency.Google.HILT)
     kapt(Dependency.Google.HILT_COMPILER)
+
+    implementation(Dependency.Libraries.OKHTTP)
 }

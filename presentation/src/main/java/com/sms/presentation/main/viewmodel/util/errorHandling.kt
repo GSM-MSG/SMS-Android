@@ -3,7 +3,7 @@ package com.sms.presentation.main.viewmodel.util
 import android.util.Log
 import com.msg.sms.domain.exception.*
 
-suspend fun Throwable.errorHandling(
+suspend fun <T> Throwable.errorHandling(
     badRequestAction: suspend () -> Unit = {},
     unauthorizedAction: suspend () -> Unit = {},
     forBiddenAction: suspend () -> Unit = {},
@@ -13,7 +13,7 @@ suspend fun Throwable.errorHandling(
     conflictAction: suspend () -> Unit = {},
     serverAction: suspend () -> Unit = {},
     unknownAction: suspend () -> Unit = {},
-): Event =
+): Event<T> =
     when (this) {
         is BadRequestException -> {
             errorLog("BadRequestException", message)
