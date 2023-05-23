@@ -1,13 +1,24 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.indicator.PagerIndicator
@@ -17,6 +28,7 @@ import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.icon.ProfileIcon
 import com.msg.sms.design.theme.SMSTheme
+import com.sms.presentation.R
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -25,6 +37,15 @@ fun ProfileComponent(
     bottomSheetScaffoldState: ModalBottomSheetState,
     selectedMajor: String
 ) {
+    val imageUri = remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            imageUri.value = uri
+        }
+
     SMSTheme { _, typography ->
         val coroutineScope = rememberCoroutineScope()
 
@@ -48,7 +69,20 @@ fun ProfileComponent(
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "사진", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            ProfileIcon()
+            if (imageUri.value == null)
+                ProfileIcon(modifier = Modifier.clickable {
+                    galleryLauncher.launch("image/*")
+                })
+            else
+                Image(
+                    painter = painterResource(id = R.drawable.login_page_bg),
+                    contentDescription = "User Profile Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(107.dp)
+                        .height(106.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "자기소개", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
