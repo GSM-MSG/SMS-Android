@@ -12,4 +12,10 @@ interface FileUploadAPI {
     suspend fun imageUpload(
         @Part file: MultipartBody.Part
     ): FileUploadResponse
+
+    @Multipart
+    @POST("file")
+    suspend fun dreamBookUpload(
+        @Part file: MultipartBody.Part
+    ): FileUploadResponse
 }
