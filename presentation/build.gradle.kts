@@ -86,6 +86,8 @@ dependencies {
     implementation(Dependency.Navigation.NAVIGATION)
 
     implementation(Dependency.Libraries.OKHTTP)
+
+    implementation(Dependency.Libraries.COIL)
 }
 
 fun getApiKey(propertyKey: String): String {
