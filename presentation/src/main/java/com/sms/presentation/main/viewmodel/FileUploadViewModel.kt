@@ -19,7 +19,7 @@ class FileUploadViewModel @Inject constructor(
     private val imageUploadUseCase: ImageUploadUseCase
 ) : ViewModel() {
     private val _imageUploadResponse =
-        MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading())
+        MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
     val imageUploadResponse: StateFlow<Event<FileUploadResponseModel>> get() = _imageUploadResponse
 
     fun imageUpload(file: MultipartBody.Part) = viewModelScope.launch {

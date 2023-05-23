@@ -18,7 +18,7 @@ import javax.inject.Inject
 class StudentViewModel @Inject constructor(
     private val enterStudentInformationUseCase: EnterStudentInformationUseCase
 ) : ViewModel() {
-    private val _enterInformationResponse = MutableStateFlow<Event<Unit>>(Event.Loading())
+    private val _enterInformationResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val enterInformationResponse: StateFlow<Event<Unit>> get() = _enterInformationResponse
 
     fun enterStudentInformation(

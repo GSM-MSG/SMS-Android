@@ -18,47 +18,47 @@ suspend fun <T> Throwable.errorHandling(
         is BadRequestException -> {
             errorLog("BadRequestException", message)
             badRequestAction()
-            Event.BadRequest()
+            Event.BadRequest
         }
         is UnauthorizedException, is NeedLoginException -> {
             errorLog("UnauthorizedException", message)
             unauthorizedAction()
-            Event.Unauthorized()
+            Event.Unauthorized
         }
         is ForBiddenException -> {
             errorLog("ForBiddenException", message)
             forBiddenAction()
-            Event.ForBidden()
+            Event.ForBidden
         }
         is NotFoundException -> {
             errorLog("NotFoundException", message)
             notFoundAction()
-            Event.NotFound()
+            Event.NotFound
         }
         is NotAcceptableException -> {
             errorLog("NotAcceptableException", message)
             notAcceptableAction()
-            Event.NotAcceptable()
+            Event.NotAcceptable
         }
         is TimeOutException -> {
             errorLog("TimeOutException", message)
             timeOutAction()
-            Event.TimeOut()
+            Event.TimeOut
         }
         is ConflictException -> {
             errorLog("ConflictException", message)
             conflictAction()
-            Event.Conflict()
+            Event.Conflict
         }
         is ServerException -> {
             errorLog("ServerException", message)
             serverAction()
-            Event.Server()
+            Event.Server
         }
         else -> {
             errorLog("UnKnownException", message)
             unknownAction()
-            Event.UnKnown()
+            Event.UnKnown
         }
     }
 
