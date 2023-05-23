@@ -13,10 +13,12 @@ object Dependency {
     }
 
     object Compose {
-        const val ACTIVITY_COMPOSE = "androidx.activity:activity-compose:${Versions.ACTIVITY_COMPOSE}"
+        const val ACTIVITY_COMPOSE =
+            "androidx.activity:activity-compose:${Versions.ACTIVITY_COMPOSE}"
         const val COMPOSE = "androidx.compose.ui:ui:${Versions.COMPOSE}"
         const val COMPOSE_PREVIEW = "androidx.compose.ui:ui-tooling-preview:${Versions.COMPOSE}"
-        const val COMPOSE_MATERIAL = "androidx.compose.material:material:${Versions.COMPOSE_MATERIAL}"
+        const val COMPOSE_MATERIAL =
+            "androidx.compose.material:material:${Versions.COMPOSE_MATERIAL}"
         const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling:${Versions.COMPOSE}"
     }
 
@@ -51,5 +53,9 @@ object Dependency {
 
     object DataStore {
         const val PREFERENCES = "androidx.datastore:datastore-preferences:${Versions.PREFERENCES}"
+    }
+
+    object Navigation {
+        const val NAVIGATION = "androidx.navigation:navigation-compose:${Versions.NAVIGATION}"
     }
 }
