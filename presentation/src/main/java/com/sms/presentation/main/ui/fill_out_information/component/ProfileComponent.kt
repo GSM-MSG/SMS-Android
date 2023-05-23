@@ -36,13 +36,13 @@ fun ProfileComponent(
     bottomSheetScaffoldState: ModalBottomSheetState,
     selectedMajor: String
 ) {
-    val imageUri = remember {
-        mutableStateOf<Uri?>(null)
+    val profileImageUri = remember {
+        mutableStateOf(Uri.EMPTY)
     }
 
     val galleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            imageUri.value = uri
+            profileImageUri.value = uri
         }
 
     SMSTheme { _, typography ->
@@ -68,13 +68,13 @@ fun ProfileComponent(
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "사진", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            if (imageUri.value == null)
+            if (profileImageUri.value == null)
                 ProfileIcon(modifier = Modifier.clickable {
                     galleryLauncher.launch("image/*")
                 })
             else
                 Image(
-                    painter = rememberAsyncImagePainter(imageUri.value),
+                    painter = rememberAsyncImagePainter(profileImageUri.value),
                     contentDescription = "User Profile Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
