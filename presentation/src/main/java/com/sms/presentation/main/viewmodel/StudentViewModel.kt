@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
+import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,6 +56,17 @@ class StudentViewModel @Inject constructor(
         this.introduce.value = introduce
         this.contactEmail.value = contactEmail
         this.portfolioUrl.value = portfolioUrl
+    }
+
+    fun getEnteredProfileInformation(): ProfileData {
+        return ProfileData(
+            profileImageUri = profileImageUri.value,
+            introduce = introduce.value,
+            contactEmail = contactEmail.value,
+            major = major.value,
+            portfolioUrl = portfolioUrl.value,
+            techStack = techStack.value
+        )
     }
 
     fun enterStudentInformation(
