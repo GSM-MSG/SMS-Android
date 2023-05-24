@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +24,7 @@ import com.sms.presentation.main.viewmodel.StudentViewModel
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    viewModel: StudentViewModel
+    viewModel: StudentViewModel,
 ) {
     val scrollState = rememberScrollState()
 
@@ -66,10 +67,12 @@ fun ProfileScreen(
                 rightIcon = null,
                 onClickLeftButton = {
                 }) {
+
             }
             SmsSpacer()
             Column(Modifier.verticalScroll(scrollState)) {
-                ProfileComponent(bottomSheetState, selectedMajor.value)
+                ProfileComponent(bottomSheetState, selectedMajor.value, enteredData = { aa: String, _: String, _: String, _: String, _: String, _: Uri ->
+                })
                 Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Spacer(modifier = Modifier.height(32.dp))
                     SmsRoundedButton(
