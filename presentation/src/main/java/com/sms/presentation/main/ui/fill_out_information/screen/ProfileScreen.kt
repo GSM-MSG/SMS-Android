@@ -51,6 +51,8 @@ fun ProfileScreen(
         mutableStateOf(Uri.EMPTY)
     }
 
+    val data = viewModel.getEnteredProfileInformation()
+
     val list = listOf(
         "FrontEnd",
         "BackEnd",
@@ -96,7 +98,9 @@ fun ProfileScreen(
                         portfolioUrl.value = getPortfolio
                         contactEmail.value = getContactEmail
                         profileImageUri.value = getProfileImageUri
-                    })
+                    } ,
+                    data
+                )
                 Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Spacer(modifier = Modifier.height(32.dp))
                     SmsRoundedButton(
