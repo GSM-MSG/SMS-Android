@@ -25,7 +25,7 @@ class StudentViewModel @Inject constructor(
     val enterInformationResponse: StateFlow<Event<Unit>> get() = _enterInformationResponse
 
     private val major = mutableStateOf("")
-    private val techStack = mutableStateListOf("")
+    private val techStack = mutableStateOf("")
     private val profileImageUri = mutableStateOf(Uri.EMPTY)
     private val introduce = mutableStateOf("")
     private val stuNum = mutableStateOf("")
@@ -43,15 +43,14 @@ class StudentViewModel @Inject constructor(
 
     fun setEnteredProfileInformation(
         major: String,
-        techStack: List<String>,
+        techStack: String,
         profileImgUri: Uri,
         introduce: String,
         contactEmail: String,
         portfolioUrl: String,
     ) {
         this.major.value = major
-        this.techStack.removeAll { true }
-        this.techStack.addAll(techStack)
+        this.techStack.value = techStack
         this.profileImageUri.value = profileImgUri
         this.introduce.value = introduce
         this.contactEmail.value = contactEmail
