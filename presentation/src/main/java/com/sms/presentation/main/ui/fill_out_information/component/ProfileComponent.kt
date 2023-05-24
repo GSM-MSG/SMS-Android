@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -35,7 +36,7 @@ import kotlinx.coroutines.launch
 fun ProfileComponent(
     bottomSheetScaffoldState: ModalBottomSheetState,
     selectedMajor: String,
-    enteredData: (major: String, techStack: String, introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit,
+    enteredData: (techStack: String, introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit,
 ) {
     val profileImageUri = remember {
         mutableStateOf(Uri.EMPTY)
@@ -49,9 +50,6 @@ fun ProfileComponent(
     SMSTheme { _, typography ->
         val coroutineScope = rememberCoroutineScope()
 
-        val major = remember {
-            mutableStateOf("")
-        }
         val techStack = remember {
             mutableStateOf("")
         }
@@ -64,7 +62,14 @@ fun ProfileComponent(
         val contactEmail = remember {
             mutableStateOf("")
         }
-//        enteredData(major.value, techStack.value, introduce.value, portfolioUrl.value, contactEmail.value, profileImageUri.value)
+
+        enteredData(
+            techStack.value,
+            introduce.value,
+            portfolioUrl.value,
+            contactEmail.value,
+            profileImageUri.value ?: Uri.EMPTY
+        )
 
         Column(
             modifier = Modifier
@@ -84,7 +89,8 @@ fun ProfileComponent(
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "사진", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            if (profileImageUri.value == Uri.EMPTY)
+            Log.d("TAG", "ProfileComponent: ${profileImageUri.value}")
+            if (profileImageUri.value == Uri.EMPTY || profileImageUri.value == null)
                 ProfileIcon(modifier = Modifier.clickable {
                     galleryLauncher.launch("image/*")
                 })
@@ -124,9 +130,7 @@ fun ProfileComponent(
                     }
                 },
                 setChangeText = selectedMajor
-            ) {
-                major.value = it
-            }
+            )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "포트폴리오 URL", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
@@ -148,5 +152,5 @@ fun ProfileComponent(
 fun ProfileComponentPre() {
     ProfileComponent(
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden), "FrontEnd"
-    ) { _: String, _: String, _: String, _: String, _: String, _: Uri -> }
+    ) { _: String, _: String, _: String, _: String, _: Uri -> }
 }
