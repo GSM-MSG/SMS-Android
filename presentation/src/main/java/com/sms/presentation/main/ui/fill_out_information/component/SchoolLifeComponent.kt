@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,9 +19,13 @@ import com.msg.sms.design.theme.SMSTheme
 
 
 @Composable
-fun SchoolLifeComponent(addDreamBook: () -> Unit) {
+fun SchoolLifeComponent(
+    fileName: String,
+    addDreamBook: () -> Unit
+) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    Log.d("fileName", fileName)
 
     SMSTheme { _, typography ->
         Column(modifier = Modifier.padding(end = 20.dp, start = 20.dp, top = 20.dp)) {
@@ -42,7 +47,7 @@ fun SchoolLifeComponent(addDreamBook: () -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "드림북", style = typography.body2)
             SmsTextField(
-                placeHolder = "+ hwp 파일 추가",
+                placeHolder = fileName.ifBlank { "+ hwp 파일 추가" },
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focusRequester)

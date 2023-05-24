@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.button.ButtonState
@@ -18,6 +19,8 @@ import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.SchoolLifeComponent
+import com.sms.presentation.main.ui.util.getPathFromUri
+import java.io.File
 
 @Composable
 fun SchoolLifeScreen(
@@ -32,6 +35,16 @@ fun SchoolLifeScreen(
             dreamBookFileUri.value = uri
         }
 
+    val fileName =
+        if (dreamBookFileUri.value == null)
+            "+ hwp 파일 추가"
+        else File(
+            getPathFromUri(
+                LocalContext.current,
+                dreamBookFileUri.value
+            )
+        ).name
+
     SMSTheme { colors, _ ->
         Column(
             modifier = Modifier
@@ -42,12 +55,14 @@ fun SchoolLifeScreen(
 
             }
             SmsSpacer()
-            SchoolLifeComponent(addDreamBook = {
+            SchoolLifeComponent(fileName = fileName) {
                 localStorageLauncher.launch("application/*")
-            })
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)) {
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+            ) {
                 Spacer(modifier = Modifier.weight(1f))
                 Row(modifier = Modifier.fillMaxWidth()) {
                     SmsRoundedButton(
