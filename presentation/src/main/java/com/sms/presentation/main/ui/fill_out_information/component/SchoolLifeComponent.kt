@@ -1,11 +1,15 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.indicator.PagerIndicator
 import com.msg.sms.design.component.text.SmsTitleText
@@ -15,6 +19,9 @@ import com.msg.sms.design.theme.SMSTheme
 
 @Composable
 fun SchoolLifeComponent(addDreamBook: () -> Unit) {
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+
     SMSTheme { _, typography ->
         Column(modifier = Modifier.padding(end = 20.dp, start = 20.dp, top = 20.dp)) {
             Box(
@@ -38,8 +45,12 @@ fun SchoolLifeComponent(addDreamBook: () -> Unit) {
                 placeHolder = "+ hwp 파일 추가",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        addDreamBook()
+                    .focusRequester(focusRequester)
+                    .onFocusChanged {
+                        if (it.hasFocus) {
+                            addDreamBook()
+                            focusManager.clearFocus()
+                        }
                     },
                 readOnly = true,
             )
