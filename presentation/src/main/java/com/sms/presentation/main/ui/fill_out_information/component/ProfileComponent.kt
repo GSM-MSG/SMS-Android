@@ -90,23 +90,23 @@ fun ProfileComponent(
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "사진", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            if (data.profileImageUri == Uri.EMPTY) {
-                profileImageUri.value = data.profileImageUri
-                if (profileImageUri.value == null)
-                    ProfileIcon(modifier = Modifier.clickable {
-                        galleryLauncher.launch("image/*")
-                    })
-                else
-                    Image(
-                        painter = rememberAsyncImagePainter(profileImageUri.value),
-                        contentDescription = "User Profile Image",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .width(107.dp)
-                            .height(106.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                    )
-            }
+            if (profileImageUri.value == Uri.EMPTY || profileImageUri.value == null) {
+                if (profileImageUri.value == Uri.EMPTY) {
+                    profileImageUri.value = data.profileImageUri
+                }
+                ProfileIcon(modifier = Modifier.clickable {
+                    galleryLauncher.launch("image/*")
+                })
+            } else
+                Image(
+                    painter = rememberAsyncImagePainter(profileImageUri.value),
+                    contentDescription = "User Profile Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(107.dp)
+                        .height(106.dp)
+                        .clip(RoundedCornerShape(5.dp))
+                )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "자기소개", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
