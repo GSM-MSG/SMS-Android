@@ -6,10 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
@@ -32,12 +29,17 @@ import kotlinx.coroutines.launch
 fun WorkConditionComponent(
     wantWorkingCondition: String,
     bottomSheetState: ModalBottomSheetState,
-    navController: NavController
+    navController: NavController,
 ) {
     SMSTheme { colors, typography ->
         val wantWorkingArea = remember {
             mutableStateListOf("")
         }
+
+        val wantPayroll = remember {
+            mutableStateOf("")
+        }
+
         val coroutineScope = rememberCoroutineScope()
 
         Column(
@@ -87,8 +89,12 @@ fun WorkConditionComponent(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Done
-                        )
-                    )
+                        ),
+                        setText = wantPayroll.value,
+                        onValueChange = { wantPayroll.value = it }
+                    ) {
+
+                    }
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(text = "근무 지역", style = typography.body2)
                     Spacer(modifier = Modifier.height(8.dp))
