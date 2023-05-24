@@ -1,10 +1,10 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,10 +23,28 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProfileComponent(
     bottomSheetScaffoldState: ModalBottomSheetState,
-    selectedMajor: String
+    selectedMajor: String,
+    enteredData: (major: String, techStack: String, introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit,
 ) {
     SMSTheme { _, typography ->
         val coroutineScope = rememberCoroutineScope()
+
+        val major = remember {
+            mutableStateOf("")
+        }
+        val techStack = remember {
+            mutableStateOf("")
+        }
+        val introduce = remember {
+            mutableStateOf("")
+        }
+        val portfolioUrl = remember {
+            mutableStateOf("")
+        }
+        val contactEmail = remember {
+            mutableStateOf("")
+        }
+//        enteredData(major.value, techStack.value, introduce.value, portfolioUrl.value, contactEmail.value, profileImageUri.value)
 
         Column(
             modifier = Modifier
@@ -40,9 +58,7 @@ fun ProfileComponent(
                 PagerIndicator(
                     modifier = Modifier.align(
                         Alignment.CenterEnd
-                    ),
-                    indexOfPointingNumber = 0,
-                    size = 6
+                    ), indexOfPointingNumber = 0, size = 6
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
@@ -52,16 +68,21 @@ fun ProfileComponent(
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "자기소개", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            SmsTextField(placeHolder = "1줄 자기소개 입력", modifier = Modifier.fillMaxWidth())
+            SmsTextField(placeHolder = "1줄 자기소개 입력", modifier = Modifier.fillMaxWidth()) {
+                introduce.value = it
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "이메일", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            SmsTextField(placeHolder = "공개용 이메일 입력", modifier = Modifier.fillMaxWidth())
+            SmsTextField(placeHolder = "공개용 이메일 입력", modifier = Modifier.fillMaxWidth()) {
+                contactEmail.value = it
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "분야", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
             SmsCustomTextField(
-                placeHolder = "FrondEnd", modifier = Modifier.fillMaxWidth(),
+                placeHolder = "FrondEnd",
+                modifier = Modifier.fillMaxWidth(),
                 endIcon = { OpenButtonIcon() },
                 readOnly = true,
                 clickAction = {
@@ -70,14 +91,20 @@ fun ProfileComponent(
                     }
                 },
                 setChangeText = selectedMajor
-            )
+            ) {
+                major.value = it
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "포트폴리오 URL", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            SmsTextField(placeHolder = "https://", modifier = Modifier.fillMaxWidth())
+            SmsTextField(placeHolder = "https://", modifier = Modifier.fillMaxWidth()) {
+                portfolioUrl.value = it
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "세부스택", style = typography.body2)
-            SmsTextField(placeHolder = "예시) HTML, CSS, C#", modifier = Modifier.fillMaxWidth())
+            SmsTextField(placeHolder = "예시) HTML, CSS, C#", modifier = Modifier.fillMaxWidth()) {
+                techStack.value = it
+            }
         }
     }
 }
@@ -87,7 +114,6 @@ fun ProfileComponent(
 @Composable
 fun ProfileComponentPre() {
     ProfileComponent(
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
-        "FrontEnd"
-    )
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden), "FrontEnd"
+    ) { _: String, _: String, _: String, _: String, _: String, _: Uri -> }
 }
