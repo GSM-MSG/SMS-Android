@@ -28,11 +28,12 @@ fun SmsTextField(
     readOnly: Boolean = false,
     focusRequester: FocusRequester = FocusRequester(),
     errorText: String = "Error",
+    setText: String = "",
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     maxLines: Int = Int.MAX_VALUE,
     onValueChange: (String) -> Unit = {},
 ) {
-    var text by remember { mutableStateOf("") }
+    var text by remember { mutableStateOf(setText) }
     val isFocused = remember { mutableStateOf(false) }
     SMSTheme { colors, typography ->
         Column {
