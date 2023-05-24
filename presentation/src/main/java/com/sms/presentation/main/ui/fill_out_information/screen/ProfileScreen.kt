@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,6 +34,21 @@ fun ProfileScreen(
 
     val selectedMajor = remember {
         mutableStateOf("FrontEnd")
+    }
+    val techStack = remember {
+        mutableStateOf("")
+    }
+    val introduce = remember {
+        mutableStateOf("")
+    }
+    val portfolioUrl = remember {
+        mutableStateOf("")
+    }
+    val contactEmail = remember {
+        mutableStateOf("")
+    }
+    val profileImageUri = remember {
+        mutableStateOf(Uri.EMPTY)
     }
 
     val list = listOf(
@@ -67,12 +83,20 @@ fun ProfileScreen(
                 rightIcon = null,
                 onClickLeftButton = {
                 }) {
-
             }
             SmsSpacer()
             Column(Modifier.verticalScroll(scrollState)) {
-                ProfileComponent(bottomSheetState, selectedMajor.value, enteredData = { aa: String, _: String, _: String, _: String, _: String, _: Uri ->
-                })
+
+                ProfileComponent(
+                    bottomSheetState,
+                    selectedMajor.value,
+                    enteredData = { getTechStack: String, getIntroduce: String, getPortfolio: String, getContactEmail: String, getProfileImageUri: Uri ->
+                        techStack.value = getTechStack
+                        introduce.value = getIntroduce
+                        portfolioUrl.value = getPortfolio
+                        contactEmail.value = getContactEmail
+                        profileImageUri.value = getProfileImageUri
+                    })
                 Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Spacer(modifier = Modifier.height(32.dp))
                     SmsRoundedButton(
@@ -80,6 +104,18 @@ fun ProfileScreen(
                             .fillMaxWidth()
                             .height(48.dp)
                     ) {
+                        Log.d(
+                            "TAG",
+                            "ProfileScreen: ${selectedMajor.value}, ${techStack.value}, ${introduce.value}, ${portfolioUrl.value}, ${contactEmail.value}, ${profileImageUri.value}"
+                        )
+                        viewModel.setEnteredProfileInformation(
+                            major = selectedMajor.value,
+                            techStack = techStack.value,
+                            profileImgUri = profileImageUri.value,
+                            introduce = introduce.value,
+                            contactEmail = contactEmail.value,
+                            portfolioUrl = portfolioUrl.value
+                        )
                         navController.navigate("SchoolLife")
                     }
                     Spacer(modifier = Modifier.height(48.dp))
