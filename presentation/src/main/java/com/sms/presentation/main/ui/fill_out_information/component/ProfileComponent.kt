@@ -80,7 +80,7 @@ fun ProfileComponent(
                     modifier = Modifier
                         .width(107.dp)
                         .height(106.dp)
-                        .clip(RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(5.dp))
                 )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "자기소개", style = typography.body2)
