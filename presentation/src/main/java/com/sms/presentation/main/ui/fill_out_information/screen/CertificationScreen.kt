@@ -16,15 +16,17 @@ import com.sms.presentation.main.viewmodel.StudentViewModel
 @Composable
 fun CertificationScreen(
     navController: NavController,
-    viewModel: StudentViewModel
+    viewModel: StudentViewModel,
 ) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .background(Color.White)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+    ) {
         TopBarComponent(text = "정보기입", leftIcon = { BackButtonIcon() }, rightIcon = null) {
 
         }
         SmsSpacer()
-        CertificationComponent(navController = navController)
+        CertificationComponent(navController = navController, viewModel = viewModel)
     }
 }
