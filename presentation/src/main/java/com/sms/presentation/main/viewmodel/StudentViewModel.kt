@@ -9,6 +9,7 @@ import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
 import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
+import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,12 +36,22 @@ class StudentViewModel @Inject constructor(
     private val formOfEmployment = mutableStateOf("")
     private val gsmAuthenticationScore = mutableStateOf(0)
     private val salary = mutableStateOf(0)
-    private val region = mutableStateListOf("")
+    private val region = mutableStateListOf<String>()
     private val languageCertificate = mutableStateListOf<CertificateInformationModel>()
     private val dreamBookFileUrl = mutableStateListOf("")
     private val militaryService = mutableStateOf("")
     private val certificate = mutableStateListOf("")
 
+    fun getEnteredProfileInformation(): ProfileData {
+        return ProfileData(
+            profileImageUri = profileImageUri.value,
+            introduce = introduce.value,
+            contactEmail = contactEmail.value,
+            major = major.value,
+            portfolioUrl = portfolioUrl.value,
+            techStack = techStack.value
+        )
+    }
 
     fun setEnteredProfileInformation(
         major: String,
@@ -58,15 +69,23 @@ class StudentViewModel @Inject constructor(
         this.portfolioUrl.value = portfolioUrl
     }
 
-    fun getEnteredProfileInformation(): ProfileData {
-        return ProfileData(
-            profileImageUri = profileImageUri.value,
-            introduce = introduce.value,
-            contactEmail = contactEmail.value,
-            major = major.value,
-            portfolioUrl = portfolioUrl.value,
-            techStack = techStack.value
+    fun getEnteredWorkConditionInformation(): WorkConditionData {
+        return WorkConditionData(
+            formOfEmployment = formOfEmployment.value,
+            salary = salary.value.toString(),
+            region = region
         )
+    }
+
+    fun setEnteredWorkConditionInformation(
+        formOfEmployment: String,
+        salary: String,
+        region: List<String>,
+    ) {
+        this.formOfEmployment.value = formOfEmployment
+        this.salary.value = salary.toInt()
+        this.region.removeAll { !region.contains(it) }
+        this.region.addAll(region.filter { !this.region.contains(it) })
     }
 
     fun enterStudentInformation(
