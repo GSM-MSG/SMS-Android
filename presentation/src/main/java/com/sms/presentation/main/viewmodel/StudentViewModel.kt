@@ -37,7 +37,7 @@ class StudentViewModel @Inject constructor(
     private val formOfEmployment = mutableStateOf("")
     private val gsmAuthenticationScore = mutableStateOf(0)
     private val salary = mutableStateOf(0)
-    private val region = mutableStateListOf<String>()
+    private val region = mutableStateListOf("")
     private val languageCertificate = mutableStateListOf<CertificateInformationModel>()
     private val dreamBookFileUrl = mutableStateListOf("")
     private val militaryService = mutableStateOf("")
