@@ -27,20 +27,22 @@ import com.sms.presentation.main.viewmodel.StudentViewModel
 @Composable
 fun MilitaryServiceScreen(
     navController: NavController,
-    viewModel: StudentViewModel
+    viewModel: StudentViewModel,
 ) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val selectedMilitaryService = remember {
         mutableStateOf("")
     }
+
+    val data = viewModel.getEnteredMilitaryServiceInformation()
     val militaryServiceServiceList = listOf("병특 희망", "희망하지 않음", "상관없음", "해당 사항 없음")
     ModalBottomSheetLayout(
         sheetContent = {
             SelectorBottomSheet(
                 list = militaryServiceServiceList,
                 bottomSheetState = bottomSheetState,
-                selected = selectedMilitaryService.value,
+                selected = if (selectedMilitaryService.value == "") data.militaryService else selectedMilitaryService.value,
                 itemChange = { selectedMilitaryService.value = it }
             )
         },
@@ -58,7 +60,7 @@ fun MilitaryServiceScreen(
             SmsSpacer()
             MilitaryServiceComponent(
                 bottomSheetState = bottomSheetState,
-                selectedMilitaryService = selectedMilitaryService.value
+                selectedMilitaryService = if (selectedMilitaryService.value == "") data.militaryService else selectedMilitaryService.value
             )
             Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.weight(1f))
@@ -78,8 +80,10 @@ fun MilitaryServiceScreen(
                         modifier = Modifier
                             .weight(4f)
                             .height(48.dp),
-                        state = ButtonState.Normal
+                        state = ButtonState.Normal,
+                        enabled = selectedMilitaryService.value != "" || (selectedMilitaryService.value == "" && data.militaryService != "")
                     ) {
+                        viewModel.setEnteredMilitaryServiceInformation(if (selectedMilitaryService.value == "") data.militaryService else selectedMilitaryService.value)
                         navController.navigate("Certification")
                     }
                 }
