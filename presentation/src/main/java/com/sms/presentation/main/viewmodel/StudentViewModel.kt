@@ -1,10 +1,16 @@
 package com.sms.presentation.main.viewmodel
 
+import android.net.Uri
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
+import com.sms.presentation.main.ui.fill_out_information.data.MilitaryServiceData
+import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
+import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,10 +22,80 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StudentViewModel @Inject constructor(
-    private val enterStudentInformationUseCase: EnterStudentInformationUseCase
+    private val enterStudentInformationUseCase: EnterStudentInformationUseCase,
 ) : ViewModel() {
     private val _enterInformationResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val enterInformationResponse: StateFlow<Event<Unit>> get() = _enterInformationResponse
+
+    private val major = mutableStateOf("")
+    private val techStack = mutableStateOf("")
+    private val profileImageUri = mutableStateOf(Uri.EMPTY)
+    private val introduce = mutableStateOf("")
+    private val stuNum = mutableStateOf("")
+    private val portfolioUrl = mutableStateOf("")
+    private val contactEmail = mutableStateOf("")
+    private val formOfEmployment = mutableStateOf("")
+    private val gsmAuthenticationScore = mutableStateOf(0)
+    private val salary = mutableStateOf(0)
+    private val region = mutableStateListOf<String>()
+    private val languageCertificate = mutableStateListOf<CertificateInformationModel>()
+    private val dreamBookFileUrl = mutableStateListOf("")
+    private val militaryService = mutableStateOf("")
+    private val certificate = mutableStateListOf("")
+
+    fun getEnteredProfileInformation(): ProfileData {
+        return ProfileData(
+            profileImageUri = profileImageUri.value,
+            introduce = introduce.value,
+            contactEmail = contactEmail.value,
+            major = major.value,
+            portfolioUrl = portfolioUrl.value,
+            techStack = techStack.value
+        )
+    }
+
+    fun setEnteredProfileInformation(
+        major: String,
+        techStack: String,
+        profileImgUri: Uri,
+        introduce: String,
+        contactEmail: String,
+        portfolioUrl: String,
+    ) {
+        this.major.value = major
+        this.techStack.value = techStack
+        this.profileImageUri.value = profileImgUri
+        this.introduce.value = introduce
+        this.contactEmail.value = contactEmail
+        this.portfolioUrl.value = portfolioUrl
+    }
+
+    fun getEnteredWorkConditionInformation(): WorkConditionData {
+        return WorkConditionData(
+            formOfEmployment = formOfEmployment.value,
+            salary = salary.value.toString(),
+            region = region
+        )
+    }
+
+    fun setEnteredWorkConditionInformation(
+        formOfEmployment: String,
+        salary: String,
+        region: List<String>,
+    ) {
+        this.formOfEmployment.value = formOfEmployment
+        this.salary.value = salary.toInt()
+        this.region.removeAll { !region.contains(it) }
+        this.region.addAll(region.filter { !this.region.contains(it) })
+    }
+
+    fun getEnteredMilitaryServiceInformation(): MilitaryServiceData {
+        return MilitaryServiceData(militaryService = militaryService.value)
+    }
+
+    fun setEnteredMilitaryServiceInformation(militaryService: String) {
+        this.militaryService.value = militaryService
+    }
 
     fun enterStudentInformation(
         major: String,
@@ -36,7 +112,7 @@ class StudentViewModel @Inject constructor(
         languageCertificate: List<CertificateInformationModel>,
         dreamBookFileUrl: String,
         militaryService: String,
-        certificate: List<String>
+        certificate: List<String>,
     ) = viewModelScope.launch {
         enterStudentInformationUseCase(
             EnterStudentInformationModel(

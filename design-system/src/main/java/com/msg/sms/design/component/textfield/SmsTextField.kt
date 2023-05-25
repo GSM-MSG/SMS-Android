@@ -14,7 +14,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.DeleteButtonIcon
@@ -28,18 +27,18 @@ fun SmsTextField(
     readOnly: Boolean = false,
     focusRequester: FocusRequester = FocusRequester(),
     errorText: String = "Error",
+    setText: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     maxLines: Int = Int.MAX_VALUE,
     onValueChange: (String) -> Unit = {},
+    onClickButton: () -> Unit,
 ) {
-    var text by remember { mutableStateOf("") }
     val isFocused = remember { mutableStateOf(false) }
     SMSTheme { colors, typography ->
         Column {
             OutlinedTextField(
-                value = text,
+                value = setText,
                 onValueChange = {
-                    text = it
                     onValueChange(it)
                 },
                 keyboardOptions = keyboardOptions,
@@ -66,9 +65,9 @@ fun SmsTextField(
                     cursorColor = colors.P2
                 ),
                 trailingIcon = {
-                    IconButton(onClick = { text = "" }, enabled = text.isNotEmpty())
+                    IconButton(onClick = { onClickButton() }, enabled = setText.isNotEmpty())
                     {
-                        if (text.isNotEmpty()) DeleteButtonIcon()
+                        if (setText.isNotEmpty()) DeleteButtonIcon()
                     }
                 },
                 readOnly = readOnly
@@ -151,6 +150,9 @@ fun SmsTextFieldPre() {
             .height(48.dp)
             .width(200.dp),
         placeHolder = "Test",
-        isError = true
+        isError = true,
+        onClickButton = {},
+        onValueChange = {},
+        setText = ""
     )
 }

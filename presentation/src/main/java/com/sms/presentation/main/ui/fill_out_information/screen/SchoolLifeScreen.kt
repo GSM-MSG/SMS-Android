@@ -13,10 +13,12 @@ import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.SchoolLifeComponent
+import com.sms.presentation.main.viewmodel.StudentViewModel
 
 @Composable
 fun SchoolLifeScreen(
     navController: NavController,
+    viewModel: StudentViewModel
 ) {
     SMSTheme { colors, _ ->
         Column(

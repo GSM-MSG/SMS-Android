@@ -11,10 +11,12 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.CertificationComponent
+import com.sms.presentation.main.viewmodel.StudentViewModel
 
 @Composable
 fun CertificationScreen(
     navController: NavController,
+    viewModel: StudentViewModel
 ) {
     Column(modifier = Modifier
         .fillMaxWidth()
