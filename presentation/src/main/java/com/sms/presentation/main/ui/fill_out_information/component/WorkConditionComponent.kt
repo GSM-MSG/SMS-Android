@@ -106,6 +106,12 @@ fun WorkConditionComponent(
                     ) {
                         wantPayroll.value = "0"
                     }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = if (wantPayroll.value == "0") "상관없음" else if (wantPayroll.value == "") "" else "${wantPayroll.value}만원",
+                        color = colors.N30,
+                        style = typography.body2
+                    )
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(text = "근무 지역", style = typography.body2)
                     Spacer(modifier = Modifier.height(8.dp))
