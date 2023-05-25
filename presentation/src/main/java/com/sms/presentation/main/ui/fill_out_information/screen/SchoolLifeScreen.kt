@@ -20,17 +20,19 @@ import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.SchoolLifeComponent
 import com.sms.presentation.main.ui.util.getFileNameFromUri
+import com.sms.presentation.main.viewmodel.StudentViewModel
 
 @Composable
 fun SchoolLifeScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: StudentViewModel
 ) {
     val dreamBookFileUri = remember {
         mutableStateOf(Uri.EMPTY)
     }
 
     val fileName = remember {
-        mutableStateOf("+ hwp 파일 추가")
+        mutableStateOf("")
     }
 
     val localStorageLauncher =

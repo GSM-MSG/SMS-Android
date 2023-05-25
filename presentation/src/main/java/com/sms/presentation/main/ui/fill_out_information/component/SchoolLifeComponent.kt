@@ -1,9 +1,9 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,9 +23,19 @@ fun SchoolLifeComponent(
     fileName: String,
     addDreamBook: () -> Unit
 ) {
-    val focusRequester = remember { FocusRequester() }
+    val gsmScore = remember {
+        mutableStateOf("")
+    }
+    val dreamBook = remember {
+        mutableStateOf("")
+    }
+    val focusRequester = remember {
+        FocusRequester()
+    }
     val focusManager = LocalFocusManager.current
-    Log.d("fileName", fileName)
+
+    if (fileName != "")
+        dreamBook.value = fileName
 
     SMSTheme { _, typography ->
         Column(modifier = Modifier.padding(end = 20.dp, start = 20.dp, top = 20.dp)) {
@@ -43,11 +53,17 @@ fun SchoolLifeComponent(
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "인증제 점수", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            SmsTextField(placeHolder = "인증제 점수 입력", modifier = Modifier.fillMaxWidth())
+            SmsTextField(
+                placeHolder = "인증제 점수 입력",
+                modifier = Modifier.fillMaxWidth(),
+                setText = gsmScore.value,
+                onValueChange = { gsmScore.value = it }) {
+                gsmScore.value = ""
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "드림북", style = typography.body2)
             SmsTextField(
-                placeHolder = fileName.ifBlank { "+ hwp 파일 추가" },
+                placeHolder = "+ hwp 파일 추가",
                 modifier = Modifier
                     .fillMaxWidth()
                     .focusRequester(focusRequester)
@@ -58,7 +74,11 @@ fun SchoolLifeComponent(
                         }
                     },
                 readOnly = true,
-            )
+                setText = dreamBook.value,
+                onValueChange = { dreamBook.value = it }
+            ) {
+
+            }
         }
     }
 }
