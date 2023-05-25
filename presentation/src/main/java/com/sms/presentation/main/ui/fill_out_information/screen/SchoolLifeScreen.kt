@@ -1,9 +1,15 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.button.ButtonState
@@ -13,6 +19,7 @@ import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.SchoolLifeComponent
+import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.viewmodel.StudentViewModel
 
 @Composable
@@ -20,6 +27,22 @@ fun SchoolLifeScreen(
     navController: NavController,
     viewModel: StudentViewModel
 ) {
+    val dreamBookFileUri = remember {
+        mutableStateOf(Uri.EMPTY)
+    }
+
+    val fileName = remember {
+        mutableStateOf("")
+    }
+
+    val localStorageLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            dreamBookFileUri.value = uri
+        }
+
+    if (dreamBookFileUri.value != Uri.EMPTY && dreamBookFileUri.value != null)
+        fileName.value = getFileNameFromUri(LocalContext.current, dreamBookFileUri.value)!!
+
     SMSTheme { colors, _ ->
         Column(
             modifier = Modifier
@@ -30,10 +53,14 @@ fun SchoolLifeScreen(
 
             }
             SmsSpacer()
-            SchoolLifeComponent(addDreamBook = {/* TODO(LeeHyeonbin) 드림북 파일 넣는 기능 추가하기 */ })
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)) {
+            SchoolLifeComponent(fileName = fileName.value) {
+                localStorageLauncher.launch("application/*")
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+            ) {
                 Spacer(modifier = Modifier.weight(1f))
                 Row(modifier = Modifier.fillMaxWidth()) {
                     SmsRoundedButton(
