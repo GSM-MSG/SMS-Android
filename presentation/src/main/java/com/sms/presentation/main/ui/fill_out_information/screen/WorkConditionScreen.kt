@@ -26,7 +26,7 @@ import com.sms.presentation.main.viewmodel.StudentViewModel
 @Composable
 fun WorkConditionScreen(
     navController: NavController,
-    viewModel: StudentViewModel
+    viewModel: StudentViewModel,
 ) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -34,12 +34,14 @@ fun WorkConditionScreen(
     val selectedWorkingCondition = remember { mutableStateOf("") }
     val workingConditionList = listOf("정규직", "비정규직", "계약직", "인턴")
 
+    val data = viewModel.getEnteredWorkConditionInformation()
+
     ModalBottomSheetLayout(
         sheetContent = {
             SelectorBottomSheet(
                 list = workingConditionList,
                 bottomSheetState = bottomSheetState,
-                selected = selectedWorkingCondition.value,
+                selected = if (selectedWorkingCondition.value == "") data.formOfEmployment else selectedWorkingCondition.value,
                 itemChange = { selectedWorkingCondition.value = it },
             )
         },
@@ -56,8 +58,10 @@ fun WorkConditionScreen(
             SmsSpacer()
             WorkConditionComponent(
                 bottomSheetState = bottomSheetState,
-                wantWorkingCondition = selectedWorkingCondition.value,
-                navController = navController
+                wantWorkingCondition = if (selectedWorkingCondition.value == "") data.formOfEmployment else selectedWorkingCondition.value,
+                navController = navController,
+                data = data,
+                viewModel = viewModel
             )
         }
     }
