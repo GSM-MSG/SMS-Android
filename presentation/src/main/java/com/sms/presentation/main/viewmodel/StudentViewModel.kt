@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
+import com.sms.presentation.main.ui.fill_out_information.data.MilitaryServiceData
 import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 import com.sms.presentation.main.viewmodel.util.Event
@@ -86,6 +87,14 @@ class StudentViewModel @Inject constructor(
         this.salary.value = salary.toInt()
         this.region.removeAll { !region.contains(it) }
         this.region.addAll(region.filter { !this.region.contains(it) })
+    }
+
+    fun getEnteredMilitaryServiceInformation(): MilitaryServiceData {
+        return MilitaryServiceData(militaryService = militaryService.value)
+    }
+
+    fun setEnteredMilitaryServiceInformation(militaryService: String) {
+        this.militaryService.value = militaryService
     }
 
     fun enterStudentInformation(
