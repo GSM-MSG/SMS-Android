@@ -22,6 +22,8 @@ import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
+import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
+import com.sms.presentation.main.viewmodel.StudentViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -30,17 +32,26 @@ fun WorkConditionComponent(
     wantWorkingCondition: String,
     bottomSheetState: ModalBottomSheetState,
     navController: NavController,
+    data: WorkConditionData,
+    viewModel: StudentViewModel,
 ) {
     SMSTheme { colors, typography ->
         val wantWorkingArea = remember {
-            mutableStateListOf("")
+            mutableStateListOf(if (data.region == listOf("")) data.region.toTypedArray() else "")
         }
 
         val wantPayroll = remember {
-            mutableStateOf("")
+            mutableStateOf(if (data.salary != "") data.salary else "")
         }
 
         val coroutineScope = rememberCoroutineScope()
+
+        val isRequired = remember {
+            mutableStateOf(false)
+        }
+
+        isRequired.value =
+            wantWorkingArea != listOf("") && wantPayroll.value != "0" && wantWorkingCondition != ""
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -111,7 +122,7 @@ fun WorkConditionComponent(
                             placeHolder = "근무 희망 지역 입력",
                             endIcon = null,
                             onValueChange = { str -> wantWorkingArea[it] = str },
-                            setChangeText = wantWorkingArea[it]
+                            setChangeText = wantWorkingArea[it].toString()
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         IconButton(onClick = { wantWorkingArea.removeAt(it) }) {
@@ -157,8 +168,13 @@ fun WorkConditionComponent(
                             .weight(4f)
                             .height(48.dp),
                         text = "다음",
-                        state = ButtonState.Normal
+                        state = ButtonState.Normal,
+                        enabled = isRequired.value
                     ) {
+                        viewModel.setEnteredWorkConditionInformation(
+                            formOfEmployment = wantWorkingCondition,
+                            salary = wantPayroll.value,
+                            region = wantWorkingArea.map { it.toString() })
                         navController.navigate("MilitaryService")
                     }
                 }
