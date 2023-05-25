@@ -1,6 +1,8 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
+import android.Manifest
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -9,15 +11,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -29,6 +29,7 @@ import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.icon.ProfileIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
+import com.sms.presentation.main.ui.util.checkAndRequestPermissions
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -48,6 +49,22 @@ fun ProfileComponent(
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             profileImageUri.value = uri ?: Uri.EMPTY
         }
+
+    val context = LocalContext.current
+
+    /** 요청할 권한 **/
+    val permission = Manifest.permission.READ_EXTERNAL_STORAGE
+
+    val launcherPermissions = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            galleryLauncher.launch("image/*")
+        } else {
+            Log.d("결과", "권한이 거부되었습니다.")
+        }
+    }
+
 
     SMSTheme { _, typography ->
         val coroutineScope = rememberCoroutineScope()
@@ -76,6 +93,7 @@ fun ProfileComponent(
         isRequired(
             techStack.value != "" && introduce.value != "" && portfolioUrl.value != "" && contactEmail.value != "" && profileImageUri.value != Uri.EMPTY
         )
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -97,7 +115,13 @@ fun ProfileComponent(
             if (profileImageUri.value == Uri.EMPTY || profileImageUri.value == null) {
                 profileImageUri.value = data.profileImageUri
                 ProfileIcon(modifier = Modifier.clickable {
-                    galleryLauncher.launch("image/*")
+                    checkAndRequestPermissions(
+                        context,
+                        permission,
+                        launcherPermissions
+                    ) {
+                        galleryLauncher.launch("image/*")
+                    }
                 })
             } else Image(
                 painter = rememberAsyncImagePainter(profileImageUri.value),

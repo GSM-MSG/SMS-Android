@@ -28,5 +28,5 @@ object Versions {
 
     const val COIL = "2.4.0"
 
-    const val PERMISSIONS = "0.25.1"
+    const val PERMISSIONS = "0.31.2-alpha"
 }
