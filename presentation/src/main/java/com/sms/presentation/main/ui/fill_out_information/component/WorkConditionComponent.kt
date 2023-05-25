@@ -102,9 +102,9 @@ fun WorkConditionComponent(
                             imeAction = ImeAction.Done
                         ),
                         setText = wantPayroll.value,
-                        onValueChange = { wantPayroll.value = it }
+                        onValueChange = { if (it.length < 5) wantPayroll.value = it }
                     ) {
-
+                        wantPayroll.value = "0"
                     }
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(text = "근무 지역", style = typography.body2)
