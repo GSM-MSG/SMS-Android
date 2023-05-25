@@ -7,9 +7,14 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 
-fun Uri.toMultipartBody(context: Context): MultipartBody.Part {
-    val file = File(getPathFromUri(context, this))
-    val requestFile: RequestBody =
-        RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-    return MultipartBody.Part.createFormData("file", file.name, requestFile)
+fun Uri.toMultipartBody(context: Context): MultipartBody.Part? {
+    val file: File? = getFileFromUri(context, this)
+    file?.let {
+        val requestFile: RequestBody =
+            RequestBody.create("application/octet-stream".toMediaTypeOrNull(), it)
+        val part: MultipartBody.Part =
+            MultipartBody.Part.createFormData("file", it.name, requestFile)
+        return part
+    }
+    return null
 }
