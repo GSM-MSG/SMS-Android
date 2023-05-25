@@ -37,7 +37,7 @@ fun WorkConditionComponent(
 ) {
     SMSTheme { colors, typography ->
         val wantWorkingArea = remember {
-            mutableStateListOf(if (data.region == listOf("")) data.region.toTypedArray() else "")
+            mutableStateListOf(*data.region.toTypedArray())
         }
 
         val wantPayroll = remember {
