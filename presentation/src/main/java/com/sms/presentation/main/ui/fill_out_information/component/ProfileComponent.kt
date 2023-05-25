@@ -2,6 +2,7 @@ package com.sms.presentation.main.ui.fill_out_information.component
 
 import android.Manifest
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -29,7 +29,6 @@ import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.icon.ProfileIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
-import com.sms.presentation.main.ui.util.checkAndRequestPermissions
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -50,18 +49,20 @@ fun ProfileComponent(
             profileImageUri.value = uri ?: Uri.EMPTY
         }
 
-    val context = LocalContext.current
+    val permission =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
 
-    /** 요청할 권한 **/
-    val permission = Manifest.permission.READ_EXTERNAL_STORAGE
-
-    val launcherPermissions = rememberLauncherForActivityResult(
+    val launcherMultiplePermissions = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
             galleryLauncher.launch("image/*")
         } else {
-            Log.d("결과", "권한이 거부되었습니다.")
+            Log.d("실패","tlqkf")
         }
     }
 
@@ -115,13 +116,7 @@ fun ProfileComponent(
             if (profileImageUri.value == Uri.EMPTY || profileImageUri.value == null) {
                 profileImageUri.value = data.profileImageUri
                 ProfileIcon(modifier = Modifier.clickable {
-                    checkAndRequestPermissions(
-                        context,
-                        permission,
-                        launcherPermissions
-                    ) {
-                        galleryLauncher.launch("image/*")
-                    }
+                    launcherMultiplePermissions.launch(permission)
                 })
             } else Image(
                 painter = rememberAsyncImagePainter(profileImageUri.value),
