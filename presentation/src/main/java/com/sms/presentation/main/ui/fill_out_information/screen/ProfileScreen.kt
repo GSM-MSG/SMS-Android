@@ -50,8 +50,9 @@ fun ProfileScreen(
     val profileImageUri = remember {
         mutableStateOf(Uri.EMPTY)
     }
-
-    val data = viewModel.getEnteredProfileInformation()
+    val isRequired = remember {
+        mutableStateOf(false)
+    }
 
     val list = listOf(
         "FrontEnd",
@@ -88,7 +89,6 @@ fun ProfileScreen(
             }
             SmsSpacer()
             Column(Modifier.verticalScroll(scrollState)) {
-
                 ProfileComponent(
                     bottomSheetState,
                     selectedMajor.value,
@@ -98,15 +98,17 @@ fun ProfileScreen(
                         portfolioUrl.value = getPortfolio
                         contactEmail.value = getContactEmail
                         profileImageUri.value = getProfileImageUri
-                    } ,
-                    data
+                    },
+                    viewModel.getEnteredProfileInformation(),
+                    { result -> isRequired.value = result }
                 )
                 Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Spacer(modifier = Modifier.height(32.dp))
                     SmsRoundedButton(
                         text = "다음", modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp)
+                            .height(48.dp),
+                        enabled = isRequired.value
                     ) {
                         Log.d(
                             "TAG",

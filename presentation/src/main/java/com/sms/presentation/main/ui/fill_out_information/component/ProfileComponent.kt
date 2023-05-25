@@ -38,6 +38,7 @@ fun ProfileComponent(
     selectedMajor: String,
     enteredData: (techStack: String, introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit,
     data: ProfileData,
+    isRequired: (Boolean) -> Unit,
 ) {
     val profileImageUri = remember {
         mutableStateOf(Uri.EMPTY)
@@ -45,23 +46,23 @@ fun ProfileComponent(
 
     val galleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            profileImageUri.value = uri
+            profileImageUri.value = uri ?: Uri.EMPTY
         }
 
     SMSTheme { _, typography ->
         val coroutineScope = rememberCoroutineScope()
 
         val techStack = remember {
-            mutableStateOf("")
+            mutableStateOf(if (data.techStack != "") data.techStack else "")
         }
         val introduce = remember {
-            mutableStateOf("")
+            mutableStateOf(if (data.introduce != "") data.introduce else "")
         }
         val portfolioUrl = remember {
-            mutableStateOf("")
+            mutableStateOf(if (data.portfolioUrl != "") data.portfolioUrl else "")
         }
         val contactEmail = remember {
-            mutableStateOf("")
+            mutableStateOf(if (data.contactEmail != "") data.contactEmail else "")
         }
 
         enteredData(
@@ -72,6 +73,9 @@ fun ProfileComponent(
             profileImageUri.value ?: Uri.EMPTY
         )
 
+        isRequired(
+            techStack.value != "" && introduce.value != "" && portfolioUrl.value != "" && contactEmail.value != "" && profileImageUri.value != Uri.EMPTY
+        )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -91,31 +95,29 @@ fun ProfileComponent(
             Text(text = "사진", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
             if (profileImageUri.value == Uri.EMPTY || profileImageUri.value == null) {
-                if (profileImageUri.value == Uri.EMPTY) {
-                    profileImageUri.value = data.profileImageUri
-                }
+                profileImageUri.value = data.profileImageUri
                 ProfileIcon(modifier = Modifier.clickable {
                     galleryLauncher.launch("image/*")
                 })
-            } else
-                Image(
-                    painter = rememberAsyncImagePainter(profileImageUri.value),
-                    contentDescription = "User Profile Image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(107.dp)
-                        .height(106.dp)
-                        .clip(RoundedCornerShape(5.dp))
-                )
+            } else Image(
+                painter = rememberAsyncImagePainter(profileImageUri.value),
+                contentDescription = "User Profile Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .width(107.dp)
+                    .height(106.dp)
+                    .clip(RoundedCornerShape(5.dp))
+            )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "자기소개", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
             SmsTextField(
                 placeHolder = "1줄 자기소개 입력",
                 modifier = Modifier.fillMaxWidth(),
-                setText = data.introduce
+                setText = introduce.value,
+                onValueChange = { introduce.value = it }
             ) {
-                introduce.value = it
+                introduce.value = ""
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "이메일", style = typography.body2)
@@ -123,9 +125,10 @@ fun ProfileComponent(
             SmsTextField(
                 placeHolder = "공개용 이메일 입력",
                 modifier = Modifier.fillMaxWidth(),
-                setText = data.contactEmail
+                setText = contactEmail.value,
+                onValueChange = { contactEmail.value = it }
             ) {
-                contactEmail.value = it
+                contactEmail.value = ""
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "분야", style = typography.body2)
@@ -148,18 +151,20 @@ fun ProfileComponent(
             SmsTextField(
                 placeHolder = "https://",
                 modifier = Modifier.fillMaxWidth(),
-                setText = data.portfolioUrl
+                setText = portfolioUrl.value,
+                onValueChange = { portfolioUrl.value = it }
             ) {
-                portfolioUrl.value = it
+                portfolioUrl.value = ""
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "세부스택", style = typography.body2)
             SmsTextField(
                 placeHolder = "예시) HTML, CSS, C#",
                 modifier = Modifier.fillMaxWidth(),
-                setText = data.techStack
+                setText = techStack.value,
+                onValueChange = { techStack.value = it }
             ) {
-                techStack.value = it
+                techStack.value = ""
             }
         }
     }
@@ -169,10 +174,9 @@ fun ProfileComponent(
 @Preview
 @Composable
 fun ProfileComponentPre() {
-    ProfileComponent(
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+    ProfileComponent(rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
         selectedMajor = "FrontEnd",
         enteredData = { _: String, _: String, _: String, _: String, _: Uri -> Unit },
-        data = ProfileData(Uri.EMPTY, "", "", "", "", "")
-    )
+        data = ProfileData(Uri.EMPTY, "", "", "", "", ""),
+        isRequired = {})
 }
