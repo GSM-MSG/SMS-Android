@@ -128,7 +128,7 @@ fun WorkConditionComponent(
                             placeHolder = "근무 희망 지역 입력",
                             endIcon = null,
                             onValueChange = { str -> wantWorkingArea[it] = str },
-                            setChangeText = wantWorkingArea[it].toString()
+                            setChangeText = wantWorkingArea[it]
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         IconButton(onClick = { wantWorkingArea.removeAt(it) }) {
@@ -180,7 +180,7 @@ fun WorkConditionComponent(
                         viewModel.setEnteredWorkConditionInformation(
                             formOfEmployment = wantWorkingCondition,
                             salary = wantPayroll.value,
-                            region = wantWorkingArea.map { it.toString() })
+                            region = wantWorkingArea.map { it })
                         navController.navigate("MilitaryService")
                     }
                 }
