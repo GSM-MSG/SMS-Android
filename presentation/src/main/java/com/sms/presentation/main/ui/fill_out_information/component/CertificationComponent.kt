@@ -20,14 +20,17 @@ import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
+import com.sms.presentation.main.viewmodel.StudentViewModel
 
 @Composable
 fun CertificationComponent(
-    navController: NavController
+    navController: NavController,
+    viewModel: StudentViewModel,
 ) {
+    val data = viewModel.getEnteredCertification()
     SMSTheme { colors, typography ->
         val certificationList = remember {
-            mutableStateListOf("")
+            mutableStateListOf(*data.certification.toTypedArray())
         }
         Column(
             modifier = Modifier
@@ -110,6 +113,7 @@ fun CertificationComponent(
                         text = "다음",
                         state = ButtonState.Normal
                     ) {
+                        viewModel.setEnteredCertification(certificationList.filter { it != "" })
                         navController.navigate("ForeignLanguage")
                     }
                 }

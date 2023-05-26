@@ -21,10 +21,13 @@ import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
+import com.msg.sms.domain.model.student.request.CertificateInformationModel
+import com.sms.presentation.main.viewmodel.StudentViewModel
 
 @Composable
 fun ForeignLanguageComponent(
     navController: NavController,
+    viewModel: StudentViewModel,
 ) {
     SMSTheme { colors, typography ->
         val foreignLanguageList = remember {
@@ -127,7 +130,14 @@ fun ForeignLanguageComponent(
                         text = "다음",
                         state = ButtonState.Normal
                     ) {
-                        Log.d("TAG", "ForeignLanguageScreen: ")
+                        val foreignLanguage = foreignLanguageList.mapIndexed { index: Int, name: String ->
+                            CertificateInformationModel(
+                                languageCertificateName = name,
+                                score = foreignLanguageScoreList[index]
+                            )
+                        }
+                        /*TODO(KH) foreignLanguage 넣어서 버튼 클릭 시 api 요청하도록 보내기 */
+                        Log.d("TAG", "ForeignLanguageScreen: $foreignLanguage")
                     }
                 }
                 Spacer(modifier = Modifier.height(48.dp))

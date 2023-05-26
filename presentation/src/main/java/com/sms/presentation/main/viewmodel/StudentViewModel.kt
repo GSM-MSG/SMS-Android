@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
+import com.sms.presentation.main.ui.fill_out_information.data.CertificationData
 import com.sms.presentation.main.ui.fill_out_information.data.MilitaryServiceData
 import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
@@ -37,8 +38,7 @@ class StudentViewModel @Inject constructor(
     private val formOfEmployment = mutableStateOf("")
     private val gsmAuthenticationScore = mutableStateOf(0)
     private val salary = mutableStateOf(0)
-    private val region = mutableStateListOf<String>()
-    private val languageCertificate = mutableStateListOf<CertificateInformationModel>()
+    private val region = mutableStateListOf("")
     private val dreamBookFileUrl = mutableStateListOf("")
     private val militaryService = mutableStateOf("")
     private val certificate = mutableStateListOf("")
@@ -95,6 +95,15 @@ class StudentViewModel @Inject constructor(
 
     fun setEnteredMilitaryServiceInformation(militaryService: String) {
         this.militaryService.value = militaryService
+    }
+
+    fun getEnteredCertification(): CertificationData {
+        return CertificationData(certification = certificate)
+    }
+
+    fun setEnteredCertification(certificate: List<String>) {
+        this.certificate.removeAll { !certificate.contains(it) }
+        this.certificate.addAll(certificate.filter { !this.certificate.contains(it) })
     }
 
     fun enterStudentInformation(

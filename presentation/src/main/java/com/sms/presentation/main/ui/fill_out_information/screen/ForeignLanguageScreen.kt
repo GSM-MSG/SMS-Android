@@ -15,13 +15,16 @@ import com.sms.presentation.main.viewmodel.StudentViewModel
 @Composable
 fun ForeignLanguageScreen(
     navController: NavController,
-    viewModel: StudentViewModel
+    viewModel: StudentViewModel,
 ) {
     Column(modifier = Modifier.background(Color.White)) {
         TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
 
         }
         SmsSpacer()
-        ForeignLanguageComponent(navController = navController)
+        ForeignLanguageComponent(
+            navController = navController,
+            viewModel = viewModel,
+        )
     }
 }

@@ -37,7 +37,7 @@ fun WorkConditionComponent(
 ) {
     SMSTheme { colors, typography ->
         val wantWorkingArea = remember {
-            mutableStateListOf(if (data.region == listOf("")) data.region.toTypedArray() else "")
+            mutableStateListOf(*data.region.toTypedArray())
         }
 
         val wantPayroll = remember {
@@ -102,10 +102,16 @@ fun WorkConditionComponent(
                             imeAction = ImeAction.Done
                         ),
                         setText = wantPayroll.value,
-                        onValueChange = { wantPayroll.value = it }
+                        onValueChange = { if (it.length < 5) wantPayroll.value = it }
                     ) {
-
+                        wantPayroll.value = "0"
                     }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = if (wantPayroll.value == "0") "상관없음" else if (wantPayroll.value == "") "" else "${wantPayroll.value}만원",
+                        color = colors.N30,
+                        style = typography.body2
+                    )
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(text = "근무 지역", style = typography.body2)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -122,7 +128,7 @@ fun WorkConditionComponent(
                             placeHolder = "근무 희망 지역 입력",
                             endIcon = null,
                             onValueChange = { str -> wantWorkingArea[it] = str },
-                            setChangeText = wantWorkingArea[it].toString()
+                            setChangeText = wantWorkingArea[it]
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         IconButton(onClick = { wantWorkingArea.removeAt(it) }) {
@@ -174,7 +180,7 @@ fun WorkConditionComponent(
                         viewModel.setEnteredWorkConditionInformation(
                             formOfEmployment = wantWorkingCondition,
                             salary = wantPayroll.value,
-                            region = wantWorkingArea.map { it.toString() })
+                            region = wantWorkingArea.map { it })
                         navController.navigate("MilitaryService")
                     }
                 }
