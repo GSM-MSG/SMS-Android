@@ -3,20 +3,17 @@ package com.sms.presentation.main.ui.fill_out_information
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sms.presentation.main.ui.fill_out_information.screen.*
-import com.sms.presentation.main.viewmodel.StudentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class FillOutInformationActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<StudentViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
