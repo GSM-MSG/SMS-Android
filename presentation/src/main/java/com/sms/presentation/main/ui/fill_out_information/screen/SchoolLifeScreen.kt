@@ -1,6 +1,9 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -43,6 +46,23 @@ fun SchoolLifeScreen(
     if (dreamBookFileUri.value != Uri.EMPTY && dreamBookFileUri.value != null)
         fileName.value = getFileNameFromUri(LocalContext.current, dreamBookFileUri.value)!!
 
+    val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        Manifest.permission.MANAGE_EXTERNAL_STORAGE
+    } else {
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    }
+    Log.d("Version", Build.VERSION.SDK_INT.toString())
+
+    val launcherMultiplePermissions = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            localStorageLauncher.launch("application/*")
+        } else {
+            Log.d("실패", "tlqkf")
+        }
+    }
+
     SMSTheme { colors, _ ->
         Column(
             modifier = Modifier
@@ -54,7 +74,7 @@ fun SchoolLifeScreen(
             }
             SmsSpacer()
             SchoolLifeComponent(fileName = fileName.value) {
-                localStorageLauncher.launch("application/*")
+                launcherMultiplePermissions.launch(permission)
             }
             Column(
                 modifier = Modifier

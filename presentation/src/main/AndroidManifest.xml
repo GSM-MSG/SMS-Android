@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <application>
         <activity
             android:name=".main.ui.fill_out_information.FillOutInformationActivity"
             android:exported="true"
-            android:label="@string/title_activity_fill_out_information"/>
+            android:label="@string/title_activity_fill_out_information" />
         <activity
             android:name=".main.ui.login.LoginActivity"
             android:exported="true"
