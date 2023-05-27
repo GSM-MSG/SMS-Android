@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StudentViewModel @Inject constructor(
+class FillOutViewModel @Inject constructor(
     private val enterStudentInformationUseCase: EnterStudentInformationUseCase,
     private val getMajorListUseCase: GetMajorListUseCase,
 ) : ViewModel() {
