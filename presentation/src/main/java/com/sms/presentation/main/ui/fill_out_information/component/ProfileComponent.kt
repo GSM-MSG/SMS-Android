@@ -55,7 +55,7 @@ fun ProfileComponent(
             Manifest.permission.READ_EXTERNAL_STORAGE
         }
 
-    val launcherMultiplePermissions = rememberLauncherForActivityResult(
+    val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
@@ -113,7 +113,7 @@ fun ProfileComponent(
             if (profileImageUri.value == Uri.EMPTY || profileImageUri.value == null) {
                 profileImageUri.value = data.profileImageUri
                 ProfileIcon(modifier = Modifier.clickable {
-                    launcherMultiplePermissions.launch(permission)
+                    permissionLauncher.launch(permission)
                 })
             } else Image(
                 painter = rememberAsyncImagePainter(profileImageUri.value),
