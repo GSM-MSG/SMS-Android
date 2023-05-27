@@ -58,7 +58,7 @@ fun WorkConditionScreen(
             SmsSpacer()
             WorkConditionComponent(
                 bottomSheetState = bottomSheetState,
-                wantWorkingCondition = if (selectedWorkingCondition.value == "") data.formOfEmployment else selectedWorkingCondition.value,
+                wantWorkingCondition = if (selectedWorkingCondition.value == "") data.formOfEmployment else selectedWorkingCondition.value.filter { it.toString() != "" },
                 navController = navController,
                 data = data,
                 viewModel = viewModel
