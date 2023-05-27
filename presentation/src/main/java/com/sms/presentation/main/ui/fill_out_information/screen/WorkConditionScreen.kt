@@ -20,13 +20,13 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.WorkConditionComponent
-import com.sms.presentation.main.viewmodel.StudentViewModel
+import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WorkConditionScreen(
     navController: NavController,
-    viewModel: StudentViewModel,
+    viewModel: FillOutViewModel,
 ) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)

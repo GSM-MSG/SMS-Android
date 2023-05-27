@@ -5,8 +5,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.msg.sms.domain.model.major.MajorListModel
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
+import com.msg.sms.domain.usecase.major.GetMajorListUseCase
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
 import com.sms.presentation.main.ui.fill_out_information.data.CertificationData
 import com.sms.presentation.main.ui.fill_out_information.data.MilitaryServiceData
@@ -24,9 +26,13 @@ import javax.inject.Inject
 @HiltViewModel
 class StudentViewModel @Inject constructor(
     private val enterStudentInformationUseCase: EnterStudentInformationUseCase,
+    private val getMajorListUseCase: GetMajorListUseCase,
 ) : ViewModel() {
     private val _enterInformationResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val enterInformationResponse: StateFlow<Event<Unit>> get() = _enterInformationResponse
+
+    private val _getMajorListResponse = MutableStateFlow<Event<MajorListModel>>(Event.Loading)
+    val getMajorListResponse: StateFlow<Event<MajorListModel>> get() = _getMajorListResponse
 
     private val major = mutableStateOf("")
     private val techStack = mutableStateOf("")
@@ -104,6 +110,18 @@ class StudentViewModel @Inject constructor(
     fun setEnteredCertification(certificate: List<String>) {
         this.certificate.removeAll { !certificate.contains(it) }
         this.certificate.addAll(certificate.filter { !this.certificate.contains(it) })
+    }
+
+    suspend fun getMajorList() {
+        getMajorListUseCase().onSuccess {
+            it.catch { remoteError ->
+                _getMajorListResponse.value = remoteError.errorHandling()
+            }.collect { response ->
+                _getMajorListResponse.value = Event.Success(data = response)
+            }
+        }.onFailure {
+            _getMajorListResponse.value = it.errorHandling()
+        }
     }
 
     fun enterStudentInformation(

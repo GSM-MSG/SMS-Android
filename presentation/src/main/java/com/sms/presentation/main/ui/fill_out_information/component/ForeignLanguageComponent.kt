@@ -22,12 +22,12 @@ import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
-import com.sms.presentation.main.viewmodel.StudentViewModel
+import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @Composable
 fun ForeignLanguageComponent(
     navController: NavController,
-    viewModel: StudentViewModel,
+    viewModel: FillOutViewModel,
 ) {
     SMSTheme { colors, typography ->
         val foreignLanguageList = remember {
