@@ -19,6 +19,7 @@ import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,8 +32,8 @@ class FillOutViewModel @Inject constructor(
     private val _enterInformationResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val enterInformationResponse: StateFlow<Event<Unit>> get() = _enterInformationResponse
 
-    private val _getMajorListResponse = MutableStateFlow<Event<MajorListModel>>(Event.Loading)
-    val getMajorListResponse: StateFlow<Event<MajorListModel>> get() = _getMajorListResponse
+    private val _getMajorListEvent = MutableStateFlow<Event<MajorListModel>>(Event.Loading)
+    val getMajorListEvent = _getMajorListEvent.asStateFlow()
 
     private val major = mutableStateOf("")
     private val techStack = mutableStateOf("")
@@ -112,15 +113,17 @@ class FillOutViewModel @Inject constructor(
         this.certificate.addAll(certificate.filter { !this.certificate.contains(it) })
     }
 
-    suspend fun getMajorList() {
-        getMajorListUseCase().onSuccess {
-            it.catch { remoteError ->
-                _getMajorListResponse.value = remoteError.errorHandling()
-            }.collect { response ->
-                _getMajorListResponse.value = Event.Success(data = response)
+    fun getMajorList() {
+        viewModelScope.launch {
+            getMajorListUseCase().onSuccess {
+                it.catch { remoteError ->
+                    _getMajorListEvent.value = remoteError.errorHandling()
+                }.collect { response ->
+                    _getMajorListEvent.value = Event.Success(data = response)
+                }
+            }.onFailure {
+                _getMajorListEvent.value = it.errorHandling()
             }
-        }.onFailure {
-            _getMajorListResponse.value = it.errorHandling()
         }
     }
 
