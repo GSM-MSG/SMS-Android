@@ -39,6 +39,7 @@ fun ProfileComponent(
     enteredData: (techStack: String, introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit,
     data: ProfileData,
     isRequired: (Boolean) -> Unit,
+    isEnable: Boolean,
 ) {
     val profileImageUri = remember {
         mutableStateOf(Uri.EMPTY)
@@ -139,8 +140,10 @@ fun ProfileComponent(
                 endIcon = { OpenButtonIcon() },
                 readOnly = true,
                 clickAction = {
-                    coroutineScope.launch {
-                        bottomSheetScaffoldState.show()
+                    if (isEnable) {
+                        coroutineScope.launch {
+                            bottomSheetScaffoldState.show()
+                        }
                     }
                 },
                 setChangeText = selectedMajor
@@ -174,9 +177,12 @@ fun ProfileComponent(
 @Preview
 @Composable
 fun ProfileComponentPre() {
-    ProfileComponent(rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+    ProfileComponent(
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
         selectedMajor = "FrontEnd",
         enteredData = { _: String, _: String, _: String, _: String, _: Uri -> Unit },
         data = ProfileData(Uri.EMPTY, "", "", "", "", ""),
-        isRequired = {})
+        isRequired = {},
+        isEnable = false
+    )
 }
