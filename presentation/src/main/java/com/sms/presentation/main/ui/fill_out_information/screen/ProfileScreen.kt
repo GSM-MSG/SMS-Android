@@ -7,9 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -33,7 +31,7 @@ fun ProfileScreen(
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
     val selectedMajor = remember {
-        mutableStateOf("FrontEnd")
+        mutableStateOf("")
     }
     val techStack = remember {
         mutableStateOf("")
@@ -53,22 +51,12 @@ fun ProfileScreen(
     val isRequired = remember {
         mutableStateOf(false)
     }
+    val list = viewModel.getMajorListEvent.collectAsState()
 
-    val list = listOf(
-        "FrontEnd",
-        "BackEnd",
-        "Android",
-        "iOS",
-        "Game",
-        "Cyber Security",
-        "Design",
-        "AI",
-        "IoT"
-    )
     ModalBottomSheetLayout(
         sheetContent = {
             SelectorBottomSheet(
-                list = list,
+                list = if(list.value.data != null ) list.value.data!!.major else listOf(""),
                 bottomSheetState = bottomSheetState,
                 selected = selectedMajor.value,
                 itemChange = {
@@ -100,7 +88,8 @@ fun ProfileScreen(
                         profileImageUri.value = getProfileImageUri
                     },
                     viewModel.getEnteredProfileInformation(),
-                    { result -> isRequired.value = result }
+                    { result -> isRequired.value = result },
+                    isEnable = list.value.data != null
                 )
                 Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Spacer(modifier = Modifier.height(32.dp))
