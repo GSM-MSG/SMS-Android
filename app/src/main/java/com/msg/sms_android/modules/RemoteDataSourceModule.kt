@@ -4,6 +4,8 @@ import com.msg.sms.data.remote.datasource.auth.RemoteAuthDataSource
 import com.msg.sms.data.remote.datasource.auth.RemoteAuthDataSourceImpl
 import com.msg.sms.data.remote.datasource.fileupload.RemoteFileUploadDataSource
 import com.msg.sms.data.remote.datasource.fileupload.RemoteFileUploadDataSourceImpl
+import com.msg.sms.data.remote.datasource.major.RemoteMajorDataSource
+import com.msg.sms.data.remote.datasource.major.RemoteMajorDataSourceImpl
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSource
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSourceImpl
 import dagger.Binds
@@ -16,16 +18,21 @@ import dagger.hilt.components.SingletonComponent
 abstract class RemoteDataSourceModule {
     @Binds
     abstract fun provideRemoteAuthDataSource(
-        remoteAuthDataSourceImpl: RemoteAuthDataSourceImpl
+        remoteAuthDataSourceImpl: RemoteAuthDataSourceImpl,
     ): RemoteAuthDataSource
 
     @Binds
     abstract fun provideRemoteStudentDataSource(
-        remoteStudentDataSourceImpl: RemoteStudentDataSourceImpl
+        remoteStudentDataSourceImpl: RemoteStudentDataSourceImpl,
     ): RemoteStudentDataSource
 
     @Binds
     abstract fun provideRemoteFileUploadDataSource(
-        remoteFileUploadDataSourceImpl: RemoteFileUploadDataSourceImpl
+        remoteFileUploadDataSourceImpl: RemoteFileUploadDataSourceImpl,
     ): RemoteFileUploadDataSource
+
+    @Binds
+    abstract fun provideRemoteMajorDataSource(
+        remoteMajorDataSourceImpl: RemoteMajorDataSourceImpl,
+    ): RemoteMajorDataSource
 }
