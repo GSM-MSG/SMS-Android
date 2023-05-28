@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface MajorAPI {
 
-    @GET("list")
+    @GET("major/list")
     suspend fun getMajorList(): MajorListResponse
 }
