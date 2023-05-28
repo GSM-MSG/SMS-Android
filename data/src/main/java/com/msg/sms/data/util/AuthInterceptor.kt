@@ -39,7 +39,8 @@ class AuthInterceptor @Inject constructor(
             val refreshTime = dataSource.getRefreshTime().first()
             val accessTime = dataSource.getAccessTime().first()
 
-            if (refreshTime >= currentTime) throw NeedLoginException()
+            Log.d("TAG", "intercept: ref: $refreshTime, acc: $accessTime, current: $currentTime")
+            if (refreshTime <= currentTime) throw NeedLoginException()
 //            access 토큰 재 발급
             if (accessTime <= currentTime) {
                 val client = OkHttpClient()
