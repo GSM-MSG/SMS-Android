@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.msg.sms.design.component.bottomsheet.ChooseProfilePictureBottomSheet
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.spacer.SmsSpacer
@@ -51,18 +52,29 @@ fun ProfileScreen(
     val isRequired = remember {
         mutableStateOf(false)
     }
+    val isProfilePictureBottomSheet = remember {
+        mutableStateOf(true)
+    }
     val list = viewModel.getMajorListEvent.collectAsState()
 
     ModalBottomSheetLayout(
         sheetContent = {
-            SelectorBottomSheet(
-                list = if(list.value.data != null ) list.value.data!!.major else listOf(""),
-                bottomSheetState = bottomSheetState,
-                selected = selectedMajor.value,
-                itemChange = {
-                    selectedMajor.value = it
-                }
-            )
+            if (isProfilePictureBottomSheet.value) {
+                ChooseProfilePictureBottomSheet(
+                    bottomSheetState = bottomSheetState,
+                    profileImageUri = {
+                        profileImageUri.value = it
+                    })
+            } else {
+                SelectorBottomSheet(
+                    list = if (list.value.data != null) list.value.data!!.major else listOf(""),
+                    bottomSheetState = bottomSheetState,
+                    selected = selectedMajor.value,
+                    itemChange = {
+                        selectedMajor.value = it
+                    }
+                )
+            }
         },
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         sheetState = bottomSheetState,
@@ -89,7 +101,9 @@ fun ProfileScreen(
                     },
                     viewModel.getEnteredProfileInformation(),
                     { result -> isRequired.value = result },
-                    isEnable = list.value.data != null
+                    isEnable = list.value.data != null,
+                    profileImageUri = profileImageUri.value,
+                    isProfilePictureBottomSheet = { isProfilePictureBottomSheet.value = it }
                 )
                 Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Spacer(modifier = Modifier.height(32.dp))

@@ -1,10 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
-import android.Manifest
 import android.net.Uri
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,32 +35,9 @@ fun ProfileComponent(
     data: ProfileData,
     isRequired: (Boolean) -> Unit,
     isEnable: Boolean,
+    profileImageUri: Uri,
+    isProfilePictureBottomSheet: (Boolean) -> Unit
 ) {
-    val profileImageUri = remember {
-        mutableStateOf(Uri.EMPTY)
-    }
-
-    val galleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            profileImageUri.value = uri ?: Uri.EMPTY
-        }
-
-    val permission =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            galleryLauncher.launch("image/*")
-        }
-    }
-
-
     SMSTheme { _, typography ->
         val coroutineScope = rememberCoroutineScope()
 
@@ -86,11 +59,11 @@ fun ProfileComponent(
             if (introduce.value == "") data.introduce else introduce.value,
             if (portfolioUrl.value == "") data.portfolioUrl else portfolioUrl.value,
             if (contactEmail.value == "") data.contactEmail else contactEmail.value,
-            profileImageUri.value ?: Uri.EMPTY
+            if (profileImageUri == Uri.EMPTY) data.profileImageUri else profileImageUri
         )
 
         isRequired(
-            techStack.value != "" && introduce.value != "" && portfolioUrl.value != "" && contactEmail.value != "" && profileImageUri.value != Uri.EMPTY
+            techStack.value != "" && introduce.value != "" && portfolioUrl.value != "" && contactEmail.value != "" && profileImageUri != Uri.EMPTY
         )
 
         Column(
@@ -111,13 +84,15 @@ fun ProfileComponent(
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "사진", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            if (profileImageUri.value == Uri.EMPTY || profileImageUri.value == null) {
-                profileImageUri.value = data.profileImageUri
+            if (profileImageUri == Uri.EMPTY) {
                 ProfileIcon(modifier = Modifier.clickable {
-                    permissionLauncher.launch(permission)
+                    isProfilePictureBottomSheet(true)
+                    coroutineScope.launch {
+                        bottomSheetScaffoldState.show()
+                    }
                 })
             } else Image(
-                painter = rememberAsyncImagePainter(profileImageUri.value),
+                painter = rememberAsyncImagePainter(profileImageUri),
                 contentDescription = "User Profile Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -156,6 +131,7 @@ fun ProfileComponent(
                 endIcon = { OpenButtonIcon() },
                 readOnly = true,
                 clickAction = {
+                    isProfilePictureBottomSheet(false)
                     if (isEnable) {
                         coroutineScope.launch {
                             bottomSheetScaffoldState.show()
@@ -199,6 +175,8 @@ fun ProfileComponentPre() {
         enteredData = { _: String, _: String, _: String, _: String, _: Uri -> Unit },
         data = ProfileData(Uri.EMPTY, "", "", "", "", ""),
         isRequired = {},
-        isEnable = false
+        isEnable = false,
+        profileImageUri = Uri.EMPTY,
+        isProfilePictureBottomSheet = {}
     )
 }
