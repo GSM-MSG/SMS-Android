@@ -2,7 +2,6 @@ package com.msg.sms.data.util
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -39,11 +38,9 @@ class AuthInterceptor @Inject constructor(
             val refreshTime = dataSource.getRefreshTime().first()
             val accessTime = dataSource.getAccessTime().first()
 
-            Log.d("TAG", "intercept: ref: $refreshTime, acc: $accessTime, current: $currentTime")
             if (refreshTime <= currentTime) throw NeedLoginException()
 //            access 토큰 재 발급
             if (accessTime <= currentTime) {
-                Log.d("TAG", "intercept: access 재발급")
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")
@@ -52,7 +49,6 @@ class AuthInterceptor @Inject constructor(
                     .build()
                 val jsonParser = JsonParser()
                 val response = client.newCall(refreshRequest).execute()
-                Log.d("TAG", "intercept: ${response.code}")
                 if (response.isSuccessful) {
                     val token = jsonParser.parse(response.body!!.string()) as JsonObject
                     dataSource.setAccessToken(token["accessToken"].toString())
