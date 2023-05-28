@@ -20,12 +20,12 @@ import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.SchoolLifeComponent
 import com.sms.presentation.main.ui.util.getFileNameFromUri
-import com.sms.presentation.main.viewmodel.StudentViewModel
+import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @Composable
 fun SchoolLifeScreen(
     navController: NavController,
-    viewModel: StudentViewModel
+    viewModel: FillOutViewModel
 ) {
     val dreamBookFileUri = remember {
         mutableStateOf(Uri.EMPTY)

@@ -23,7 +23,7 @@ import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
-import com.sms.presentation.main.viewmodel.StudentViewModel
+import com.sms.presentation.main.viewmodel.FillOutViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -33,7 +33,7 @@ fun WorkConditionComponent(
     bottomSheetState: ModalBottomSheetState,
     navController: NavController,
     data: WorkConditionData,
-    viewModel: StudentViewModel,
+    viewModel: FillOutViewModel,
 ) {
     SMSTheme { colors, typography ->
         val wantWorkingArea = remember {

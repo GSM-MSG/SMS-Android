@@ -5,8 +5,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.msg.sms.domain.model.major.MajorListModel
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
+import com.msg.sms.domain.usecase.major.GetMajorListUseCase
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
 import com.sms.presentation.main.ui.fill_out_information.data.CertificationData
 import com.sms.presentation.main.ui.fill_out_information.data.MilitaryServiceData
@@ -17,16 +19,21 @@ import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StudentViewModel @Inject constructor(
+class FillOutViewModel @Inject constructor(
     private val enterStudentInformationUseCase: EnterStudentInformationUseCase,
+    private val getMajorListUseCase: GetMajorListUseCase,
 ) : ViewModel() {
     private val _enterInformationResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val enterInformationResponse: StateFlow<Event<Unit>> get() = _enterInformationResponse
+
+    private val _getMajorListEvent = MutableStateFlow<Event<MajorListModel>>(Event.Loading)
+    val getMajorListEvent = _getMajorListEvent.asStateFlow()
 
     private val major = mutableStateOf("")
     private val techStack = mutableStateOf("")
@@ -104,6 +111,20 @@ class StudentViewModel @Inject constructor(
     fun setEnteredCertification(certificate: List<String>) {
         this.certificate.removeAll { !certificate.contains(it) }
         this.certificate.addAll(certificate.filter { !this.certificate.contains(it) })
+    }
+
+    fun getMajorList() {
+        viewModelScope.launch {
+            getMajorListUseCase().onSuccess {
+                it.catch { remoteError ->
+                    _getMajorListEvent.value = remoteError.errorHandling()
+                }.collect { response ->
+                    _getMajorListEvent.value = Event.Success(data = response)
+                }
+            }.onFailure {
+                _getMajorListEvent.value = it.errorHandling()
+            }
+        }
     }
 
     fun enterStudentInformation(

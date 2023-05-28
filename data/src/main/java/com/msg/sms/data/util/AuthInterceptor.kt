@@ -1,6 +1,9 @@
 package com.msg.sms.data.util
 
 import android.annotation.SuppressLint
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.msg.sms.data.local.datasource.auth.LocalAuthDataSource
@@ -17,12 +20,13 @@ import javax.inject.Inject
 class AuthInterceptor @Inject constructor(
     private val dataSource: LocalAuthDataSource
 ) : Interceptor {
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SimpleDateFormat")
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val builder = request.newBuilder()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-        val currentTime = dateFormat.format(System.currentTimeMillis()).toString()
+        val currentTime = dateFormat.format(System.currentTimeMillis())
         val ignorePath = listOf("/auth")
         val ignoreMethod = listOf("POST")
         val path = request.url.encodedPath
@@ -39,7 +43,7 @@ class AuthInterceptor @Inject constructor(
 
             if (refreshTime >= currentTime) throw NeedLoginException()
 //            access 토큰 재 발급
-            if (accessTime >= currentTime) {
+            if (accessTime <= currentTime) {
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")
@@ -58,7 +62,6 @@ class AuthInterceptor @Inject constructor(
             }
             builder.addHeader("Authorization", "Bearer ${dataSource.getAccessToken().first()}")
         }
-
         return chain.proceed(builder.build())
     }
 }

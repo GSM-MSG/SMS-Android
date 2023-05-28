@@ -20,12 +20,12 @@ import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.viewmodel.StudentViewModel
+import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @Composable
 fun CertificationComponent(
     navController: NavController,
-    viewModel: StudentViewModel,
+    viewModel: FillOutViewModel,
 ) {
     val data = viewModel.getEnteredCertification()
     SMSTheme { colors, typography ->

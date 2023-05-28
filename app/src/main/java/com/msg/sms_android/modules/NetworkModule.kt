@@ -2,6 +2,7 @@ package com.msg.sms_android.modules
 
 import com.msg.sms.data.remote.network.api.AuthAPI
 import com.msg.sms.data.remote.network.api.FileUploadAPI
+import com.msg.sms.data.remote.network.api.MajorAPI
 import com.msg.sms.data.remote.network.api.StudentAPI
 import com.msg.sms.data.util.AuthInterceptor
 import com.msg.sms_android.BuildConfig
@@ -22,7 +23,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkhttpClient(
-        authInterceptor: AuthInterceptor
+        authInterceptor: AuthInterceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -36,7 +37,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofitInstance(
         okHttpClient: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory
+        gsonConverterFactory: GsonConverterFactory,
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
@@ -67,5 +68,11 @@ object NetworkModule {
     @Singleton
     fun provideFileUploadService(retrofit: Retrofit): FileUploadAPI {
         return retrofit.create(FileUploadAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMajorService(retrofit: Retrofit): MajorAPI {
+        return retrofit.create(MajorAPI::class.java)
     }
 }
