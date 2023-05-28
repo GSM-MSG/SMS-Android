@@ -68,7 +68,9 @@ fun ProfileScreen(
     }
     val galleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            profileImageUri.value = uri
+            if (uri != null) {
+                profileImageUri.value = uri
+            }
         }
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
