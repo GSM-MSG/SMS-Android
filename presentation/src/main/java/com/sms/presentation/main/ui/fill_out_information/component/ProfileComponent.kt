@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -91,15 +92,23 @@ fun ProfileComponent(
                         bottomSheetScaffoldState.show()
                     }
                 })
-            } else Image(
-                painter = rememberAsyncImagePainter(profileImageUri),
-                contentDescription = "User Profile Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .width(107.dp)
-                    .height(106.dp)
-                    .clip(RoundedCornerShape(5.dp))
-            )
+            } else {
+                Image(
+                    painter = rememberAsyncImagePainter(profileImageUri),
+                    contentDescription = "User Profile Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(107.dp)
+                        .height(106.dp)
+                        .clip(RoundedCornerShape(5.dp))
+                        .clickable {
+                            coroutineScope.launch {
+                                bottomSheetScaffoldState.show()
+                            }
+                        }
+                )
+                Log.d("profileUri - component", profileImageUri.toString())
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "자기소개", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
