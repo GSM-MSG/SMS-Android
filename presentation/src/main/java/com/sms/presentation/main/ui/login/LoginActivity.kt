@@ -44,7 +44,8 @@ class LoginActivity : ComponentActivity() {
         viewModel.gAuthLoginRequest.observe(this) { event ->
             when (event) {
                 is Event.Success -> {
-                    pageController(event.data!!.isExist)
+                    viewModel.saveTheLoginData(event.data!!)
+                    pageController(event.data.isExist)
                 }
                 else -> {
                     Log.d("login", event.toString())
