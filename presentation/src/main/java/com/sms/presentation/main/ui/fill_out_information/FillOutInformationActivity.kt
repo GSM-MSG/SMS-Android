@@ -65,25 +65,7 @@ class FillOutInformationActivity : ComponentActivity() {
                 }
             }
         }
-
-//        observeData()
     }
-
-//    private fun observeData() {
-//        lifecycleScope.launch {
-//            viewModel.getMajorListEvent.observe(this@FillOutInformationActivity) { data ->
-//                when (data) {
-//                    is Event.Success -> {
-//                        showSuccessPage(data.data!!.major)
-//                    }
-//                    is Event.Loading -> {
-//                    }
-//                    else -> {
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     private fun showSuccessPage(list: List<String>) {
 
