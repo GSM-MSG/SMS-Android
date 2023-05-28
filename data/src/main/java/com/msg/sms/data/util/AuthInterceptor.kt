@@ -2,7 +2,6 @@ package com.msg.sms.data.util
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -12,8 +11,6 @@ import com.sms.data.BuildConfig
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
@@ -25,7 +22,7 @@ class AuthInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val builder = request.newBuilder()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        val dateFormat = SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss")
         val currentTime = dateFormat.format(System.currentTimeMillis())
         val ignorePath = listOf("/auth")
         val ignoreMethod = listOf("POST")
@@ -41,14 +38,14 @@ class AuthInterceptor @Inject constructor(
             val refreshTime = dataSource.getRefreshTime().first()
             val accessTime = dataSource.getAccessTime().first()
 
-            if (refreshTime >= currentTime) throw NeedLoginException()
+            if (refreshTime <= currentTime) throw NeedLoginException()
 //            access 토큰 재 발급
             if (accessTime <= currentTime) {
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")
-                    .patch("".toRequestBody("application/json".toMediaTypeOrNull()))
-                    .addHeader("Refresh-Token", "Bearer ${dataSource.getRefreshToken().first()}")
+                    .patch(chain.request().body ?: RequestBody.create(null, byteArrayOf()))
+                    .addHeader("Refresh-Token", dataSource.getRefreshToken().first())
                     .build()
                 val jsonParser = JsonParser()
                 val response = client.newCall(refreshRequest).execute()
@@ -62,6 +59,7 @@ class AuthInterceptor @Inject constructor(
             }
             builder.addHeader("Authorization", "Bearer ${dataSource.getAccessToken().first()}")
         }
-        return chain.proceed(builder.build())
+        val accessToken = runBlocking { dataSource.getAccessToken().first() }
+        return chain.proceed(builder.addHeader("Authorization", "Bearer $accessToken").build())
     }
 }
