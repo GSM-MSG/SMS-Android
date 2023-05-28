@@ -43,14 +43,16 @@ class AuthInterceptor @Inject constructor(
             if (refreshTime <= currentTime) throw NeedLoginException()
 //            access 토큰 재 발급
             if (accessTime <= currentTime) {
+                Log.d("TAG", "intercept: access 재발급")
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")
                     .patch(chain.request().body ?: RequestBody.create(null, byteArrayOf()))
-                    .addHeader("Refresh-Token", "Bearer ${dataSource.getRefreshToken().first()}")
+                    .addHeader("Refresh-Token", dataSource.getRefreshToken().first())
                     .build()
                 val jsonParser = JsonParser()
                 val response = client.newCall(refreshRequest).execute()
+                Log.d("TAG", "intercept: ${response.code}")
                 if (response.isSuccessful) {
                     val token = jsonParser.parse(response.body!!.string()) as JsonObject
                     dataSource.setAccessToken(token["accessToken"].toString())
