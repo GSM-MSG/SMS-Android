@@ -88,8 +88,6 @@ dependencies {
     implementation(Dependency.Libraries.OKHTTP)
 
     implementation(Dependency.Libraries.COIL)
-
-    implementation(Dependency.Google.PERMISSIONS)
 }
 
 fun getApiKey(propertyKey: String): String {

@@ -1,6 +1,8 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -9,10 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +49,22 @@ fun ProfileComponent(
             profileImageUri.value = uri ?: Uri.EMPTY
         }
 
+    val permission =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            galleryLauncher.launch("image/*")
+        }
+    }
+
+
     SMSTheme { _, typography ->
         val coroutineScope = rememberCoroutineScope()
 
@@ -77,6 +92,7 @@ fun ProfileComponent(
         isRequired(
             techStack.value != "" && introduce.value != "" && portfolioUrl.value != "" && contactEmail.value != "" && profileImageUri.value != Uri.EMPTY
         )
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -98,7 +114,7 @@ fun ProfileComponent(
             if (profileImageUri.value == Uri.EMPTY || profileImageUri.value == null) {
                 profileImageUri.value = data.profileImageUri
                 ProfileIcon(modifier = Modifier.clickable {
-                    galleryLauncher.launch("image/*")
+                    permissionLauncher.launch(permission)
                 })
             } else Image(
                 painter = rememberAsyncImagePainter(profileImageUri.value),
