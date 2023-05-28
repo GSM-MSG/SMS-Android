@@ -66,8 +66,4 @@ class FillOutInformationActivity : ComponentActivity() {
             }
         }
     }
-
-    private fun showSuccessPage(list: List<String>) {
-
-    }
 }
