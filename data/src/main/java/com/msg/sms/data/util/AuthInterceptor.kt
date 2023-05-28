@@ -61,6 +61,7 @@ class AuthInterceptor @Inject constructor(
             }
             builder.addHeader("Authorization", "Bearer ${dataSource.getAccessToken().first()}")
         }
-        return chain.proceed(builder.build())
+        val accessToken = runBlocking { dataSource.getAccessToken().first() }
+        return chain.proceed(builder.addHeader("Authorization", "Bearer $accessToken").build())
     }
 }
