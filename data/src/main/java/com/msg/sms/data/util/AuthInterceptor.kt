@@ -12,8 +12,6 @@ import com.sms.data.BuildConfig
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
@@ -47,7 +45,7 @@ class AuthInterceptor @Inject constructor(
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")
-                    .patch("".toRequestBody("application/json".toMediaTypeOrNull()))
+                    .patch(chain.request().body ?: RequestBody.create(null, byteArrayOf()))
                     .addHeader("Refresh-Token", "Bearer ${dataSource.getRefreshToken().first()}")
                     .build()
                 val jsonParser = JsonParser()
