@@ -7,7 +7,7 @@
     <application>
         <activity
             android:name=".main.ui.fill_out_information.FillOutInformationActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_activity_fill_out_information" />
         <activity
             android:name=".main.ui.login.LoginActivity"
