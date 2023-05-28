@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import com.msg.gauthsignin.GAuthSigninWebView
 import com.sms.presentation.BuildConfig
 import com.sms.presentation.main.ui.MainActivity
+import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.component.LoginScreen
 import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -43,13 +44,22 @@ class LoginActivity : ComponentActivity() {
         viewModel.gAuthLoginRequest.observe(this) { event ->
             when (event) {
                 is Event.Success -> {
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                    pageController(event.data!!.isExist)
                 }
                 else -> {
                     Log.d("login", event.toString())
                 }
             }
         }
+    }
+
+    private fun pageController(isExist: Boolean) {
+        startActivity(
+            Intent(
+                this,
+                if (isExist) MainActivity::class.java else FillOutInformationActivity::class.java
+            )
+        )
+        finish()
     }
 }
