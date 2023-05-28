@@ -25,7 +25,7 @@ class AuthInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val builder = request.newBuilder()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        val dateFormat = SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss")
         val currentTime = dateFormat.format(System.currentTimeMillis())
         val ignorePath = listOf("/auth")
         val ignoreMethod = listOf("POST")
