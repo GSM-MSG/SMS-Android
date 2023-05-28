@@ -3,11 +3,12 @@
 
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application>
         <activity
             android:name=".main.ui.fill_out_information.FillOutInformationActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_fill_out_information" />
         <activity
             android:name=".main.ui.login.LoginActivity"

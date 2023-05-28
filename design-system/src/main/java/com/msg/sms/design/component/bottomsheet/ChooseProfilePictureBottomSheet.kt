@@ -1,10 +1,7 @@
 package com.msg.sms.design.component.bottomsheet
 
 import android.Manifest
-import android.net.Uri
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
@@ -19,29 +16,11 @@ import com.msg.sms.design.icon.GalleryIcon
 @Composable
 fun ChooseProfilePictureBottomSheet(
     bottomSheetState: ModalBottomSheetState,
-    profileImageUri: (Uri) -> Unit
+    isCamera: (Boolean) -> Unit,
+    permissionLauncher: ManagedActivityResultLauncher<String, Boolean>,
+    permission: String
 ) {
     val coroutineScope = rememberCoroutineScope()
-
-    val galleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            profileImageUri(uri ?: Uri.EMPTY)
-        }
-
-    val permission =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            galleryLauncher.launch("image/*")
-        }
-    }
 
     Column {
         Spacer(modifier = Modifier.size(24.dp))
@@ -51,6 +30,7 @@ fun ChooseProfilePictureBottomSheet(
             icon = { GalleryIcon() },
             text = "앨범에서 가져오기"
         ) {
+            isCamera(false)
             permissionLauncher.launch(permission)
         }
         Spacer(modifier = Modifier.size(8.dp))
@@ -60,7 +40,8 @@ fun ChooseProfilePictureBottomSheet(
             icon = { CameraIcon() },
             text = "카메라에서 촬영"
         ) {
-
+            isCamera(true)
+            permissionLauncher.launch(Manifest.permission.CAMERA)
         }
         Spacer(modifier = Modifier.size(16.dp))
     }

@@ -1,7 +1,11 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.bottomsheet.ChooseProfilePictureBottomSheet
@@ -18,6 +23,7 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.ProfileComponent
+import com.sms.presentation.main.ui.util.toUri
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -26,6 +32,8 @@ fun ProfileScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
 ) {
+    val context = LocalContext.current
+
     val scrollState = rememberScrollState()
 
     val bottomSheetState =
@@ -55,6 +63,35 @@ fun ProfileScreen(
     val isProfilePictureBottomSheet = remember {
         mutableStateOf(true)
     }
+    val isCamera = remember {
+        mutableStateOf(false)
+    }
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            profileImageUri.value = uri
+        }
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
+            profileImageUri.value = bitmap.toUri(context)
+        }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        when {
+            isGranted && isCamera.value -> {
+                cameraLauncher.launch(null)
+            }
+            isGranted && !isCamera.value -> {
+                galleryLauncher.launch("image/*")
+            }
+        }
+    }
+    val permission =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
     val list = viewModel.getMajorListEvent.collectAsState()
 
     ModalBottomSheetLayout(
@@ -62,9 +99,12 @@ fun ProfileScreen(
             if (isProfilePictureBottomSheet.value) {
                 ChooseProfilePictureBottomSheet(
                     bottomSheetState = bottomSheetState,
-                    profileImageUri = {
-                        profileImageUri.value = it
-                    })
+                    isCamera = {
+                        isCamera.value = it
+                    },
+                    permissionLauncher = permissionLauncher,
+                    permission = permission
+                )
             } else {
                 SelectorBottomSheet(
                     list = if (list.value.data != null) list.value.data!!.major else listOf(""),
@@ -104,7 +144,9 @@ fun ProfileScreen(
                     isEnable = list.value.data != null,
                     profileImageUri = profileImageUri.value,
                     isProfilePictureBottomSheet = { isProfilePictureBottomSheet.value = it }
-                )
+                ).also {
+                    Log.d("profileUri", profileImageUri.value.toString())
+                }
                 Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Spacer(modifier = Modifier.height(32.dp))
                     SmsRoundedButton(
