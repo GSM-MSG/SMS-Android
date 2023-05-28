@@ -36,9 +36,7 @@ class AuthViewModel @Inject constructor(
     fun saveTheLoginData(data: GAuthLoginResponseModel) = viewModelScope.launch {
         saveTheLoginDataUseCase(
             data = data
-        ).onSuccess {
-
-        }.onFailure {
+        ).onFailure {
             Log.d("TAG", "saveTheLoginData: $it")
         }
     }
