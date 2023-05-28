@@ -13,6 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.CameraIcon
+import com.msg.sms.design.icon.GalleryIcon
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -47,7 +48,7 @@ fun ChooseProfilePictureBottomSheet(
         ProfileBottomSheetComponent(
             coroutineScope = coroutineScope,
             bottomSheetState = bottomSheetState,
-            icon = { CameraIcon() },
+            icon = { GalleryIcon() },
             text = "앨범에서 가져오기"
         ) {
             permissionLauncher.launch(permission)

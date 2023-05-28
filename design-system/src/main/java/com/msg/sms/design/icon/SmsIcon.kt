@@ -116,6 +116,17 @@ fun TrashCanIcon(
     )
 }
 
+@Composable
+fun GalleryIcon(
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_gallery),
+        contentDescription = "Gallery Icon Button",
+        modifier = modifier
+    )
+}
+
 
 
 
