@@ -35,7 +35,7 @@ fun ProfileBottomSheetComponent(
                 },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.fillMaxWidth(0.05f))
+            Spacer(modifier = Modifier.size(21.dp))
             icon()
             Spacer(modifier = Modifier.size(12.dp))
             Text(
