@@ -1,6 +1,5 @@
 package com.msg.sms.design.component.bottomsheet
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
@@ -10,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -27,7 +27,7 @@ fun ProfileBottomSheetComponent(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
+                .smsClickable {
                     onClick()
                     coroutineScope.launch {
                         bottomSheetState.hide()
