@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -19,7 +20,7 @@ fun Uri.toMultipartBody(context: Context): MultipartBody.Part? {
     val file: File? = getFileFromUri(context, this)
     file?.let {
         val requestFile: RequestBody =
-            RequestBody.create("application/octet-stream".toMediaTypeOrNull(), it)
+            it.asRequestBody("application/octet-stream".toMediaTypeOrNull())
         val part: MultipartBody.Part =
             MultipartBody.Part.createFormData("file", it.name, requestFile)
         return part
