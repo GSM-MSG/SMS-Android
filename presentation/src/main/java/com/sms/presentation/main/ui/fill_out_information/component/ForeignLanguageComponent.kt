@@ -146,8 +146,6 @@ fun ForeignLanguageComponent(
                                     score = foreignLanguageScoreList[index]
                                 )
                             }
-                        /*TODO(KH) foreignLanguage 넣어서 버튼 클릭 시 api 요청하도록 보내기 */
-                        Log.d("TAG", "ForeignLanguageScreen: $foreignLanguage")
 
                         imageFileUpload(
                             viewModel.getEnteredProfileInformation().profileImageUri.toMultipartBody(
@@ -168,7 +166,8 @@ fun ForeignLanguageComponent(
                                 if (isComplete) {
                                     enterStudentInformation(
                                         viewModel = viewModel,
-                                        coroutineScope = coroutineScope
+                                        coroutineScope = coroutineScope,
+                                        languageCertificate = foreignLanguage
                                     )
                                 }
                             }
@@ -219,16 +218,40 @@ fun dreamBookFileUpload(
 
 fun enterStudentInformation(
     viewModel: FillOutViewModel,
-    coroutineScope: CoroutineScope
-) = coroutineScope.launch {
-    //viewModel.enterStudentInformation()
-    viewModel.enterInformationResponse.collect { response ->
-        when (response) {
-            is Event.Success -> {
+    coroutineScope: CoroutineScope,
+    languageCertificate: List<CertificateInformationModel>
+) {
+    val profileInfo = viewModel.getEnteredProfileInformation()
+    val schoolLifeInfo = viewModel.getEnteredSchoolLifeInformation()
+    val militaryServiceInfo = viewModel.getEnteredMilitaryServiceInformation()
+    val workConditionInfo = viewModel.getEnteredWorkConditionInformation()
+    val certificateInfo = viewModel.getEnteredCertification()
 
-            }
-            else -> {
-
+    coroutineScope.launch {
+        viewModel.enterStudentInformation(
+            major = profileInfo.major,
+            techStack = profileInfo.techStack.split(",").map { it.trim() },
+            profileImgUrl = viewModel.getProfileImageUrl(),
+            introduce = profileInfo.introduce,
+            portfolioUrl = profileInfo.portfolioUrl,
+            contactEmail = profileInfo.contactEmail,
+            formOfEmployment = workConditionInfo.formOfEmployment,
+            gsmAuthenticationScore = schoolLifeInfo.gsmAuthenticationScore,
+            salary = workConditionInfo.salary.toInt(),
+            region = workConditionInfo.region,
+            languageCertificate = languageCertificate,
+            dreamBookFileUrl = viewModel.getDreamBookFileUrl(),
+            militaryService = militaryServiceInfo.militaryService,
+            certificate = certificateInfo.certification
+        )
+        viewModel.enterInformationResponse.collect { response ->
+            when (response) {
+                is Event.Success -> {
+                    Log.d("Enter Student Info", response.toString())
+                }
+                else -> {
+                    Log.d("Enter Student Info", response.toString())
+                }
             }
         }
     }

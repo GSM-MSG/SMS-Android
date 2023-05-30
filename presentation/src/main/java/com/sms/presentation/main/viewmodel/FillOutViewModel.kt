@@ -52,7 +52,6 @@ class FillOutViewModel @Inject constructor(
     private val techStack = mutableStateOf("")
     private val profileImageUri = mutableStateOf(Uri.EMPTY)
     private val introduce = mutableStateOf("")
-    private val stuNum = mutableStateOf("")
     private val portfolioUrl = mutableStateOf("")
     private val contactEmail = mutableStateOf("")
     private val formOfEmployment = mutableStateOf("")
@@ -143,8 +142,16 @@ class FillOutViewModel @Inject constructor(
         this.dreamBookFileUri.value = dreamBookFileUri
     }
 
+    fun getProfileImageUrl(): String {
+        return profileImageUrl
+    }
+
     fun setProfileImageUrl(profileImageUrl: String) {
         this.profileImageUrl = profileImageUrl
+    }
+
+    fun getDreamBookFileUrl(): String {
+        return dreamBookFileUrl
     }
 
     fun setDreamBookFileUrl(dreamBookFileUrl: String) {
@@ -171,7 +178,6 @@ class FillOutViewModel @Inject constructor(
         techStack: List<String>,
         profileImgUrl: String,
         introduce: String,
-        stuNum: String,
         portfolioUrl: String,
         contactEmail: String,
         formOfEmployment: String,
@@ -189,7 +195,6 @@ class FillOutViewModel @Inject constructor(
                 techStack = techStack,
                 profileImgUrl = profileImgUrl,
                 introduce = introduce,
-                stuNum = stuNum,
                 portfolioUrl = portfolioUrl,
                 contactEmail = contactEmail,
                 formOfEmployment = formOfEmployment,
