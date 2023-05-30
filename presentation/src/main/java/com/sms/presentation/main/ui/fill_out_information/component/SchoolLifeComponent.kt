@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,16 +27,10 @@ fun SchoolLifeComponent(
     gsmAuthenticationScore: (String) -> Unit,
     addDreamBook: () -> Unit
 ) {
-    val dreamBook = remember {
-        mutableStateOf("")
-    }
     val focusRequester = remember {
         FocusRequester()
     }
     val focusManager = LocalFocusManager.current
-
-    if (fileName != "")
-        dreamBook.value = fileName
 
     SMSTheme { _, typography ->
         Column(modifier = Modifier.padding(end = 20.dp, start = 20.dp, top = 20.dp)) {
@@ -82,8 +75,7 @@ fun SchoolLifeComponent(
                         }
                     },
                 readOnly = true,
-                setText = dreamBook.value,
-                onValueChange = { dreamBook.value = it }
+                setText = fileName
             ) {
 
             }
