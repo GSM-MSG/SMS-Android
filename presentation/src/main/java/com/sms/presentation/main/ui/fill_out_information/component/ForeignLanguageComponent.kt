@@ -24,7 +24,12 @@ import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
+import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.FillOutViewModel
+import com.sms.presentation.main.viewmodel.util.Event
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 
 @Composable
 fun ForeignLanguageComponent(
@@ -143,9 +148,56 @@ fun ForeignLanguageComponent(
                             }
                         /*TODO(KH) foreignLanguage 넣어서 버튼 클릭 시 api 요청하도록 보내기 */
                         Log.d("TAG", "ForeignLanguageScreen: $foreignLanguage")
+
+                        imageFileUpload(
+                            viewModel.getEnteredProfileInformation().profileImageUri.toMultipartBody(context)!!,
+                            viewModel = viewModel,
+                            coroutineScope = coroutineScope
+                        )
+                        dreamBookFileUpload(
+                            viewModel.getEnteredSchoolLifeInformation().dreamBookFileUri.toMultipartBody(context)!!,
+                            viewModel = viewModel,
+                            coroutineScope = coroutineScope
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.height(48.dp))
+            }
+        }
+    }
+}
+
+fun imageFileUpload(
+    imageFile: MultipartBody.Part,
+    viewModel: FillOutViewModel,
+    coroutineScope: CoroutineScope
+) = coroutineScope.launch {
+    viewModel.imageUpload(imageFile)
+    viewModel.imageUploadResponse.collect { response ->
+        when (response) {
+            is Event.Success -> {
+                Log.d("ImageUpload", response.data!!.fileUrl)
+            }
+            else -> {
+                Log.d("ImageUpload", response.toString())
+            }
+        }
+    }
+}
+
+fun dreamBookFileUpload(
+    dreamBookFile: MultipartBody.Part,
+    viewModel: FillOutViewModel,
+    coroutineScope: CoroutineScope
+) = coroutineScope.launch {
+    viewModel.dreamBookUpload(dreamBookFile)
+    viewModel.dreamBookUploadResponse.collect { response ->
+        when (response) {
+            is Event.Success -> {
+                Log.d("DreamBookUpload", response.data!!.fileUrl)
+            }
+            else -> {
+                Log.d("DreamBookUpload", response.toString())
             }
         }
     }
