@@ -57,7 +57,8 @@ class AuthInterceptor @Inject constructor(
                     dataSource.setRefreshTime(token["refreshTokenExp"].toString())
                 } else throw NeedLoginException()
             }
-            builder.addHeader("Authorization", "Bearer ${dataSource.getAccessToken().first()}")
+            val accessToken = dataSource.getAccessToken().first()
+            builder.addHeader("Authorization", "Bearer $accessToken")
         }
         return chain.proceed(builder.build())
     }
