@@ -18,7 +18,6 @@ import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
@@ -33,18 +32,16 @@ class FillOutViewModel @Inject constructor(
     private val dreamBookUploadUseCase: DreamBookUploadUseCase
 ) : ViewModel() {
     private val _enterInformationResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
-    val enterInformationResponse: StateFlow<Event<Unit>> get() = _enterInformationResponse
+    val enterInformationResponse = _enterInformationResponse.asStateFlow()
 
     private val _getMajorListEvent = MutableStateFlow<Event<MajorListModel>>(Event.Loading)
     val getMajorListEvent = _getMajorListEvent.asStateFlow()
 
-    private val _imageUploadResponse =
-        MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
-    val imageUploadResponse: StateFlow<Event<FileUploadResponseModel>> get() = _imageUploadResponse
+    private val _imageUploadResponse = MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
+    val imageUploadResponse = _imageUploadResponse.asStateFlow()
 
-    private val _dreamBookUploadResponse =
-        MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
-    val dreamBookUploadResponse: StateFlow<Event<FileUploadResponseModel>> get() = _dreamBookUploadResponse
+    private val _dreamBookUploadResponse = MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
+    val dreamBookUploadResponse = _dreamBookUploadResponse.asStateFlow()
 
     private val major = mutableStateOf("")
     private val techStack = mutableStateOf("")
