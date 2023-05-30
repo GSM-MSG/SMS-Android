@@ -2,7 +2,6 @@ package com.msg.sms.data.util
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -38,7 +37,6 @@ class AuthInterceptor @Inject constructor(
         runBlocking {
             val refreshTime = dataSource.getRefreshTime().first()
             val accessTime = dataSource.getAccessTime().first()
-            Log.d("TAG", "intercept: $refreshTime, $accessTime")
 
             if (refreshTime <= currentTime) throw NeedLoginException()
 //            access 토큰 재 발급
