@@ -102,6 +102,7 @@ fun ProfileComponent(
                         .height(106.dp)
                         .clip(RoundedCornerShape(5.dp))
                         .clickable {
+                            isProfilePictureBottomSheet(true)
                             coroutineScope.launch {
                                 bottomSheetScaffoldState.show()
                             }
