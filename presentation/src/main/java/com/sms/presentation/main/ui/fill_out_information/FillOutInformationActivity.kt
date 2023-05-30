@@ -10,16 +10,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sms.presentation.main.ui.fill_out_information.screen.*
+import com.sms.presentation.main.viewmodel.FileUploadViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class FillOutInformationActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<FillOutViewModel>()
+    private val fillOutViewModel by viewModels<FillOutViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getMajorList()
+        fillOutViewModel.getMajorList()
 
         setContent {
             val navController = rememberNavController()
@@ -60,7 +61,8 @@ class FillOutInformationActivity : ComponentActivity() {
                 composable("ForeignLanguage") {
                     ForeignLanguageScreen(
                         navController = navController,
-                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
+                        fillOutViewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                        fileUploadViewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                     )
                 }
             }

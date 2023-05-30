@@ -10,12 +10,14 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.ForeignLanguageComponent
+import com.sms.presentation.main.viewmodel.FileUploadViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @Composable
 fun ForeignLanguageScreen(
     navController: NavController,
-    viewModel: FillOutViewModel,
+    fillOutViewModel: FillOutViewModel,
+    fileUploadViewModel: FileUploadViewModel
 ) {
     Column(modifier = Modifier.background(Color.White)) {
         TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
@@ -24,7 +26,8 @@ fun ForeignLanguageScreen(
         SmsSpacer()
         ForeignLanguageComponent(
             navController = navController,
-            viewModel = viewModel,
+            fillOutViewModel = fillOutViewModel,
+            fileUploadViewModel = fileUploadViewModel
         )
     }
 }

@@ -10,8 +10,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.button.ButtonState
@@ -22,14 +24,21 @@ import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
+import com.sms.presentation.main.ui.util.toMultipartBody
+import com.sms.presentation.main.viewmodel.FileUploadViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ForeignLanguageComponent(
     navController: NavController,
-    viewModel: FillOutViewModel,
+    fillOutViewModel: FillOutViewModel,
+    fileUploadViewModel: FileUploadViewModel
 ) {
     SMSTheme { colors, typography ->
+        val context = LocalContext.current
+        val coroutineScope = rememberCoroutineScope()
         val foreignLanguageList = remember {
             mutableStateListOf("")
         }
@@ -130,14 +139,26 @@ fun ForeignLanguageComponent(
                         text = "다음",
                         state = ButtonState.Normal
                     ) {
-                        val foreignLanguage = foreignLanguageList.mapIndexed { index: Int, name: String ->
-                            CertificateInformationModel(
-                                languageCertificateName = name,
-                                score = foreignLanguageScoreList[index]
-                            )
-                        }
+                        val foreignLanguage =
+                            foreignLanguageList.mapIndexed { index: Int, name: String ->
+                                CertificateInformationModel(
+                                    languageCertificateName = name,
+                                    score = foreignLanguageScoreList[index]
+                                )
+                            }
                         /*TODO(KH) foreignLanguage 넣어서 버튼 클릭 시 api 요청하도록 보내기 */
                         Log.d("TAG", "ForeignLanguageScreen: $foreignLanguage")
+                        fileUploadViewModel.imageUpload(
+                            fillOutViewModel.getEnteredProfileInformation().profileImageUri.toMultipartBody(
+                                context
+                            )!!
+                        )
+
+                        coroutineScope.launch {
+                            fileUploadViewModel.imageUploadResponse.collect { response ->
+                                Log.d("response - image", response.toString())
+                            }
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(48.dp))
