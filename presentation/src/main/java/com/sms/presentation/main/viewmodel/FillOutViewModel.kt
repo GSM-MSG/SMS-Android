@@ -37,11 +37,16 @@ class FillOutViewModel @Inject constructor(
     private val _getMajorListEvent = MutableStateFlow<Event<MajorListModel>>(Event.Loading)
     val getMajorListEvent = _getMajorListEvent.asStateFlow()
 
-    private val _imageUploadResponse = MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
+    private val _imageUploadResponse =
+        MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
     val imageUploadResponse = _imageUploadResponse.asStateFlow()
 
-    private val _dreamBookUploadResponse = MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
+    private val _dreamBookUploadResponse =
+        MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
     val dreamBookUploadResponse = _dreamBookUploadResponse.asStateFlow()
+
+    private val _fileUploadCompleted = MutableStateFlow(false)
+    val fileUploadCompleted = _fileUploadCompleted.asStateFlow()
 
     private val major = mutableStateOf("")
     private val techStack = mutableStateOf("")
@@ -57,6 +62,8 @@ class FillOutViewModel @Inject constructor(
     private val dreamBookFileUri = mutableStateOf(Uri.EMPTY)
     private val militaryService = mutableStateOf("")
     private val certificate = mutableStateListOf("")
+    private lateinit var profileImageUrl: String
+    private lateinit var dreamBookFileUrl: String
 
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(
@@ -136,6 +143,15 @@ class FillOutViewModel @Inject constructor(
         this.dreamBookFileUri.value = dreamBookFileUri
     }
 
+    fun setProfileImageUrl(profileImageUrl: String) {
+        this.profileImageUrl = profileImageUrl
+    }
+
+    fun setDreamBookFileUrl(dreamBookFileUrl: String) {
+        this.dreamBookFileUrl = dreamBookFileUrl
+    }
+
+
     fun getMajorList() {
         viewModelScope.launch {
             getMajorListUseCase().onSuccess {
@@ -200,6 +216,7 @@ class FillOutViewModel @Inject constructor(
         imageUploadUseCase(
             file = file
         ).onSuccess {
+            specifyWhenCompleteFileUpload()
             it.catch { remoteError ->
                 _imageUploadResponse.value = remoteError.errorHandling()
             }.collect { response ->
@@ -214,6 +231,7 @@ class FillOutViewModel @Inject constructor(
         dreamBookUploadUseCase(
             file = file
         ).onSuccess {
+            specifyWhenCompleteFileUpload()
             it.catch { remoteError ->
                 _dreamBookUploadResponse.value = remoteError.errorHandling()
             }.collect { response ->
@@ -222,5 +240,10 @@ class FillOutViewModel @Inject constructor(
         }.onFailure { error ->
             _dreamBookUploadResponse.value = error.errorHandling()
         }
+    }
+
+    private fun specifyWhenCompleteFileUpload() {
+        _fileUploadCompleted.value =
+            _imageUploadResponse.value is Event.Success && _dreamBookUploadResponse.value is Event.Success
     }
 }

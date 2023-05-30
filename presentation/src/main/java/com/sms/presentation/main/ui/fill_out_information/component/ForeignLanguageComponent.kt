@@ -150,15 +150,29 @@ fun ForeignLanguageComponent(
                         Log.d("TAG", "ForeignLanguageScreen: $foreignLanguage")
 
                         imageFileUpload(
-                            viewModel.getEnteredProfileInformation().profileImageUri.toMultipartBody(context)!!,
+                            viewModel.getEnteredProfileInformation().profileImageUri.toMultipartBody(
+                                context
+                            )!!,
                             viewModel = viewModel,
                             coroutineScope = coroutineScope
                         )
                         dreamBookFileUpload(
-                            viewModel.getEnteredSchoolLifeInformation().dreamBookFileUri.toMultipartBody(context)!!,
+                            viewModel.getEnteredSchoolLifeInformation().dreamBookFileUri.toMultipartBody(
+                                context
+                            )!!,
                             viewModel = viewModel,
                             coroutineScope = coroutineScope
                         )
+                        coroutineScope.launch {
+                            viewModel.fileUploadCompleted.collect { isComplete ->
+                                if (isComplete) {
+                                    enterStudentInformation(
+                                        viewModel = viewModel,
+                                        coroutineScope = coroutineScope
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(48.dp))
@@ -176,7 +190,7 @@ fun imageFileUpload(
     viewModel.imageUploadResponse.collect { response ->
         when (response) {
             is Event.Success -> {
-                Log.d("ImageUpload", response.data!!.fileUrl)
+                viewModel.setProfileImageUrl(response.data!!.fileUrl)
             }
             else -> {
                 Log.d("ImageUpload", response.toString())
@@ -194,10 +208,27 @@ fun dreamBookFileUpload(
     viewModel.dreamBookUploadResponse.collect { response ->
         when (response) {
             is Event.Success -> {
-                Log.d("DreamBookUpload", response.data!!.fileUrl)
+                viewModel.setDreamBookFileUrl(response.data!!.fileUrl)
             }
             else -> {
                 Log.d("DreamBookUpload", response.toString())
+            }
+        }
+    }
+}
+
+fun enterStudentInformation(
+    viewModel: FillOutViewModel,
+    coroutineScope: CoroutineScope
+) = coroutineScope.launch {
+    //viewModel.enterStudentInformation()
+    viewModel.enterInformationResponse.collect { response ->
+        when (response) {
+            is Event.Success -> {
+
+            }
+            else -> {
+
             }
         }
     }
