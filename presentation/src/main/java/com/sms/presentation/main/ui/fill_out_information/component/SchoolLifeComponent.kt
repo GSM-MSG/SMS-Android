@@ -21,6 +21,7 @@ import com.msg.sms.design.theme.SMSTheme
 @Composable
 fun SchoolLifeComponent(
     fileName: String,
+    gsmAuthenticationScore: (String) -> Unit,
     addDreamBook: () -> Unit
 ) {
     val gsmScore = remember {
@@ -57,7 +58,10 @@ fun SchoolLifeComponent(
                 placeHolder = "인증제 점수 입력",
                 modifier = Modifier.fillMaxWidth(),
                 setText = gsmScore.value,
-                onValueChange = { gsmScore.value = it }) {
+                onValueChange = {
+                    gsmScore.value = it
+                    gsmAuthenticationScore(it)
+                }) {
                 gsmScore.value = ""
             }
             Spacer(modifier = Modifier.height(24.dp))

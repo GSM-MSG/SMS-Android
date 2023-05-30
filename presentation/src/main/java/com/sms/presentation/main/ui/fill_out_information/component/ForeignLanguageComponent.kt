@@ -143,17 +143,6 @@ fun ForeignLanguageComponent(
                             }
                         /*TODO(KH) foreignLanguage 넣어서 버튼 클릭 시 api 요청하도록 보내기 */
                         Log.d("TAG", "ForeignLanguageScreen: $foreignLanguage")
-//                        viewModel.imageUpload(
-//                            fillOutViewModel.getEnteredProfileInformation().profileImageUri.toMultipartBody(
-//                                context
-//                            )!!
-//                        )
-//
-//                        coroutineScope.launch {
-//                            fileUploadViewModel.imageUploadResponse.collect { response ->
-//                                Log.d("response - image", response.toString())
-//                            }
-//                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(48.dp))

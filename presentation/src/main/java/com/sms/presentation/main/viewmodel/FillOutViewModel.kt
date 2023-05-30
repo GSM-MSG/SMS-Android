@@ -13,10 +13,7 @@ import com.msg.sms.domain.usecase.fileupload.DreamBookUploadUseCase
 import com.msg.sms.domain.usecase.fileupload.ImageUploadUseCase
 import com.msg.sms.domain.usecase.major.GetMajorListUseCase
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
-import com.sms.presentation.main.ui.fill_out_information.data.CertificationData
-import com.sms.presentation.main.ui.fill_out_information.data.MilitaryServiceData
-import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
-import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
+import com.sms.presentation.main.ui.fill_out_information.data.*
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,10 +38,12 @@ class FillOutViewModel @Inject constructor(
     private val _getMajorListEvent = MutableStateFlow<Event<MajorListModel>>(Event.Loading)
     val getMajorListEvent = _getMajorListEvent.asStateFlow()
 
-    private val _imageUploadResponse = MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
+    private val _imageUploadResponse =
+        MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
     val imageUploadResponse: StateFlow<Event<FileUploadResponseModel>> get() = _imageUploadResponse
 
-    private val _dreamBookUploadResponse = MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
+    private val _dreamBookUploadResponse =
+        MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
     val dreamBookUploadResponse: StateFlow<Event<FileUploadResponseModel>> get() = _dreamBookUploadResponse
 
     private val major = mutableStateOf("")
@@ -58,7 +57,7 @@ class FillOutViewModel @Inject constructor(
     private val gsmAuthenticationScore = mutableStateOf(0)
     private val salary = mutableStateOf(0)
     private val region = mutableStateListOf("")
-    private val dreamBookFileUrl = mutableStateListOf("")
+    private val dreamBookFileUri = mutableStateOf(Uri.EMPTY)
     private val militaryService = mutableStateOf("")
     private val certificate = mutableStateListOf("")
 
@@ -123,6 +122,21 @@ class FillOutViewModel @Inject constructor(
     fun setEnteredCertification(certificate: List<String>) {
         this.certificate.removeAll { !certificate.contains(it) }
         this.certificate.addAll(certificate.filter { !this.certificate.contains(it) })
+    }
+
+    fun getEnteredSchoolLifeInformation(): SchoolLifeData {
+        return SchoolLifeData(
+            gsmAuthenticationScore = gsmAuthenticationScore.value,
+            dreamBookFileUri = dreamBookFileUri.value
+        )
+    }
+
+    fun setEnteredSchoolLifeInformation(
+        gsmAuthenticationScore: Int,
+        dreamBookFileUri: Uri
+    ) {
+        this.gsmAuthenticationScore.value = gsmAuthenticationScore
+        this.dreamBookFileUri.value = dreamBookFileUri
     }
 
     fun getMajorList() {

@@ -31,16 +31,22 @@ fun SchoolLifeScreen(
         mutableStateOf(Uri.EMPTY)
     }
 
+    val gsmAuthenticationScore = remember {
+        mutableStateOf("")
+    }
+
     val fileName = remember {
         mutableStateOf("")
     }
 
     val localStorageLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            dreamBookFileUri.value = uri
+            if (uri != null) {
+                dreamBookFileUri.value = uri
+            }
         }
 
-    if (dreamBookFileUri.value != Uri.EMPTY && dreamBookFileUri.value != null)
+    if (dreamBookFileUri.value != Uri.EMPTY)
         fileName.value = getFileNameFromUri(LocalContext.current, dreamBookFileUri.value)!!
 
     SMSTheme { colors, _ ->
@@ -53,9 +59,15 @@ fun SchoolLifeScreen(
 
             }
             SmsSpacer()
-            SchoolLifeComponent(fileName = fileName.value) {
-                localStorageLauncher.launch("application/*")
-            }
+            SchoolLifeComponent(
+                fileName = fileName.value,
+                gsmAuthenticationScore = {
+                    gsmAuthenticationScore.value = it
+                },
+                addDreamBook = {
+                    localStorageLauncher.launch("application/*")
+                }
+            )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -78,8 +90,13 @@ fun SchoolLifeScreen(
                         modifier = Modifier
                             .weight(4f)
                             .height(48.dp),
+                        enabled = dreamBookFileUri.value != Uri.EMPTY && gsmAuthenticationScore.value != "",
                         state = ButtonState.Normal
                     ) {
+                        viewModel.setEnteredSchoolLifeInformation(
+                            gsmAuthenticationScore = gsmAuthenticationScore.value.toInt(),
+                            dreamBookFileUri = dreamBookFileUri.value
+                        )
                         navController.navigate("WorkCondition")
                     }
                 }
