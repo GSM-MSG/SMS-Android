@@ -146,9 +146,7 @@ fun ProfileScreen(
                     isEnable = list.value.data != null,
                     profileImageUri = profileImageUri.value,
                     isProfilePictureBottomSheet = { isProfilePictureBottomSheet.value = it }
-                ).also {
-                    Log.d("profileUri", profileImageUri.value.toString())
-                }
+                )
                 Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Spacer(modifier = Modifier.height(32.dp))
                     SmsRoundedButton(
