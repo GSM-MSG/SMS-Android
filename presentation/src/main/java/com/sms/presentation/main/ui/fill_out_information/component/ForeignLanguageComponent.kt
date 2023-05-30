@@ -236,7 +236,7 @@ fun enterStudentInformation(
             portfolioUrl = profileInfo.portfolioUrl,
             contactEmail = profileInfo.contactEmail,
             formOfEmployment = workConditionInfo.formOfEmployment,
-            gsmAuthenticationScore = schoolLifeInfo.gsmAuthenticationScore,
+            gsmAuthenticationScore = schoolLifeInfo.gsmAuthenticationScore.toInt(),
             salary = workConditionInfo.salary.toInt(),
             region = workConditionInfo.region,
             languageCertificate = languageCertificate,

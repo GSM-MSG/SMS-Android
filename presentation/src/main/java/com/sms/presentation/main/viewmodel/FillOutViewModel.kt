@@ -55,7 +55,7 @@ class FillOutViewModel @Inject constructor(
     private val portfolioUrl = mutableStateOf("")
     private val contactEmail = mutableStateOf("")
     private val formOfEmployment = mutableStateOf("")
-    private val gsmAuthenticationScore = mutableStateOf(0)
+    private val gsmAuthenticationScore = mutableStateOf("")
     private val salary = mutableStateOf(0)
     private val region = mutableStateListOf("")
     private val dreamBookFileUri = mutableStateOf(Uri.EMPTY)
@@ -135,7 +135,7 @@ class FillOutViewModel @Inject constructor(
     }
 
     fun setEnteredSchoolLifeInformation(
-        gsmAuthenticationScore: Int,
+        gsmAuthenticationScore: String,
         dreamBookFileUri: Uri
     ) {
         this.gsmAuthenticationScore.value = gsmAuthenticationScore

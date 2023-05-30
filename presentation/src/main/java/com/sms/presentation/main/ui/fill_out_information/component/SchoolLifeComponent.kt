@@ -24,12 +24,10 @@ import com.msg.sms.design.theme.SMSTheme
 @Composable
 fun SchoolLifeComponent(
     fileName: String,
+    enteredGsmAuthenticationScore: String,
     gsmAuthenticationScore: (String) -> Unit,
     addDreamBook: () -> Unit
 ) {
-    val gsmScore = remember {
-        mutableStateOf("")
-    }
     val dreamBook = remember {
         mutableStateOf("")
     }
@@ -60,16 +58,15 @@ fun SchoolLifeComponent(
             SmsTextField(
                 placeHolder = "인증제 점수 입력",
                 modifier = Modifier.fillMaxWidth(),
-                setText = gsmScore.value,
+                setText = enteredGsmAuthenticationScore,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
                 ),
                 onValueChange = {
-                    gsmScore.value = it
                     gsmAuthenticationScore(it)
                 }) {
-                gsmScore.value = ""
+                gsmAuthenticationScore("")
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "드림북", style = typography.body2)

@@ -27,12 +27,14 @@ fun SchoolLifeScreen(
     navController: NavController,
     viewModel: FillOutViewModel
 ) {
+    val data = viewModel.getEnteredSchoolLifeInformation()
+
     val dreamBookFileUri = remember {
-        mutableStateOf(Uri.EMPTY)
+        mutableStateOf(data.dreamBookFileUri)
     }
 
     val gsmAuthenticationScore = remember {
-        mutableStateOf("")
+        mutableStateOf(data.gsmAuthenticationScore)
     }
 
     val fileName = remember {
@@ -46,8 +48,9 @@ fun SchoolLifeScreen(
             }
         }
 
-    if (dreamBookFileUri.value != Uri.EMPTY)
+    if (dreamBookFileUri.value != Uri.EMPTY) {
         fileName.value = getFileNameFromUri(LocalContext.current, dreamBookFileUri.value)!!
+    }
 
     SMSTheme { colors, _ ->
         Column(
@@ -61,6 +64,7 @@ fun SchoolLifeScreen(
             SmsSpacer()
             SchoolLifeComponent(
                 fileName = fileName.value,
+                enteredGsmAuthenticationScore = gsmAuthenticationScore.value,
                 gsmAuthenticationScore = {
                     gsmAuthenticationScore.value = it
                 },
@@ -94,7 +98,7 @@ fun SchoolLifeScreen(
                         state = ButtonState.Normal
                     ) {
                         viewModel.setEnteredSchoolLifeInformation(
-                            gsmAuthenticationScore = gsmAuthenticationScore.value.toInt(),
+                            gsmAuthenticationScore = gsmAuthenticationScore.value,
                             dreamBookFileUri = dreamBookFileUri.value
                         )
                         navController.navigate("WorkCondition")
