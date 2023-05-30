@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -107,7 +106,6 @@ fun ProfileComponent(
                             }
                         }
                 )
-                Log.d("profileUri - component", profileImageUri.toString())
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "자기소개", style = typography.body2)

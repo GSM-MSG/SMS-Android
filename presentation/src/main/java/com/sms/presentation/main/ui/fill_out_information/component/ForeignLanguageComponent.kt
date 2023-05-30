@@ -24,17 +24,12 @@ import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
-import com.sms.presentation.main.ui.util.toMultipartBody
-import com.sms.presentation.main.viewmodel.FileUploadViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun ForeignLanguageComponent(
     navController: NavController,
-    fillOutViewModel: FillOutViewModel,
-    fileUploadViewModel: FileUploadViewModel
+    viewModel: FillOutViewModel
 ) {
     SMSTheme { colors, typography ->
         val context = LocalContext.current
@@ -148,17 +143,17 @@ fun ForeignLanguageComponent(
                             }
                         /*TODO(KH) foreignLanguage 넣어서 버튼 클릭 시 api 요청하도록 보내기 */
                         Log.d("TAG", "ForeignLanguageScreen: $foreignLanguage")
-                        fileUploadViewModel.imageUpload(
-                            fillOutViewModel.getEnteredProfileInformation().profileImageUri.toMultipartBody(
-                                context
-                            )!!
-                        )
-
-                        coroutineScope.launch {
-                            fileUploadViewModel.imageUploadResponse.collect { response ->
-                                Log.d("response - image", response.toString())
-                            }
-                        }
+//                        viewModel.imageUpload(
+//                            fillOutViewModel.getEnteredProfileInformation().profileImageUri.toMultipartBody(
+//                                context
+//                            )!!
+//                        )
+//
+//                        coroutineScope.launch {
+//                            fileUploadViewModel.imageUploadResponse.collect { response ->
+//                                Log.d("response - image", response.toString())
+//                            }
+//                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(48.dp))
