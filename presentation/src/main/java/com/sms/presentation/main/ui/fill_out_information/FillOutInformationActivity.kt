@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -60,7 +61,8 @@ class FillOutInformationActivity : ComponentActivity() {
                 composable("ForeignLanguage") {
                     ForeignLanguageScreen(
                         navController = navController,
-                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
+                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                        lifecycleScope = lifecycleScope
                     )
                 }
             }

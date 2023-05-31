@@ -10,7 +10,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,16 +28,20 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 
 @Composable
 fun ForeignLanguageComponent(
     navController: NavController,
-    viewModel: FillOutViewModel
+    viewModel: FillOutViewModel,
+    lifecycleScope: CoroutineScope
 ) {
     SMSTheme { colors, typography ->
+        val enteredProfileData = viewModel.getEnteredProfileInformation()
+        val enteredSchoolLifeData = viewModel.getEnteredSchoolLifeInformation()
+        val enteredMilitaryServiceData = viewModel.getEnteredMilitaryServiceInformation()
+        val enteredWorkConditionData = viewModel.getEnteredWorkConditionInformation()
+        val enteredCertificateData = viewModel.getEnteredCertification()
         val context = LocalContext.current
-        val coroutineScope = rememberCoroutineScope()
         val foreignLanguageList = remember {
             mutableStateListOf("")
         }
@@ -147,28 +150,34 @@ fun ForeignLanguageComponent(
                                 )
                             }
 
-                        imageFileUpload(
-                            viewModel.getEnteredProfileInformation().profileImageUri.toMultipartBody(
-                                context
-                            )!!,
-                            viewModel = viewModel,
-                            coroutineScope = coroutineScope
-                        )
-                        dreamBookFileUpload(
-                            viewModel.getEnteredSchoolLifeInformation().dreamBookFileUri.toMultipartBody(
-                                context
-                            )!!,
-                            viewModel = viewModel,
-                            coroutineScope = coroutineScope
-                        )
-                        coroutineScope.launch {
+                        lifecycleScope.launch {
+
+                            viewModel.imageUpload(enteredProfileData.profileImageUri.toMultipartBody(context)!!)
+                            imageFileUpload(viewModel = viewModel)
+
+                            viewModel.dreamBookUpload(enteredSchoolLifeData.dreamBookFileUri.toMultipartBody(context)!!)
+                            dreamBookFileUpload(viewModel = viewModel)
+
                             viewModel.fileUploadCompleted.collect { isComplete ->
                                 if (isComplete) {
-                                    enterStudentInformation(
-                                        viewModel = viewModel,
-                                        coroutineScope = coroutineScope,
-                                        languageCertificate = foreignLanguage
+                                    viewModel.enterStudentInformation(
+                                        major = enteredProfileData.major,
+                                        techStack = enteredProfileData.techStack.split(",")
+                                            .map { it.trim() },
+                                        profileImgUrl = viewModel.getProfileImageUrl(),
+                                        introduce = enteredProfileData.introduce,
+                                        portfolioUrl = enteredProfileData.portfolioUrl,
+                                        contactEmail = enteredProfileData.contactEmail,
+                                        formOfEmployment = enteredWorkConditionData.formOfEmployment,
+                                        gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
+                                        salary = enteredWorkConditionData.salary.toInt(),
+                                        region = enteredWorkConditionData.region,
+                                        languageCertificate = foreignLanguage,
+                                        dreamBookFileUrl = viewModel.getDreamBookFileUrl(),
+                                        militaryService = enteredMilitaryServiceData.militaryService,
+                                        certificate = enteredCertificateData.certification
                                     )
+                                    enterStudentInformation(viewModel = viewModel)
                                 }
                             }
                         }
@@ -180,12 +189,7 @@ fun ForeignLanguageComponent(
     }
 }
 
-fun imageFileUpload(
-    imageFile: MultipartBody.Part,
-    viewModel: FillOutViewModel,
-    coroutineScope: CoroutineScope
-) = coroutineScope.launch {
-    viewModel.imageUpload(imageFile)
+suspend fun imageFileUpload(viewModel: FillOutViewModel) {
     viewModel.imageUploadResponse.collect { response ->
         when (response) {
             is Event.Success -> {
@@ -198,12 +202,7 @@ fun imageFileUpload(
     }
 }
 
-fun dreamBookFileUpload(
-    dreamBookFile: MultipartBody.Part,
-    viewModel: FillOutViewModel,
-    coroutineScope: CoroutineScope
-) = coroutineScope.launch {
-    viewModel.dreamBookUpload(dreamBookFile)
+suspend fun dreamBookFileUpload(viewModel: FillOutViewModel) {
     viewModel.dreamBookUploadResponse.collect { response ->
         when (response) {
             is Event.Success -> {
@@ -216,42 +215,14 @@ fun dreamBookFileUpload(
     }
 }
 
-fun enterStudentInformation(
-    viewModel: FillOutViewModel,
-    coroutineScope: CoroutineScope,
-    languageCertificate: List<CertificateInformationModel>
-) {
-    val profileInfo = viewModel.getEnteredProfileInformation()
-    val schoolLifeInfo = viewModel.getEnteredSchoolLifeInformation()
-    val militaryServiceInfo = viewModel.getEnteredMilitaryServiceInformation()
-    val workConditionInfo = viewModel.getEnteredWorkConditionInformation()
-    val certificateInfo = viewModel.getEnteredCertification()
-
-    coroutineScope.launch {
-        viewModel.enterStudentInformation(
-            major = profileInfo.major,
-            techStack = profileInfo.techStack.split(",").map { it.trim() },
-            profileImgUrl = viewModel.getProfileImageUrl(),
-            introduce = profileInfo.introduce,
-            portfolioUrl = profileInfo.portfolioUrl,
-            contactEmail = profileInfo.contactEmail,
-            formOfEmployment = workConditionInfo.formOfEmployment,
-            gsmAuthenticationScore = schoolLifeInfo.gsmAuthenticationScore.toInt(),
-            salary = workConditionInfo.salary.toInt(),
-            region = workConditionInfo.region,
-            languageCertificate = languageCertificate,
-            dreamBookFileUrl = viewModel.getDreamBookFileUrl(),
-            militaryService = militaryServiceInfo.militaryService,
-            certificate = certificateInfo.certification
-        )
-        viewModel.enterInformationResponse.collect { response ->
-            when (response) {
-                is Event.Success -> {
-                    Log.d("Enter Student Info", response.toString())
-                }
-                else -> {
-                    Log.d("Enter Student Info", response.toString())
-                }
+suspend fun enterStudentInformation(viewModel: FillOutViewModel) {
+    viewModel.enterInformationResponse.collect { response ->
+        when (response) {
+            is Event.Success -> {
+                Log.d("Enter Student Info", response.toString())
+            }
+            else -> {
+                Log.d("Enter Student Info", response.toString())
             }
         }
     }
