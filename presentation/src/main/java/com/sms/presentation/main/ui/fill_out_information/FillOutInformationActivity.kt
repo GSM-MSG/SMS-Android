@@ -30,7 +30,7 @@ class FillOutInformationActivity : ComponentActivity() {
                 composable("Profile") {
                     ProfileScreen(
                         navController = navController,
-                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                     )
                 }
                 composable("SchoolLife") {
@@ -60,7 +60,7 @@ class FillOutInformationActivity : ComponentActivity() {
                 composable("ForeignLanguage") {
                     ForeignLanguageScreen(
                         navController = navController,
-                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                     )
                 }
             }
