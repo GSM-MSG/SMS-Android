@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.bottomsheet.ChooseProfilePictureBottomSheet
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.button.SmsRoundedButton
@@ -24,6 +25,8 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.ProfileComponent
+import com.sms.presentation.main.ui.util.getFileNameFromUri
+import com.sms.presentation.main.ui.util.isImageExtensionCorrect
 import com.sms.presentation.main.ui.util.toUri
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import kotlinx.coroutines.launch
@@ -44,7 +47,7 @@ fun ProfileScreen(
     val data = viewModel.getEnteredProfileInformation()
 
     val selectedMajor = remember {
-        mutableStateOf(if(data.major != "")data.major else "")
+        mutableStateOf(if (data.major != "") data.major else "")
     }
     val techStack = remember {
         mutableStateOf("")
@@ -71,18 +74,34 @@ fun ProfileScreen(
         mutableStateOf(false)
     }
     val enteredMajor = remember {
-        mutableStateOf(if(data.enteredMajor != "") data.enteredMajor else "")
+        mutableStateOf(if (data.enteredMajor != "") data.enteredMajor else "")
+    }
+    val isImageExtentsionInCorrect = remember {
+        mutableStateOf(false)
     }
     val scope = rememberCoroutineScope()
     val galleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
-                profileImageUri.value = uri
+                if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
+                    isImageExtentsionInCorrect.value = false
+                    profileImageUri.value = uri
+                } else {
+                    isImageExtentsionInCorrect.value = true
+                }
             }
         }
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
-            profileImageUri.value = bitmap.toUri(context)
+            val uri = bitmap.toUri(context)
+            if (uri != null) {
+                if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
+                    isImageExtentsionInCorrect.value = false
+                    profileImageUri.value = uri
+                } else {
+                    isImageExtentsionInCorrect.value = true
+                }
+            }
         }
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -103,6 +122,18 @@ fun ProfileScreen(
             Manifest.permission.READ_EXTERNAL_STORAGE
         }
     val list = viewModel.getMajorListEvent.collectAsState()
+
+    if (isImageExtentsionInCorrect.value) {
+        SmsDialog(
+            widthPercent = 1f,
+            title = "에러",
+            msg = "이미지의 확장자가 jpg, jpeg, png, heic가 아닙니다.",
+            outLineButtonText = "취소",
+            normalButtonText = "확인",
+            outlineButtonOnClick = { isImageExtentsionInCorrect.value = false },
+            normalButtonOnClick = { isImageExtentsionInCorrect.value = false }
+        )
+    }
 
     ModalBottomSheetLayout(
         sheetContent = {

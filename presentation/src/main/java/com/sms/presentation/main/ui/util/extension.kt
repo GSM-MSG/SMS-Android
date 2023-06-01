@@ -73,3 +73,8 @@ fun String.isfileExtensionCorrect(): Boolean {
     val fileExtension = listOf("hwp", "hwpx")
     return fileExtension.contains(this.substringAfter("."))
 }
+
+fun String.isImageExtensionCorrect(): Boolean {
+    val imageExtension = listOf("jpg", "jpeg", "png", "heic")
+    return imageExtension.contains(this.substringAfter("."))
+}
