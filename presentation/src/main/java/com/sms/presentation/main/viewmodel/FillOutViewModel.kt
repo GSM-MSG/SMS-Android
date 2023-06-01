@@ -49,6 +49,7 @@ class FillOutViewModel @Inject constructor(
     val fileUploadCompleted = _fileUploadCompleted.asStateFlow()
 
     private val major = mutableStateOf("")
+    private val enteredMajor = mutableStateOf("")
     private val techStack = mutableStateOf("")
     private val profileImageUri = mutableStateOf(Uri.EMPTY)
     private val introduce = mutableStateOf("")
@@ -69,6 +70,7 @@ class FillOutViewModel @Inject constructor(
             profileImageUri = profileImageUri.value,
             introduce = introduce.value,
             contactEmail = contactEmail.value,
+            enteredMajor = enteredMajor.value,
             major = major.value,
             portfolioUrl = portfolioUrl.value,
             techStack = techStack.value
@@ -76,6 +78,7 @@ class FillOutViewModel @Inject constructor(
     }
 
     fun setEnteredProfileInformation(
+        enteredMajor: String,
         major: String,
         techStack: String,
         profileImgUri: Uri,
@@ -83,6 +86,7 @@ class FillOutViewModel @Inject constructor(
         contactEmail: String,
         portfolioUrl: String,
     ) {
+        this.enteredMajor.value = enteredMajor
         this.major.value = major
         this.techStack.value = techStack
         this.profileImageUri.value = profileImgUri
