@@ -68,3 +68,8 @@ fun Bitmap?.toUri(context: Context): Uri? {
     }
     return imageUri
 }
+
+fun String.isfileExtensionCorrect(): Boolean {
+    val fileExtension = listOf("hwp", "hwpx")
+    return fileExtension.contains(this.substringAfter("."))
+}
