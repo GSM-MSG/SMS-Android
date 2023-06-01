@@ -18,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
     private val viewModel by viewModels<AuthViewModel>()
+    private lateinit var isExist: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +41,7 @@ class LoginActivity : ComponentActivity() {
     private fun observeEvent() {
         observeLoginEvent()
         observeAutoLoginCheck()
+        observeSaveTokenEvent()
     }
 
     private fun observeLoginEvent() {
@@ -47,7 +49,7 @@ class LoginActivity : ComponentActivity() {
             when (event) {
                 is Event.Success -> {
                     viewModel.saveTheLoginData(event.data!!)
-                    pageController(event.data.isExist)
+                    isExist = event.data.isExist.toString()
                 }
                 else -> {
                     Log.d("login", event.toString())
@@ -64,7 +66,21 @@ class LoginActivity : ComponentActivity() {
         }
     }
 
+    private fun observeSaveTokenEvent() {
+        viewModel.saveTokenRequest.observe(this) { event ->
+            when (event) {
+                is Event.Success -> {
+                    pageController(isExist.toBoolean())
+                }
+                else -> {
+                    Log.d("login", event.toString())
+                }
+            }
+        }
+    }
+
     private fun pageController(isExist: Boolean) {
+        Log.d("TAG", "페이지 이동")
         startActivity(
             Intent(
                 this,

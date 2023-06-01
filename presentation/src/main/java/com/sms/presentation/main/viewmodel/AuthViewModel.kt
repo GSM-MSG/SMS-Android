@@ -1,6 +1,5 @@
 package com.sms.presentation.main.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,6 +29,9 @@ class AuthViewModel @Inject constructor(
     private val _getMajorList = MutableLiveData<Event<MajorListModel>>()
     val getMajorList: LiveData<Event<MajorListModel>> get() = _getMajorList
 
+    private val _saveTokenRequest = MutableLiveData<Event<MajorListModel>>()
+    val saveTokenRequest: LiveData<Event<MajorListModel>> get() = _saveTokenRequest
+
     fun gAuthLogin(code: String) = viewModelScope.launch {
         gAuthLoginUseCase(
             GAuthLoginRequestModel(code = code)
@@ -56,8 +58,10 @@ class AuthViewModel @Inject constructor(
     fun saveTheLoginData(data: GAuthLoginResponseModel) = viewModelScope.launch {
         saveTheLoginDataUseCase(
             data = data
-        ).onFailure {
-            Log.d("TAG", "saveTheLoginData: $it")
+        ).onSuccess {
+            _saveTokenRequest.value = Event.Success()
+        }.onFailure {
+            _saveTokenRequest.value = it.errorHandling()
         }
     }
 }
