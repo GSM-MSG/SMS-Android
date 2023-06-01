@@ -13,8 +13,9 @@ fun SelectorBottomSheet(
     list: List<String>,
     bottomSheetState: ModalBottomSheetState,
     selected: String,
-    itemChange: (String) -> Unit
-) {
+    lastItem: @Composable (() -> Unit) = {},
+    itemChange: (String) -> Unit,
+    ) {
     val coroutineScope = rememberCoroutineScope()
 
     LazyColumn {
@@ -25,6 +26,9 @@ fun SelectorBottomSheet(
                     bottomSheetState.hide()
                 }
             }
+        }
+        item {
+            lastItem()
         }
     }
 }
