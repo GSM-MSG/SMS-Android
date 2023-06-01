@@ -6,19 +6,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.theme.SMSTheme
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SmsDialog(
     widthPercent: Float? = null,
@@ -55,8 +52,7 @@ fun SmsDialog(
 
     SMSTheme { colors, typography ->
         Dialog(
-            onDismissRequest = { onDissMissRequest() },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
+            onDismissRequest = { onDissMissRequest() }
         ) {
             Box(
                 modifier = modifier

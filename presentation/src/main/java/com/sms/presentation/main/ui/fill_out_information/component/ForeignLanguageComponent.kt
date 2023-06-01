@@ -9,12 +9,14 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.indicator.PagerIndicator
@@ -47,6 +49,27 @@ fun ForeignLanguageComponent(
         }
         val foreignLanguageScoreList = remember {
             mutableStateListOf("")
+        }
+        val isError = remember {
+            mutableStateOf(false)
+        }
+        val errorTitle = remember {
+            mutableStateOf("")
+        }
+        val errorMsg = remember {
+            mutableStateOf("")
+        }
+
+        if (isError.value) {
+            SmsDialog(
+                widthPercent = 1f,
+                title = errorTitle.value,
+                msg = errorMsg.value,
+                outLineButtonText = "취소",
+                normalButtonText = "확인",
+                outlineButtonOnClick = { isError.value = false },
+                normalButtonOnClick = { isError.value = false }
+            )
         }
 
         Column(
@@ -152,11 +175,33 @@ fun ForeignLanguageComponent(
 
                         lifecycleScope.launch {
 
-                            viewModel.imageUpload(enteredProfileData.profileImageUri.toMultipartBody(context)!!)
-                            imageFileUpload(viewModel = viewModel)
+                            viewModel.imageUpload(
+                                enteredProfileData.profileImageUri.toMultipartBody(
+                                    context
+                                )!!
+                            )
+                            imageFileUpload(
+                                viewModel = viewModel,
+                                error = { errorState, title, msg ->
+                                    isError.value = errorState
+                                    errorTitle.value = title
+                                    errorMsg.value = msg
+                                }
+                            )
 
-                            viewModel.dreamBookUpload(enteredSchoolLifeData.dreamBookFileUri.toMultipartBody(context)!!)
-                            dreamBookFileUpload(viewModel = viewModel)
+                            viewModel.dreamBookUpload(
+                                enteredSchoolLifeData.dreamBookFileUri.toMultipartBody(
+                                    context
+                                )!!
+                            )
+                            dreamBookFileUpload(
+                                viewModel = viewModel,
+                                error = { errorState, title, msg ->
+                                    isError.value = errorState
+                                    errorTitle.value = title
+                                    errorMsg.value = msg
+                                }
+                            )
 
                             viewModel.fileUploadCompleted.collect { isComplete ->
                                 if (isComplete) {
@@ -177,7 +222,14 @@ fun ForeignLanguageComponent(
                                         militaryService = enteredMilitaryServiceData.militaryService,
                                         certificate = enteredCertificateData.certification
                                     )
-                                    enterStudentInformation(viewModel = viewModel)
+                                    enterStudentInformation(
+                                        viewModel = viewModel,
+                                        error = { errorState, title, msg ->
+                                            isError.value = errorState
+                                            errorTitle.value = title
+                                            errorMsg.value = msg
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -189,40 +241,49 @@ fun ForeignLanguageComponent(
     }
 }
 
-suspend fun imageFileUpload(viewModel: FillOutViewModel) {
+suspend fun imageFileUpload(
+    viewModel: FillOutViewModel,
+    error: (Boolean, String, String) -> Unit
+) {
     viewModel.imageUploadResponse.collect { response ->
         when (response) {
             is Event.Success -> {
                 viewModel.setProfileImageUrl(response.data!!.fileUrl)
             }
             else -> {
-                Log.d("ImageUpload", response.toString())
+                error(true, "에러", "알 수 없는 오류 발생")
             }
         }
     }
 }
 
-suspend fun dreamBookFileUpload(viewModel: FillOutViewModel) {
+suspend fun dreamBookFileUpload(
+    viewModel: FillOutViewModel,
+    error: (Boolean, String, String) -> Unit
+) {
     viewModel.dreamBookUploadResponse.collect { response ->
         when (response) {
             is Event.Success -> {
                 viewModel.setDreamBookFileUrl(response.data!!.fileUrl)
             }
             else -> {
-                Log.d("DreamBookUpload", response.toString())
+                error(true, "에러", "알 수 없는 오류 발생")
             }
         }
     }
 }
 
-suspend fun enterStudentInformation(viewModel: FillOutViewModel) {
+suspend fun enterStudentInformation(
+    viewModel: FillOutViewModel,
+    error: (Boolean, String, String) -> Unit
+) {
     viewModel.enterInformationResponse.collect { response ->
         when (response) {
             is Event.Success -> {
                 Log.d("Enter Student Info", response.toString())
             }
             else -> {
-                Log.d("Enter Student Info", response.toString())
+                error(true, "에러", "알 수 없는 오류 발생")
             }
         }
     }
