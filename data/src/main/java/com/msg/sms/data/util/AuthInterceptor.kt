@@ -2,6 +2,7 @@ package com.msg.sms.data.util
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -15,7 +16,7 @@ import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
-    private val dataSource: LocalAuthDataSource
+    private val dataSource: LocalAuthDataSource,
 ) : Interceptor {
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SimpleDateFormat")
@@ -23,7 +24,7 @@ class AuthInterceptor @Inject constructor(
         val request = chain.request()
         val builder = request.newBuilder()
         val dateFormat = SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss")
-        val currentTime = dateFormat.format(System.currentTimeMillis())
+        val currentTime = dateFormat.format(System.currentTimeMillis()).toString()
         val ignorePath = listOf("/auth")
         val ignoreMethod = listOf("POST")
         val path = request.url.encodedPath
@@ -37,10 +38,13 @@ class AuthInterceptor @Inject constructor(
         runBlocking {
             val refreshTime = dataSource.getRefreshTime().first()
             val accessTime = dataSource.getAccessTime().first()
+            Log.d("TAG", "intercept: acc: $accessTime, ref: $refreshTime, cur: $currentTime")
+            Log.d("TAG", "intercept: ${accessTime.compareTo(currentTime)} ")
+            Log.d("TAG", "intercept: ${refreshTime.compareTo(currentTime)} ")
 
-            if (refreshTime <= currentTime) throw NeedLoginException()
+            if (refreshTime.compareTo(currentTime) != -1) throw NeedLoginException()
 //            access 토큰 재 발급
-            if (accessTime <= currentTime) {
+            if (accessTime.compareTo(currentTime) != -1) {
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")
@@ -58,6 +62,7 @@ class AuthInterceptor @Inject constructor(
                 } else throw NeedLoginException()
             }
             val accessToken = dataSource.getAccessToken().first()
+            Log.d("TAG", "intercept: $accessToken")
             builder.addHeader("Authorization", "Bearer $accessToken")
         }
         return chain.proceed(builder.build())
