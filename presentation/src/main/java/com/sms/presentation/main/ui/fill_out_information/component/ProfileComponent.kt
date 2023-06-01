@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -105,6 +104,7 @@ fun ProfileComponent(
                         .height(106.dp)
                         .clip(RoundedCornerShape(5.dp))
                         .clickable {
+                            isProfilePictureBottomSheet(true)
                             coroutineScope.launch {
                                 bottomSheetScaffoldState.show()
                             }
