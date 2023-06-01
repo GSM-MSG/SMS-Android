@@ -22,8 +22,6 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeEvent()
-        viewModel.getMajorList()
-
         setContent {
             LoginScreen(context = this@LoginActivity) {
                 setContent {
@@ -40,7 +38,6 @@ class LoginActivity : ComponentActivity() {
 
     private fun observeEvent() {
         observeLoginEvent()
-        observeLoginCheck()
     }
 
     private fun observeLoginEvent() {
@@ -53,15 +50,6 @@ class LoginActivity : ComponentActivity() {
                 else -> {
                     Log.d("login", event.toString())
                 }
-            }
-        }
-    }
-
-    private fun observeLoginCheck() {
-        viewModel.getMajorList.observe(this) {
-            when (it) {
-                is Event.Success -> pageController(true)
-                else -> {}
             }
         }
     }
