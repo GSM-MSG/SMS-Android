@@ -314,6 +314,7 @@ suspend fun imageFileUpload(
                 dialog(true, "에러", "파일이 jpg, jpeg, png, heic 가 아닙니다.")
                 isBadRequest()
             }
+            is Event.Loading -> {}
             else -> {
                 dialog(true, "에러", "알 수 없는 오류 발생")
             }
@@ -340,6 +341,7 @@ suspend fun dreamBookFileUpload(
                 dialog(true, "에러", "파일이 hwp, hwpx 가 아닙니다.")
                 isBadRequest()
             }
+            is Event.Loading -> {}
             else -> {
                 dialog(true, "에러", "알 수 없는 오류 발생")
             }
@@ -358,6 +360,7 @@ suspend fun enterStudentInformation(
                 dialog(true, "성공", "정보기입을 완료했습니다.")
                 isSuccess()
             }
+            is Event.Loading -> {}
             else -> {
                 dialog(true, "에러", "알 수 없는 오류 발생")
             }
