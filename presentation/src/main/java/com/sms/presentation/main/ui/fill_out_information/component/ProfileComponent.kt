@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,12 +31,15 @@ import kotlinx.coroutines.launch
 fun ProfileComponent(
     bottomSheetScaffoldState: ModalBottomSheetState,
     selectedMajor: String,
-    enteredData: (techStack: String, introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit,
+    savedData: (techStack: String, introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit,
+    enteringMajor: (String) -> Unit,
+    enteredMajor: String,
     data: ProfileData,
+    isReadOnly: Boolean,
     isRequired: (Boolean) -> Unit,
     isEnable: Boolean,
     profileImageUri: Uri,
-    isProfilePictureBottomSheet: (Boolean) -> Unit
+    isProfilePictureBottomSheet: (Boolean) -> Unit,
 ) {
     SMSTheme { _, typography ->
         val coroutineScope = rememberCoroutineScope()
@@ -55,7 +57,7 @@ fun ProfileComponent(
             mutableStateOf(if (data.contactEmail != "") data.contactEmail else "")
         }
 
-        enteredData(
+        savedData(
             if (techStack.value == "") data.techStack else techStack.value,
             if (introduce.value == "") data.introduce else introduce.value,
             if (portfolioUrl.value == "") data.portfolioUrl else portfolioUrl.value,
@@ -108,7 +110,6 @@ fun ProfileComponent(
                             }
                         }
                 )
-                Log.d("profileUri - component", profileImageUri.toString())
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "자기소개", style = typography.body2)
@@ -139,7 +140,7 @@ fun ProfileComponent(
                 placeHolder = "FrondEnd",
                 modifier = Modifier.fillMaxWidth(),
                 endIcon = { OpenButtonIcon() },
-                readOnly = true,
+                readOnly = isReadOnly,
                 clickAction = {
                     isProfilePictureBottomSheet(false)
                     if (isEnable) {
@@ -148,7 +149,10 @@ fun ProfileComponent(
                         }
                     }
                 },
-                setChangeText = selectedMajor
+                setChangeText = if (selectedMajor == "직접입력") enteredMajor else selectedMajor,
+                onValueChange = {
+                    enteringMajor(it)
+                }
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "포트폴리오 URL", style = typography.body2)
@@ -182,11 +186,14 @@ fun ProfileComponentPre() {
     ProfileComponent(
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
         selectedMajor = "FrontEnd",
-        enteredData = { _: String, _: String, _: String, _: String, _: Uri -> Unit },
-        data = ProfileData(Uri.EMPTY, "", "", "", "", ""),
+        savedData = { _: String, _: String, _: String, _: String, _: Uri -> },
+        data = ProfileData(Uri.EMPTY, "", "", "", "", "", ""),
         isRequired = {},
         isEnable = false,
         profileImageUri = Uri.EMPTY,
-        isProfilePictureBottomSheet = {}
+        isProfilePictureBottomSheet = {},
+        isReadOnly = true,
+        enteringMajor = {},
+        enteredMajor = ""
     )
 }

@@ -6,6 +6,7 @@ data class ProfileData(
     val profileImageUri: Uri,
     val introduce: String,
     val contactEmail: String,
+    val enteredMajor: String,
     val major: String,
     val portfolioUrl: String,
     val techStack: String

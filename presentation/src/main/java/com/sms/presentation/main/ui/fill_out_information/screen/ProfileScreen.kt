@@ -19,12 +19,14 @@ import androidx.navigation.NavController
 import com.msg.sms.design.component.bottomsheet.ChooseProfilePictureBottomSheet
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.button.SmsRoundedButton
+import com.msg.sms.design.component.selector.MajorSelector
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.ProfileComponent
 import com.sms.presentation.main.ui.util.toUri
 import com.sms.presentation.main.viewmodel.FillOutViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -39,8 +41,10 @@ fun ProfileScreen(
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
+    val data = viewModel.getEnteredProfileInformation()
+
     val selectedMajor = remember {
-        mutableStateOf("")
+        mutableStateOf(if(data.major != "")data.major else "")
     }
     val techStack = remember {
         mutableStateOf("")
@@ -66,6 +70,10 @@ fun ProfileScreen(
     val isCamera = remember {
         mutableStateOf(false)
     }
+    val enteredMajor = remember {
+        mutableStateOf(if(data.enteredMajor != "") data.enteredMajor else "")
+    }
+    val scope = rememberCoroutineScope()
     val galleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
@@ -114,6 +122,14 @@ fun ProfileScreen(
                     selected = selectedMajor.value,
                     itemChange = {
                         selectedMajor.value = it
+                    },
+                    lastItem = {
+                        MajorSelector(major = "직접입력", selected = selectedMajor.value == "직접입력") {
+                            selectedMajor.value = "직접입력"
+                            scope.launch {
+                                bottomSheetState.hide()
+                            }
+                        }
                     }
                 )
             }
@@ -132,23 +148,26 @@ fun ProfileScreen(
             SmsSpacer()
             Column(Modifier.verticalScroll(scrollState)) {
                 ProfileComponent(
-                    bottomSheetState,
-                    selectedMajor.value,
-                    enteredData = { getTechStack: String, getIntroduce: String, getPortfolio: String, getContactEmail: String, getProfileImageUri: Uri ->
+                    bottomSheetScaffoldState = bottomSheetState,
+                    isReadOnly = selectedMajor.value != "직접입력",
+                    selectedMajor = selectedMajor.value,
+                    savedData = { getTechStack: String, getIntroduce: String, getPortfolio: String, getContactEmail: String, getProfileImageUri: Uri ->
                         techStack.value = getTechStack
                         introduce.value = getIntroduce
                         portfolioUrl.value = getPortfolio
                         contactEmail.value = getContactEmail
                         profileImageUri.value = getProfileImageUri
                     },
-                    viewModel.getEnteredProfileInformation(),
-                    { result -> isRequired.value = result },
+                    enteredMajor = enteredMajor.value,
+                    data = data,
+                    isRequired = { result -> isRequired.value = result },
                     isEnable = list.value.data != null,
                     profileImageUri = profileImageUri.value,
-                    isProfilePictureBottomSheet = { isProfilePictureBottomSheet.value = it }
-                ).also {
-                    Log.d("profileUri", profileImageUri.value.toString())
-                }
+                    isProfilePictureBottomSheet = { isProfilePictureBottomSheet.value = it },
+                    enteringMajor = { string ->
+                        enteredMajor.value = string
+                    }
+                )
                 Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Spacer(modifier = Modifier.height(32.dp))
                     SmsRoundedButton(
@@ -159,7 +178,7 @@ fun ProfileScreen(
                     ) {
                         Log.d(
                             "TAG",
-                            "ProfileScreen: ${selectedMajor.value}, ${techStack.value}, ${introduce.value}, ${portfolioUrl.value}, ${contactEmail.value}, ${profileImageUri.value}"
+                            "whenClickNextButton: ${selectedMajor.value}, ${techStack.value}, ${introduce.value}, ${portfolioUrl.value}, ${contactEmail.value}, ${profileImageUri.value}"
                         )
                         viewModel.setEnteredProfileInformation(
                             major = selectedMajor.value,
@@ -167,7 +186,8 @@ fun ProfileScreen(
                             profileImgUri = profileImageUri.value,
                             introduce = introduce.value,
                             contactEmail = contactEmail.value,
-                            portfolioUrl = portfolioUrl.value
+                            portfolioUrl = portfolioUrl.value,
+                            enteredMajor = enteredMajor.value
                         )
                         navController.navigate("SchoolLife")
                     }
