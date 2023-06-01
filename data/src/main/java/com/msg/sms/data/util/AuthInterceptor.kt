@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
-    private val dataSource: LocalAuthDataSource
+    private val dataSource: LocalAuthDataSource,
 ) : Interceptor {
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SimpleDateFormat")
@@ -23,7 +23,7 @@ class AuthInterceptor @Inject constructor(
         val request = chain.request()
         val builder = request.newBuilder()
         val dateFormat = SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss")
-        val currentTime = dateFormat.format(System.currentTimeMillis())
+        val currentTime = dateFormat.format(System.currentTimeMillis()).toString()
         val ignorePath = listOf("/auth")
         val ignoreMethod = listOf("POST")
         val path = request.url.encodedPath
@@ -38,9 +38,9 @@ class AuthInterceptor @Inject constructor(
             val refreshTime = dataSource.getRefreshTime().first()
             val accessTime = dataSource.getAccessTime().first()
 
-            if (refreshTime <= currentTime) throw NeedLoginException()
+            if (refreshTime.compareTo(currentTime) != -1) throw NeedLoginException()
 //            access 토큰 재 발급
-            if (accessTime <= currentTime) {
+            if (accessTime.compareTo(currentTime) != -1) {
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")
@@ -57,9 +57,9 @@ class AuthInterceptor @Inject constructor(
                     dataSource.setRefreshTime(token["refreshTokenExp"].toString())
                 } else throw NeedLoginException()
             }
-            builder.addHeader("Authorization", "Bearer ${dataSource.getAccessToken().first()}")
+            val accessToken = dataSource.getAccessToken().first()
+            builder.addHeader("Authorization", "Bearer $accessToken")
         }
-        val accessToken = runBlocking { dataSource.getAccessToken().first() }
-        return chain.proceed(builder.addHeader("Authorization", "Bearer $accessToken").build())
+        return chain.proceed(builder.build())
     }
 }
