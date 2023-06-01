@@ -26,6 +26,7 @@ import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
+import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.FillOutViewModel
@@ -45,7 +46,7 @@ fun ForeignLanguageComponent(
         val enteredMilitaryServiceData = viewModel.getEnteredMilitaryServiceInformation()
         val enteredWorkConditionData = viewModel.getEnteredWorkConditionInformation()
         val enteredCertificateData = viewModel.getEnteredCertification()
-        val context = LocalContext.current
+        val context = LocalContext.current as FillOutInformationActivity
         val foreignLanguageList = remember {
             mutableStateListOf("")
         }
@@ -205,6 +206,7 @@ fun ForeignLanguageComponent(
                                                 LoginActivity::class.java
                                             )
                                         )
+                                        context.finish()
                                     }
                                 },
                                 isBadRequest = {
@@ -234,6 +236,7 @@ fun ForeignLanguageComponent(
                                                 LoginActivity::class.java
                                             )
                                         )
+                                        context.finish()
                                     }
                                 },
                                 isBadRequest = {
