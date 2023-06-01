@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -26,6 +25,7 @@ import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
+import com.sms.presentation.main.ui.MainActivity
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.util.toMultipartBody
@@ -53,7 +53,7 @@ fun ForeignLanguageComponent(
         val foreignLanguageScoreList = remember {
             mutableStateListOf("")
         }
-        val isError = remember {
+        val dialogState = remember {
             mutableStateOf(false)
         }
         val errorTitle = remember {
@@ -66,7 +66,7 @@ fun ForeignLanguageComponent(
             mutableStateOf({})
         }
 
-        if (isError.value) {
+        if (dialogState.value) {
             SmsDialog(
                 widthPercent = 1f,
                 title = errorTitle.value,
@@ -74,11 +74,11 @@ fun ForeignLanguageComponent(
                 outLineButtonText = "취소",
                 normalButtonText = "확인",
                 outlineButtonOnClick = {
-                    isError.value = false
+                    dialogState.value = false
                 },
                 normalButtonOnClick = {
                     onClick.value()
-                    isError.value = false
+                    dialogState.value = false
                 }
             )
         }
@@ -193,8 +193,8 @@ fun ForeignLanguageComponent(
                             )
                             imageFileUpload(
                                 viewModel = viewModel,
-                                error = { errorState, title, msg ->
-                                    isError.value = errorState
+                                dialog = { errorState, title, msg ->
+                                    dialogState.value = errorState
                                     errorTitle.value = title
                                     errorMsg.value = msg
                                 },
@@ -223,8 +223,8 @@ fun ForeignLanguageComponent(
                             )
                             dreamBookFileUpload(
                                 viewModel = viewModel,
-                                error = { errorState, title, msg ->
-                                    isError.value = errorState
+                                dialog = { errorState, title, msg ->
+                                    dialogState.value = errorState
                                     errorTitle.value = title
                                     errorMsg.value = msg
                                 },
@@ -267,10 +267,21 @@ fun ForeignLanguageComponent(
                                     )
                                     enterStudentInformation(
                                         viewModel = viewModel,
-                                        error = { errorState, title, msg ->
-                                            isError.value = errorState
+                                        dialog = { visible, title, msg ->
+                                            dialogState.value = visible
                                             errorTitle.value = title
                                             errorMsg.value = msg
+                                        },
+                                        isSuccess = {
+                                            onClick.value = {
+                                                context.startActivity(
+                                                    Intent(
+                                                        context,
+                                                        MainActivity::class.java
+                                                    )
+                                                )
+                                                context.finish()
+                                            }
                                         }
                                     )
                                 }
@@ -286,7 +297,7 @@ fun ForeignLanguageComponent(
 
 suspend fun imageFileUpload(
     viewModel: FillOutViewModel,
-    error: (Boolean, String, String) -> Unit,
+    dialog: (visible: Boolean, title: String, msg: String) -> Unit,
     isUnauthorized: () -> Unit,
     isBadRequest: () -> Unit
 ) {
@@ -296,15 +307,15 @@ suspend fun imageFileUpload(
                 viewModel.setProfileImageUrl(response.data!!.fileUrl)
             }
             is Event.Unauthorized -> {
-                error(true, "토큰 만료", "다시 로그인 해주세요")
+                dialog(true, "토큰 만료", "다시 로그인 해주세요")
                 isUnauthorized()
             }
             is Event.BadRequest -> {
-                error(true, "에러", "파일이 jpg, jpeg, png, heic 가 아닙니다.")
+                dialog(true, "에러", "파일이 jpg, jpeg, png, heic 가 아닙니다.")
                 isBadRequest()
             }
             else -> {
-                error(true, "에러", "알 수 없는 오류 발생")
+                dialog(true, "에러", "알 수 없는 오류 발생")
             }
         }
     }
@@ -312,7 +323,7 @@ suspend fun imageFileUpload(
 
 suspend fun dreamBookFileUpload(
     viewModel: FillOutViewModel,
-    error: (Boolean, String, String) -> Unit,
+    dialog: (visible: Boolean, title: String, msg: String) -> Unit,
     isUnauthorized: () -> Unit,
     isBadRequest: () -> Unit
 ) {
@@ -322,15 +333,15 @@ suspend fun dreamBookFileUpload(
                 viewModel.setDreamBookFileUrl(response.data!!.fileUrl)
             }
             is Event.Unauthorized -> {
-                error(true, "토큰 만료", "다시 로그인 해주세요")
+                dialog(true, "토큰 만료", "다시 로그인 해주세요")
                 isUnauthorized()
             }
             is Event.BadRequest -> {
-                error(true, "에러", "파일이 hwp, hwpx 가 아닙니다.")
+                dialog(true, "에러", "파일이 hwp, hwpx 가 아닙니다.")
                 isBadRequest()
             }
             else -> {
-                error(true, "에러", "알 수 없는 오류 발생")
+                dialog(true, "에러", "알 수 없는 오류 발생")
             }
         }
     }
@@ -338,15 +349,17 @@ suspend fun dreamBookFileUpload(
 
 suspend fun enterStudentInformation(
     viewModel: FillOutViewModel,
-    error: (Boolean, String, String) -> Unit
+    dialog: (visible: Boolean, title: String, msg: String) -> Unit,
+    isSuccess: () -> Unit
 ) {
     viewModel.enterInformationResponse.collect { response ->
         when (response) {
             is Event.Success -> {
-                Log.d("Enter Student Info", response.toString())
+                dialog(true, "성공", "정보기입을 완료했습니다.")
+                isSuccess()
             }
             else -> {
-                error(true, "에러", "알 수 없는 오류 발생")
+                dialog(true, "에러", "알 수 없는 오류 발생")
             }
         }
     }
