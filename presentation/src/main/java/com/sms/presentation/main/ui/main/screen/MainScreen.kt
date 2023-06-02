@@ -10,9 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.sms.presentation.main.ui.main.component.ListItemSpacer
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
-import com.sms.presentation.main.ui.main.component.StudentListItem
+import com.sms.presentation.main.ui.main.component.StudentListComponent
 
 @Composable
 fun MainScreen(
@@ -29,12 +28,6 @@ fun MainScreen(
             profileButtonOnClick = { /*TODO (KimHyunseung) : 마이페이지로 이동*/ }
         )
         Spacer(modifier = Modifier.size(16.dp))
-        StudentListItem(
-            profileImageUrl = "",
-            major = "iOS Dev",
-            name = "최형우",
-            teckStackList = listOf("figma", "figma")
-        )
-        ListItemSpacer()
+        StudentListComponent(studentList = listOf("이현빈","김현승","김준","최형우","김성훈","김시훈","전승원","변찬우"))
     }
 }
