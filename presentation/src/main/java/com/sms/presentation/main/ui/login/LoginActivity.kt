@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.msg.gauthsignin.GAuthSigninWebView
 import com.sms.presentation.BuildConfig
-import com.sms.presentation.main.ui.MainActivity
+import com.sms.presentation.main.ui.main.MainActivity
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.component.LoginScreen
 import com.sms.presentation.main.viewmodel.AuthViewModel
