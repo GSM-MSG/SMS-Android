@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.sms.presentation.main.ui.main.component.ListItemSpacer
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListItem
 
@@ -34,5 +35,6 @@ fun MainScreen(
             name = "최형우",
             teckStackList = listOf("figma", "figma")
         )
+        ListItemSpacer()
     }
 }
