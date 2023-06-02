@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
+import com.sms.presentation.main.ui.main.data.StudentData
 
 @Composable
 fun MainScreen(
@@ -28,6 +29,17 @@ fun MainScreen(
             profileButtonOnClick = { /*TODO (KimHyunseung) : 마이페이지로 이동*/ }
         )
         Spacer(modifier = Modifier.size(16.dp))
-        StudentListComponent(studentList = listOf("이현빈","김현승","김준","최형우","김성훈","김시훈","전승원","변찬우"))
+        StudentListComponent(studentList = listOf(
+            StudentData(name = "이현빈", major = "Android Dev", profileImageUrl = "", teckStackList = listOf("Kotlin","Retrofit")),
+            StudentData(name = "김현승", major = "Android Dev", profileImageUrl = "", teckStackList = listOf("Compose","MVVM")),
+            StudentData(name = "최형우", major = "iOS Dev", profileImageUrl = "", teckStackList = listOf("Swift","Xcode")),
+            StudentData(name = "김성훈", major = "iOS Dev", profileImageUrl = "", teckStackList = listOf("RxSwift","MVI")),
+            StudentData(name = "김시훈", major = "BackEnd Dev", profileImageUrl = "", teckStackList = listOf("Java","Spring")),
+            StudentData(name = "전승원", major = "BackEnd Dev", profileImageUrl = "", teckStackList = listOf("JS","Node.js")),
+            StudentData(name = "변찬우", major = "FrontEnd Dev", profileImageUrl = "", teckStackList = listOf("HTML","CSS","JS")),
+            StudentData(name = "김준", major = "Design", profileImageUrl = "", teckStackList = listOf("Figma","Adobe"))
+        )) {
+            //TODO (Kimhyunseung) : 디테일 페이지로 이동
+        }
     }
 }
