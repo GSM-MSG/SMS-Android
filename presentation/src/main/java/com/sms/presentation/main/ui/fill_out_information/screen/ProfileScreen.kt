@@ -153,6 +153,7 @@ fun ProfileScreen(
                     selected = selectedMajor.value,
                     itemChange = {
                         selectedMajor.value = it
+                        Log.d("major", it)
                     },
                     lastItem = {
                         MajorSelector(major = "직접입력", selected = selectedMajor.value == "직접입력") {
