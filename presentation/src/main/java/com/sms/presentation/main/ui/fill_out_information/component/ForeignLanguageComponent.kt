@@ -248,7 +248,7 @@ fun ForeignLanguageComponent(
                             viewModel.fileUploadCompleted.collect { isComplete ->
                                 if (isComplete) {
                                     viewModel.enterStudentInformation(
-                                        major = enteredProfileData.major,
+                                        major = if (enteredProfileData.major == "직접입력") enteredProfileData.enteredMajor else enteredProfileData.major,
                                         techStack = enteredProfileData.techStack.split(",")
                                             .map { it.trim() },
                                         profileImgUrl = viewModel.getProfileImageUrl(),
