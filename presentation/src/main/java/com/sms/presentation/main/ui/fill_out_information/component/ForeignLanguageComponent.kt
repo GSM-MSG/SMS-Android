@@ -185,7 +185,6 @@ fun ForeignLanguageComponent(
                             }
 
                         lifecycleScope.launch {
-
                             viewModel.imageUpload(
                                 enteredProfileData.profileImageUri.toMultipartBody(
                                     context
