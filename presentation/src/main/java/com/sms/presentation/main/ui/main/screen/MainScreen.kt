@@ -15,7 +15,6 @@ import androidx.navigation.NavController
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.ui.main.data.StudentData
-import com.sms.presentation.main.ui.util.toCorrectList
 
 @Composable
 fun MainScreen(
@@ -41,7 +40,7 @@ fun MainScreen(
                     name = "이현빈",
                     major = "Android Dev",
                     profileImageUrl = "",
-                    teckStackList = listOf("Spring Boot", "Kotlin", "Kotlin").toCorrectList(deviceWidth)
+                    teckStackList = listOf("Spring Boot", "Kot", "Kot", "Android")
                 )
             )
         ) {
