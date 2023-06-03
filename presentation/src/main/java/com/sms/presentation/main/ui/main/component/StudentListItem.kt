@@ -6,11 +6,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.icon.ProfileDefalutIcon
@@ -69,26 +70,53 @@ fun StudentListItem(
                             .padding(end = 5.dp)
                             .fillMaxWidth()
                     ) {
-                        teckStackList.forEach { teckStack ->
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(colors.N10)
-                            ) {
-                                Text(
-                                    text = teckStack,
-                                    style = typography.caption1,
-                                    color = colors.N40,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
+                        run {
+                            teckStackList.forEach { teckStack ->
+                                val isItemOver = remember {
+                                    mutableStateOf(false)
+                                }
+
+                                Box(
                                     modifier = Modifier
-                                        .padding(
-                                            vertical = 6.5.dp,
-                                            horizontal = 12.dp
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(colors.N10)
+                                ) {
+                                    if (isItemOver.value) {
+                                        Text(
+                                            text = "•••",
+                                            style = typography.caption1,
+                                            color = colors.N40,
+                                            maxLines = 1,
+                                            onTextLayout = { result ->
+                                                isItemOver.value = result.hasVisualOverflow
+                                            },
+                                            modifier = Modifier
+                                                .padding(
+                                                    vertical = 6.5.dp,
+                                                    horizontal = 12.dp
+                                                )
                                         )
-                                )
+                                    } else {
+                                        Text(
+                                            text = teckStack,
+                                            style = typography.caption1,
+                                            color = colors.N40,
+                                            maxLines = 1,
+                                            onTextLayout = { result ->
+                                                isItemOver.value = result.hasVisualOverflow
+                                            },
+                                            modifier = Modifier
+                                                .padding(
+                                                    vertical = 6.5.dp,
+                                                    horizontal = 12.dp
+                                                )
+                                        )
+                                    }
+                                }
+                                Spacer(modifier = Modifier.size(4.dp))
+                                if (isItemOver.value)
+                                    return@run
                             }
-                            Spacer(modifier = Modifier.size(4.dp))
                         }
                     }
                 }

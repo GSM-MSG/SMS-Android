@@ -37,12 +37,9 @@ fun MainScreen(
                     profileImageUrl = "",
                     teckStackList = listOf(
                         "Spring Boot",
-                        "Kot",
-                        "Kot",
-                        "Android",
-                        "Android",
-                        "Android",
-                        "Android"
+                        "Kotlin",
+                        "JAVA",
+                        "AndroidStuidd"
                     )
                 )
             )
