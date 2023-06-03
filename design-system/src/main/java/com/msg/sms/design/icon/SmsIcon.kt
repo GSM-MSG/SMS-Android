@@ -107,7 +107,7 @@ fun ProfileIcon(
 
 @Composable
 fun TrashCanIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_trash_can),
@@ -118,11 +118,33 @@ fun TrashCanIcon(
 
 @Composable
 fun GalleryIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_gallery),
         contentDescription = "Gallery Icon Button",
+        modifier = modifier
+    )
+}
+
+@Composable
+fun CheckedIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_checked_btn),
+        contentDescription = "Checked Icon Button",
+        modifier = modifier
+    )
+}
+
+@Composable
+fun UnCheckedIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_unchecked_btn),
+        contentDescription = "UnChecked Icon Button",
         modifier = modifier
     )
 }
