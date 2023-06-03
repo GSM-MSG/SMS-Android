@@ -38,8 +38,7 @@ fun MainScreen(
                     teckStackList = listOf(
                         "Spring Boot",
                         "Kotlin",
-                        "JAVA",
-                        "AndroidStuidd"
+                        "JAVA"
                     )
                 )
             )
