@@ -149,4 +149,14 @@ fun SmsLogoIcon(
     )
 }
 
+@Composable
+fun ProfileDefalutIcon(
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_profile_defalut),
+        contentDescription = "Profile Defalut Icon",
+        modifier = modifier
+    )
+}
 

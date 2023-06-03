@@ -10,8 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.msg.sms.design.icon.ProfileDefalutIcon
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 
@@ -34,14 +36,18 @@ fun StudentListItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Spacer(modifier = Modifier.size(20.dp))
-                Image(
-                    painter = rememberAsyncImagePainter(profileImageUrl),
-                    contentDescription = "Student Profile Image",
-                    modifier = Modifier
-                        .width(101.dp)
-                        .height(101.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                )
+                if (profileImageUrl == "")
+                    ProfileDefalutIcon()
+                else {
+                    Image(
+                        painter = rememberAsyncImagePainter(profileImageUrl),
+                        contentDescription = "Student Profile Image",
+                        modifier = Modifier
+                            .width(101.dp)
+                            .height(101.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                }
                 Spacer(modifier = Modifier.size(12.dp))
                 Column {
                     Text(
@@ -58,9 +64,10 @@ fun StudentListItem(
                         fontWeight = FontWeight.Normal
                     )
                     Spacer(modifier = Modifier.size(20.dp))
-                    Row(modifier = Modifier
-                        .padding(end = 5.dp)
-                        .fillMaxWidth()
+                    Row(
+                        modifier = Modifier
+                            .padding(end = 5.dp)
+                            .fillMaxWidth()
                     ) {
                         teckStackList.forEach { teckStack ->
                             Box(
@@ -72,6 +79,8 @@ fun StudentListItem(
                                     text = teckStack,
                                     style = typography.caption1,
                                     color = colors.N40,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier
                                         .padding(
                                             vertical = 6.5.dp,

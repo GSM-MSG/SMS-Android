@@ -10,6 +10,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.icon.FilterButtonIcon
+import com.msg.sms.design.icon.ProfileDefalutIcon
 import com.msg.sms.design.icon.SmsLogoIcon
 import com.msg.sms.design.modifier.smsClickable
 
@@ -38,17 +39,29 @@ fun MainScreenTopBar(
                     }
             )
             Spacer(modifier = Modifier.size(16.dp))
-            Image(
-                painter = rememberAsyncImagePainter(profileImageUrl),
-                contentDescription = "Profile Image",
-                modifier = Modifier
-                    .width(32.dp)
-                    .height(32.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .smsClickable {
-                        profileButtonOnClick()
-                    }
-            )
+            if (profileImageUrl == "")
+                ProfileDefalutIcon(
+                    modifier = Modifier
+                        .width(32.dp)
+                        .height(32.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .smsClickable {
+                            profileButtonOnClick()
+                        }
+                )
+            else {
+                Image(
+                    painter = rememberAsyncImagePainter(profileImageUrl),
+                    contentDescription = "Profile Image",
+                    modifier = Modifier
+                        .width(32.dp)
+                        .height(32.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .smsClickable {
+                            profileButtonOnClick()
+                        }
+                )
+            }
         }
     }
 }

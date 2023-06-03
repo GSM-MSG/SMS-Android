@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
@@ -20,9 +18,6 @@ import com.sms.presentation.main.ui.main.data.StudentData
 fun MainScreen(
     navController: NavController
 ) {
-    val display = LocalContext.current.resources?.displayMetrics
-    val deviceWidth = with(LocalDensity.current) { display!!.widthPixels.toDp() }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,7 +35,15 @@ fun MainScreen(
                     name = "이현빈",
                     major = "Android Dev",
                     profileImageUrl = "",
-                    teckStackList = listOf("Spring Boot", "Kot", "Kot", "Android")
+                    teckStackList = listOf(
+                        "Spring Boot",
+                        "Kot",
+                        "Kot",
+                        "Android",
+                        "Android",
+                        "Android",
+                        "Android"
+                    )
                 )
             )
         ) {
