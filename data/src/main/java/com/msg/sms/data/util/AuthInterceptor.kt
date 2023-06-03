@@ -1,9 +1,5 @@
 package com.msg.sms.data.util
 
-import android.annotation.SuppressLint
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.msg.sms.data.local.datasource.auth.LocalAuthDataSource
@@ -12,19 +8,15 @@ import com.sms.data.BuildConfig
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
-import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
     private val dataSource: LocalAuthDataSource,
 ) : Interceptor {
-    @RequiresApi(Build.VERSION_CODES.O)
-    @SuppressLint("SimpleDateFormat")
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val builder = request.newBuilder()
-        val dateFormat = SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss")
-        val currentTime = dateFormat.format(System.currentTimeMillis()).toString()
+        val currentTime = System.currentTimeMillis().toSmsTimeDate()
         val ignorePath = listOf("/auth")
         val ignoreMethod = listOf("POST")
         val path = request.url.encodedPath
@@ -36,14 +28,12 @@ class AuthInterceptor @Inject constructor(
             }
         }
         runBlocking {
-            val refreshTime = dataSource.getRefreshTime().first()
-            val accessTime = dataSource.getAccessTime().first()
-            Log.d("refreshTime", refreshTime)
-            Log.d("accessTime", accessTime)
+            val refreshTime = dataSource.getRefreshTime().first().toDate()
+            val accessTime = dataSource.getAccessTime().first().toDate()
 
-            if (refreshTime.compareTo(currentTime) != -1) throw NeedLoginException()
+            if (currentTime.after(refreshTime)) throw NeedLoginException()
 //            access 토큰 재 발급
-            if (accessTime.compareTo(currentTime) != -1) {
+            if (currentTime.after(accessTime)) {
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")

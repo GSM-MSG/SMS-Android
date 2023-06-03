@@ -58,7 +58,10 @@ fun StudentListItem(
                         fontWeight = FontWeight.Normal
                     )
                     Spacer(modifier = Modifier.size(20.dp))
-                    Row {
+                    Row(modifier = Modifier
+                        .padding(end = 5.dp)
+                        .fillMaxWidth()
+                    ) {
                         teckStackList.forEach { teckStack ->
                             Box(
                                 modifier = Modifier
@@ -69,10 +72,11 @@ fun StudentListItem(
                                     text = teckStack,
                                     style = typography.caption1,
                                     color = colors.N40,
-                                    modifier = Modifier.padding(
-                                        vertical = 6.5.dp,
-                                        horizontal = 12.dp
-                                    )
+                                    modifier = Modifier
+                                        .padding(
+                                            vertical = 6.5.dp,
+                                            horizontal = 12.dp
+                                        )
                                 )
                             }
                             Spacer(modifier = Modifier.size(4.dp))

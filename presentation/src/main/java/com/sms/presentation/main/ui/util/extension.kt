@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import androidx.compose.ui.unit.Dp
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -65,4 +66,20 @@ fun Bitmap?.toUri(context: Context): Uri? {
         e.printStackTrace()
     }
     return imageUri
+}
+
+fun List<String>.toCorrectList(screenWidth: Dp): List<String> {
+    val rowWidth = (screenWidth.toString().split(".")[0].toInt() * 0.6).toInt()
+    var itemListSize = 0
+    val list = arrayListOf<String>()
+    this.forEach {
+        itemListSize += (screenWidth.toString()
+            .split(".")[0].toInt() * 0.02 * it.length).toInt() + 17
+        if (rowWidth > itemListSize) {
+            list.add(it)
+        } else {
+            list[list.size - 1] = "•••"
+        }
+    }
+    return list
 }
