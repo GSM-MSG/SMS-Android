@@ -149,6 +149,17 @@ fun UnCheckedIcon(
     )
 }
 
+@Composable
+fun SearchIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_search),
+        contentDescription = "Search Icon Button",
+        modifier = modifier
+    )
+}
+
 
 
 
