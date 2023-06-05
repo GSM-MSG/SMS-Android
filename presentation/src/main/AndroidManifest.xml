@@ -21,9 +21,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".main.ui.MainActivity"
+            android:name=".main.ui.main.MainActivity"
             android:exported="false"
-            android:label="@string/title_activity_main" />
+            android:label="@string/title_activity_main"/>
     </application>
 
 </manifest>
