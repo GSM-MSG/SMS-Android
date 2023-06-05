@@ -3,10 +3,7 @@ package com.msg.sms.design.component.button
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -26,7 +23,7 @@ fun SmsBoxButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     state: ButtonState = ButtonState.Normal,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     SMSTheme { colors, typography ->
 
@@ -35,8 +32,8 @@ fun SmsBoxButton(
 
         val backgroundFor: (buttonState: ButtonState) -> Color = {
             when (it) {
-                ButtonState.OutLine -> if(isPressed) colors.N10 else colors.WHITE
-                ButtonState.Normal -> if(isPressed) colors.P3 else colors.P2
+                ButtonState.OutLine -> if (isPressed) colors.N10 else colors.WHITE
+                ButtonState.Normal -> if (isPressed) colors.P3 else colors.P2
             }
         }
 
@@ -53,10 +50,11 @@ fun SmsBoxButton(
                     width = 1.dp,
                     color =
                     if (state == ButtonState.OutLine)
-                        if(isPressed) colors.N30 else colors.N20
+                        if (isPressed) colors.N30 else colors.N20
                     else colors.WHITE.copy(
                         alpha = 0f
-                    )),
+                    )
+                ),
             interactionSource = interactionSource,
             onClick = onClick,
             enabled = enabled,
@@ -68,7 +66,12 @@ fun SmsBoxButton(
             )
 
         ) {
-            Text(text = text, style = typography.title2, fontWeight = FontWeight.Bold)
+            Text(
+                text = text,
+                style = typography.title2,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 13.5.dp)
+            )
         }
     }
 }
