@@ -159,7 +159,3 @@ fun SearchIcon(
         modifier = modifier
     )
 }
-
-
-
-
