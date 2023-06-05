@@ -20,9 +20,6 @@ fun DetailStackSearchScreen() {
     val searchQuery = remember {
         mutableStateOf("")
     }
-    val detailStackDummy = remember {
-        mutableStateListOf("Android", "Coroutine", "Flow", "MVVM", "Kotlin", "sleep")
-    }
     val detailStack = remember {
         mutableStateListOf<String>()
     }
@@ -64,7 +61,7 @@ fun DetailStackSearchScreen() {
         SmsSpacer()
         RecentlyAddedListComponent(
             modifier = Modifier.weight(1f),
-            list = detailStackDummy,
+            list = detailStack,
             selectedList = selectedStack,
             onClickRemoveAll = { selectedStack.clear() },
             onClickButton = { stack, checked ->
