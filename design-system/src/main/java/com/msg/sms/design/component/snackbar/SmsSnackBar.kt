@@ -1,5 +1,8 @@
 package com.msg.sms.design.component.snackbar
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,31 +25,38 @@ import com.msg.sms.design.theme.SMSTheme
 fun SmsSnackBar(
     modifier: Modifier = Modifier,
     text: String,
+    visible: Boolean,
     leftIcon: @Composable (() -> Unit),
     onClick: () -> Unit,
 ) {
     SMSTheme { colors, typography ->
-        Card(
-            modifier = modifier
-                .smsClickable {
-                    onClick()
-                },
-            shape = RoundedCornerShape(50)
-        ) {
-            Row(
+        AnimatedVisibility(visible = visible, modifier = modifier, enter = slideInVertically {
+            -it
+        }, exit = slideOutVertically {
+            -it
+        }) {
+            Card(
                 modifier = Modifier
-                    .background(colors.WHITE)
-                    .padding(vertical = 14.dp, horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .smsClickable(rippleEnabled = false) {
+                        onClick()
+                    },
+                shape = RoundedCornerShape(50)
             ) {
-                leftIcon()
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = text,
-                    style = typography.body1,
-                    fontWeight = FontWeight.Normal,
-                    color = colors.BLACK
-                )
+                Row(
+                    modifier = Modifier
+                        .background(colors.WHITE)
+                        .padding(vertical = 14.dp, horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    leftIcon()
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = text,
+                        style = typography.body1,
+                        fontWeight = FontWeight.Normal,
+                        color = colors.BLACK
+                    )
+                }
             }
         }
     }
@@ -55,7 +65,7 @@ fun SmsSnackBar(
 @Preview
 @Composable
 fun SmsSnackBarPre() {
-    SmsSnackBar(text = "text", leftIcon = { TrashCanIcon() }) {
+    SmsSnackBar(text = "text", leftIcon = { TrashCanIcon() }, visible = true) {
 
     }
 }
