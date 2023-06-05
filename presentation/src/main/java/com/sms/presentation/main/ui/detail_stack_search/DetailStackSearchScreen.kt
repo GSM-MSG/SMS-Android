@@ -37,7 +37,7 @@ fun DetailStackSearchScreen() {
     }
     val scope = rememberCoroutineScope()
 
-    val text = ("세부 스택 ${if (selectedStack.isEmpty()) "" else "${selectedStack.size}개 "}추가")
+    val nextButtonText = ("세부 스택 ${if (selectedStack.isEmpty()) "" else "${selectedStack.size}개 "}추가")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,7 +84,7 @@ fun DetailStackSearchScreen() {
         SmsBoxButton(
             modifier = Modifier
                 .fillMaxWidth(),
-            text = text,
+            text = nextButtonText,
             enabled = selectedStack.isNotEmpty()
         ) {
         }
