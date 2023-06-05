@@ -18,6 +18,7 @@ fun SearchTopBar(
     modifier: Modifier = Modifier,
     setText: String,
     onValueChanged: (String) -> Unit,
+    onClickBackButton: () -> Unit,
     onClickButton: () -> Unit,
 ) {
     Row(
@@ -27,7 +28,7 @@ fun SearchTopBar(
             .padding(start = 20.dp, end = 20.dp, bottom = 12.dp, top = 20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = onClickButton, modifier = Modifier.size(24.dp)) {
+        IconButton(onClick = onClickBackButton, modifier = Modifier.size(24.dp)) {
             BackButtonIcon()
         }
         Spacer(modifier = Modifier.width(22.dp))
@@ -38,7 +39,7 @@ fun SearchTopBar(
             placeHolder = "찾고 싶은 세부 스택 입력",
             trailingIcon = { DeleteButtonIcon() }
         ) {
-
+            onClickButton()
         }
     }
 }
@@ -48,8 +49,8 @@ fun SearchTopBar(
 fun SearchTopBarPre() {
     SearchTopBar(
         onValueChanged = {},
-        setText = "sd"
-    ) {
-
-    }
+        setText = "sd",
+        onClickButton = {},
+        onClickBackButton = {}
+    )
 }
