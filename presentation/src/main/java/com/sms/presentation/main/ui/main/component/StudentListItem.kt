@@ -52,7 +52,7 @@ fun StudentListItem(
                             .clip(RoundedCornerShape(8.dp))
                     )
                 }
-                Spacer(modifier = Modifier.size(12.dp))
+                Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
                         text = name,
@@ -60,14 +60,14 @@ fun StudentListItem(
                         color = colors.BLACK,
                         fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.size(4.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = major,
                         style = typography.body2,
                         color = colors.BLACK,
                         fontWeight = FontWeight.Normal
                     )
-                    Spacer(modifier = Modifier.size(20.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
                     Row(
                         modifier = Modifier
                             .padding(end = 5.dp)
@@ -120,7 +120,7 @@ fun StudentListItem(
                                         )
                                     }
                                 }
-                                Spacer(modifier = Modifier.size(4.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
                                 if (isItemOver.value)
                                     return@run
                             }

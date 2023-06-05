@@ -36,7 +36,7 @@ fun MainScreenTopBar(
                 modifier = Modifier
                     .smsClickable(onClick = filterButtonOnClick)
             )
-            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.width(16.dp))
             if (profileImageUrl == "")
                 ProfileDefalutIcon(
                     modifier = Modifier

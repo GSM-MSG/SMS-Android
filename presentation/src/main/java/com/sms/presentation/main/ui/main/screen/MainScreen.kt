@@ -1,10 +1,7 @@
 package com.sms.presentation.main.ui.main.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,7 +25,7 @@ fun MainScreen(
             filterButtonOnClick = { /*TODO (KimHyunseung) : 필터 Screen으로 이동*/ },
             profileButtonOnClick = { /*TODO (KimHyunseung) : 마이페이지로 이동*/ }
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         StudentListComponent(
             studentList = listOf(
                 StudentData(
