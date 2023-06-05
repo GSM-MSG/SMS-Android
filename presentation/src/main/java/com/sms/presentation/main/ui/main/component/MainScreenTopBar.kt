@@ -34,9 +34,7 @@ fun MainScreenTopBar(
         Row(modifier = Modifier.align(Alignment.CenterEnd)) {
             FilterButtonIcon(
                 modifier = Modifier
-                    .smsClickable {
-                        filterButtonOnClick()
-                    }
+                    .smsClickable(onClick = filterButtonOnClick)
             )
             Spacer(modifier = Modifier.size(16.dp))
             if (profileImageUrl == "")
@@ -45,9 +43,7 @@ fun MainScreenTopBar(
                         .width(32.dp)
                         .height(32.dp)
                         .clip(RoundedCornerShape(20.dp))
-                        .smsClickable {
-                            profileButtonOnClick()
-                        }
+                        .smsClickable(onClick = profileButtonOnClick)
                 )
             else {
                 Image(
@@ -57,9 +53,7 @@ fun MainScreenTopBar(
                         .width(32.dp)
                         .height(32.dp)
                         .clip(RoundedCornerShape(20.dp))
-                        .smsClickable {
-                            profileButtonOnClick()
-                        }
+                        .smsClickable(onClick = profileButtonOnClick)
                 )
             }
         }

@@ -5,7 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,9 +31,9 @@ fun StudentListItem(
     }
 
     SMSTheme { colors, typography ->
-        Box(modifier = Modifier.smsClickable {
-            onClick()
-        }) {
+        Box(
+            modifier = Modifier.smsClickable(onClick = onClick)
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -91,7 +93,9 @@ fun StudentListItem(
                                             maxLines = 1,
                                             onTextLayout = { result ->
                                                 if (result.hasVisualOverflow) {
-                                                    list.value = list.value.slice(0 until index-1).plus("•••")
+                                                    list.value =
+                                                        list.value.slice(0 until index - 1)
+                                                            .plus("•••")
                                                 }
                                             },
                                             modifier = Modifier
