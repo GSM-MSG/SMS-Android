@@ -225,7 +225,6 @@ class FillOutViewModel @Inject constructor(
         imageUploadUseCase(
             file = file
         ).onSuccess {
-            specifyWhenCompleteFileUpload()
             it.catch { remoteError ->
                 _imageUploadResponse.value = remoteError.errorHandling()
             }.collect { response ->
@@ -240,7 +239,6 @@ class FillOutViewModel @Inject constructor(
         dreamBookUploadUseCase(
             file = file
         ).onSuccess {
-            specifyWhenCompleteFileUpload()
             it.catch { remoteError ->
                 _dreamBookUploadResponse.value = remoteError.errorHandling()
             }.collect { response ->
@@ -251,7 +249,7 @@ class FillOutViewModel @Inject constructor(
         }
     }
 
-    private fun specifyWhenCompleteFileUpload() {
+    fun specifyWhenCompleteFileUpload() {
         _fileUploadCompleted.value =
             _imageUploadResponse.value is Event.Success && _dreamBookUploadResponse.value is Event.Success
     }

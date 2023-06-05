@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -214,7 +215,9 @@ fun ForeignLanguageComponent(
                                     }
                                 }
                             )
+                        }
 
+                        lifecycleScope.launch {
                             viewModel.dreamBookUpload(
                                 enteredSchoolLifeData.dreamBookFileUri.toMultipartBody(
                                     context
@@ -244,7 +247,9 @@ fun ForeignLanguageComponent(
                                     }
                                 }
                             )
+                        }
 
+                        lifecycleScope.launch {
                             viewModel.fileUploadCompleted.collect { isComplete ->
                                 if (isComplete) {
                                     viewModel.enterStudentInformation(
@@ -288,8 +293,8 @@ fun ForeignLanguageComponent(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(48.dp))
             }
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }
@@ -301,6 +306,7 @@ suspend fun imageFileUpload(
     isBadRequest: () -> Unit
 ) {
     viewModel.imageUploadResponse.collect { response ->
+        viewModel.specifyWhenCompleteFileUpload()
         when (response) {
             is Event.Success -> {
                 viewModel.setProfileImageUrl(response.data!!.fileUrl)
@@ -328,6 +334,7 @@ suspend fun dreamBookFileUpload(
     isBadRequest: () -> Unit
 ) {
     viewModel.dreamBookUploadResponse.collect { response ->
+        viewModel.specifyWhenCompleteFileUpload()
         when (response) {
             is Event.Success -> {
                 viewModel.setDreamBookFileUrl(response.data!!.fileUrl)
