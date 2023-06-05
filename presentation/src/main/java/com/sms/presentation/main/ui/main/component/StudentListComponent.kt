@@ -17,15 +17,13 @@ fun StudentListComponent(
     SMSTheme { colors, _ ->
         LazyColumn {
             items(studentList.size) {
-                with(studentList[it]) {
-                    StudentListItem(
-                        profileImageUrl = profileImageUrl,
-                        major = major,
-                        name = name,
-                        teckStackList = teckStackList
-                    ) {
-                        onItemClick()
-                    }
+                StudentListItem(
+                    profileImageUrl = studentList[it].profileImageUrl,
+                    major = studentList[it].major,
+                    name = studentList[it].name,
+                    teckStackList = studentList[it].teckStackList
+                ) {
+                    onItemClick()
                 }
                 Divider(
                     modifier = Modifier.padding(horizontal = 20.dp),
