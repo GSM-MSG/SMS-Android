@@ -1,6 +1,5 @@
 package com.sms.presentation.main.ui.main.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,12 +10,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
-import com.msg.sms.design.icon.ProfileDefalutIcon
+import coil.compose.AsyncImage
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
+import com.sms.design_system.R
 
 @Composable
 fun StudentListItem(
@@ -40,18 +40,16 @@ fun StudentListItem(
                     .padding(start = 20.dp, top = 16.dp, bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (profileImageUrl == "")
-                    ProfileDefalutIcon()
-                else {
-                    Image(
-                        painter = rememberAsyncImagePainter(profileImageUrl),
-                        contentDescription = "Student Profile Image",
-                        modifier = Modifier
-                            .width(101.dp)
-                            .height(101.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                    )
-                }
+                AsyncImage(
+                    model = profileImageUrl,
+                    placeholder = painterResource(id = R.drawable.ic_profile_defalut),
+                    error = painterResource(id = R.drawable.ic_profile_defalut),
+                    contentDescription = "Student Profile Image",
+                    modifier = Modifier
+                        .width(101.dp)
+                        .height(101.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                )
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
