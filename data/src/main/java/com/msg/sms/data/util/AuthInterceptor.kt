@@ -28,12 +28,12 @@ class AuthInterceptor @Inject constructor(
             }
         }
         runBlocking {
-            val refreshTime = dataSource.getRefreshTime().first().toDate()
-            val accessTime = dataSource.getAccessTime().first().toDate()
+            val refreshTime = dataSource.getRefreshTime().first()
+            val accessTime = dataSource.getAccessTime().first()
 
-            if (currentTime.after(refreshTime)) throw NeedLoginException()
+            if (refreshTime == "" || currentTime.after(refreshTime.toDate())) throw NeedLoginException()
 //            access 토큰 재 발급
-            if (currentTime.after(accessTime)) {
+            if (currentTime.after(accessTime.toDate())) {
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")

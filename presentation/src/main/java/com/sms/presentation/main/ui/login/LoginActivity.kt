@@ -11,6 +11,7 @@ import com.sms.presentation.BuildConfig
 import com.sms.presentation.main.ui.main.MainActivity
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.component.LoginScreen
+import com.sms.presentation.main.ui.util.setTransparentStatusBar
 import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         viewModel.getMajorList()
         observeEvent()
+        this.setTransparentStatusBar()
         setContent {
             LoginScreen(context = this@LoginActivity) {
                 setContent {
