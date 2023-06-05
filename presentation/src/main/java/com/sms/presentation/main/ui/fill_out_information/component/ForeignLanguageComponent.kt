@@ -25,9 +25,9 @@ import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
-import com.sms.presentation.main.ui.MainActivity
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.LoginActivity
+import com.sms.presentation.main.ui.main.MainActivity
 import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.util.Event
