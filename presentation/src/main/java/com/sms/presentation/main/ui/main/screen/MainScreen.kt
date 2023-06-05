@@ -35,11 +35,7 @@ fun MainScreen(
                     name = "이현빈",
                     major = "Android Dev",
                     profileImageUrl = "",
-                    teckStackList = listOf(
-                        "Spring Boot",
-                        "Kotlin",
-                        "JAVA"
-                    )
+                    teckStackList = listOf("Spring Boot", "Kotlin", "JAVA")
                 )
             )
         ) {
