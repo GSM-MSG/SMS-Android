@@ -37,10 +37,9 @@ fun StudentListItem(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                    .padding(start = 20.dp, top = 16.dp, bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Spacer(modifier = Modifier.size(20.dp))
                 if (profileImageUrl == "")
                     ProfileDefalutIcon()
                 else {
