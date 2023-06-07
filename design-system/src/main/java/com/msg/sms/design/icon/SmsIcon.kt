@@ -150,11 +150,11 @@ fun SmsLogoIcon(
 }
 
 @Composable
-fun ProfileDefalutIcon(
+fun ProfileDefaultIcon(
     modifier: Modifier = Modifier
 ) {
     Image(
-        painter = painterResource(id = R.drawable.ic_profile_defalut),
+        painter = painterResource(id = R.drawable.ic_profile_default),
         contentDescription = "Profile Defalut Icon",
         modifier = modifier
     )

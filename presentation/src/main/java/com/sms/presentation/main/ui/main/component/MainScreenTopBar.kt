@@ -39,8 +39,8 @@ fun MainScreenTopBar(
             Spacer(modifier = Modifier.width(16.dp))
             AsyncImage(
                 model = profileImageUrl,
-                placeholder = painterResource(id = R.drawable.ic_profile_defalut),
-                error = painterResource(id = R.drawable.ic_profile_defalut),
+                placeholder = painterResource(id = R.drawable.ic_profile_default),
+                error = painterResource(id = R.drawable.ic_profile_default),
                 contentDescription = "Profile Image",
                 modifier = Modifier
                     .width(32.dp)
