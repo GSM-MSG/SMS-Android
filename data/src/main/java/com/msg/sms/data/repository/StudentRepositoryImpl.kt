@@ -18,7 +18,6 @@ class StudentRepositoryImpl @Inject constructor(
                 techStack = body.techStack,
                 profileImgUrl = body.profileImgUrl,
                 introduce = body.introduce,
-                stuNum = body.stuNum,
                 portfolioUrl = body.portfolioUrl,
                 contactEmail = body.contactEmail,
                 formOfEmployment = body.formOfEmployment,

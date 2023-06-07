@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -9,11 +10,14 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.indicator.PagerIndicator
@@ -22,19 +26,62 @@ import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
+import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
+import com.sms.presentation.main.ui.login.LoginActivity
+import com.sms.presentation.main.ui.main.MainActivity
+import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.FillOutViewModel
+import com.sms.presentation.main.viewmodel.util.Event
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ForeignLanguageComponent(
     navController: NavController,
     viewModel: FillOutViewModel,
+    lifecycleScope: CoroutineScope
 ) {
     SMSTheme { colors, typography ->
+        val enteredProfileData = viewModel.getEnteredProfileInformation()
+        val enteredSchoolLifeData = viewModel.getEnteredSchoolLifeInformation()
+        val enteredMilitaryServiceData = viewModel.getEnteredMilitaryServiceInformation()
+        val enteredWorkConditionData = viewModel.getEnteredWorkConditionInformation()
+        val enteredCertificateData = viewModel.getEnteredCertification()
+        val context = LocalContext.current as FillOutInformationActivity
         val foreignLanguageList = remember {
             mutableStateListOf("")
         }
         val foreignLanguageScoreList = remember {
             mutableStateListOf("")
+        }
+        val dialogState = remember {
+            mutableStateOf(false)
+        }
+        val errorTitle = remember {
+            mutableStateOf("")
+        }
+        val errorMsg = remember {
+            mutableStateOf("")
+        }
+        val onClick = remember {
+            mutableStateOf({})
+        }
+
+        if (dialogState.value) {
+            SmsDialog(
+                widthPercent = 1f,
+                title = errorTitle.value,
+                msg = errorMsg.value,
+                outLineButtonText = "취소",
+                normalButtonText = "확인",
+                outlineButtonOnClick = {
+                    dialogState.value = false
+                },
+                normalButtonOnClick = {
+                    onClick.value()
+                    dialogState.value = false
+                }
+            )
         }
 
         Column(
@@ -130,17 +177,198 @@ fun ForeignLanguageComponent(
                         text = "다음",
                         state = ButtonState.Normal
                     ) {
-                        val foreignLanguage = foreignLanguageList.mapIndexed { index: Int, name: String ->
-                            CertificateInformationModel(
-                                languageCertificateName = name,
-                                score = foreignLanguageScoreList[index]
+                        val foreignLanguage =
+                            foreignLanguageList.mapIndexed { index: Int, name: String ->
+                                CertificateInformationModel(
+                                    languageCertificateName = name,
+                                    score = foreignLanguageScoreList[index]
+                                )
+                            }
+
+                        lifecycleScope.launch {
+                            viewModel.imageUpload(
+                                enteredProfileData.profileImageUri.toMultipartBody(
+                                    context
+                                )!!
+                            )
+                            imageFileUpload(
+                                viewModel = viewModel,
+                                dialog = { errorState, title, msg ->
+                                    dialogState.value = errorState
+                                    errorTitle.value = title
+                                    errorMsg.value = msg
+                                },
+                                isUnauthorized = {
+                                    onClick.value = {
+                                        context.startActivity(
+                                            Intent(
+                                                context,
+                                                LoginActivity::class.java
+                                            )
+                                        )
+                                        context.finish()
+                                    }
+                                },
+                                isBadRequest = {
+                                    onClick.value = {
+                                        navController.navigate("Profile")
+                                    }
+                                }
                             )
                         }
-                        /*TODO(KH) foreignLanguage 넣어서 버튼 클릭 시 api 요청하도록 보내기 */
-                        Log.d("TAG", "ForeignLanguageScreen: $foreignLanguage")
+
+                        lifecycleScope.launch {
+                            viewModel.dreamBookUpload(
+                                enteredSchoolLifeData.dreamBookFileUri.toMultipartBody(
+                                    context
+                                )!!
+                            )
+                            dreamBookFileUpload(
+                                viewModel = viewModel,
+                                dialog = { errorState, title, msg ->
+                                    dialogState.value = errorState
+                                    errorTitle.value = title
+                                    errorMsg.value = msg
+                                },
+                                isUnauthorized = {
+                                    onClick.value = {
+                                        context.startActivity(
+                                            Intent(
+                                                context,
+                                                LoginActivity::class.java
+                                            )
+                                        )
+                                        context.finish()
+                                    }
+                                },
+                                isBadRequest = {
+                                    onClick.value = {
+                                        navController.navigate("SchoolLife")
+                                    }
+                                }
+                            )
+                        }
+
+                        lifecycleScope.launch {
+                            viewModel.fileUploadCompleted.collect { isComplete ->
+                                if (isComplete) {
+                                    viewModel.enterStudentInformation(
+                                        major = if (enteredProfileData.major == "직접입력") enteredProfileData.enteredMajor else enteredProfileData.major,
+                                        techStack = enteredProfileData.techStack.split(",")
+                                            .map { it.trim() },
+                                        profileImgUrl = viewModel.getProfileImageUrl(),
+                                        introduce = enteredProfileData.introduce,
+                                        portfolioUrl = enteredProfileData.portfolioUrl,
+                                        contactEmail = enteredProfileData.contactEmail,
+                                        formOfEmployment = enteredWorkConditionData.formOfEmployment,
+                                        gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
+                                        salary = enteredWorkConditionData.salary.toInt(),
+                                        region = enteredWorkConditionData.region,
+                                        languageCertificate = foreignLanguage,
+                                        dreamBookFileUrl = viewModel.getDreamBookFileUrl(),
+                                        militaryService = enteredMilitaryServiceData.militaryService,
+                                        certificate = enteredCertificateData.certification
+                                    )
+                                    enterStudentInformation(
+                                        viewModel = viewModel,
+                                        dialog = { visible, title, msg ->
+                                            dialogState.value = visible
+                                            errorTitle.value = title
+                                            errorMsg.value = msg
+                                        },
+                                        isSuccess = {
+                                            onClick.value = {
+                                                context.startActivity(
+                                                    Intent(
+                                                        context,
+                                                        MainActivity::class.java
+                                                    )
+                                                )
+                                                context.finish()
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
-                Spacer(modifier = Modifier.height(48.dp))
+            }
+            Spacer(modifier = Modifier.height(48.dp))
+        }
+    }
+}
+
+suspend fun imageFileUpload(
+    viewModel: FillOutViewModel,
+    dialog: (visible: Boolean, title: String, msg: String) -> Unit,
+    isUnauthorized: () -> Unit,
+    isBadRequest: () -> Unit
+) {
+    viewModel.imageUploadResponse.collect { response ->
+        viewModel.specifyWhenCompleteFileUpload()
+        when (response) {
+            is Event.Success -> {
+                viewModel.setProfileImageUrl(response.data!!.fileUrl)
+            }
+            is Event.Unauthorized -> {
+                dialog(true, "토큰 만료", "다시 로그인 해주세요")
+                isUnauthorized()
+            }
+            is Event.BadRequest -> {
+                dialog(true, "에러", "파일이 jpg, jpeg, png, heic 가 아닙니다.")
+                isBadRequest()
+            }
+            is Event.Loading -> {}
+            else -> {
+                dialog(true, "에러", "알 수 없는 오류 발생")
+            }
+        }
+    }
+}
+
+suspend fun dreamBookFileUpload(
+    viewModel: FillOutViewModel,
+    dialog: (visible: Boolean, title: String, msg: String) -> Unit,
+    isUnauthorized: () -> Unit,
+    isBadRequest: () -> Unit
+) {
+    viewModel.dreamBookUploadResponse.collect { response ->
+        viewModel.specifyWhenCompleteFileUpload()
+        when (response) {
+            is Event.Success -> {
+                viewModel.setDreamBookFileUrl(response.data!!.fileUrl)
+            }
+            is Event.Unauthorized -> {
+                dialog(true, "토큰 만료", "다시 로그인 해주세요")
+                isUnauthorized()
+            }
+            is Event.BadRequest -> {
+                dialog(true, "에러", "파일이 hwp, hwpx 가 아닙니다.")
+                isBadRequest()
+            }
+            is Event.Loading -> {}
+            else -> {
+                dialog(true, "에러", "알 수 없는 오류 발생")
+            }
+        }
+    }
+}
+
+suspend fun enterStudentInformation(
+    viewModel: FillOutViewModel,
+    dialog: (visible: Boolean, title: String, msg: String) -> Unit,
+    isSuccess: () -> Unit
+) {
+    viewModel.enterInformationResponse.collect { response ->
+        when (response) {
+            is Event.Success -> {
+                dialog(true, "성공", "정보기입을 완료했습니다.")
+                isSuccess()
+            }
+            is Event.Loading -> {}
+            else -> {
+                dialog(true, "에러", "알 수 없는 오류 발생")
             }
         }
     }

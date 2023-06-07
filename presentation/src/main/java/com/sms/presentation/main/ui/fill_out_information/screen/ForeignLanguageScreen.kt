@@ -11,11 +11,13 @@ import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.ForeignLanguageComponent
 import com.sms.presentation.main.viewmodel.FillOutViewModel
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun ForeignLanguageScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
+    lifecycleScope: CoroutineScope
 ) {
     Column(modifier = Modifier.background(Color.White)) {
         TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
@@ -25,6 +27,7 @@ fun ForeignLanguageScreen(
         ForeignLanguageComponent(
             navController = navController,
             viewModel = viewModel,
+            lifecycleScope = lifecycleScope
         )
     }
 }

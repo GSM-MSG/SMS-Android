@@ -8,9 +8,8 @@ import java.io.FileOutputStream
 fun getFileFromUri(context: Context, uri: Uri): File? {
     val inputStream = context.contentResolver.openInputStream(uri)
     inputStream?.let {
-        val fileExtension = getFileExtension(context, uri)
         val fileName = getFileNameFromUri(context, uri)
-        val file = File(context.cacheDir, fileName + fileExtension)
+        val file = File(context.cacheDir, fileName ?: "")
         FileOutputStream(file).use { outputStream ->
             val buffer = ByteArray(4 * 1024) // 4KB buffer size
             var bytesRead: Int

@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.spacer.SmsSpacer
@@ -20,6 +22,7 @@ import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.SchoolLifeComponent
 import com.sms.presentation.main.ui.util.getFileNameFromUri
+import com.sms.presentation.main.ui.util.isfileExtensionCorrect
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @Composable
@@ -27,21 +30,55 @@ fun SchoolLifeScreen(
     navController: NavController,
     viewModel: FillOutViewModel
 ) {
+    val data = viewModel.getEnteredSchoolLifeInformation()
+
+    val context = LocalContext.current
+
     val dreamBookFileUri = remember {
-        mutableStateOf(Uri.EMPTY)
+        mutableStateOf(data.dreamBookFileUri)
+    }
+
+    val gsmAuthenticationScore = remember {
+        mutableStateOf(data.gsmAuthenticationScore)
     }
 
     val fileName = remember {
         mutableStateOf("")
     }
 
+    val isFileExtensionInCorrect = remember {
+        mutableStateOf(false)
+    }
+
     val localStorageLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            dreamBookFileUri.value = uri
+            if (uri != null) {
+                Log.d("filename", getFileNameFromUri(context, uri).toString())
+                if (getFileNameFromUri(context, uri)!!.isfileExtensionCorrect()) {
+                    isFileExtensionInCorrect.value = false
+                    dreamBookFileUri.value = uri
+                } else {
+                    isFileExtensionInCorrect.value = true
+                }
+            }
         }
 
-    if (dreamBookFileUri.value != Uri.EMPTY && dreamBookFileUri.value != null)
+    if (dreamBookFileUri.value != Uri.EMPTY) {
         fileName.value = getFileNameFromUri(LocalContext.current, dreamBookFileUri.value)!!
+    }
+
+    if (isFileExtensionInCorrect.value) {
+        SmsDialog(
+            widthPercent = 1f,
+            title = "에러",
+            msg = "파일의 확장자가 hwp, hwpx가 아닙니다.",
+            outLineButtonText = "취소",
+            normalButtonText = "확인",
+            outlineButtonOnClick = { isFileExtensionInCorrect.value = false },
+            normalButtonOnClick = { isFileExtensionInCorrect.value = false }
+        )
+    }
+
 
     SMSTheme { colors, _ ->
         Column(
@@ -53,9 +90,16 @@ fun SchoolLifeScreen(
 
             }
             SmsSpacer()
-            SchoolLifeComponent(fileName = fileName.value) {
-                localStorageLauncher.launch("application/*")
-            }
+            SchoolLifeComponent(
+                fileName = fileName.value,
+                enteredGsmAuthenticationScore = gsmAuthenticationScore.value,
+                gsmAuthenticationScore = {
+                    gsmAuthenticationScore.value = it
+                },
+                addDreamBook = {
+                    localStorageLauncher.launch("application/*")
+                }
+            )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -78,8 +122,13 @@ fun SchoolLifeScreen(
                         modifier = Modifier
                             .weight(4f)
                             .height(48.dp),
+                        enabled = dreamBookFileUri.value != Uri.EMPTY && gsmAuthenticationScore.value != "",
                         state = ButtonState.Normal
                     ) {
+                        viewModel.setEnteredSchoolLifeInformation(
+                            gsmAuthenticationScore = gsmAuthenticationScore.value,
+                            dreamBookFileUri = dreamBookFileUri.value
+                        )
                         navController.navigate("WorkCondition")
                     }
                 }

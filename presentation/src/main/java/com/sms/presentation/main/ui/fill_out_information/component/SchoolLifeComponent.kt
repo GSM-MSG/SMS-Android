@@ -1,9 +1,9 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -11,6 +11,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.indicator.PagerIndicator
 import com.msg.sms.design.component.text.SmsTitleText
@@ -21,21 +23,14 @@ import com.msg.sms.design.theme.SMSTheme
 @Composable
 fun SchoolLifeComponent(
     fileName: String,
+    enteredGsmAuthenticationScore: String,
+    gsmAuthenticationScore: (String) -> Unit,
     addDreamBook: () -> Unit
 ) {
-    val gsmScore = remember {
-        mutableStateOf("")
-    }
-    val dreamBook = remember {
-        mutableStateOf("")
-    }
     val focusRequester = remember {
         FocusRequester()
     }
     val focusManager = LocalFocusManager.current
-
-    if (fileName != "")
-        dreamBook.value = fileName
 
     SMSTheme { _, typography ->
         Column(modifier = Modifier.padding(end = 20.dp, start = 20.dp, top = 20.dp)) {
@@ -56,9 +51,15 @@ fun SchoolLifeComponent(
             SmsTextField(
                 placeHolder = "인증제 점수 입력",
                 modifier = Modifier.fillMaxWidth(),
-                setText = gsmScore.value,
-                onValueChange = { gsmScore.value = it }) {
-                gsmScore.value = ""
+                setText = enteredGsmAuthenticationScore,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                onValueChange = {
+                    gsmAuthenticationScore(it)
+                }) {
+                gsmAuthenticationScore("")
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "드림북", style = typography.body2)
@@ -74,8 +75,7 @@ fun SchoolLifeComponent(
                         }
                     },
                 readOnly = true,
-                setText = dreamBook.value,
-                onValueChange = { dreamBook.value = it }
+                setText = fileName
             ) {
 
             }

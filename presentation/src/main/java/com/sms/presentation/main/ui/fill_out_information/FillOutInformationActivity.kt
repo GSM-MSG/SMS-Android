@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,10 +17,10 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class FillOutInformationActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<FillOutViewModel>()
+    private val fillOutViewModel by viewModels<FillOutViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getMajorList()
+        fillOutViewModel.getMajorList()
 
         setContent {
             val navController = rememberNavController()
@@ -30,7 +31,7 @@ class FillOutInformationActivity : ComponentActivity() {
                 composable("Profile") {
                     ProfileScreen(
                         navController = navController,
-                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                     )
                 }
                 composable("SchoolLife") {
@@ -60,7 +61,8 @@ class FillOutInformationActivity : ComponentActivity() {
                 composable("ForeignLanguage") {
                     ForeignLanguageScreen(
                         navController = navController,
-                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
+                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                        lifecycleScope = lifecycleScope
                     )
                 }
             }
