@@ -21,4 +21,14 @@ class RemoteStudentDataSourceImpl @Inject constructor(
             )
         }.flowOn(Dispatchers.IO)
     }
+
+    override suspend fun getStudentList(page: Int, size: Int): Flow<Unit> {
+        return flow {
+            emit(
+                SMSApiHandler<Unit>()
+                    .httpRequest { service.getStudentList(page = page, size = size) }
+                    .sendRequest()
+            )
+        }.flowOn(Dispatchers.IO)
+    }
 }
