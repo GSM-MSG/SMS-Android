@@ -192,3 +192,14 @@ fun SearchIcon(
         modifier = modifier
     )
 }
+
+@Composable
+fun ArrowUpWardIcon(
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_arrow_upward),
+        contentDescription = "Arrow UpWard Icon",
+        modifier = modifier
+    )
+}
