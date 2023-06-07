@@ -1,6 +1,7 @@
 package com.msg.sms.data.remote.datasource.student
 
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
+import com.msg.sms.data.remote.dto.student.response.GetStudentListResponse
 import com.msg.sms.data.remote.network.api.StudentAPI
 import com.msg.sms.data.util.SMSApiHandler
 import kotlinx.coroutines.Dispatchers
@@ -22,10 +23,10 @@ class RemoteStudentDataSourceImpl @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun getStudentList(page: Int, size: Int): Flow<Unit> {
+    override suspend fun getStudentList(page: Int, size: Int): Flow<GetStudentListResponse> {
         return flow {
             emit(
-                SMSApiHandler<Unit>()
+                SMSApiHandler<GetStudentListResponse>()
                     .httpRequest { service.getStudentList(page = page, size = size) }
                     .sendRequest()
             )
