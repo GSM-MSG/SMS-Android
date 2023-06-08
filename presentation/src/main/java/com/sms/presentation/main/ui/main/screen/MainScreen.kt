@@ -61,14 +61,14 @@ fun MainScreen(
     }
 
     LaunchedEffect("Pagination") {
-        snapshotFlow { listState.firstVisibleItemIndex }
-            .filter { index -> index + 5 == listState.layoutInfo.totalItemsCount }
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .filter { it == listState.layoutInfo.totalItemsCount - 1 }
             .collect {
+                progressState.value = true
 //                viewModel.getStudentList(
 //                    viewModel.getStudentListResponse.value.data!!.page + 1,
 //                    20
 //                )
-                progressState.value = true
             }
     }
 }
