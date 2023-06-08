@@ -13,6 +13,7 @@ import com.msg.sms.design.component.button.ListFloatingButton
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.viewmodel.StudentListViewModel
+import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
@@ -64,11 +65,32 @@ fun MainScreen(
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .filter { it == listState.layoutInfo.totalItemsCount - 1 }
             .collect {
-                progressState.value = true
-//                viewModel.getStudentList(
-//                    viewModel.getStudentListResponse.value.data!!.page + 1,
-//                    20
-//                )
+                viewModel.getStudentList(
+                    viewModel.getStudentListResponse.value.data!!.page + 1,
+                    20
+                )
+                getStudentList(viewModel = viewModel) {
+                    progressState.value = it
+                }
             }
+    }
+}
+
+suspend fun getStudentList(
+    viewModel: StudentListViewModel,
+    progressState: (Boolean) -> Unit
+) {
+    viewModel.getStudentListResponse.collect { response ->
+        when (response) {
+            is Event.Success -> {
+                progressState(false)
+            }
+            is Event.Loading -> {
+                progressState(true)
+            }
+            else -> {
+                progressState(false)
+            }
+        }
     }
 }
