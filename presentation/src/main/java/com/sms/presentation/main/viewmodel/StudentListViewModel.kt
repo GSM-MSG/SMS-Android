@@ -1,8 +1,12 @@
 package com.sms.presentation.main.viewmodel
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.response.StudentListModel
+import com.msg.sms.domain.model.student.response.StudentModel
 import com.msg.sms.domain.usecase.student.GetStudentListUseCase
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
@@ -17,8 +21,14 @@ import javax.inject.Inject
 class StudentListViewModel @Inject constructor(
     private val getStudentListUseCase: GetStudentListUseCase
 ) : ViewModel() {
+    private var studentList = mutableStateListOf<StudentModel>()
+
     private val _getStudentListResponse = MutableStateFlow<Event<StudentListModel>>(Event.Loading)
     val getStudentListResponse = _getStudentListResponse.asStateFlow()
+
+    fun getStudentList(): SnapshotStateList<StudentModel> {
+        return studentList
+    }
 
     fun getStudentList(page: Int, size: Int) = viewModelScope.launch {
         getStudentListUseCase(
@@ -29,6 +39,7 @@ class StudentListViewModel @Inject constructor(
                 _getStudentListResponse.value = remoteError.errorHandling()
             }.collect { response ->
                 _getStudentListResponse.value = Event.Success(data = response)
+                studentList = response.content.toMutableStateList()
             }
         }.onFailure { error ->
             _getStudentListResponse.value = error.errorHandling()
