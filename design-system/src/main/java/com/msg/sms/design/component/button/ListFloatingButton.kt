@@ -3,7 +3,7 @@ package com.msg.sms.design.component.button
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,7 +19,7 @@ fun ListFloatingButton(onClick: () -> Unit) {
         modifier = Modifier
             .height(40.dp)
             .width(40.dp)
-            .clip(RoundedCornerShape(30.dp))
+            .clip(CircleShape)
             .background(Color.Black)
     ) {
         ArrowUpWardIcon()
