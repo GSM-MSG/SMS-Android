@@ -3,9 +3,12 @@ package com.msg.sms.data.repository
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSource
 import com.msg.sms.data.remote.dto.student.request.CertificateInformation
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
+import com.msg.sms.data.remote.dto.student.response.toStudentListModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
+import com.msg.sms.domain.model.student.response.StudentListModel
 import com.msg.sms.domain.repository.StudentRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class StudentRepositoryImpl @Inject constructor(
@@ -35,5 +38,12 @@ class StudentRepositoryImpl @Inject constructor(
                 certificate = body.certificate
             )
         )
+    }
+
+    override suspend fun getStudentList(page: Int, size: Int): Flow<StudentListModel> {
+        return dataSource.getStudentList(
+            page = page,
+            size = size
+        ).map { it.toStudentListModel() }
     }
 }
