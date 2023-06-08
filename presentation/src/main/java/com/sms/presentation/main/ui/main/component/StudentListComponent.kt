@@ -1,11 +1,12 @@
 package com.sms.presentation.main.ui.main.component
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
@@ -37,7 +38,19 @@ fun StudentListComponent(
             }
             if (progressState) {
                 item {
-                    CircularProgressIndicator()
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(15.dp)
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .width(32.dp)
+                                .height(32.dp)
+                                .align(Alignment.Center),
+                            color = colors.N20,
+                        )
+                    }
                 }
             }
         }
