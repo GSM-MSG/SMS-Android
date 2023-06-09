@@ -9,9 +9,9 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun SmsDivider() {
+fun SmsDivider(modifier: Modifier = Modifier) {
     SMSTheme { colors, _ ->
-        Divider(modifier = Modifier
+        Divider(modifier = modifier
             .fillMaxWidth()
             .height(1.dp), color = colors.N20)
     }
