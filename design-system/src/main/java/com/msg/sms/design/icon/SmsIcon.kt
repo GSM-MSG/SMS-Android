@@ -96,7 +96,7 @@ fun PlusButtonGrayIcon(
 
 @Composable
 fun FilterButtonIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_filter_btn),
@@ -140,7 +140,7 @@ fun GalleryIcon(
 
 @Composable
 fun SmsLogoIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_sms_logo),
@@ -151,7 +151,7 @@ fun SmsLogoIcon(
 
 @Composable
 fun ProfileDefaultIcon(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_profile_default),
@@ -189,6 +189,17 @@ fun SearchIcon(
     Image(
         painter = painterResource(id = R.drawable.ic_search),
         contentDescription = "Search Icon Button",
+        modifier = modifier
+    )
+}
+
+@Composable
+fun BookIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_book),
+        contentDescription = "Book Icon Button",
         modifier = modifier
     )
 }
