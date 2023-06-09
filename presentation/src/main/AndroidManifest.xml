@@ -14,17 +14,16 @@
             android:name=".main.ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login">
-        </activity>
-        <activity
-            android:name=".main.ui.main.MainActivity"
-            android:exported="true"
-            android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".main.ui.main.MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main" />
     </application>
 
 </manifest>
