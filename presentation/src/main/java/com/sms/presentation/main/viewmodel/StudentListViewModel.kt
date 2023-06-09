@@ -29,10 +29,39 @@ class StudentListViewModel @Inject constructor(
         return studentList
     }
 
-    fun getStudentListRequest(page: Int, size: Int) = viewModelScope.launch {
+    fun getStudentListRequest(
+        page: Int,
+        size: Int,
+        majors: List<String>? = null,
+        techStacks: List<String>? = null,
+        grade: Int? = null,
+        classNum: Int? = null,
+        department: List<String>? = null,
+        stuNumSort: String? = null,
+        formOfEmployment: String? = null,
+        minGsmAuthenticationScore: Int? = null,
+        maxGsmAuthenticationScore: Int? = null,
+        minSalary: Int? = null,
+        maxSalary: Int? = null,
+        gsmAuthenticationScoreSort: String? = null,
+        salarySort: String? = null
+    ) = viewModelScope.launch {
         getStudentListUseCase(
             page = page,
-            size = size
+            size = size,
+            majors = majors,
+            techStacks = techStacks,
+            grade = grade,
+            classNum = classNum,
+            department = department,
+            stuNumSort = stuNumSort,
+            formOfEmployment = formOfEmployment,
+            minGsmAuthenticationScore = minGsmAuthenticationScore,
+            maxGsmAuthenticationScore = maxGsmAuthenticationScore,
+            minSalary = minSalary,
+            maxSalary = maxSalary,
+            gsmAuthenticationScoreSort = gsmAuthenticationScoreSort,
+            salarySort = salarySort
         ).onSuccess {
             it.catch { remoteError ->
                 _getStudentListResponse.value = remoteError.errorHandling()

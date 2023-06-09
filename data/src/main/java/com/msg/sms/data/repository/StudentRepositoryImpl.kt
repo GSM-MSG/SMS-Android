@@ -40,10 +40,39 @@ class StudentRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun getStudentList(page: Int, size: Int): Flow<StudentListModel> {
+    override suspend fun getStudentList(
+        page: Int,
+        size: Int,
+        majors: List<String>?,
+        techStacks: List<String>?,
+        grade: Int?,
+        classNum: Int?,
+        department: List<String>?,
+        stuNumSort: String?,
+        formOfEmployment: String?,
+        minGsmAuthenticationScore: Int?,
+        maxGsmAuthenticationScore: Int?,
+        minSalary: Int?,
+        maxSalary: Int?,
+        gsmAuthenticationScoreSort: String?,
+        salarySort: String?
+    ): Flow<StudentListModel> {
         return dataSource.getStudentList(
             page = page,
-            size = size
+            size = size,
+            majors = majors,
+            techStacks = techStacks,
+            grade = grade,
+            classNum = classNum,
+            department = department,
+            stuNumSort = stuNumSort,
+            formOfEmployment = formOfEmployment,
+            minGsmAuthenticationScore = minGsmAuthenticationScore,
+            maxGsmAuthenticationScore = maxGsmAuthenticationScore,
+            minSalary = minSalary,
+            maxSalary = maxSalary,
+            gsmAuthenticationScoreSort = gsmAuthenticationScoreSort,
+            salarySort = salarySort
         ).map { it.toStudentListModel() }
     }
 }

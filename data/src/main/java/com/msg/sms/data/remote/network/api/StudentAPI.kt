@@ -18,18 +18,18 @@ interface StudentAPI {
     suspend fun getStudentList(
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("majors") majors: List<String>? = null,
-        @Query("techStacks") techStacks: List<String>? = null,
-        @Query("grade") grade: Int? = null,
-        @Query("classNum") classNum: Int? = null,
-        @Query("department") department: List<String>? = null,
-        @Query("stuNumSort") stuNumSort: String? = null,
-        @Query("formOfEmployment") formOfEmployment: String? = null,
-        @Query("minGsmAuthenticationScore") minGsmAuthenticationScore: Int? = null,
-        @Query("maxGsmAuthenticationScore") maxGsmAuthenticationScore: Int? = null,
-        @Query("minSalary") minSalary: Int? = null,
-        @Query("maxSalary") maxSalary: Int? = null,
-        @Query("gsmAuthenticationScoreSort") gsmAuthenticationScoreSort: String? = null,
-        @Query("salarySort") salarySort: String? = null
+        @Query("majors") majors: List<String>?,
+        @Query("techStacks") techStacks: List<String>?,
+        @Query("grade") grade: Int?,
+        @Query("classNum") classNum: Int?,
+        @Query("department") department: List<String>?,
+        @Query("stuNumSort") stuNumSort: String?,
+        @Query("formOfEmployment") formOfEmployment: String?,
+        @Query("minGsmAuthenticationScore") minGsmAuthenticationScore: Int?,
+        @Query("maxGsmAuthenticationScore") maxGsmAuthenticationScore: Int?,
+        @Query("minSalary") minSalary: Int?,
+        @Query("maxSalary") maxSalary: Int?,
+        @Query("gsmAuthenticationScoreSort") gsmAuthenticationScoreSort: String?,
+        @Query("salarySort") salarySort: String?
     ): GetStudentListResponse
 }
