@@ -1,7 +1,6 @@
 package com.sms.presentation.main.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,11 +25,11 @@ class StudentListViewModel @Inject constructor(
     private val _getStudentListResponse = MutableStateFlow<Event<StudentListModel>>(Event.Loading)
     val getStudentListResponse = _getStudentListResponse.asStateFlow()
 
-    fun getStudentList(): SnapshotStateList<StudentModel> {
+    fun getStudentListData(): List<StudentModel> {
         return studentList
     }
 
-    fun getStudentList(page: Int, size: Int) = viewModelScope.launch {
+    fun getStudentListRequest(page: Int, size: Int) = viewModelScope.launch {
         getStudentListUseCase(
             page = page,
             size = size

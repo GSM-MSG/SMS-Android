@@ -43,7 +43,7 @@ fun MainScreen(
             StudentListComponent(
                 listState = listState,
                 progressState = progressState.value,
-                studentList = viewModel.getStudentList()
+                studentList = viewModel.getStudentListData()
             ) {
                 //TODO (Kimhyunseung) : 디테일 페이지로 이동
             }
@@ -62,15 +62,19 @@ fun MainScreen(
     }
 
     LaunchedEffect("Pagination") {
+        val response = viewModel.getStudentListResponse.value.data!!
+
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .filter { it == listState.layoutInfo.totalItemsCount - 1 }
             .collect {
-                viewModel.getStudentList(
-                    viewModel.getStudentListResponse.value.data!!.page + 1,
-                    20
-                )
-                getStudentList(viewModel = viewModel) {
-                    progressState.value = it
+                if (viewModel.getStudentListData().size < response.totalSize) {
+                    viewModel.getStudentListRequest(
+                        response.page + 1,
+                        20
+                    )
+                    getStudentList(viewModel = viewModel) {
+                        progressState.value = it
+                    }
                 }
             }
     }

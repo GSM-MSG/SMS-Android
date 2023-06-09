@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
     private val studentListViewModel by viewModels<StudentListViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        studentListViewModel.getStudentList(1, 20)
+        studentListViewModel.getStudentListRequest(1, 20)
 
         setContent {
             val navController = rememberNavController()
