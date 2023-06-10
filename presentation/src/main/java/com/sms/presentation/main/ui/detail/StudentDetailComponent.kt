@@ -39,7 +39,7 @@ fun StudentDetailComponent(
     introduce: String,
     isNotGuest: Boolean,
     isTeacher: Boolean,
-    onDreamBookButtonClick: (() -> Unit)?,
+    onDreamBookButtonClick: (() -> Unit)?
 ) {
     val scrollState = rememberScrollState()
 
