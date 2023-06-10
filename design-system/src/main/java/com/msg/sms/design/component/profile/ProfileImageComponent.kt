@@ -10,7 +10,7 @@ import com.msg.sms.design.icon.ProfileDefaultIcon
 fun ProfileImageComponent(
     profileImage: String,
     modifier: Modifier,
-    imageView: @Composable (Modifier) -> Unit,
+    imageView: @Composable (Modifier) -> Unit
 ) {
     val imageModifier = modifier
         .fillMaxWidth()
