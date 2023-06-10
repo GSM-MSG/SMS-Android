@@ -2,6 +2,7 @@ package com.sms.presentation.main.ui.main.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,11 +12,12 @@ import com.sms.presentation.main.ui.main.data.StudentData
 
 @Composable
 fun StudentListComponent(
+    listState: LazyListState,
     studentList: List<StudentData>,
     onItemClick: () -> Unit
 ) {
     SMSTheme { colors, _ ->
-        LazyColumn {
+        LazyColumn(state = listState) {
             items(studentList.size) {
                 StudentListItem(
                     profileImageUrl = studentList[it].profileImageUrl,
