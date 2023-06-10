@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.main.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -67,14 +68,12 @@ fun MainScreen(
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .filter { it == listState.layoutInfo.totalItemsCount - 1 }
             .collect {
-                if (viewModel.getStudentListData().size < response.totalSize) {
-                    viewModel.getStudentListRequest(
-                        response.page + 1,
-                        20
-                    )
-                    getStudentList(viewModel = viewModel) {
-                        progressState.value = it
-                    }
+                val isSuccess = viewModel.getStudentListResponse.value is Event.Success
+                val isIncompleteData = viewModel.getStudentListData().size < response.totalSize
+
+                if (isSuccess && isIncompleteData) {
+                    viewModel.getStudentListRequest(response.page + 1, 20)
+                    getStudentList(viewModel = viewModel) { progressState.value = it }
                 }
             }
     }
@@ -87,12 +86,15 @@ suspend fun getStudentList(
     viewModel.getStudentListResponse.collect { response ->
         when (response) {
             is Event.Success -> {
+                Log.d("StudentList", response.data.toString())
                 progressState(false)
             }
             is Event.Loading -> {
+                Log.d("StudentList", response.data.toString())
                 progressState(true)
             }
             else -> {
+                Log.d("StudentList", response.data.toString())
                 progressState(false)
             }
         }

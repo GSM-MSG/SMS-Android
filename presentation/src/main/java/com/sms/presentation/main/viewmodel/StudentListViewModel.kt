@@ -46,6 +46,7 @@ class StudentListViewModel @Inject constructor(
         gsmAuthenticationScoreSort: String? = null,
         salarySort: String? = null
     ) = viewModelScope.launch {
+        _getStudentListResponse.value = Event.Loading
         getStudentListUseCase(
             page = page,
             size = size,
