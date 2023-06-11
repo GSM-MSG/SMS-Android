@@ -80,11 +80,12 @@ fun MainScreen(
             .filter { it == listState.layoutInfo.totalItemsCount - 1 }
             .collect {
                 val isSuccess = response is Event.Success
-                val isIncompleteData =
-                    studentList.value.size < response.data!!.totalSize
-
-                if (isSuccess && isIncompleteData) {
-                    viewModel.getStudentListRequest(response.data.page + 1, 20)
+                if (isSuccess) {
+                    val isIncompleteData =
+                        studentList.value.size < response.data!!.totalSize
+                    if (isIncompleteData) {
+                        viewModel.getStudentListRequest(response.data.page + 1, 20)
+                    }
                 }
             }
     }
