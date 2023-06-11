@@ -15,17 +15,16 @@ import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
     navController: NavController,
-    lifecycleScope: CoroutineScope,
     viewModel: StudentListViewModel
 ) {
     val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
     val studentList = remember {
         mutableStateOf(listOf<StudentModel>())
     }
@@ -33,6 +32,13 @@ fun MainScreen(
         mutableStateOf(false)
     }
 
+    LaunchedEffect("GetStudentList") {
+        getStudentList(
+            viewModel = viewModel,
+            progressState = { progressState.value = it },
+            onSuccess = { studentList.value += it }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -59,7 +65,7 @@ fun MainScreen(
                     .padding(bottom = 32.dp, end = 20.dp)
             ) {
                 ListFloatingButton(onClick = {
-                    lifecycleScope.launch {
+                    scope.launch {
                         listState.animateScrollToItem(0)
                     }
                 })
@@ -69,11 +75,6 @@ fun MainScreen(
 
     LaunchedEffect("Pagination") {
         val response = viewModel.getStudentListResponse.value
-        getStudentList(
-            viewModel = viewModel,
-            progressState = { progressState.value = it },
-            onSuccess = { studentList.value = it }
-        )
 
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .filter { it == listState.layoutInfo.totalItemsCount - 1 }

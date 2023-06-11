@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,7 +30,6 @@ class MainActivity : ComponentActivity() {
                 composable("Main") {
                     MainScreen(
                         navController = navController,
-                        lifecycleScope = lifecycleScope,
                         viewModel = viewModel(LocalContext.current as MainActivity)
                     )
                 }
