@@ -1,6 +1,5 @@
 package com.sms.presentation.main.ui.main.screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -11,23 +10,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.button.ListFloatingButton
+import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
     navController: NavController,
+    lifecycleScope: CoroutineScope,
     viewModel: StudentListViewModel
 ) {
     val listState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
+    val studentList = remember {
+        mutableStateOf(listOf<StudentModel>())
+    }
     val progressState = remember {
         mutableStateOf(false)
     }
+
 
     Column(
         modifier = Modifier
@@ -44,7 +49,7 @@ fun MainScreen(
             StudentListComponent(
                 listState = listState,
                 progressState = progressState.value,
-                studentList = viewModel.getStudentListData()
+                studentList = studentList.value
             ) {
                 //TODO (Kimhyunseung) : 디테일 페이지로 이동
             }
@@ -54,7 +59,7 @@ fun MainScreen(
                     .padding(bottom = 32.dp, end = 20.dp)
             ) {
                 ListFloatingButton(onClick = {
-                    scope.launch {
+                    lifecycleScope.launch {
                         listState.animateScrollToItem(0)
                     }
                 })
@@ -63,17 +68,22 @@ fun MainScreen(
     }
 
     LaunchedEffect("Pagination") {
-        val response = viewModel.getStudentListResponse.value.data!!
+        val response = viewModel.getStudentListResponse.value
+        getStudentList(
+            viewModel = viewModel,
+            progressState = { progressState.value = it },
+            onSuccess = { studentList.value = it }
+        )
 
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .filter { it == listState.layoutInfo.totalItemsCount - 1 }
             .collect {
-                val isSuccess = viewModel.getStudentListResponse.value is Event.Success
-                val isIncompleteData = viewModel.getStudentListData().size < response.totalSize
+                val isSuccess = response is Event.Success
+                val isIncompleteData =
+                    studentList.value.size < response.data!!.totalSize
 
                 if (isSuccess && isIncompleteData) {
-                    viewModel.getStudentListRequest(response.page + 1, 20)
-                    getStudentList(viewModel = viewModel) { progressState.value = it }
+                    viewModel.getStudentListRequest(response.data.page + 1, 20)
                 }
             }
     }
@@ -81,20 +91,19 @@ fun MainScreen(
 
 suspend fun getStudentList(
     viewModel: StudentListViewModel,
-    progressState: (Boolean) -> Unit
+    progressState: (Boolean) -> Unit,
+    onSuccess: (List<StudentModel>) -> Unit
 ) {
     viewModel.getStudentListResponse.collect { response ->
         when (response) {
             is Event.Success -> {
-                Log.d("StudentList", response.data.toString())
+                onSuccess(response.data!!.content)
                 progressState(false)
             }
             is Event.Loading -> {
-                Log.d("StudentList", response.data.toString())
                 progressState(true)
             }
             else -> {
-                Log.d("StudentList", response.data.toString())
                 progressState(false)
             }
         }

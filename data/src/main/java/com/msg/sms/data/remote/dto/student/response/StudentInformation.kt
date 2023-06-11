@@ -3,7 +3,7 @@ package com.msg.sms.data.remote.dto.student.response
 import com.msg.sms.domain.model.student.response.StudentModel
 
 data class StudentInformation(
-    val profileImg: String,
+    val profileImgUrl: String,
     val name: String,
     val major: String,
     val techStack: List<String>
@@ -11,7 +11,7 @@ data class StudentInformation(
 
 fun StudentInformation.toStudentModel() =
     StudentModel(
-        profileImg = this.profileImg,
+        profileImgUrl = this.profileImgUrl,
         name = this.name,
         major = this.major,
         techStack = this.techStack
