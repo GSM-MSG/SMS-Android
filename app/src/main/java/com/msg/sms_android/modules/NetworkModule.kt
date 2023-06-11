@@ -27,10 +27,10 @@ object NetworkModule {
         authInterceptor: AuthInterceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .cookieJar(CookieJar.NO_COOKIES)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
-            .cookieJar(CookieJar.NO_COOKIES)
             .addInterceptor(authInterceptor)
             .build()
     }

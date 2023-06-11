@@ -1,5 +1,6 @@
 package com.msg.sms.data.util
 
+import android.util.Log
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.msg.sms.data.local.datasource.auth.LocalAuthDataSource
@@ -31,14 +32,22 @@ class AuthInterceptor @Inject constructor(
             val refreshTime = dataSource.getRefreshTime().first().replace("\"", "")
             val accessTime = dataSource.getAccessTime().first().replace("\"", "")
 
-            if (refreshTime == "" || currentTime.after(refreshTime.toDate())) throw NeedLoginException()
+            Log.d("interceptor", refreshTime)
+            Log.d("interceptor", accessTime)
+
+            if (refreshTime == "" || currentTime.after(refreshTime.toDate())) {
+                return@runBlocking
+            }
 //            access 토큰 재 발급
             if (currentTime.after(accessTime.toDate())) {
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")
                     .patch(chain.request().body ?: RequestBody.create(null, byteArrayOf()))
-                    .addHeader("Refresh-Token", dataSource.getRefreshToken().first().replace("\"",""))
+                    .addHeader(
+                        "Refresh-Token",
+                        dataSource.getRefreshToken().first().replace("\"", "")
+                    )
                     .build()
                 val jsonParser = JsonParser()
                 val response = client.newCall(refreshRequest).execute()
