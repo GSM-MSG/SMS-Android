@@ -31,8 +31,12 @@ class AuthInterceptor @Inject constructor(
             val refreshTime = dataSource.getRefreshTime().first().replace("\"", "")
             val accessTime = dataSource.getAccessTime().first().replace("\"", "")
 
-            if (refreshTime == "" || currentTime.after(refreshTime.toDate())) {
+            if (refreshTime == "") {
                 return@runBlocking
+            }
+
+            if (currentTime.after(refreshTime.toDate())) {
+                throw NeedLoginException()
             }
 //            access 토큰 재 발급
             if (currentTime.after(accessTime.toDate())) {
