@@ -27,16 +27,22 @@ class LoginActivity : ComponentActivity() {
         observeEvent()
         this.setTransparentStatusBar()
         setContent {
-            LoginScreen(context = this@LoginActivity) {
-                setContent {
-                    GAuthSigninWebView(
-                        clientId = BuildConfig.CLIENT_ID,
-                        redirectUri = BuildConfig.REDIRECT_URI
-                    ) { code ->
-                        viewModel.gAuthLogin(code = code)
+            LoginScreen(
+                context = this@LoginActivity,
+                onLoginButtonClick = {
+                    setContent {
+                        GAuthSigninWebView(
+                            clientId = BuildConfig.CLIENT_ID,
+                            redirectUri = BuildConfig.REDIRECT_URI
+                        ) { code ->
+                            viewModel.gAuthLogin(code = code)
+                        }
                     }
+                },
+                onLookAroundToGuestButtonClick = {
+                    pageController(true)
                 }
-            }
+            )
         }
     }
 
