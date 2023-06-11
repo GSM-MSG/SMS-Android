@@ -1,6 +1,5 @@
 package com.msg.sms.data.util
 
-import android.util.Log
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.msg.sms.data.local.datasource.auth.LocalAuthDataSource
@@ -31,9 +30,6 @@ class AuthInterceptor @Inject constructor(
         runBlocking {
             val refreshTime = dataSource.getRefreshTime().first().replace("\"", "")
             val accessTime = dataSource.getAccessTime().first().replace("\"", "")
-
-            Log.d("interceptor", refreshTime)
-            Log.d("interceptor", accessTime)
 
             if (refreshTime == "" || currentTime.after(refreshTime.toDate())) {
                 return@runBlocking
