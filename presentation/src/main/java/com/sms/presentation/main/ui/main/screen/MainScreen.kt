@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.main.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -98,12 +99,13 @@ fun MainScreen(
             .filter { it == listState.layoutInfo.totalItemsCount - 1 }
             .collect {
                 val isSuccess = response is Event.Success
-                if (isSuccess) {
+                if (isSuccess && it != 0) {
                     val isIncompleteData =
-                        response.data!!.last
-                    if (!isIncompleteData) {
+                        studentList.value.size < response.data!!.totalSize
+                    if (isIncompleteData) {
                         viewModel.getStudentListRequest(response.data.page + 1, 20)
                     }
+                    Log.d("pagination", it.toString())
                 }
             }
     }
