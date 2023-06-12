@@ -7,24 +7,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.msg.sms.design.component.button.SmsBoxButton
 import com.msg.sms.design.component.snackbar.TechStackSnackBar
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.SearchTopBar
+import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun DetailStackSearchScreen() {
+fun DetailStackSearchScreen(
+    navController: NavController,
+    viewModel: SearchDetailStackViewModel,
+    selectedStack: List<String>,
+) {
     val searchQuery = remember {
         mutableStateOf("")
     }
-    val detailStack = remember {
-        mutableStateListOf<String>()
-    }
-    val selectedStack = remember {
-        mutableStateListOf<String>()
+    val detailStack =
+        viewModel.searchResult.collectAsState()
+    val selectedStackList = remember {
+        if(selectedStack.first() == "") mutableStateListOf() else  mutableStateListOf(*selectedStack.toTypedArray())
     }
     val snackBarVisible = remember {
         mutableStateOf(false)
@@ -34,7 +41,9 @@ fun DetailStackSearchScreen() {
     }
     val scope = rememberCoroutineScope()
 
-    val nextButtonText = ("세부 스택 ${if (selectedStack.isEmpty()) "" else "${selectedStack.size}개 "}추가")
+    val nextButtonText =
+        ("세부 스택 ${if (selectedStackList.isEmpty()) "" else "${selectedStackList.size}개 "}추가")
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,7 +57,9 @@ fun DetailStackSearchScreen() {
                 setText = searchQuery.value,
                 onValueChanged = { searchQuery.value = it },
                 onClickButton = { searchQuery.value = "" },
-                onClickBackButton = {}
+                onClickBackButton = { navController.popBackStack() },
+                debounceTime = 300L,
+                debounceTextChanged = { if (it != "") viewModel.searchDetailStack(name = it) }
             )
             TechStackSnackBar(
                 modifier = Modifier.align(Alignment.Center),
@@ -61,20 +72,21 @@ fun DetailStackSearchScreen() {
         SmsSpacer()
         RecentlyAddedListComponent(
             modifier = Modifier.weight(1f),
-            list = detailStack,
-            selectedList = selectedStack,
-            onClickRemoveAll = { selectedStack.clear() },
+            list = if (detailStack.value.data != null) detailStack.value.data!!.techStack else emptyList(),
+            selectedList = selectedStackList,
+            onClickRemoveAll = { selectedStackList.clear() },
+            isSearching = searchQuery.value != "",
             onClickButton = { stack, checked ->
                 snackBarAdded.value = !checked
                 if (checked) {
-                    selectedStack.remove(stack)
+                    selectedStackList.remove(stack)
                 } else {
-                    selectedStack.add(stack)
+                    selectedStackList.add(stack)
                 }
                 scope.launch {
                     snackBarVisible.value = true
                     delay(1.5.seconds)
-                    if(snackBarVisible.value) snackBarVisible.value = false
+                    if (snackBarVisible.value) snackBarVisible.value = false
                 }
             }
         )
@@ -82,8 +94,13 @@ fun DetailStackSearchScreen() {
             modifier = Modifier
                 .fillMaxWidth(),
             text = nextButtonText,
-            enabled = selectedStack.isNotEmpty()
+            enabled = selectedStackList.isNotEmpty()
         ) {
+            navController.currentBackStackEntry?.savedStateHandle?.set(
+                key = "detailStack",
+                value = selectedStackList.joinToString(",")
+            )
+            navController.navigate("Profile")
         }
     }
 }
@@ -91,5 +108,9 @@ fun DetailStackSearchScreen() {
 @Preview
 @Composable
 fun DetailStackSearchScreenPre() {
-    DetailStackSearchScreen()
+    DetailStackSearchScreen(
+        navController = rememberNavController(),
+        viewModel = viewModel(),
+        listOf()
+    )
 }

@@ -11,6 +11,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,11 +34,13 @@ import kotlinx.coroutines.launch
 fun ProfileComponent(
     bottomSheetScaffoldState: ModalBottomSheetState,
     selectedMajor: String,
-    savedData: (techStack: String, introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit,
+    detailStack: String,
+    savedData: (introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit,
     enteringMajor: (String) -> Unit,
     enteredMajor: String,
     data: ProfileData,
     isReadOnly: Boolean,
+    changeView: () -> Unit,
     isRequired: (Boolean) -> Unit,
     isEnable: Boolean,
     profileImageUri: Uri,
@@ -44,9 +49,6 @@ fun ProfileComponent(
     SMSTheme { _, typography ->
         val coroutineScope = rememberCoroutineScope()
 
-        val techStack = remember {
-            mutableStateOf(if (data.techStack != "") data.techStack else "")
-        }
         val introduce = remember {
             mutableStateOf(if (data.introduce != "") data.introduce else "")
         }
@@ -58,7 +60,6 @@ fun ProfileComponent(
         }
 
         savedData(
-            if (techStack.value == "") data.techStack else techStack.value,
             if (introduce.value == "") data.introduce else introduce.value,
             if (portfolioUrl.value == "") data.portfolioUrl else portfolioUrl.value,
             if (contactEmail.value == "") data.contactEmail else contactEmail.value,
@@ -66,7 +67,7 @@ fun ProfileComponent(
         )
 
         isRequired(
-            techStack.value != "" && introduce.value != "" && portfolioUrl.value != "" && contactEmail.value != "" && profileImageUri != Uri.EMPTY
+            detailStack != "" && introduce.value != "" && portfolioUrl.value != "" && contactEmail.value != "" && profileImageUri != Uri.EMPTY
         )
 
         Column(
@@ -167,14 +168,22 @@ fun ProfileComponent(
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "세부스택", style = typography.body2)
-            SmsTextField(
+            SmsCustomTextField(
                 placeHolder = "예시) HTML, CSS, C#",
-                modifier = Modifier.fillMaxWidth(),
-                setText = techStack.value,
-                onValueChange = { techStack.value = it }
-            ) {
-                techStack.value = ""
-            }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(FocusRequester())
+                    .onFocusChanged {
+                        if (it.isFocused) {
+                            changeView()
+                        }
+                    },
+                setChangeText = detailStack,
+                readOnly = true,
+                endIcon = null,
+                onValueChange = {},
+                clickAction = {}
+            )
         }
     }
 }
@@ -186,13 +195,15 @@ fun ProfileComponentPre() {
     ProfileComponent(
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
         selectedMajor = "FrontEnd",
-        savedData = { _: String, _: String, _: String, _: String, _: Uri -> },
+        savedData = { _: String, _: String, _: String, _: Uri -> },
         data = ProfileData(Uri.EMPTY, "", "", "", "", "", ""),
         isRequired = {},
         isEnable = false,
+        detailStack = "",
         profileImageUri = Uri.EMPTY,
         isProfilePictureBottomSheet = {},
         isReadOnly = true,
+        changeView = {},
         enteringMajor = {},
         enteredMajor = ""
     )

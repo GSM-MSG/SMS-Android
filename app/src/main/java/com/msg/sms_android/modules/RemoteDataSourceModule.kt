@@ -6,6 +6,8 @@ import com.msg.sms.data.remote.datasource.fileupload.RemoteFileUploadDataSource
 import com.msg.sms.data.remote.datasource.fileupload.RemoteFileUploadDataSourceImpl
 import com.msg.sms.data.remote.datasource.major.RemoteMajorDataSource
 import com.msg.sms.data.remote.datasource.major.RemoteMajorDataSourceImpl
+import com.msg.sms.data.remote.datasource.stack.RemoteStackDataSource
+import com.msg.sms.data.remote.datasource.stack.RemoteStackDataSourceImpl
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSource
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSourceImpl
 import dagger.Binds
@@ -35,4 +37,9 @@ abstract class RemoteDataSourceModule {
     abstract fun provideRemoteMajorDataSource(
         remoteMajorDataSourceImpl: RemoteMajorDataSourceImpl,
     ): RemoteMajorDataSource
+
+    @Binds
+    abstract fun provideRemoteStackDataSource(
+        remoteStackDataSourceImpl: RemoteStackDataSourceImpl,
+    ): RemoteStackDataSource
 }
