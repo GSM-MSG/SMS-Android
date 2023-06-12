@@ -15,7 +15,6 @@ import androidx.navigation.NavController
 import com.msg.sms.design.component.button.ListFloatingButton
 import com.msg.sms.design.icon.RedLogoutIcon
 import com.msg.sms.design.icon.RedWithdrawalIcon
-import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.ModalBottomSheetItem
@@ -28,7 +27,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
-    navController: NavController, viewModel: StudentListViewModel
+    navController: NavController,
+    viewModel: StudentListViewModel
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -64,35 +64,33 @@ fun MainScreen(
 
     ModalBottomSheetLayout(
         sheetContent = {
-            SMSTheme { colors, typography ->
-                Spacer(modifier = Modifier.height(24.dp))
-                ModalBottomSheetItem(
-                    text = "로그아웃",
-                    icon = {
-                        RedLogoutIcon(
-                            modifier = Modifier.padding(
-                                start = 20.dp, bottom = 12.dp, top = 12.dp
-                            )
+            Spacer(modifier = Modifier.height(24.dp))
+            ModalBottomSheetItem(
+                text = "로그아웃",
+                icon = {
+                    RedLogoutIcon(
+                        modifier = Modifier.padding(
+                            start = 20.dp, bottom = 12.dp, top = 12.dp
                         )
-                    }
-                ) {
-                    /*TODO(Kimhyunseung) - 로그아웃 */
+                    )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                ModalBottomSheetItem(
-                    text = "회원탈퇴",
-                    icon = {
-                        RedWithdrawalIcon(
-                            modifier = Modifier.padding(
-                                start = 20.dp, bottom = 12.dp, top = 12.dp
-                            )
-                        )
-                    }
-                ) {
-                    /*TODO(Kimhyunseung) - 회원탈퇴 */
-                }
-                Spacer(modifier = Modifier.height(16.dp))
+            ) {
+                /*TODO(Kimhyunseung) - 로그아웃 */
             }
+            Spacer(modifier = Modifier.height(8.dp))
+            ModalBottomSheetItem(
+                text = "회원탈퇴",
+                icon = {
+                    RedWithdrawalIcon(
+                        modifier = Modifier.padding(
+                            start = 20.dp, bottom = 12.dp, top = 12.dp
+                        )
+                    )
+                }
+            ) {
+                /*TODO(Kimhyunseung) - 회원탈퇴 */
+            }
+            Spacer(modifier = Modifier.height(16.dp))
         },
         sheetState = bottomSheetState,
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
