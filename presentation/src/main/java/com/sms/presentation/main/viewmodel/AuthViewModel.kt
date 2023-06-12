@@ -5,14 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.auth.request.GAuthLoginRequestModel
+import com.msg.sms.domain.model.auth.response.AccessValidationResponseModel
 import com.msg.sms.domain.model.auth.response.GAuthLoginResponseModel
 import com.msg.sms.domain.model.major.MajorListModel
+import com.msg.sms.domain.usecase.auth.AccessValidationUseCase
 import com.msg.sms.domain.usecase.auth.GAuthLoginUseCase
 import com.msg.sms.domain.usecase.auth.SaveTheLoginDataUseCase
 import com.msg.sms.domain.usecase.major.GetMajorListUseCase
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +26,7 @@ class AuthViewModel @Inject constructor(
     private val gAuthLoginUseCase: GAuthLoginUseCase,
     private val saveTheLoginDataUseCase: SaveTheLoginDataUseCase,
     private val getMajorListUseCase: GetMajorListUseCase,
+    private val accessValidationUseCase: AccessValidationUseCase
 ) : ViewModel() {
     private val _gAuthLoginRequest = MutableLiveData<Event<GAuthLoginResponseModel>>()
     val gAuthLoginRequest: LiveData<Event<GAuthLoginResponseModel>> get() = _gAuthLoginRequest
@@ -31,6 +36,10 @@ class AuthViewModel @Inject constructor(
 
     private val _saveTokenRequest = MutableLiveData<Event<MajorListModel>>()
     val saveTokenRequest: LiveData<Event<MajorListModel>> get() = _saveTokenRequest
+
+    private val _accessValidationResponse =
+        MutableStateFlow<Event<AccessValidationResponseModel>>(Event.Loading)
+    val accessValidationResponse = _accessValidationResponse.asStateFlow()
 
     fun gAuthLogin(code: String) = viewModelScope.launch {
         gAuthLoginUseCase(
@@ -63,5 +72,18 @@ class AuthViewModel @Inject constructor(
         }.onFailure {
             _saveTokenRequest.value = it.errorHandling()
         }
+    }
+
+    fun accessValidation() = viewModelScope.launch {
+        accessValidationUseCase()
+            .onSuccess {
+                it.catch { remoteError ->
+                    _accessValidationResponse.value = remoteError.errorHandling()
+                }.collect { response ->
+                    _accessValidationResponse.value = Event.Success(data = response)
+                }
+            }.onFailure { error ->
+                _accessValidationResponse.value = error.errorHandling()
+            }
     }
 }

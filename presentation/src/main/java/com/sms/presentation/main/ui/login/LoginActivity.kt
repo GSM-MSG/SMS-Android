@@ -6,15 +6,17 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.msg.gauthsignin.GAuthSigninWebView
 import com.sms.presentation.BuildConfig
-import com.sms.presentation.main.ui.main.MainActivity
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.component.LoginScreen
+import com.sms.presentation.main.ui.main.MainActivity
 import com.sms.presentation.main.ui.util.setTransparentStatusBar
 import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
@@ -23,7 +25,7 @@ class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getMajorList()
+        viewModel.accessValidation()
         observeEvent()
         this.setTransparentStatusBar()
         setContent {
@@ -48,8 +50,19 @@ class LoginActivity : ComponentActivity() {
 
     private fun observeEvent() {
         observeLoginEvent()
-        //observeAutoLoginCheck() //TODO (Kimhyunseung) - 자동로그인 조건 변경 필요
+        observeAutoLoginCheck()
         observeSaveTokenEvent()
+    }
+
+    private fun observeAutoLoginCheck() = lifecycleScope.launch {
+        viewModel.accessValidationResponse.collect {
+            when (it) {
+                is Event.Success -> pageController(it.data!!.isExist)
+                else -> {
+                    Log.d("loginCheck", it.toString())
+                }
+            }
+        }
     }
 
     private fun observeLoginEvent() {
@@ -62,14 +75,6 @@ class LoginActivity : ComponentActivity() {
                 else -> {
                     Log.d("login", event.toString())
                 }
-            }
-        }
-    }
-
-    private fun observeAutoLoginCheck() {
-        viewModel.getMajorList.observe(this) {
-            if (it is Event.Success) {
-                pageController(true)
             }
         }
     }
