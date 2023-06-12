@@ -74,7 +74,7 @@ fun DetailStackSearchScreen() {
                 scope.launch {
                     snackBarVisible.value = true
                     delay(1.5.seconds)
-                    if(snackBarVisible.value) snackBarVisible.value = false
+                    if (snackBarVisible.value) snackBarVisible.value = false
                 }
             }
         )
