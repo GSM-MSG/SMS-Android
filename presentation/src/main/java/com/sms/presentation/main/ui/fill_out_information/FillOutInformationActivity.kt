@@ -4,12 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,9 +32,17 @@ class FillOutInformationActivity : ComponentActivity() {
                 startDestination = "Profile"
             ) {
                 composable("Profile") {
+                    val data = remember {
+                        mutableStateOf(
+                            navController.previousBackStackEntry?.savedStateHandle?.get<String>(
+                                "detailStack"
+                            )
+                        )
+                    }
                     ProfileScreen(
                         navController = navController,
-                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
+                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                        detailStack = (if (data.value != null) data.value!!.split(",") else listOf())
                     )
                 }
                 composable("SchoolLife") {
@@ -63,6 +74,17 @@ class FillOutInformationActivity : ComponentActivity() {
                         navController = navController,
                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
                         lifecycleScope = lifecycleScope
+                    )
+                }
+                composable("Search") {
+                    DetailStackSearchScreen(
+                        onClickButton = { detailStackList ->
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                key = "detailStack",
+                                value = detailStackList.joinToString(",")
+                            )
+                            navController.navigate("Profile")
+                        }
                     )
                 }
             }
