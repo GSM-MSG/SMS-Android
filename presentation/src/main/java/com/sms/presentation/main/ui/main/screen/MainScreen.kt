@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.main.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -36,7 +37,10 @@ fun MainScreen(
         getStudentList(
             viewModel = viewModel,
             progressState = { progressState.value = it },
-            onSuccess = { studentList.value += it }
+            onSuccess = {
+                Log.d("studentList", it.toString())
+                studentList.value += it
+            }
         )
     }
 
