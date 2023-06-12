@@ -6,6 +6,7 @@ import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -36,6 +38,7 @@ import kotlinx.coroutines.launch
 fun ProfileScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
+    detailStack: List<String>,
 ) {
     val context = LocalContext.current
 
@@ -48,9 +51,6 @@ fun ProfileScreen(
 
     val selectedMajor = remember {
         mutableStateOf(if (data.major != "") data.major else "")
-    }
-    val techStack = remember {
-        mutableStateOf("")
     }
     val introduce = remember {
         mutableStateOf("")
@@ -76,7 +76,7 @@ fun ProfileScreen(
     val enteredMajor = remember {
         mutableStateOf(if (data.enteredMajor != "") data.enteredMajor else "")
     }
-    val isImageExtentsionInCorrect = remember {
+    val isImageExtensionInCorrect = remember {
         mutableStateOf(false)
     }
     val scope = rememberCoroutineScope()
@@ -84,10 +84,10 @@ fun ProfileScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
                 if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
-                    isImageExtentsionInCorrect.value = false
+                    isImageExtensionInCorrect.value = false
                     profileImageUri.value = uri
                 } else {
-                    isImageExtentsionInCorrect.value = true
+                    isImageExtensionInCorrect.value = true
                 }
             }
         }
@@ -96,10 +96,10 @@ fun ProfileScreen(
             val uri = bitmap.toUri(context)
             if (uri != null) {
                 if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
-                    isImageExtentsionInCorrect.value = false
+                    isImageExtensionInCorrect.value = false
                     profileImageUri.value = uri
                 } else {
-                    isImageExtentsionInCorrect.value = true
+                    isImageExtensionInCorrect.value = true
                 }
             }
         }
@@ -123,15 +123,15 @@ fun ProfileScreen(
         }
     val list = viewModel.getMajorListEvent.collectAsState()
 
-    if (isImageExtentsionInCorrect.value) {
+    if (isImageExtensionInCorrect.value) {
         SmsDialog(
             widthPercent = 1f,
             title = "에러",
             msg = "이미지의 확장자가 jpg, jpeg, png, heic가 아닙니다.",
             outLineButtonText = "취소",
             normalButtonText = "확인",
-            outlineButtonOnClick = { isImageExtentsionInCorrect.value = false },
-            normalButtonOnClick = { isImageExtentsionInCorrect.value = false }
+            outlineButtonOnClick = { isImageExtensionInCorrect.value = false },
+            normalButtonOnClick = { isImageExtensionInCorrect.value = false }
         )
     }
 
@@ -178,13 +178,15 @@ fun ProfileScreen(
                 }) {
             }
             SmsSpacer()
-            Column(Modifier.verticalScroll(scrollState)) {
+            Column(
+                Modifier
+                    .verticalScroll(scrollState)
+                    .background(Color.White)) {
                 ProfileComponent(
                     bottomSheetScaffoldState = bottomSheetState,
                     isReadOnly = selectedMajor.value != "직접입력",
                     selectedMajor = selectedMajor.value,
-                    savedData = { getTechStack: String, getIntroduce: String, getPortfolio: String, getContactEmail: String, getProfileImageUri: Uri ->
-                        techStack.value = getTechStack
+                    savedData = { getIntroduce: String, getPortfolio: String, getContactEmail: String, getProfileImageUri: Uri ->
                         introduce.value = getIntroduce
                         portfolioUrl.value = getPortfolio
                         contactEmail.value = getContactEmail
@@ -196,9 +198,17 @@ fun ProfileScreen(
                     isEnable = list.value.data != null,
                     profileImageUri = profileImageUri.value,
                     isProfilePictureBottomSheet = { isProfilePictureBottomSheet.value = it },
+                    changeView = {
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            key = "detailStack",
+                            value = detailStack.joinToString(",")
+                        )
+                        navController.navigate("Search")
+                    },
                     enteringMajor = { string ->
                         enteredMajor.value = string
-                    }
+                    },
+                    detailStack = detailStack.joinToString(", ")
                 )
                 Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Spacer(modifier = Modifier.height(32.dp))
@@ -210,11 +220,11 @@ fun ProfileScreen(
                     ) {
                         Log.d(
                             "TAG",
-                            "whenClickNextButton: ${selectedMajor.value}, ${techStack.value}, ${introduce.value}, ${portfolioUrl.value}, ${contactEmail.value}, ${profileImageUri.value}"
+                            "whenClickNextButton: ${selectedMajor.value}, ${detailStack}, ${introduce.value}, ${portfolioUrl.value}, ${contactEmail.value}, ${profileImageUri.value}"
                         )
                         viewModel.setEnteredProfileInformation(
                             major = selectedMajor.value,
-                            techStack = techStack.value,
+                            techStack = detailStack.joinToString(", "),
                             profileImgUri = profileImageUri.value,
                             introduce = introduce.value,
                             contactEmail = contactEmail.value,

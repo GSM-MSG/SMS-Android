@@ -18,6 +18,8 @@ fun SearchTopBar(
     modifier: Modifier = Modifier,
     setText: String,
     onValueChanged: (String) -> Unit,
+    debounceTime: Long = 300L,
+    debounceTextChanged: (String) -> Unit,
     onClickBackButton: () -> Unit,
     onClickButton: () -> Unit,
 ) {
@@ -37,7 +39,9 @@ fun SearchTopBar(
             setText = setText,
             onValueChanged = onValueChanged,
             placeHolder = "찾고 싶은 세부 스택 입력",
-            trailingIcon = { DeleteButtonIcon() }
+            trailingIcon = { DeleteButtonIcon() },
+            debounceTime = debounceTime,
+            debounceTextChanged = debounceTextChanged
         ) {
             onClickButton()
         }
@@ -51,6 +55,7 @@ fun SearchTopBarPre() {
         onValueChanged = {},
         setText = "sd",
         onClickButton = {},
-        onClickBackButton = {}
+        onClickBackButton = {},
+        debounceTextChanged = {}
     )
 }

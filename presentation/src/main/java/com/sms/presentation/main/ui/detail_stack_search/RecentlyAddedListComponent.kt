@@ -18,9 +18,10 @@ import com.msg.sms.design.theme.SMSTheme
 fun RecentlyAddedListComponent(
     modifier: Modifier,
     list: List<String>,
+    isSearching: Boolean,
     selectedList: List<String>,
     onClickButton: (stack: String, checked: Boolean) -> Unit,
-    onClickRemoveAll: () -> Unit
+    onClickRemoveAll: () -> Unit,
 ) {
     SMSTheme { colors, typography ->
         LazyColumn(
@@ -28,40 +29,47 @@ fun RecentlyAddedListComponent(
                 .fillMaxWidth()
                 .padding(start = 20.dp, end = 20.dp, top = 24.dp)
         ) {
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "최근 추가", style = typography.title2, fontWeight = FontWeight.Bold)
-                    Box(
-                        modifier = Modifier.clickable(
-                            indication = null,
-                            interactionSource = MutableInteractionSource(),
-                            onClick = onClickRemoveAll
-                        )
+            if (!isSearching) {
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            modifier = Modifier.align(Alignment.Center),
-                            text = "전체삭제",
-                            style = typography.body1,
-                            fontWeight = FontWeight.Normal,
-                            color = colors.N30,
+                            text = "최근 추가",
+                            style = typography.title2,
+                            fontWeight = FontWeight.Bold
                         )
+                        Box(
+                            modifier = Modifier.clickable(
+                                indication = null,
+                                interactionSource = MutableInteractionSource(),
+                                onClick = onClickRemoveAll
+                            )
+                        ) {
+                            Text(
+                                modifier = Modifier.align(Alignment.Center),
+                                text = "전체삭제",
+                                style = typography.body1,
+                                fontWeight = FontWeight.Normal,
+                                color = colors.N30,
+                            )
+                        }
                     }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Divider(
+                        color = colors.N10,
+                        thickness = 1.dp,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-                Divider(
-                    color = colors.N10,
-                    thickness = 1.dp,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
             }
-            items(list.size) {
+            val currentList = if (isSearching) list else selectedList
+            items(currentList.size) {
                 RecentlyAddedItem(
-                    stack = list[it],
+                    stack = currentList[it],
                     selectedStack = selectedList,
                     onClick = { stack, checked -> onClickButton(stack, checked) }
                 )

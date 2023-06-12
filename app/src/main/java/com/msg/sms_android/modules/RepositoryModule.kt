@@ -1,13 +1,7 @@
 package com.msg.sms_android.modules
 
-import com.msg.sms.data.repository.AuthRepositoryImpl
-import com.msg.sms.data.repository.FileUploadRepositoryImpl
-import com.msg.sms.data.repository.MajorRepositoryImpl
-import com.msg.sms.data.repository.StudentRepositoryImpl
-import com.msg.sms.domain.repository.AuthRepository
-import com.msg.sms.domain.repository.FileUploadRepository
-import com.msg.sms.domain.repository.MajorRepository
-import com.msg.sms.domain.repository.StudentRepository
+import com.msg.sms.data.repository.*
+import com.msg.sms.domain.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,4 +30,9 @@ abstract class RepositoryModule {
     abstract fun provideMajorRepository(
         majorRepositoryImpl: MajorRepositoryImpl
     ): MajorRepository
+
+    @Binds
+    abstract fun provideStackRepository(
+        stackRepositoryImpl: StackRepositoryImpl
+    ): StackRepository
 }
