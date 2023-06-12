@@ -1,6 +1,5 @@
 package com.sms.presentation.main.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.response.StudentListModel
@@ -57,14 +56,11 @@ class StudentListViewModel @Inject constructor(
             salarySort = salarySort
         ).onSuccess {
             it.catch { remoteError ->
-                Log.d("studentList", remoteError.toString())
                 _getStudentListResponse.value = remoteError.errorHandling()
             }.collect { response ->
-                Log.d("studentList", response.toString())
                 _getStudentListResponse.value = Event.Success(data = response)
             }
         }.onFailure { error ->
-            Log.d("studentList", error.toString())
             _getStudentListResponse.value = error.errorHandling()
         }
     }
