@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -250,6 +251,7 @@ fun ForeignLanguageComponent(
 
                         lifecycleScope.launch {
                             viewModel.fileUploadCompleted.collect { isComplete ->
+                                Log.d("fileUploadCompleted", isComplete.toString())
                                 if (isComplete) {
                                     viewModel.enterStudentInformation(
                                         major = if (enteredProfileData.major == "직접입력") enteredProfileData.enteredMajor else enteredProfileData.major,
@@ -268,27 +270,30 @@ fun ForeignLanguageComponent(
                                         militaryService = enteredMilitaryServiceData.militaryService.toEnum(),
                                         certificate = enteredCertificateData.certification
                                     )
-                                    enterStudentInformation(
-                                        viewModel = viewModel,
-                                        dialog = { visible, title, msg ->
-                                            dialogState.value = visible
-                                            errorTitle.value = title
-                                            errorMsg.value = msg
-                                        },
-                                        isSuccess = {
-                                            onClick.value = {
-                                                context.startActivity(
-                                                    Intent(
-                                                        context,
-                                                        MainActivity::class.java
-                                                    )
-                                                )
-                                                context.finish()
-                                            }
-                                        }
-                                    )
                                 }
                             }
+                        }
+
+                        lifecycleScope.launch {
+                            enterStudentInformation(
+                                viewModel = viewModel,
+                                dialog = { visible, title, msg ->
+                                    dialogState.value = visible
+                                    errorTitle.value = title
+                                    errorMsg.value = msg
+                                },
+                                isSuccess = {
+                                    onClick.value = {
+                                        context.startActivity(
+                                            Intent(
+                                                context,
+                                                MainActivity::class.java
+                                            )
+                                        )
+                                        context.finish()
+                                    }
+                                }
+                            )
                         }
                     }
                 }
@@ -360,10 +365,17 @@ suspend fun enterStudentInformation(
     isSuccess: () -> Unit
 ) {
     viewModel.enterInformationResponse.collect { response ->
+        Log.d("정보기입", response.toString())
         when (response) {
             is Event.Success -> {
                 dialog(true, "성공", "정보기입을 완료했습니다.")
                 isSuccess()
+            }
+            is Event.BadRequest -> {
+                dialog(true, "에러", "이메일 형식또는 url형식을 확인해 주세요.")
+            }
+            is Event.Conflict -> {
+                dialog(true,"에러","이미 존재하는 유저 입니다.")
             }
             is Event.Loading -> {}
             else -> {

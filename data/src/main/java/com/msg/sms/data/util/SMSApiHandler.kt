@@ -1,5 +1,6 @@
 package com.msg.sms.data.util
 
+import android.util.Log
 import com.msg.sms.domain.exception.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -15,11 +16,13 @@ class SMSApiHandler<T> {
 
     suspend fun sendRequest(): T {
         return try {
+            Log.d("ApiHandler","Success")
             withContext(Dispatchers.IO) {
                 httpRequest.invoke()
             }
         } catch (e: HttpException) {
             val message = e.message
+            Log.d("ApiHandler",message.toString())
             throw when (e.code()) {
                 400 -> BadRequestException(
                     message = message
