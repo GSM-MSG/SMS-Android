@@ -5,16 +5,16 @@ import com.msg.sms.domain.model.student.response.StudentListModel
 data class GetStudentListResponse(
     val content: List<StudentInformation>,
     val page: Int,
-    val size: Int,
+    val contentSize: Int,
     val last: Boolean,
-    val isFilter: Boolean
+    val totalSize: Int
 )
 
 fun GetStudentListResponse.toStudentListModel() =
     StudentListModel(
         content = this.content.map { it.toStudentModel() },
         page = this.page,
-        size = this.size,
+        contentSize = this.contentSize,
         last = this.last,
-        isFilter = this.isFilter
+        totalSize = this.totalSize
     )

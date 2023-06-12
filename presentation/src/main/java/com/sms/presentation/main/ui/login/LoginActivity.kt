@@ -27,22 +27,28 @@ class LoginActivity : ComponentActivity() {
         observeEvent()
         this.setTransparentStatusBar()
         setContent {
-            LoginScreen(context = this@LoginActivity) {
-                setContent {
-                    GAuthSigninWebView(
-                        clientId = BuildConfig.CLIENT_ID,
-                        redirectUri = BuildConfig.REDIRECT_URI
-                    ) { code ->
-                        viewModel.gAuthLogin(code = code)
+            LoginScreen(
+                context = this@LoginActivity,
+                onLoginButtonClick = {
+                    setContent {
+                        GAuthSigninWebView(
+                            clientId = BuildConfig.CLIENT_ID,
+                            redirectUri = BuildConfig.REDIRECT_URI
+                        ) { code ->
+                            viewModel.gAuthLogin(code = code)
+                        }
                     }
+                },
+                onLookAroundToGuestButtonClick = {
+                    pageController(true)
                 }
-            }
+            )
         }
     }
 
     private fun observeEvent() {
         observeLoginEvent()
-        observeAutoLoginCheck()
+        //observeAutoLoginCheck() //TODO (Kimhyunseung) - 자동로그인 조건 변경 필요
         observeSaveTokenEvent()
     }
 
@@ -82,7 +88,6 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun pageController(isExist: Boolean) {
-        Log.d("TAG", "페이지 이동")
         startActivity(
             Intent(
                 this,

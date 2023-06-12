@@ -17,6 +17,19 @@ interface StudentAPI {
     @GET("student")
     suspend fun getStudentList(
         @Query("page") page: Int,
-        @Query("size") size: Int
+        @Query("size") size: Int,
+        @Query("majors") majors: List<String>?,
+        @Query("techStacks") techStacks: List<String>?,
+        @Query("grade") grade: Int?,
+        @Query("classNum") classNum: Int?,
+        @Query("department") department: List<String>?,
+        @Query("stuNumSort") stuNumSort: String?,
+        @Query("formOfEmployment") formOfEmployment: String?,
+        @Query("minGsmAuthenticationScore") minGsmAuthenticationScore: Int?,
+        @Query("maxGsmAuthenticationScore") maxGsmAuthenticationScore: Int?,
+        @Query("minSalary") minSalary: Int?,
+        @Query("maxSalary") maxSalary: Int?,
+        @Query("gsmAuthenticationScoreSort") gsmAuthenticationScoreSort: String?,
+        @Query("salarySort") salarySort: String?
     ): GetStudentListResponse
 }
