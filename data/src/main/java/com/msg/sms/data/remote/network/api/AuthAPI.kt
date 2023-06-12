@@ -13,6 +13,6 @@ interface AuthAPI {
         @Body body: GAuthLoginRequest
     ): GAuthLoginResponse
 
-    @GET("verify/access")
+    @GET("auth/verify/access")
     suspend fun accessValidation(): AccessValidationResponse
 }

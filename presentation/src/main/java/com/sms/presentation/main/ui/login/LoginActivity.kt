@@ -54,6 +54,17 @@ class LoginActivity : ComponentActivity() {
         observeSaveTokenEvent()
     }
 
+    private fun observeAutoLoginCheck() = lifecycleScope.launch {
+        viewModel.accessValidationResponse.collect {
+            when (it) {
+                is Event.Success -> pageController(it.data!!.isExist)
+                else -> {
+                    Log.d("loginCheck", it.toString())
+                }
+            }
+        }
+    }
+
     private fun observeLoginEvent() {
         viewModel.gAuthLoginRequest.observe(this) { event ->
             when (event) {
@@ -63,17 +74,6 @@ class LoginActivity : ComponentActivity() {
                 }
                 else -> {
                     Log.d("login", event.toString())
-                }
-            }
-        }
-    }
-
-    private fun observeAutoLoginCheck() = lifecycleScope.launch {
-        viewModel.accessValidationResponse.collect {
-            when (it) {
-                is Event.Success -> pageController(it.data!!.isExist)
-                else -> {
-                    Log.d("loginCheck", it.toString())
                 }
             }
         }
