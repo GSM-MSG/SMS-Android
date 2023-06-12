@@ -103,8 +103,8 @@ suspend fun getStudentList(
     viewModel.getStudentListResponse.collect { response ->
         when (response) {
             is Event.Success -> {
-                onSuccess(response.data!!.content)
                 progressState(false)
+                onSuccess(response.data!!.content)
             }
             is Event.Loading -> {
                 progressState(true)
