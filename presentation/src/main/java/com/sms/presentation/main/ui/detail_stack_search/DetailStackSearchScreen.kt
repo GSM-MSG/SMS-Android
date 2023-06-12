@@ -34,7 +34,9 @@ fun DetailStackSearchScreen() {
     }
     val scope = rememberCoroutineScope()
 
-    val nextButtonText = ("세부 스택 ${if (selectedStack.isEmpty()) "" else "${selectedStack.size}개 "}추가")
+    val nextButtonText =
+        ("세부 스택 ${if (selectedStack.isEmpty()) "" else "${selectedStack.size}개 "}추가")
+
     Column(
         modifier = Modifier
             .fillMaxSize()
