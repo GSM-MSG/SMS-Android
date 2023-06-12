@@ -251,6 +251,7 @@ fun ForeignLanguageComponent(
 
                         lifecycleScope.launch {
                             viewModel.fileUploadCompleted.collect { isComplete ->
+                                Log.d("fileUploadCompleted", isComplete.toString())
                                 if (isComplete) {
                                     viewModel.enterStudentInformation(
                                         major = if (enteredProfileData.major == "직접입력") enteredProfileData.enteredMajor else enteredProfileData.major,
@@ -260,36 +261,39 @@ fun ForeignLanguageComponent(
                                         introduce = enteredProfileData.introduce,
                                         portfolioUrl = enteredProfileData.portfolioUrl,
                                         contactEmail = enteredProfileData.contactEmail,
-                                        formOfEmployment = enteredWorkConditionData.formOfEmployment,
+                                        formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
                                         gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
                                         salary = enteredWorkConditionData.salary.toInt(),
                                         region = enteredWorkConditionData.region,
                                         languageCertificate = foreignLanguage,
                                         dreamBookFileUrl = viewModel.getDreamBookFileUrl(),
-                                        militaryService = enteredMilitaryServiceData.militaryService,
+                                        militaryService = enteredMilitaryServiceData.militaryService.toEnum(),
                                         certificate = enteredCertificateData.certification
-                                    )
-                                    enterStudentInformation(
-                                        viewModel = viewModel,
-                                        dialog = { visible, title, msg ->
-                                            dialogState.value = visible
-                                            errorTitle.value = title
-                                            errorMsg.value = msg
-                                        },
-                                        isSuccess = {
-                                            onClick.value = {
-                                                context.startActivity(
-                                                    Intent(
-                                                        context,
-                                                        MainActivity::class.java
-                                                    )
-                                                )
-                                                context.finish()
-                                            }
-                                        }
                                     )
                                 }
                             }
+                        }
+
+                        lifecycleScope.launch {
+                            enterStudentInformation(
+                                viewModel = viewModel,
+                                dialog = { visible, title, msg ->
+                                    dialogState.value = visible
+                                    errorTitle.value = title
+                                    errorMsg.value = msg
+                                },
+                                isSuccess = {
+                                    onClick.value = {
+                                        context.startActivity(
+                                            Intent(
+                                                context,
+                                                MainActivity::class.java
+                                            )
+                                        )
+                                        context.finish()
+                                    }
+                                }
+                            )
                         }
                     }
                 }
@@ -361,15 +365,36 @@ suspend fun enterStudentInformation(
     isSuccess: () -> Unit
 ) {
     viewModel.enterInformationResponse.collect { response ->
+        Log.d("정보기입", response.toString())
         when (response) {
             is Event.Success -> {
                 dialog(true, "성공", "정보기입을 완료했습니다.")
                 isSuccess()
+            }
+            is Event.BadRequest -> {
+                dialog(true, "에러", "이메일 형식또는 url형식을 확인해 주세요.")
+            }
+            is Event.Conflict -> {
+                dialog(true,"에러","이미 존재하는 유저 입니다.")
             }
             is Event.Loading -> {}
             else -> {
                 dialog(true, "에러", "알 수 없는 오류 발생")
             }
         }
+    }
+}
+
+private fun String.toEnum(): String {
+    return when (this) {
+        "정규직" -> "FULL_TIME"
+        "비정규직" -> "TEMPORARY"
+        "계약직" -> "CONSTRACT"
+        "인턴" -> "INTERN"
+        "병특 희망" -> "HOPE"
+        "희망하지 않음" -> "NOT_HOPE"
+        "상관없음" -> "NO_MATTER"
+        "해당 사항 없음" -> "NONE"
+        else -> ""
     }
 }

@@ -5,15 +5,14 @@ import com.msg.sms.data.remote.dto.student.response.GetStudentForAnonymousRespon
 import com.msg.sms.data.remote.dto.student.response.GetStudentForStudentResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentForTeacherResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentListResponse
-import retrofit2.Response
 import retrofit2.http.*
 import java.util.*
 
 interface StudentAPI {
     @POST("student")
     suspend fun enterStudentInformation(
-        @Body body: EnterStudentInformationRequest,
-    ): Response<Unit>
+        @Body body: EnterStudentInformationRequest
+    )
 
     @GET("student")
     suspend fun getStudentList(
