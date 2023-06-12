@@ -5,9 +5,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.response.StudentModel
@@ -17,10 +19,31 @@ fun StudentListComponent(
     listState: LazyListState,
     progressState: Boolean,
     studentList: List<StudentModel>,
+    listTotalSize: Int,
     onItemClick: () -> Unit
 ) {
-    SMSTheme { colors, _ ->
+    SMSTheme { colors, typography ->
         LazyColumn(state = listState) {
+            item {
+                Row(
+                    modifier = Modifier.padding(start = 20.dp, top = 32.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = listTotalSize.toString(),
+                        style = typography.title1,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.BLACK
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "명",
+                        style = typography.title2,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.N30
+                    )
+                }
+            }
             items(studentList.size) {
                 StudentListItem(
                     profileImageUrl = studentList[it].profileImg,
