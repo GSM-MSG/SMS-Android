@@ -23,15 +23,15 @@ import kotlin.time.Duration.Companion.seconds
 fun DetailStackSearchScreen(
     navController: NavController,
     viewModel: SearchDetailStackViewModel,
+    selectedStack: List<String>,
 ) {
     val searchQuery = remember {
         mutableStateOf("")
     }
     val detailStack =
         viewModel.searchResult.collectAsState()
-
-    val selectedStack = remember {
-        mutableStateListOf<String>()
+    val selectedStackList = remember {
+        if(selectedStack.first() == "") mutableStateListOf() else  mutableStateListOf(*selectedStack.toTypedArray())
     }
     val snackBarVisible = remember {
         mutableStateOf(false)
@@ -42,7 +42,7 @@ fun DetailStackSearchScreen(
     val scope = rememberCoroutineScope()
 
     val nextButtonText =
-        ("세부 스택 ${if (selectedStack.isEmpty()) "" else "${selectedStack.size}개 "}추가")
+        ("세부 스택 ${if (selectedStackList.isEmpty()) "" else "${selectedStackList.size}개 "}추가")
 
     Column(
         modifier = Modifier
@@ -72,16 +72,16 @@ fun DetailStackSearchScreen(
         SmsSpacer()
         RecentlyAddedListComponent(
             modifier = Modifier.weight(1f),
-            list = if(detailStack.value.data != null) detailStack.value.data!!.techStack else emptyList(),
-            selectedList = selectedStack,
-            onClickRemoveAll = { selectedStack.clear() },
+            list = if (detailStack.value.data != null) detailStack.value.data!!.techStack else emptyList(),
+            selectedList = selectedStackList,
+            onClickRemoveAll = { selectedStackList.clear() },
             isSearching = searchQuery.value != "",
             onClickButton = { stack, checked ->
                 snackBarAdded.value = !checked
                 if (checked) {
-                    selectedStack.remove(stack)
+                    selectedStackList.remove(stack)
                 } else {
-                    selectedStack.add(stack)
+                    selectedStackList.add(stack)
                 }
                 scope.launch {
                     snackBarVisible.value = true
@@ -94,11 +94,11 @@ fun DetailStackSearchScreen(
             modifier = Modifier
                 .fillMaxWidth(),
             text = nextButtonText,
-            enabled = selectedStack.isNotEmpty()
+            enabled = selectedStackList.isNotEmpty()
         ) {
             navController.currentBackStackEntry?.savedStateHandle?.set(
                 key = "detailStack",
-                value = selectedStack.joinToString(",")
+                value = selectedStackList.joinToString(",")
             )
             navController.navigate("Profile")
         }
@@ -108,5 +108,9 @@ fun DetailStackSearchScreen(
 @Preview
 @Composable
 fun DetailStackSearchScreenPre() {
-    DetailStackSearchScreen(navController = rememberNavController(), viewModel = viewModel())
+    DetailStackSearchScreen(
+        navController = rememberNavController(),
+        viewModel = viewModel(),
+        listOf()
+    )
 }
