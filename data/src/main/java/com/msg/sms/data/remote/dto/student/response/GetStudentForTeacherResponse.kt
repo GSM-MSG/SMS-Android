@@ -32,7 +32,7 @@ data class GetStudentForTeacherResponse(
     @SerializedName("formOfEmployment")
     val formOfEmployment: String,
     @SerializedName("regions")
-    val regions: List<String>, // 근무지역
+    val regions: List<String>,
     @SerializedName("militaryService")
     val militaryService: String,
     @SerializedName("salary")
