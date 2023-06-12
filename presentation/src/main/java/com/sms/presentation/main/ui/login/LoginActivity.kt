@@ -50,7 +50,7 @@ class LoginActivity : ComponentActivity() {
 
     private fun observeEvent() {
         observeLoginEvent()
-        //observeAutoLoginCheck() //TODO (Kimhyunseung) - 자동로그인 조건 변경 필요
+        observeAutoLoginCheck()
         observeSaveTokenEvent()
     }
 
@@ -70,12 +70,12 @@ class LoginActivity : ComponentActivity() {
 
     private fun observeAutoLoginCheck() = lifecycleScope.launch {
         viewModel.accessValidationResponse.collect {
-            pageController(
-                when (it) {
-                    is Event.Success -> true
-                    else -> false
+            when (it) {
+                is Event.Success -> pageController(it.data!!.isExist)
+                else -> {
+                    Log.d("loginCheck", it.toString())
                 }
-            )
+            }
         }
     }
 
