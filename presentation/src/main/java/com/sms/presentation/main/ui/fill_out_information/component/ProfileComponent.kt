@@ -168,7 +168,7 @@ fun ProfileComponent(
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "세부스택", style = typography.body2)
-            SmsTextField(
+            SmsCustomTextField(
                 placeHolder = "예시) HTML, CSS, C#",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -178,9 +178,12 @@ fun ProfileComponent(
                             changeView()
                         }
                     },
-                setText = detailStack,
-                readOnly = true
-            ) {}
+                setChangeText = detailStack,
+                readOnly = true,
+                endIcon = null,
+                onValueChange = {},
+                clickAction = {}
+            )
         }
     }
 }
