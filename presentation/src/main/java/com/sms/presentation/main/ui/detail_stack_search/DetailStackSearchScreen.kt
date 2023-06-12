@@ -8,6 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.msg.sms.design.component.button.SmsBoxButton
 import com.msg.sms.design.component.snackbar.TechStackSnackBar
 import com.msg.sms.design.component.spacer.SmsSpacer
@@ -19,15 +21,15 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun DetailStackSearchScreen(
-    onClickButton: (detailStackList: List<String>) -> Unit,
+    navController: NavController,
     viewModel: SearchDetailStackViewModel,
 ) {
     val searchQuery = remember {
         mutableStateOf("")
     }
-    val detailStack = remember {
-        mutableStateListOf<String>()
-    }
+    val detailStack =
+        viewModel.searchResult.collectAsState()
+
     val selectedStack = remember {
         mutableStateListOf<String>()
     }
@@ -55,8 +57,7 @@ fun DetailStackSearchScreen(
                 setText = searchQuery.value,
                 onValueChanged = { searchQuery.value = it },
                 onClickButton = { searchQuery.value = "" },
-                onClickBackButton = {
-                },
+                onClickBackButton = { navController.popBackStack() },
                 debounceTime = 300L,
                 debounceTextChanged = { if (it != "") viewModel.searchDetailStack(name = it) }
             )
@@ -71,7 +72,7 @@ fun DetailStackSearchScreen(
         SmsSpacer()
         RecentlyAddedListComponent(
             modifier = Modifier.weight(1f),
-            list = detailStack,
+            list = if(detailStack.value.data != null) detailStack.value.data!!.techStack else emptyList(),
             selectedList = selectedStack,
             onClickRemoveAll = { selectedStack.clear() },
             onClickButton = { stack, checked ->
@@ -94,7 +95,11 @@ fun DetailStackSearchScreen(
             text = nextButtonText,
             enabled = selectedStack.isNotEmpty()
         ) {
-            onClickButton(selectedStack)
+            navController.currentBackStackEntry?.savedStateHandle?.set(
+                key = "detailStack",
+                value = selectedStack.joinToString(",")
+            )
+            navController.navigate("Profile")
         }
     }
 }
@@ -102,5 +107,5 @@ fun DetailStackSearchScreen(
 @Preview
 @Composable
 fun DetailStackSearchScreenPre() {
-    DetailStackSearchScreen(onClickButton = {}, viewModel = viewModel())
+    DetailStackSearchScreen(navController = rememberNavController(), viewModel = viewModel())
 }
