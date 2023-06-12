@@ -15,12 +15,14 @@ import androidx.navigation.compose.rememberNavController
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
+import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class FillOutInformationActivity : ComponentActivity() {
 
     private val fillOutViewModel by viewModels<FillOutViewModel>()
+    private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fillOutViewModel.getMajorList()
@@ -84,7 +86,8 @@ class FillOutInformationActivity : ComponentActivity() {
                                 value = detailStackList.joinToString(",")
                             )
                             navController.navigate("Profile")
-                        }
+                        },
+                        viewModel = searchDetailStackViewModel
                     )
                 }
             }
