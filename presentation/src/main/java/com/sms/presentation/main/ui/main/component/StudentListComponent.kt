@@ -23,7 +23,7 @@ fun StudentListComponent(
         LazyColumn(state = listState) {
             items(studentList.size) {
                 StudentListItem(
-                    profileImageUrl = studentList[it].profileImgUrl,
+                    profileImageUrl = studentList[it].profileImg,
                     major = studentList[it].major,
                     name = studentList[it].name,
                     teckStackList = studentList[it].techStack
