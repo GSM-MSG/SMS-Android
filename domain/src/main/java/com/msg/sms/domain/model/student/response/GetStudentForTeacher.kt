@@ -14,7 +14,7 @@ data class GetStudentForTeacher(
     val contactEmail: String,
     val gsmAuthenticationScore: Int,
     val formOfEmployment: String,
-    val regions: List<String>, // 근무지역
+    val regions: List<String>,
     val militaryService: String,
     val salary: Int,
     val languageCertificates: List<CertificationModel>,
