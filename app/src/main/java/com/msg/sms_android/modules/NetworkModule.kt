@@ -1,9 +1,6 @@
 package com.msg.sms_android.modules
 
-import com.msg.sms.data.remote.network.api.AuthAPI
-import com.msg.sms.data.remote.network.api.FileUploadAPI
-import com.msg.sms.data.remote.network.api.MajorAPI
-import com.msg.sms.data.remote.network.api.StudentAPI
+import com.msg.sms.data.remote.network.api.*
 import com.msg.sms.data.util.AuthInterceptor
 import com.msg.sms_android.BuildConfig
 import dagger.Module
@@ -74,5 +71,11 @@ object NetworkModule {
     @Singleton
     fun provideMajorService(retrofit: Retrofit): MajorAPI {
         return retrofit.create(MajorAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStackService(retrofit: Retrofit): StackAPI {
+        return retrofit.create(StackAPI::class.java)
     }
 }
