@@ -34,6 +34,9 @@ fun MainScreen(
     val listTotalSize = remember {
         mutableStateOf(0)
     }
+    val isScrolled = remember {
+        mutableStateOf(false)
+    }
 
     LaunchedEffect("GetStudentList") {
         getStudentList(
@@ -46,6 +49,14 @@ fun MainScreen(
         )
     }
 
+    LaunchedEffect("isScrolled") {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.first().index != 0 }
+            .collect {
+                if (isScrolled.value != it)
+                    isScrolled.value = it
+            }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,6 +64,7 @@ fun MainScreen(
     ) {
         MainScreenTopBar(
             profileImageUrl = "",
+            isScolled = isScrolled.value,
             filterButtonOnClick = { /*TODO (KimHyunseung) : 필터 Screen으로 이동*/ },
             profileButtonOnClick = { /*TODO (KimHyunseung) : 마이페이지로 이동*/ }
         )
