@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -260,13 +259,13 @@ fun ForeignLanguageComponent(
                                         introduce = enteredProfileData.introduce,
                                         portfolioUrl = enteredProfileData.portfolioUrl,
                                         contactEmail = enteredProfileData.contactEmail,
-                                        formOfEmployment = enteredWorkConditionData.formOfEmployment,
+                                        formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
                                         gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
                                         salary = enteredWorkConditionData.salary.toInt(),
                                         region = enteredWorkConditionData.region,
                                         languageCertificate = foreignLanguage,
                                         dreamBookFileUrl = viewModel.getDreamBookFileUrl(),
-                                        militaryService = enteredMilitaryServiceData.militaryService,
+                                        militaryService = enteredMilitaryServiceData.militaryService.toEnum(),
                                         certificate = enteredCertificateData.certification
                                     )
                                     enterStudentInformation(
@@ -371,5 +370,19 @@ suspend fun enterStudentInformation(
                 dialog(true, "에러", "알 수 없는 오류 발생")
             }
         }
+    }
+}
+
+private fun String.toEnum(): String {
+    return when (this) {
+        "정규직" -> "FULL_TIME"
+        "비정규직" -> "TEMPORARY"
+        "계약직" -> "CONSTRACT"
+        "인턴" -> "INTERN"
+        "병특 희망" -> "HOPE"
+        "희망하지 않음" -> "NOT_HOPE"
+        "상관없음" -> "NO_MATTER"
+        "해당 사항 없음" -> "NONE"
+        else -> ""
     }
 }
