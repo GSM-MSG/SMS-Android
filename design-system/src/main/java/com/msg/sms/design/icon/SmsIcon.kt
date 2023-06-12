@@ -214,3 +214,25 @@ fun ArrowUpWardIcon(
         modifier = modifier
     )
 }
+
+@Composable
+fun RedLogoutIcon(
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_red_logout),
+        contentDescription = "Red Logout Button Icon",
+        modifier = modifier
+    )
+}
+
+@Composable
+fun RedWithdrawalIcon(
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_red_withdrawal),
+        contentDescription = "Red Withdrawal Button Icon",
+        modifier = modifier
+    )
+}
