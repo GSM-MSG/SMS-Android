@@ -80,13 +80,7 @@ class FillOutInformationActivity : ComponentActivity() {
                 }
                 composable("Search") {
                     DetailStackSearchScreen(
-                        onClickButton = { detailStackList ->
-                            navController.currentBackStackEntry?.savedStateHandle?.set(
-                                key = "detailStack",
-                                value = detailStackList.joinToString(",")
-                            )
-                            navController.navigate("Profile")
-                        },
+                        navController = navController,
                         viewModel = searchDetailStackViewModel
                     )
                 }
