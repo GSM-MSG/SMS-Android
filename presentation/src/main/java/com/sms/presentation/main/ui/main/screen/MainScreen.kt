@@ -86,8 +86,8 @@ fun MainScreen(
                 val isSuccess = response is Event.Success
                 if (isSuccess) {
                     val isIncompleteData =
-                        studentList.value.size < response.data!!.totalSize
-                    if (isIncompleteData) {
+                        response.data!!.last
+                    if (!isIncompleteData) {
                         viewModel.getStudentListRequest(response.data.page + 1, 20)
                     }
                 }
