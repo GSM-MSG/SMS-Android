@@ -7,6 +7,7 @@ import com.msg.sms.data.remote.dto.auth.response.toLoginModel
 import com.msg.sms.domain.model.auth.request.GAuthLoginRequestModel
 import com.msg.sms.domain.model.auth.response.GAuthLoginResponseModel
 import com.msg.sms.domain.repository.AuthRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -28,5 +29,9 @@ class AuthRepositoryImpl @Inject constructor(
             localDataSource.setRefreshToken(it.refreshToken)
             localDataSource.setRefreshTime(it.refreshTokenExp)
         }
+    }
+
+    override suspend fun accessValidation(): Flow<Unit> {
+        return remoteDataSource.accessValidation()
     }
 }
