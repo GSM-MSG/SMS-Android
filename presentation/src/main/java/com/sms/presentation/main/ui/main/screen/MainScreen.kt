@@ -4,6 +4,11 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +24,7 @@ import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
     navController: NavController,
@@ -38,6 +44,8 @@ fun MainScreen(
     val isScrolled = remember {
         mutableStateOf(false)
     }
+    val bottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
     LaunchedEffect("GetStudentList") {
         getStudentList(
@@ -58,36 +66,48 @@ fun MainScreen(
             }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
+    ModalBottomSheetLayout(
+        sheetContent = {
+
+        },
+        sheetState = bottomSheetState,
+        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
     ) {
-        MainScreenTopBar(
-            profileImageUrl = "",
-            isScolled = isScrolled.value,
-            filterButtonOnClick = { /*TODO (KimHyunseung) : 필터 Screen으로 이동*/ },
-            profileButtonOnClick = { /*TODO (KimHyunseung) : 마이페이지로 이동*/ }
-        )
-        Box(modifier = Modifier.fillMaxSize()) {
-            StudentListComponent(
-                listState = listState,
-                progressState = progressState.value,
-                studentList = studentList.value,
-                listTotalSize = listTotalSize.value
-            ) {
-                //TODO (Kimhyunseung) : 디테일 페이지로 이동
-            }
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 32.dp, end = 20.dp)
-            ) {
-                ListFloatingButton(onClick = {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+        ) {
+            MainScreenTopBar(
+                profileImageUrl = "",
+                isScolled = isScrolled.value,
+                filterButtonOnClick = { /*TODO (KimHyunseung) : 필터 Screen으로 이동*/ },
+                profileButtonOnClick = {
                     scope.launch {
-                        listState.animateScrollToItem(0)
+                        bottomSheetState.show()
                     }
-                })
+                }
+            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                StudentListComponent(
+                    listState = listState,
+                    progressState = progressState.value,
+                    studentList = studentList.value,
+                    listTotalSize = listTotalSize.value
+                ) {
+                    //TODO (Kimhyunseung) : 디테일 페이지로 이동
+                }
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = 32.dp, end = 20.dp)
+                ) {
+                    ListFloatingButton(onClick = {
+                        scope.launch {
+                            listState.animateScrollToItem(0)
+                        }
+                    })
+                }
             }
         }
     }
