@@ -7,10 +7,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.msg.sms.design.component.button.SmsBoxButton
 import com.msg.sms.design.component.snackbar.TechStackSnackBar
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.SearchTopBar
+import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
@@ -18,6 +20,7 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun DetailStackSearchScreen(
     onClickButton: (detailStackList: List<String>) -> Unit,
+    viewModel: SearchDetailStackViewModel,
 ) {
     val searchQuery = remember {
         mutableStateOf("")
@@ -96,5 +99,5 @@ fun DetailStackSearchScreen(
 @Preview
 @Composable
 fun DetailStackSearchScreenPre() {
-    DetailStackSearchScreen(onClickButton = {})
+    DetailStackSearchScreen(onClickButton = {}, viewModel = viewModel())
 }
