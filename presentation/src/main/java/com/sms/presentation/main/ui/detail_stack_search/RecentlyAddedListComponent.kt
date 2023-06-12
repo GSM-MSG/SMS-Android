@@ -18,6 +18,7 @@ import com.msg.sms.design.theme.SMSTheme
 fun RecentlyAddedListComponent(
     modifier: Modifier,
     list: List<String>,
+    isSearching: Boolean,
     selectedList: List<String>,
     onClickButton: (stack: String, checked: Boolean) -> Unit,
     onClickRemoveAll: () -> Unit
@@ -59,9 +60,10 @@ fun RecentlyAddedListComponent(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            items(list.size) {
+            val currentList = if(isSearching) list else selectedList
+            items(currentList.size) {
                 RecentlyAddedItem(
-                    stack = list[it],
+                    stack = currentList[it],
                     selectedStack = selectedList,
                     onClick = { stack, checked -> onClickButton(stack, checked) }
                 )

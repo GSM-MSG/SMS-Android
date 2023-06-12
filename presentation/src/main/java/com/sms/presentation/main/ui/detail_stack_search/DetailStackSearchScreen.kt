@@ -75,6 +75,7 @@ fun DetailStackSearchScreen(
             list = if(detailStack.value.data != null) detailStack.value.data!!.techStack else emptyList(),
             selectedList = selectedStack,
             onClickRemoveAll = { selectedStack.clear() },
+            isSearching = searchQuery.value != "",
             onClickButton = { stack, checked ->
                 snackBarAdded.value = !checked
                 if (checked) {
