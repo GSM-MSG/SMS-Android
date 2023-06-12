@@ -1,6 +1,5 @@
 package com.sms.presentation.main.ui.main.screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -32,16 +31,30 @@ fun MainScreen(
     val progressState = remember {
         mutableStateOf(false)
     }
+    val listTotalSize = remember {
+        mutableStateOf(0)
+    }
+    val isScrolled = remember {
+        mutableStateOf(false)
+    }
 
     LaunchedEffect("GetStudentList") {
         getStudentList(
             viewModel = viewModel,
             progressState = { progressState.value = it },
-            onSuccess = {
-                Log.d("studentList", it.toString())
-                studentList.value += it
+            onSuccess = { list, size ->
+                studentList.value += list
+                listTotalSize.value = size
             }
         )
+    }
+
+    LaunchedEffect("isScrolled") {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.first().index != 0 }
+            .collect {
+                if (isScrolled.value != it)
+                    isScrolled.value = it
+            }
     }
 
     Column(
@@ -51,15 +64,16 @@ fun MainScreen(
     ) {
         MainScreenTopBar(
             profileImageUrl = "",
+            isScolled = isScrolled.value,
             filterButtonOnClick = { /*TODO (KimHyunseung) : 필터 Screen으로 이동*/ },
             profileButtonOnClick = { /*TODO (KimHyunseung) : 마이페이지로 이동*/ }
         )
-        Spacer(modifier = Modifier.height(16.dp))
         Box(modifier = Modifier.fillMaxSize()) {
             StudentListComponent(
                 listState = listState,
                 progressState = progressState.value,
-                studentList = studentList.value
+                studentList = studentList.value,
+                listTotalSize = listTotalSize.value
             ) {
                 //TODO (Kimhyunseung) : 디테일 페이지로 이동
             }
@@ -98,13 +112,13 @@ fun MainScreen(
 suspend fun getStudentList(
     viewModel: StudentListViewModel,
     progressState: (Boolean) -> Unit,
-    onSuccess: (List<StudentModel>) -> Unit
+    onSuccess: (studentList: List<StudentModel>, totalListSize: Int) -> Unit
 ) {
     viewModel.getStudentListResponse.collect { response ->
         when (response) {
             is Event.Success -> {
                 progressState(false)
-                onSuccess(response.data!!.content)
+                onSuccess(response.data!!.content, response.data.totalSize)
             }
             is Event.Loading -> {
                 progressState(true)
