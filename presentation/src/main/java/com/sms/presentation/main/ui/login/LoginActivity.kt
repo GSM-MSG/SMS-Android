@@ -88,7 +88,6 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun pageController(isExist: Boolean) {
-        Log.d("TAG", "페이지 이동")
         startActivity(
             Intent(
                 this,
