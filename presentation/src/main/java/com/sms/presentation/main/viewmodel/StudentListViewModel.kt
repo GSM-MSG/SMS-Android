@@ -1,5 +1,6 @@
 package com.sms.presentation.main.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.response.StudentListModel
@@ -20,17 +21,50 @@ class StudentListViewModel @Inject constructor(
     private val _getStudentListResponse = MutableStateFlow<Event<StudentListModel>>(Event.Loading)
     val getStudentListResponse = _getStudentListResponse.asStateFlow()
 
-    fun getStudentList(page: Int, size: Int) = viewModelScope.launch {
+    fun getStudentListRequest(
+        page: Int,
+        size: Int,
+        majors: List<String>? = null,
+        techStacks: List<String>? = null,
+        grade: Int? = null,
+        classNum: Int? = null,
+        department: List<String>? = null,
+        stuNumSort: String? = null,
+        formOfEmployment: String? = null,
+        minGsmAuthenticationScore: Int? = null,
+        maxGsmAuthenticationScore: Int? = null,
+        minSalary: Int? = null,
+        maxSalary: Int? = null,
+        gsmAuthenticationScoreSort: String? = null,
+        salarySort: String? = null
+    ) = viewModelScope.launch {
+        _getStudentListResponse.value = Event.Loading
         getStudentListUseCase(
             page = page,
-            size = size
+            size = size,
+            majors = majors,
+            techStacks = techStacks,
+            grade = grade,
+            classNum = classNum,
+            department = department,
+            stuNumSort = stuNumSort,
+            formOfEmployment = formOfEmployment,
+            minGsmAuthenticationScore = minGsmAuthenticationScore,
+            maxGsmAuthenticationScore = maxGsmAuthenticationScore,
+            minSalary = minSalary,
+            maxSalary = maxSalary,
+            gsmAuthenticationScoreSort = gsmAuthenticationScoreSort,
+            salarySort = salarySort
         ).onSuccess {
             it.catch { remoteError ->
+                Log.d("studentList", remoteError.toString())
                 _getStudentListResponse.value = remoteError.errorHandling()
             }.collect { response ->
+                Log.d("studentList", response.toString())
                 _getStudentListResponse.value = Event.Success(data = response)
             }
         }.onFailure { error ->
+            Log.d("studentList", error.toString())
             _getStudentListResponse.value = error.errorHandling()
         }
     }

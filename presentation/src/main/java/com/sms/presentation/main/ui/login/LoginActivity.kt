@@ -48,7 +48,7 @@ class LoginActivity : ComponentActivity() {
 
     private fun observeEvent() {
         observeLoginEvent()
-        observeAutoLoginCheck()
+        //observeAutoLoginCheck() //TODO (Kimhyunseung) - 자동로그인 조건 변경 필요
         observeSaveTokenEvent()
     }
 
@@ -88,7 +88,6 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun pageController(isExist: Boolean) {
-        Log.d("TAG", "페이지 이동")
         startActivity(
             Intent(
                 this,

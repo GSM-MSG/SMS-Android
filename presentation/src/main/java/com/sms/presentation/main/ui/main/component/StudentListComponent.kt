@@ -1,29 +1,32 @@
 package com.sms.presentation.main.ui.main.component
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.main.data.StudentData
+import com.msg.sms.domain.model.student.response.StudentModel
 
 @Composable
 fun StudentListComponent(
     listState: LazyListState,
-    studentList: List<StudentData>,
+    progressState: Boolean,
+    studentList: List<StudentModel>,
     onItemClick: () -> Unit
 ) {
     SMSTheme { colors, _ ->
         LazyColumn(state = listState) {
             items(studentList.size) {
                 StudentListItem(
-                    profileImageUrl = studentList[it].profileImageUrl,
+                    profileImageUrl = studentList[it].profileImgUrl,
                     major = studentList[it].major,
                     name = studentList[it].name,
-                    teckStackList = studentList[it].teckStackList
+                    teckStackList = studentList[it].techStack
                 ) {
                     onItemClick()
                 }
@@ -32,6 +35,23 @@ fun StudentListComponent(
                     color = colors.N10,
                     thickness = 1.dp
                 )
+            }
+            if (progressState) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(15.dp)
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .width(32.dp)
+                                .height(32.dp)
+                                .align(Alignment.Center),
+                            color = colors.N20,
+                        )
+                    }
+                }
             }
         }
     }
