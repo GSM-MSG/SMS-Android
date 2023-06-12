@@ -14,5 +14,5 @@ interface AuthAPI {
     ): GAuthLoginResponse
 
     @GET("verify/access")
-    suspend fun accessValidationCheck(): Response<Unit>
+    suspend fun accessValidation(): Response<Unit>
 }

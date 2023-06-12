@@ -23,7 +23,7 @@ class RemoteAuthDataSourceImpl @Inject constructor(
         return flow {
             emit(
                 SMSApiHandler<Unit>()
-                    .httpRequest { service.accessValidationCheck() }
+                    .httpRequest { service.accessValidation() }
                     .sendRequest()
             )
         }.flowOn(Dispatchers.IO)
