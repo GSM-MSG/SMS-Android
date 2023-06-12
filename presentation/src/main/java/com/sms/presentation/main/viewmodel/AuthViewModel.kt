@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.auth.request.GAuthLoginRequestModel
+import com.msg.sms.domain.model.auth.response.AccessValidationResponseModel
 import com.msg.sms.domain.model.auth.response.GAuthLoginResponseModel
 import com.msg.sms.domain.model.major.MajorListModel
 import com.msg.sms.domain.usecase.auth.AccessValidationUseCase
@@ -36,7 +37,8 @@ class AuthViewModel @Inject constructor(
     private val _saveTokenRequest = MutableLiveData<Event<MajorListModel>>()
     val saveTokenRequest: LiveData<Event<MajorListModel>> get() = _saveTokenRequest
 
-    private val _accessValidationResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
+    private val _accessValidationResponse =
+        MutableStateFlow<Event<AccessValidationResponseModel>>(Event.Loading)
     val accessValidationResponse = _accessValidationResponse.asStateFlow()
 
     fun gAuthLogin(code: String) = viewModelScope.launch {
@@ -77,8 +79,8 @@ class AuthViewModel @Inject constructor(
             .onSuccess {
                 it.catch { remoteError ->
                     _accessValidationResponse.value = remoteError.errorHandling()
-                }.collect {
-                    _accessValidationResponse.value = Event.Success()
+                }.collect { response ->
+                    _accessValidationResponse.value = Event.Success(data = response)
                 }
             }.onFailure { error ->
                 _accessValidationResponse.value = error.errorHandling()

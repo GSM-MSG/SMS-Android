@@ -4,10 +4,13 @@ import com.msg.sms.data.local.datasource.auth.LocalAuthDataSource
 import com.msg.sms.data.remote.datasource.auth.RemoteAuthDataSource
 import com.msg.sms.data.remote.dto.auth.request.GAuthLoginRequest
 import com.msg.sms.data.remote.dto.auth.response.toLoginModel
+import com.msg.sms.data.remote.dto.auth.response.toModel
 import com.msg.sms.domain.model.auth.request.GAuthLoginRequestModel
+import com.msg.sms.domain.model.auth.response.AccessValidationResponseModel
 import com.msg.sms.domain.model.auth.response.GAuthLoginResponseModel
 import com.msg.sms.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -31,7 +34,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun accessValidation(): Flow<Unit> {
-        return remoteDataSource.accessValidation()
+    override suspend fun accessValidation(): Flow<AccessValidationResponseModel> {
+        return remoteDataSource.accessValidation().map { it.toModel() }
     }
 }
