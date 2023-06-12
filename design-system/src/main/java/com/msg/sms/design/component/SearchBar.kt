@@ -8,6 +8,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -20,18 +21,30 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.design.icon.SearchIcon
 import com.msg.sms.design.theme.SMSTheme
+import kotlinx.coroutines.delay
 
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
     setText: String,
     focusRequester: FocusRequester = FocusRequester(),
+    debounceTime: Long = 300L,
+    debounceTextChanged: (String) -> Unit,
     onValueChanged: (String) -> Unit,
     trailingIcon: @Composable () -> Unit,
     placeHolder: String,
     onClickTrailingButton: () -> Unit,
 ) {
     val isFocused = remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = setText) {
+        val debounce = kotlinx.coroutines.Job()
+
+        delay(debounceTime)
+        debounceTextChanged(setText)
+
+        debounce.cancel()
+    }
 
     SMSTheme { colors, typography ->
         OutlinedTextField(
@@ -76,7 +89,8 @@ fun SearchBarPre() {
         setText = "",
         onValueChanged = {},
         trailingIcon = { DeleteButtonIcon() },
-        placeHolder = "찾고 싶은 세부 스택 입력"
+        placeHolder = "찾고 싶은 세부 스택 입력",
+        debounceTextChanged = {}
     ) {
 
     }

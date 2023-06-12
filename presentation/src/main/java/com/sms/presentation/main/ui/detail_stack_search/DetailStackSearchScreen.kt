@@ -55,7 +55,10 @@ fun DetailStackSearchScreen(
                 setText = searchQuery.value,
                 onValueChanged = { searchQuery.value = it },
                 onClickButton = { searchQuery.value = "" },
-                onClickBackButton = {}
+                onClickBackButton = {
+                },
+                debounceTime = 300L,
+                debounceTextChanged = { if (it != "") viewModel.searchDetailStack(name = it) }
             )
             TechStackSnackBar(
                 modifier = Modifier.align(Alignment.Center),
