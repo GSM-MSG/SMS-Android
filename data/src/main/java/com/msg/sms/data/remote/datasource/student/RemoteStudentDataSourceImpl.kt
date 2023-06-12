@@ -73,7 +73,8 @@ class RemoteStudentDataSourceImpl @Inject constructor(
 
     override suspend fun getUserDetailForStudent(uuid: UUID): Flow<GetStudentForStudentResponse> {
         return flow {
-            emit(SMSApiHandler<GetStudentForStudentResponse>().httpRequest {
+            emit(
+                SMSApiHandler<GetStudentForStudentResponse>().httpRequest {
                 service.getStudentForStudent(
                     uuid = uuid
                 )
@@ -83,7 +84,8 @@ class RemoteStudentDataSourceImpl @Inject constructor(
 
     override suspend fun getUserDetailForAnonymous(uuid: UUID): Flow<GetStudentForAnonymousResponse> {
         return flow {
-            emit(SMSApiHandler<GetStudentForAnonymousResponse>().httpRequest {
+            emit(
+                SMSApiHandler<GetStudentForAnonymousResponse>().httpRequest {
                 service.getStudentForAnonymous(
                     uuid = uuid
                 )
@@ -93,7 +95,8 @@ class RemoteStudentDataSourceImpl @Inject constructor(
 
     override suspend fun getUserDetailForTeacher(uuid: UUID): Flow<GetStudentForTeacherResponse> {
         return flow {
-            emit(SMSApiHandler<GetStudentForTeacherResponse>().httpRequest {
+            emit(
+                SMSApiHandler<GetStudentForTeacherResponse>().httpRequest {
                 service.getStudentForTeacher(
                     uuid = uuid
                 )
