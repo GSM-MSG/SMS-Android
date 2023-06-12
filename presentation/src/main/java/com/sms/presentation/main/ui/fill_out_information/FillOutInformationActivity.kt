@@ -79,9 +79,17 @@ class FillOutInformationActivity : ComponentActivity() {
                     )
                 }
                 composable("Search") {
+                    val data = remember {
+                        mutableStateOf(
+                            navController.previousBackStackEntry?.savedStateHandle?.get<String>(
+                                "detailStack"
+                            )
+                        )
+                    }
                     DetailStackSearchScreen(
                         navController = navController,
-                        viewModel = searchDetailStackViewModel
+                        viewModel = searchDetailStackViewModel,
+                        selectedStack = (if (data.value != null) data.value!!.split(",") else listOf())
                     )
                 }
             }
