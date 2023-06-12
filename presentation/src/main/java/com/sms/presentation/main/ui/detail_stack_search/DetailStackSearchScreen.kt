@@ -16,7 +16,9 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun DetailStackSearchScreen() {
+fun DetailStackSearchScreen(
+    onClickButton: (detailStackList: List<String>) -> Unit,
+) {
     val searchQuery = remember {
         mutableStateOf("")
     }
@@ -86,6 +88,7 @@ fun DetailStackSearchScreen() {
             text = nextButtonText,
             enabled = selectedStack.isNotEmpty()
         ) {
+            onClickButton(selectedStack)
         }
     }
 }
@@ -93,5 +96,5 @@ fun DetailStackSearchScreen() {
 @Preview
 @Composable
 fun DetailStackSearchScreenPre() {
-    DetailStackSearchScreen()
+    DetailStackSearchScreen(onClickButton = {})
 }
