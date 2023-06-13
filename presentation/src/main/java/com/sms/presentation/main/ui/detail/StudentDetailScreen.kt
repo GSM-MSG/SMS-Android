@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.component.profile.ProfileImageComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
-import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.sms.presentation.main.ui.main.data.StudentDetailData
 import com.sms.presentation.main.ui.util.departmentEnumToString
 import com.sms.presentation.main.ui.util.employmentEnumToSting
 import com.sms.presentation.main.ui.util.militaryServiceEnumToString
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun StudentDetailScreen(
-    studentDetailData: GetStudentForTeacher,
+    studentDetailData: StudentDetailData,
     role: String,
     onDismissButtonClick: () -> Unit
 ) {
@@ -92,7 +92,7 @@ fun StudentDetailScreen(
                     fileName =
                     "${studentDetailData.grade}${studentDetailData.classNum}${studentDetailData.number}${studentDetailData.name}의 드림북"
                 )
-                downloader.downloadFile(url = studentDetailData.dreamBookFileUrl!!)
+                downloader.downloadFile(url = studentDetailData.dreamBookFileUrl)
             },
             certificationData = studentDetailData.certificates,
             email = studentDetailData.contactEmail,
@@ -100,7 +100,7 @@ fun StudentDetailScreen(
             foreignLanguage = studentDetailData.languageCertificates,
             formOfEmployment = studentDetailData.formOfEmployment.employmentEnumToSting(),
             militaryService = studentDetailData.militaryService.militaryServiceEnumToString(),
-            portfolioLink = studentDetailData.portfolioUrl!!,
+            portfolioLink = studentDetailData.portfolioUrl,
             region = studentDetailData.regions,
             salary = studentDetailData.salary.toString(),
             scrollState = scrollState

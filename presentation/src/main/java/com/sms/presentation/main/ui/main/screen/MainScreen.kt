@@ -22,6 +22,7 @@ import com.sms.presentation.main.ui.detail.StudentDetailScreen
 import com.sms.presentation.main.ui.main.component.LogoutWithDrawalBottomSheetComponent
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
+import com.sms.presentation.main.ui.main.data.StudentDetailData
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.CoroutineScope
@@ -70,29 +71,7 @@ fun MainScreen(
         mutableStateOf("Teacher")
     }
     val studentDetailData = remember {
-        mutableStateOf(
-            GetStudentForTeacher(
-                name = "",
-                introduce = "",
-                dreamBookFileUrl = "",
-                portfolioUrl = "",
-                grade = 0,
-                classNum = 0,
-                number = 0,
-                department = "",
-                major = "",
-                profileImg = "",
-                contactEmail = "",
-                gsmAuthenticationScore = 0,
-                formOfEmployment = "",
-                regions = listOf(),
-                militaryService = "",
-                salary = 0,
-                languageCertificates = listOf(),
-                certificates = listOf(),
-                techStacks = listOf()
-            )
-        )
+        mutableStateOf(StudentDetailData())
     }
 
     LaunchedEffect("GetStudentList") {
@@ -223,7 +202,27 @@ fun MainScreen(
                                     },
                                     {
                                         isDetailBottomSheet.value = true
-                                        studentDetailData.value = it
+                                        studentDetailData.value = StudentDetailData(
+                                            name = it.name,
+                                            introduce = it.introduce,
+                                            dreamBookFileUrl = it.dreamBookFileUrl!!,
+                                            portfolioUrl = it.portfolioUrl!!,
+                                            grade = it.grade,
+                                            classNum = it.classNum,
+                                            number = it.number,
+                                            department = it.department,
+                                            major = it.major,
+                                            profileImg = it.profileImg,
+                                            contactEmail = it.contactEmail,
+                                            gsmAuthenticationScore = it.gsmAuthenticationScore,
+                                            formOfEmployment = it.formOfEmployment,
+                                            regions = it.regions,
+                                            militaryService = it.militaryService,
+                                            salary = it.salary,
+                                            languageCertificates = it.languageCertificates,
+                                            certificates = it.certificates,
+                                            techStacks = it.techStacks
+                                        )
                                         scope.launch {
                                             bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
@@ -241,25 +240,15 @@ fun MainScreen(
                                     },
                                     {
                                         isDetailBottomSheet.value = true
-                                        studentDetailData.value = GetStudentForTeacher(
+                                        studentDetailData.value = StudentDetailData(
                                             name = it.name,
                                             introduce = it.introduce,
-                                            dreamBookFileUrl = "",
-                                            portfolioUrl = "",
                                             grade = it.grade,
                                             classNum = it.classNum,
                                             number = it.number,
                                             department = it.department,
                                             major = it.major,
                                             profileImg = it.profileImg,
-                                            contactEmail = "",
-                                            gsmAuthenticationScore = 0,
-                                            formOfEmployment = "",
-                                            regions = listOf(),
-                                            militaryService = "",
-                                            salary = 0,
-                                            languageCertificates = listOf(),
-                                            certificates = listOf(),
                                             techStacks = it.techStack
                                         )
                                         scope.launch {
@@ -279,25 +268,11 @@ fun MainScreen(
                                     },
                                     {
                                         isDetailBottomSheet.value = true
-                                        studentDetailData.value = GetStudentForTeacher(
+                                        studentDetailData.value = StudentDetailData(
                                             name = it.name,
                                             introduce = it.introduce,
-                                            dreamBookFileUrl = "",
-                                            portfolioUrl = "",
-                                            grade = 0,
-                                            classNum = 0,
-                                            number = 0,
-                                            department = "",
                                             major = it.major,
                                             profileImg = it.profileImg,
-                                            contactEmail = "",
-                                            gsmAuthenticationScore = 0,
-                                            formOfEmployment = "",
-                                            regions = listOf(),
-                                            militaryService = "",
-                                            salary = 0,
-                                            languageCertificates = listOf(),
-                                            certificates = listOf(),
                                             techStacks = it.techStack
                                         )
                                         scope.launch {
