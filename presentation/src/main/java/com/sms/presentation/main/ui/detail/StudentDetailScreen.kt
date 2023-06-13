@@ -79,13 +79,13 @@ fun StudentDetailScreen(
             name = studentDetailData.name,
             major = studentDetailData.major,
             modifier = Modifier.align(Alignment.TopCenter),
-            isNotGuest = role != "Anonymous",
+            isNotGuest = role == "ROLE_TEACHER" || role == "ROLE_STUDENT",
             grade = studentDetailData.grade.toString(),
             classNumber = studentDetailData.classNum.toString(),
             schoolNumber = studentDetailData.number.toString(),
             departments = studentDetailData.department.departmentEnumToString(),
             introduce = studentDetailData.introduce,
-            isTeacher = role == "Teacher",
+            isTeacher = role == "ROLE_TEACHER",
             onDreamBookButtonClick = {
                 val downloader = AndroidDownloader(
                     context = context,
