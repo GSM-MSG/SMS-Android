@@ -31,7 +31,7 @@ fun DetailStackSearchScreen(
     val detailStack =
         viewModel.searchResult.collectAsState()
     val selectedStackList = remember {
-        if(selectedStack.first() == "") mutableStateListOf() else  mutableStateListOf(*selectedStack.toTypedArray())
+        if (selectedStack.first() == "") mutableStateListOf() else mutableStateListOf(*selectedStack.toTypedArray())
     }
     val snackBarVisible = remember {
         mutableStateOf(false)
@@ -74,6 +74,7 @@ fun DetailStackSearchScreen(
             modifier = Modifier.weight(1f),
             list = if (detailStack.value.data != null) detailStack.value.data!!.techStack else emptyList(),
             selectedList = selectedStackList,
+            searchQuery = searchQuery.value,
             onClickRemoveAll = { selectedStackList.clear() },
             isSearching = searchQuery.value != "",
             onClickButton = { stack, checked ->
