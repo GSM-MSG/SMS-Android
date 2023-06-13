@@ -12,4 +12,6 @@ object AuthPreferenceKey {
 
     val REFRESH_TIME = stringPreferencesKey("refresh_time")
 
+    val ROLE = stringPreferencesKey("role")
+
 }
