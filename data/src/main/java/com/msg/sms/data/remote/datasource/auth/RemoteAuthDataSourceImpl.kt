@@ -12,12 +12,14 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class RemoteAuthDataSourceImpl @Inject constructor(
-    private val service: AuthAPI
+    private val service: AuthAPI,
 ) : RemoteAuthDataSource {
-    override suspend fun gAuthLogin(body: GAuthLoginRequest): GAuthLoginResponse =
-        SMSApiHandler<GAuthLoginResponse>()
+    override suspend fun gAuthLogin(body: GAuthLoginRequest): Flow<GAuthLoginResponse> = flow {
+        emit(SMSApiHandler<GAuthLoginResponse>()
             .httpRequest { service.gAuthLogin(body = body) }
-            .sendRequest()
+            .sendRequest())
+    }.flowOn(Dispatchers.IO)
+
 
     override suspend fun accessValidation(): Flow<AccessValidationResponse> {
         return flow {
@@ -28,4 +30,20 @@ class RemoteAuthDataSourceImpl @Inject constructor(
             )
         }.flowOn(Dispatchers.IO)
     }
+
+    override suspend fun logout(): Flow<Unit> = flow {
+        emit(
+            SMSApiHandler<Unit>()
+                .httpRequest { service.logout() }
+                .sendRequest()
+        )
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun withdrawal(): Flow<Unit> = flow {
+        emit(
+            SMSApiHandler<Unit>()
+                .httpRequest { service.withdrawal() }
+                .sendRequest()
+        )
+    }.flowOn(Dispatchers.IO)
 }
