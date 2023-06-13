@@ -112,7 +112,7 @@ fun MainScreen(
     ModalBottomSheetLayout(
         sheetContent = {
             if (isDetailBottomSheet.value) {
-                StudentDetailScreen(onDissmissButtonClick = {
+                StudentDetailScreen(onDismissButtonClick = {
                     scope.launch {
                         bottomSheetState.hide()
                     }
