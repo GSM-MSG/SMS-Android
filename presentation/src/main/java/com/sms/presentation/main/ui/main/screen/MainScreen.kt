@@ -69,9 +69,7 @@ fun MainScreen(
                 text = "로그아웃",
                 icon = {
                     RedLogoutIcon(
-                        modifier = Modifier.padding(
-                            start = 20.dp, bottom = 12.dp, top = 12.dp
-                        )
+                        modifier = Modifier.padding(12.dp)
                     )
                 }
             ) {
@@ -82,9 +80,7 @@ fun MainScreen(
                 text = "회원탈퇴",
                 icon = {
                     RedWithdrawalIcon(
-                        modifier = Modifier.padding(
-                            start = 20.dp, bottom = 12.dp, top = 12.dp
-                        )
+                        modifier = Modifier.padding(12.dp)
                     )
                 }
             ) {
@@ -100,14 +96,16 @@ fun MainScreen(
                 .fillMaxSize()
                 .background(Color.White)
         ) {
-            MainScreenTopBar(profileImageUrl = "",
+            MainScreenTopBar(
+                profileImageUrl = "",
                 isScolled = isScrolled.value,
                 filterButtonOnClick = { /*TODO (KimHyunseung) : 필터 Screen으로 이동*/ },
                 profileButtonOnClick = {
                     scope.launch {
                         bottomSheetState.show()
                     }
-                })
+                }
+            )
             Box(modifier = Modifier.fillMaxSize()) {
                 StudentListComponent(
                     listState = listState,
