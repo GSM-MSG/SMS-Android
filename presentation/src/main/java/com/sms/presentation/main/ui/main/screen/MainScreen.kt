@@ -14,7 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListFloatingButton
-import com.msg.sms.domain.model.student.response.*
+import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
+import com.msg.sms.domain.model.student.response.GetStudentForStudent
+import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
 import com.sms.presentation.main.ui.main.component.LogoutWithDrawalBottomSheetComponent
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
@@ -29,8 +32,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     navController: NavController,
-    lifecycleScope: CoroutineScope,
-    viewModel: StudentListViewModel
+    viewModel: StudentListViewModel,
+    lifecycleScope: CoroutineScope
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -144,12 +147,13 @@ fun MainScreen(
             if (isDetailBottomSheet.value) {
                 StudentDetailScreen(
                     studentDetailData = studentDetailData.value,
-                    role = "Teacher"
-                ) {
-                    scope.launch {
-                        bottomSheetState.hide()
+                    role = role.value,
+                    onDismissButtonClick = {
+                        scope.launch {
+                            bottomSheetState.hide()
+                        }
                     }
-                }
+                )
             } else {
                 LogoutWithDrawalBottomSheetComponent(
                     onLogoutClick = {
@@ -159,7 +163,9 @@ fun MainScreen(
                         dialogState.value = true
                         dialogTitle.value = "로그아웃"
                         dialogMsg.value = "정말로 로그아웃 하시겠습니까?"
-                        dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 로그아웃 로직 연결 */ }
+                        dialogOnClick.value = {
+                            viewModel.logout()
+                        }
                     },
                     onWithDrawalClick = {
                         scope.launch {
@@ -168,7 +174,9 @@ fun MainScreen(
                         dialogState.value = true
                         dialogTitle.value = "회원탈퇴"
                         dialogMsg.value = "정말로 회원탈퇴 하시겠습니까?"
-                        dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 회원탈퇴 로직 연결 */ }
+                        dialogOnClick.value = {
+                            viewModel.withdrawal()
+                        }
                     }
                 )
             }
@@ -290,16 +298,12 @@ fun MainScreen(
                                             techStacks = it.techStack
                                         )
                                         scope.launch {
-                                            bottomSheetState.show()
+                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     }
                                 )
                             }
                         }
-                    }
-                    isDetailBottomSheet.value = true
-                    scope.launch {
-                        bottomSheetState.animateTo(targetValue = ModalBottomSheetValue.Expanded)
                     }
                 }
                 Box(
@@ -321,7 +325,7 @@ fun MainScreen(
 suspend fun getStudentList(
     viewModel: StudentListViewModel,
     progressState: (Boolean) -> Unit,
-    onSuccess: (studentList: List<StudentModel>, totalListSize: Int) -> Unit
+    onSuccess: (studentList: List<StudentModel>, totalListSize: Int) -> Unit,
 ) {
     viewModel.getStudentListResponse.collect { response ->
         when (response) {

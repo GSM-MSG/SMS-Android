@@ -199,6 +199,15 @@ fun ProfileScreen(
                     profileImageUri = profileImageUri.value,
                     isProfilePictureBottomSheet = { isProfilePictureBottomSheet.value = it },
                     changeView = {
+                        viewModel.setEnteredProfileInformation(
+                            major = selectedMajor.value,
+                            techStack = detailStack.joinToString(", "),
+                            profileImgUri = profileImageUri.value,
+                            introduce = introduce.value,
+                            contactEmail = contactEmail.value,
+                            portfolioUrl = portfolioUrl.value,
+                            enteredMajor = enteredMajor.value
+                        )
                         navController.currentBackStackEntry?.savedStateHandle?.set(
                             key = "detailStack",
                             value = detailStack.joinToString(",")

@@ -50,7 +50,7 @@ fun StudentListComponent(
                     profileImageUrl = studentList[it].profileImg,
                     major = studentList[it].major,
                     name = studentList[it].name,
-                    teckStackList = studentList[it].techStack
+                    techStackList = studentList[it].techStack
                 ) {
                     onItemClick(studentList[it].id)
                 }

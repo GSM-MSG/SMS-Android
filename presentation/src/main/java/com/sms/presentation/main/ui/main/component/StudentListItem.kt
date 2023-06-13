@@ -23,11 +23,11 @@ fun StudentListItem(
     profileImageUrl: String,
     name: String,
     major: String,
-    teckStackList: List<String>,
+    techStackList: List<String>,
     onClick: () -> Unit
 ) {
     val list = remember {
-        mutableStateOf(teckStackList)
+        mutableStateOf(techStackList)
     }
 
     SMSTheme { colors, typography ->
@@ -53,7 +53,7 @@ fun StudentListItem(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = name,
+                        text = name.replace("**", "소금"),
                         style = typography.title2,
                         color = colors.BLACK,
                         fontWeight = FontWeight.Bold
@@ -72,11 +72,10 @@ fun StudentListItem(
                             .fillMaxWidth()
                     ) {
                         run {
-                            list.value.forEachIndexed { index, teckStack ->
+                            list.value.forEachIndexed { index, techStack ->
                                 val isItemOver = remember {
                                     mutableStateOf(false)
                                 }
-
                                 Box(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(8.dp))
@@ -103,7 +102,7 @@ fun StudentListItem(
                                         )
                                     } else {
                                         Text(
-                                            text = teckStack,
+                                            text = techStack,
                                             style = typography.caption1,
                                             color = colors.N40,
                                             maxLines = 1,

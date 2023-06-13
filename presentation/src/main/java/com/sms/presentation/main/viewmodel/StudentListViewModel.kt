@@ -6,6 +6,9 @@ import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
 import com.msg.sms.domain.model.student.response.GetStudentForStudent
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 import com.msg.sms.domain.model.student.response.StudentListModel
+import com.msg.sms.domain.usecase.auth.DeleteTokenUseCase
+import com.msg.sms.domain.usecase.auth.LogoutUseCase
+import com.msg.sms.domain.usecase.auth.WithdrawalUseCase
 import com.msg.sms.domain.usecase.student.GetStudentDetailForStudentUseCase
 import com.msg.sms.domain.usecase.student.GetStudentListUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForAnonymousUseCase
@@ -23,12 +26,21 @@ import javax.inject.Inject
 @HiltViewModel
 class StudentListViewModel @Inject constructor(
     private val getStudentListUseCase: GetStudentListUseCase,
+    private val logoutUseCase: LogoutUseCase,
+    private val withdrawalUseCase: WithdrawalUseCase,
+    private val deleteTokenUseCase: DeleteTokenUseCase,
     private val getStudentDetailForTeacherUseCase: GetUserDetailForTeacherUseCase,
     private val getStudentDetailForStudentUseCase: GetStudentDetailForStudentUseCase,
     private val getStudentDetailForAnonymousUseCase: GetUserDetailForAnonymousUseCase
 ) : ViewModel() {
     private val _getStudentListResponse = MutableStateFlow<Event<StudentListModel>>(Event.Loading)
     val getStudentListResponse = _getStudentListResponse.asStateFlow()
+
+    private val _logoutResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
+    val logoutResponse = _logoutResponse.asStateFlow()
+
+    private val _withdrawalResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
+    val withdrawalResponse = _withdrawalResponse.asStateFlow()
 
     private val _getStudentDetailForTeacherResponse =
         MutableStateFlow<Event<GetStudentForTeacher>>(Event.Loading)
@@ -57,7 +69,7 @@ class StudentListViewModel @Inject constructor(
         minSalary: Int? = null,
         maxSalary: Int? = null,
         gsmAuthenticationScoreSort: String? = null,
-        salarySort: String? = null
+        salarySort: String? = null,
     ) = viewModelScope.launch {
         _getStudentListResponse.value = Event.Loading
         getStudentListUseCase(
@@ -84,6 +96,32 @@ class StudentListViewModel @Inject constructor(
             }
         }.onFailure { error ->
             _getStudentListResponse.value = error.errorHandling()
+        }
+    }
+
+    fun logout() = viewModelScope.launch {
+        logoutUseCase().onSuccess {
+            it.catch { remoteError ->
+                _logoutResponse.value = remoteError.errorHandling()
+            }.collect { response ->
+                deleteTokenUseCase()
+                _logoutResponse.value = Event.Success(data = response)
+            }
+        }.onFailure {
+            _logoutResponse.value = it.errorHandling()
+        }
+    }
+
+    fun withdrawal() = viewModelScope.launch {
+        withdrawalUseCase().onSuccess {
+            it.catch { remoteError ->
+                _withdrawalResponse.value = remoteError.errorHandling()
+            }.collect { response ->
+                deleteTokenUseCase()
+                _withdrawalResponse.value = Event.Success(data = response)
+            }
+        }.onFailure {
+            _withdrawalResponse.value = it.errorHandling()
         }
     }
 
@@ -128,5 +166,4 @@ class StudentListViewModel @Inject constructor(
             _getStudentDetailForAnonymousResponse.value = error.errorHandling()
         }
     }
-
 }
