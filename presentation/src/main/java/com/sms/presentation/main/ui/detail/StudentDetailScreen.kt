@@ -4,11 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,12 +23,23 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.component.profile.ProfileImageComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
+import com.sms.presentation.main.ui.main.data.StudentDetailData
+import com.sms.presentation.main.ui.util.departmentEnumToString
+import com.sms.presentation.main.ui.util.employmentEnumToSting
+import com.sms.presentation.main.ui.util.militaryServiceEnumToString
+import com.sms.presentation.main.viewmodel.util.downloader.AndroidDownloader
+import kotlinx.coroutines.launch
 
 @Composable
 fun StudentDetailScreen(
-    onDismissButtonClick: () -> Unit,
+    studentDetailData: StudentDetailData,
+    role: String,
+    onDismissButtonClick: () -> Unit
 ) {
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -37,7 +50,7 @@ fun StudentDetailScreen(
         }
         val localDensity = LocalDensity.current
         ProfileImageComponent(
-            profileImage = "",
+            profileImage = studentDetailData.profileImg,
             modifier = Modifier
                 .onGloballyPositioned { layoutCoordinates ->
                     imageHeight.value = with(localDensity) { layoutCoordinates.size.height.toDp() }
@@ -54,33 +67,53 @@ fun StudentDetailScreen(
         ) { modifier ->
             Image(
                 painter = rememberAsyncImagePainter(
-                    model = "",
+                    model = studentDetailData.profileImg,
                     contentScale = ContentScale.Crop
                 ), contentDescription = "User Image",
                 modifier = modifier
             )
         }
-        // Todo(LeeHyeonbin) - 데이터 띄울 때 파라미터로 넘기기
         StudentDetailComponent(
             imageHeight = imageHeight.value,
-            techStack = listOf("Kotlin", "Compose"),
-            name = "이현빈",
-            major = "Android",
+            techStack = studentDetailData.techStacks,
+            name = studentDetailData.name,
+            major = studentDetailData.major,
             modifier = Modifier.align(Alignment.TopCenter),
-            isNotGuest = true,
-            grade = "3",
-            classNumber = "2",
-            schoolNumber = "15",
-            departments = "사과",
-            introduce = "ljasfd;lsfdlk;asfdloi;jsdf;oijsadfoi;jsadf;jsdfa;lfl;fa;lasfd;l jasfd ; lsdfa;l asf d;l sadf ;l safd;l fads;l sfad;jl af;oij asf;oij fauij fweio;j fewi;o jferai;ojefai;o jeawri;j wfwea rilj f wae iljfaer wi faijl awefj iawef ilj ferw ie iefarijl erfawijlo ;erfi;jlo o ie",
-            isTeacher = true,
+            isNotGuest = role != "Anonymous",
+            grade = studentDetailData.grade.toString(),
+            classNumber = studentDetailData.classNum.toString(),
+            schoolNumber = studentDetailData.number.toString(),
+            departments = studentDetailData.department.departmentEnumToString(),
+            introduce = studentDetailData.introduce,
+            isTeacher = role == "Teacher",
             onDreamBookButtonClick = {
-                /* Todo  데이터 여기로도 넘겨줘요 */
-//                val downloader = AndroidDownloader(context = context, fileName = "grade classNumber schoolNumber name 의 드림북")
-//                downloader.downloadFile(url = )
-            }
+                val downloader = AndroidDownloader(
+                    context = context,
+                    fileName =
+                    "${studentDetailData.grade}${studentDetailData.classNum}${studentDetailData.number}${studentDetailData.name}의 드림북"
+                )
+                downloader.downloadFile(url = studentDetailData.dreamBookFileUrl)
+            },
+            certificationData = studentDetailData.certificates,
+            email = studentDetailData.contactEmail,
+            gsmAuthenticationScore = studentDetailData.gsmAuthenticationScore.toString(),
+            foreignLanguage = studentDetailData.languageCertificates,
+            formOfEmployment = studentDetailData.formOfEmployment.employmentEnumToSting(),
+            militaryService = studentDetailData.militaryService.militaryServiceEnumToString(),
+            portfolioLink = studentDetailData.portfolioUrl,
+            region = studentDetailData.regions,
+            salary = studentDetailData.salary.toString(),
+            scrollState = scrollState
         )
-        IconButton(onClick = onDismissButtonClick, modifier = Modifier.align(Alignment.TopEnd)) {
+        IconButton(
+            onClick = {
+                onDismissButtonClick()
+                scope.launch {
+                    scrollState.scrollTo(0)
+                }
+            },
+            modifier = Modifier.align(Alignment.TopEnd)
+        ) {
             DeleteButtonIcon()
         }
     }

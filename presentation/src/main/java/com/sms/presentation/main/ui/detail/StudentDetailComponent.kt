@@ -1,11 +1,10 @@
 package com.sms.presentation.main.ui.detail
 
-import android.net.Uri
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.IconButton
@@ -21,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.item.TechStackItem
 import com.msg.sms.design.icon.BookIcon
 import com.msg.sms.design.theme.SMSTheme
+import com.msg.sms.domain.model.student.response.CertificationModel
 import com.sms.presentation.main.ui.fill_out_information.data.CertificationData
-import com.sms.presentation.main.ui.fill_out_information.data.SchoolLifeData
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 
 @Composable
@@ -37,12 +36,20 @@ fun StudentDetailComponent(
     schoolNumber: String,
     departments: String,
     introduce: String,
+    portfolioLink: String,
+    gsmAuthenticationScore: String,
+    email: String,
+    militaryService: String,
+    formOfEmployment: String,
+    salary: String,
+    region: List<String>,
+    certificationData: List<String>,
+    foreignLanguage: List<CertificationModel>,
     isNotGuest: Boolean,
     isTeacher: Boolean,
-    onDreamBookButtonClick: (() -> Unit)?
+    onDreamBookButtonClick: (() -> Unit)?,
+    scrollState: ScrollState
 ) {
-    val scrollState = rememberScrollState()
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -107,23 +114,19 @@ fun StudentDetailComponent(
                     )
                 }
                 if (isTeacher) {
-                    // TODO (LeeHyeonbin) - 데이터 띄울 때 파라미터로 넘기기
                     StudentInfoComponent(
                         modifier = itemModifier,
-                        portfolioLink = "https://litt.ly/leehyeonbin",
-                        schoolLifeData = SchoolLifeData(
-                            gsmAuthenticationScore = "990",
-                            dreamBookFileUri = Uri.EMPTY
-                        ),
-                        email = "de@dlajsdlfv.doadm",
-                        militaryService = "헤응",
+                        portfolioLink = portfolioLink,
+                        gsmAuthenticationScore = gsmAuthenticationScore,
+                        email = email,
+                        militaryService = militaryService,
                         workConditionData = WorkConditionData(
-                            formOfEmployment = "정규직",
-                            salary = "1000만원",
-                            region = listOf("광주", "충칭")
+                            formOfEmployment = formOfEmployment,
+                            salary = salary,
+                            region = region
                         ),
-                        certificationData = CertificationData(listOf("정보처리기능사", "이잉")),
-                        foreignLanguage = listOf(Pair("한국어", "쌉장인"), Pair("영어", "쫌침"))
+                        certificationData = CertificationData(certificationData),
+                        foreignLanguage = foreignLanguage
                     )
                 }
             }

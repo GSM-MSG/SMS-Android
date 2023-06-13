@@ -14,13 +14,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListFloatingButton
+import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
+import com.msg.sms.domain.model.student.response.GetStudentForStudent
+import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
 import com.sms.presentation.main.ui.main.component.LogoutWithDrawalBottomSheetComponent
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
+import com.sms.presentation.main.ui.main.data.StudentDetailData
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
@@ -29,6 +34,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     navController: NavController,
     viewModel: StudentListViewModel,
+    lifecycleScope: CoroutineScope
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -60,6 +66,12 @@ fun MainScreen(
     }
     val isDetailBottomSheet = remember {
         mutableStateOf(false)
+    }
+    val role = remember {
+        mutableStateOf("Teacher")
+    }
+    val studentDetailData = remember {
+        mutableStateOf(StudentDetailData())
     }
 
     LaunchedEffect("GetStudentList") {
@@ -112,11 +124,15 @@ fun MainScreen(
     ModalBottomSheetLayout(
         sheetContent = {
             if (isDetailBottomSheet.value) {
-                StudentDetailScreen(onDismissButtonClick = {
-                    scope.launch {
-                        bottomSheetState.hide()
+                StudentDetailScreen(
+                    studentDetailData = studentDetailData.value,
+                    role = role.value,
+                    onDismissButtonClick = {
+                        scope.launch {
+                            bottomSheetState.hide()
+                        }
                     }
-                })
+                )
             } else {
                 LogoutWithDrawalBottomSheetComponent(
                     onLogoutClick = {
@@ -173,9 +189,99 @@ fun MainScreen(
                     studentList = studentList.value,
                     listTotalSize = listTotalSize.value
                 ) {
-                    isDetailBottomSheet.value = true
-                    scope.launch {
-                        bottomSheetState.animateTo(targetValue = ModalBottomSheetValue.Expanded)
+                    lifecycleScope.launch {
+                        when (role.value) {
+                            "Teacher" -> {
+                                viewModel.getStudentDetailForTeacher(it)
+                                getStudentDetailForTeacher(
+                                    viewModel,
+                                    { state, title, msg ->
+                                        dialogState.value = state
+                                        dialogTitle.value = title
+                                        dialogMsg.value = msg
+                                    },
+                                    {
+                                        isDetailBottomSheet.value = true
+                                        studentDetailData.value = StudentDetailData(
+                                            name = it.name,
+                                            introduce = it.introduce,
+                                            dreamBookFileUrl = it.dreamBookFileUrl!!,
+                                            portfolioUrl = it.portfolioUrl!!,
+                                            grade = it.grade,
+                                            classNum = it.classNum,
+                                            number = it.number,
+                                            department = it.department,
+                                            major = it.major,
+                                            profileImg = it.profileImg,
+                                            contactEmail = it.contactEmail,
+                                            gsmAuthenticationScore = it.gsmAuthenticationScore,
+                                            formOfEmployment = it.formOfEmployment,
+                                            regions = it.regions,
+                                            militaryService = it.militaryService,
+                                            salary = it.salary,
+                                            languageCertificates = it.languageCertificates,
+                                            certificates = it.certificates,
+                                            techStacks = it.techStacks
+                                        )
+                                        scope.launch {
+                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                        }
+                                    }
+                                )
+                            }
+                            "Student" -> {
+                                viewModel.getStudentDetailForStudent(it)
+                                getStudentDetailForStudent(
+                                    viewModel,
+                                    { state, title, msg ->
+                                        dialogState.value = state
+                                        dialogTitle.value = title
+                                        dialogMsg.value = msg
+                                    },
+                                    {
+                                        isDetailBottomSheet.value = true
+                                        studentDetailData.value = StudentDetailData(
+                                            name = it.name,
+                                            introduce = it.introduce,
+                                            grade = it.grade,
+                                            classNum = it.classNum,
+                                            number = it.number,
+                                            department = it.department,
+                                            major = it.major,
+                                            profileImg = it.profileImg,
+                                            techStacks = it.techStack
+                                        )
+                                        scope.launch {
+                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                        }
+                                    }
+                                )
+                            }
+                            "Anonymous" -> {
+                                viewModel.getStudentDetailForAnonymous(it)
+                                getStudentDetailForAnonymous(
+                                    viewModel,
+                                    { state, title, msg ->
+                                        dialogState.value = state
+                                        dialogTitle.value = title
+                                        dialogMsg.value = msg
+                                    },
+                                    {
+                                        isDetailBottomSheet.value = true
+                                        studentDetailData.value = StudentDetailData(
+                                            name = it.name,
+                                            introduce = it.introduce,
+                                            major = it.major,
+                                            profileImg = it.profileImg,
+                                            techStacks = it.techStack
+                                        )
+                                        scope.launch {
+                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                        }
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
                 Box(
@@ -210,6 +316,60 @@ suspend fun getStudentList(
             }
             else -> {
                 progressState(false)
+            }
+        }
+    }
+}
+
+suspend fun getStudentDetailForTeacher(
+    viewModel: StudentListViewModel,
+    dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
+    onSuccess: (GetStudentForTeacher) -> Unit
+) {
+    viewModel.getStudentDetailForTeacherResponse.collect { response ->
+        when (response) {
+            is Event.Success -> {
+                onSuccess(response.data!!)
+            }
+            is Event.Loading -> {}
+            else -> {
+                dialog(true, "에러", "알 수 없는 에러 발생")
+            }
+        }
+    }
+}
+
+suspend fun getStudentDetailForStudent(
+    viewModel: StudentListViewModel,
+    dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
+    onSuccess: (GetStudentForStudent) -> Unit
+) {
+    viewModel.getStudentDetailForStudentResponse.collect { response ->
+        when (response) {
+            is Event.Success -> {
+                onSuccess(response.data!!)
+            }
+            is Event.Loading -> {}
+            else -> {
+                dialog(true, "에러", "알 수 없는 에러 발생")
+            }
+        }
+    }
+}
+
+suspend fun getStudentDetailForAnonymous(
+    viewModel: StudentListViewModel,
+    dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
+    onSuccess: (GetStudentForAnonymous) -> Unit
+) {
+    viewModel.getStudentDetailForAnonymousResponse.collect { response ->
+        when (response) {
+            is Event.Success -> {
+                onSuccess(response.data!!)
+            }
+            is Event.Loading -> {}
+            else -> {
+                dialog(true, "에러", "알 수 없는 에러 발생")
             }
         }
     }
