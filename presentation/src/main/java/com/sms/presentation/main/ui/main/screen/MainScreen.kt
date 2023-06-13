@@ -34,7 +34,8 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     navController: NavController,
     viewModel: StudentListViewModel,
-    lifecycleScope: CoroutineScope
+    lifecycleScope: CoroutineScope,
+    role: String
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
