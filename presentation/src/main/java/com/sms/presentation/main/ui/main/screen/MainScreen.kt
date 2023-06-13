@@ -240,6 +240,7 @@ fun MainScreen(
                                         dialogMsg.value = msg
                                     },
                                     {
+                                        isDetailBottomSheet.value = true
                                         studentDetailData.value = GetStudentForTeacher(
                                             name = it.name,
                                             introduce = it.introduce,
@@ -261,7 +262,6 @@ fun MainScreen(
                                             certificates = listOf(),
                                             techStacks = it.techStack
                                         )
-                                        isDetailBottomSheet.value = true
                                         scope.launch {
                                             bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
@@ -278,6 +278,7 @@ fun MainScreen(
                                         dialogMsg.value = msg
                                     },
                                     {
+                                        isDetailBottomSheet.value = true
                                         studentDetailData.value = GetStudentForTeacher(
                                             name = it.name,
                                             introduce = it.introduce,
@@ -299,7 +300,6 @@ fun MainScreen(
                                             certificates = listOf(),
                                             techStacks = it.techStack
                                         )
-                                        isDetailBottomSheet.value = true
                                         scope.launch {
                                             bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
@@ -358,8 +358,7 @@ suspend fun getStudentDetailForTeacher(
             }
             is Event.Loading -> {}
             else -> {
-                Log.d("error",response.toString())
-                dialog(true, "에러", response.toString())
+                dialog(true, "에러", "알 수 없는 에러 발생")
             }
         }
     }
@@ -377,8 +376,7 @@ suspend fun getStudentDetailForStudent(
             }
             is Event.Loading -> {}
             else -> {
-                Log.d("error",response.toString())
-                dialog(true, "에러", response.toString())
+                dialog(true, "에러", "알 수 없는 에러 발생")
             }
         }
     }
@@ -396,8 +394,7 @@ suspend fun getStudentDetailForAnonymous(
             }
             is Event.Loading -> {}
             else -> {
-                Log.d("error",response.toString())
-                dialog(true, "에러", response.toString())
+                dialog(true, "에러", "알 수 없는 에러 발생")
             }
         }
     }

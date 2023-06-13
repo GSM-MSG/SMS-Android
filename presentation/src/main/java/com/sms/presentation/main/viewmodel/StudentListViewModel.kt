@@ -126,6 +126,7 @@ class StudentListViewModel @Inject constructor(
     }
 
     fun getStudentDetailForTeacher(uuid: UUID) = viewModelScope.launch {
+        _getStudentDetailForTeacherResponse.value = Event.Loading
         getStudentDetailForTeacherUseCase(
             uuid = uuid
         ).onSuccess {
@@ -140,6 +141,7 @@ class StudentListViewModel @Inject constructor(
     }
 
     fun getStudentDetailForStudent(uuid: UUID) = viewModelScope.launch {
+        _getStudentDetailForStudentResponse.value = Event.Loading
         getStudentDetailForStudentUseCase(
             uuid = uuid
         ).onSuccess {
@@ -154,6 +156,7 @@ class StudentListViewModel @Inject constructor(
     }
 
     fun getStudentDetailForAnonymous(uuid: UUID) = viewModelScope.launch {
+        _getStudentDetailForAnonymousResponse.value = Event.Loading
         getStudentDetailForAnonymousUseCase(
             uuid = uuid
         ).onSuccess {
