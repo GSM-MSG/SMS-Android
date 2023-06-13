@@ -15,9 +15,11 @@ class RemoteAuthDataSourceImpl @Inject constructor(
     private val service: AuthAPI,
 ) : RemoteAuthDataSource {
     override suspend fun gAuthLogin(body: GAuthLoginRequest): Flow<GAuthLoginResponse> = flow {
-        emit(SMSApiHandler<GAuthLoginResponse>()
+        emit(
+            SMSApiHandler<GAuthLoginResponse>()
             .httpRequest { service.gAuthLogin(body = body) }
-            .sendRequest())
+            .sendRequest()
+        )
     }.flowOn(Dispatchers.IO)
 
 
