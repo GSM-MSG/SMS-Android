@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.msg.gauthsignin.GAuthSigninWebView
 import com.sms.presentation.BuildConfig
@@ -25,6 +26,11 @@ class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                viewModel.accessValidationResponse.value is Event.Loading
+            }
+        }
         viewModel.accessValidation()
         observeEvent()
         this.setTransparentStatusBar()

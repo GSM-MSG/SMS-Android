@@ -5,9 +5,11 @@ object Versions {
     const val KOTLIN = "1.7.0"
 
     const val COMPOSE = "1.2.0"
+    const val APPCOMPAT = "1.6.1"
     const val ACTIVITY_COMPOSE = "1.3.1"
     const val COMPOSE_MATERIAL = "1.2.0"
 
+    const val SPLASH = "1.0.1"
     const val CORE_KTX = "1.7.0"
     const val LIFECYCLE = "2.3.1"
     const val MATERIAL = "1.8.0"
