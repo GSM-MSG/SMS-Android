@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.response.StudentModel
+import java.util.UUID
 
 @Composable
 fun StudentListComponent(
@@ -20,7 +21,7 @@ fun StudentListComponent(
     progressState: Boolean,
     studentList: List<StudentModel>,
     listTotalSize: Int,
-    onItemClick: () -> Unit
+    onItemClick: (uuid: UUID) -> Unit
 ) {
     SMSTheme { colors, typography ->
         LazyColumn(state = listState) {
@@ -51,7 +52,7 @@ fun StudentListComponent(
                     name = studentList[it].name,
                     teckStackList = studentList[it].techStack
                 ) {
-                    onItemClick()
+                    onItemClick(studentList[it].id)
                 }
                 Divider(
                     modifier = Modifier.padding(horizontal = 20.dp),
