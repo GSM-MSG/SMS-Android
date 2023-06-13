@@ -68,9 +68,6 @@ fun MainScreen(
     val isDetailBottomSheet = remember {
         mutableStateOf(false)
     }
-    val role = remember {
-        mutableStateOf("Teacher")
-    }
     val studentDetailData = remember {
         mutableStateOf(StudentDetailData())
     }
@@ -127,7 +124,7 @@ fun MainScreen(
             if (isDetailBottomSheet.value) {
                 StudentDetailScreen(
                     studentDetailData = studentDetailData.value,
-                    role = role.value,
+                    role = role,
                     onDismissButtonClick = {
                         scope.launch {
                             bottomSheetState.hide()
@@ -191,8 +188,8 @@ fun MainScreen(
                     listTotalSize = listTotalSize.value
                 ) {
                     lifecycleScope.launch {
-                        when (role.value) {
-                            "Teacher" -> {
+                        when (role) {
+                            "ROLE_TEACHER" -> {
                                 viewModel.getStudentDetailForTeacher(it)
                                 getStudentDetailForTeacher(
                                     viewModel,
@@ -230,7 +227,7 @@ fun MainScreen(
                                     }
                                 )
                             }
-                            "Student" -> {
+                            "ROLE_STUDENT" -> {
                                 viewModel.getStudentDetailForStudent(it)
                                 getStudentDetailForStudent(
                                     viewModel,
@@ -258,7 +255,7 @@ fun MainScreen(
                                     }
                                 )
                             }
-                            "Anonymous" -> {
+                            else -> {
                                 viewModel.getStudentDetailForAnonymous(it)
                                 getStudentDetailForAnonymous(
                                     viewModel,
