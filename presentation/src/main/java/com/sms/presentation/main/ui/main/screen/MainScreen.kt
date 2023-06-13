@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.main.screen
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
@@ -19,6 +21,7 @@ import com.msg.sms.domain.model.student.response.GetStudentForStudent
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
+import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.main.component.LogoutWithDrawalBottomSheetComponent
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
@@ -34,8 +37,10 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     navController: NavController,
     viewModel: StudentListViewModel,
-    lifecycleScope: CoroutineScope
+    lifecycleScope: CoroutineScope,
+    role: String
 ) {
+    val context = LocalContext.current
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     val studentList = remember {
@@ -66,9 +71,6 @@ fun MainScreen(
     }
     val isDetailBottomSheet = remember {
         mutableStateOf(false)
-    }
-    val role = remember {
-        mutableStateOf("Teacher")
     }
     val studentDetailData = remember {
         mutableStateOf(StudentDetailData())
@@ -126,7 +128,7 @@ fun MainScreen(
             if (isDetailBottomSheet.value) {
                 StudentDetailScreen(
                     studentDetailData = studentDetailData.value,
-                    role = role.value,
+                    role = role,
                     onDismissButtonClick = {
                         scope.launch {
                             bottomSheetState.hide()
@@ -176,9 +178,13 @@ fun MainScreen(
                 isScolled = isScrolled.value,
                 filterButtonOnClick = { /*TODO (KimHyunseung) : 필터 Screen으로 이동*/ },
                 profileButtonOnClick = {
-                    isDetailBottomSheet.value = false
-                    scope.launch {
-                        bottomSheetState.show()
+                    if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
+                        isDetailBottomSheet.value = false
+                        scope.launch {
+                            bottomSheetState.show()
+                        }
+                    } else {
+                        context.startActivity(Intent(context, LoginActivity::class.java))
                     }
                 }
             )
@@ -190,8 +196,8 @@ fun MainScreen(
                     listTotalSize = listTotalSize.value
                 ) {
                     lifecycleScope.launch {
-                        when (role.value) {
-                            "Teacher" -> {
+                        when (role) {
+                            "ROLE_TEACHER" -> {
                                 viewModel.getStudentDetailForTeacher(it)
                                 getStudentDetailForTeacher(
                                     viewModel,
@@ -229,7 +235,7 @@ fun MainScreen(
                                     }
                                 )
                             }
-                            "Student" -> {
+                            "ROLE_STUDENT" -> {
                                 viewModel.getStudentDetailForStudent(it)
                                 getStudentDetailForStudent(
                                     viewModel,
@@ -257,7 +263,7 @@ fun MainScreen(
                                     }
                                 )
                             }
-                            "Anonymous" -> {
+                            else -> {
                                 viewModel.getStudentDetailForAnonymous(it)
                                 getStudentDetailForAnonymous(
                                     viewModel,
