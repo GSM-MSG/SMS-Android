@@ -8,9 +8,7 @@ import com.msg.sms.domain.model.auth.request.GAuthLoginRequestModel
 import com.msg.sms.domain.model.auth.response.AccessValidationResponseModel
 import com.msg.sms.domain.model.auth.response.GAuthLoginResponseModel
 import com.msg.sms.domain.model.major.MajorListModel
-import com.msg.sms.domain.usecase.auth.AccessValidationUseCase
-import com.msg.sms.domain.usecase.auth.GAuthLoginUseCase
-import com.msg.sms.domain.usecase.auth.SaveTheLoginDataUseCase
+import com.msg.sms.domain.usecase.auth.*
 import com.msg.sms.domain.usecase.major.GetMajorListUseCase
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
@@ -26,7 +24,9 @@ class AuthViewModel @Inject constructor(
     private val gAuthLoginUseCase: GAuthLoginUseCase,
     private val saveTheLoginDataUseCase: SaveTheLoginDataUseCase,
     private val getMajorListUseCase: GetMajorListUseCase,
-    private val accessValidationUseCase: AccessValidationUseCase
+    private val accessValidationUseCase: AccessValidationUseCase,
+    private val saveRoleInfoUseCase: SaveRoleInfoUseCase,
+    private val getRoleInfoUseCase: GetRoleInfoUseCase
 ) : ViewModel() {
     private val _gAuthLoginRequest = MutableLiveData<Event<GAuthLoginResponseModel>>()
     val gAuthLoginRequest: LiveData<Event<GAuthLoginResponseModel>> get() = _gAuthLoginRequest
@@ -40,6 +40,12 @@ class AuthViewModel @Inject constructor(
     private val _accessValidationResponse =
         MutableStateFlow<Event<AccessValidationResponseModel>>(Event.Loading)
     val accessValidationResponse = _accessValidationResponse.asStateFlow()
+
+    private val _saveRoleResponse = MutableLiveData<Event<Unit>>()
+    val saveRoleResponse: LiveData<Event<Unit>> get() = _saveRoleResponse
+
+    private val _getRoleResponse = MutableLiveData<Event<String>>()
+    val getRoleResponse: LiveData<Event<String>> get() = _getRoleResponse
 
     fun gAuthLogin(code: String) = viewModelScope.launch {
         gAuthLoginUseCase(
@@ -88,6 +94,29 @@ class AuthViewModel @Inject constructor(
                 }
             }.onFailure { error ->
                 _accessValidationResponse.value = error.errorHandling()
+            }
+    }
+
+    fun saveRoleInfo(role: String) = viewModelScope.launch {
+        saveRoleInfoUseCase(
+            role = role
+        ).onSuccess {
+            _saveRoleResponse.value = Event.Success()
+        }.onFailure {
+            _saveRoleResponse.value = it.errorHandling()
+        }
+    }
+
+    fun getRoleInfo() = viewModelScope.launch {
+        getRoleInfoUseCase()
+            .onSuccess {
+                it.catch { remoteError ->
+                    _getRoleResponse.value = remoteError.errorHandling()
+                }.collect { response ->
+                    _getRoleResponse.value = Event.Success(data = response)
+                }
+            }.onFailure { error ->
+                _getRoleResponse.value = error.errorHandling()
             }
     }
 }
