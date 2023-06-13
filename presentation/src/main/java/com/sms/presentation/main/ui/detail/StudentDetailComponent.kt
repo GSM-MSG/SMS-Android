@@ -106,12 +106,26 @@ fun StudentDetailComponent(
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = introduce,
-                        style = typography.body2,
-                        color = colors.N40,
-                        modifier = itemModifier.fillMaxWidth()
-                    )
+                    Column(
+                        modifier = itemModifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(colors.N10)
+                    ) {
+                        Text(
+                            text = "자기소개",
+                            style = typography.caption2,
+                            color = colors.N40,
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = introduce,
+                            style = typography.body2,
+                            color = colors.BLACK,
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        )
+                    }
                 }
                 if (isTeacher) {
                     StudentInfoComponent(
