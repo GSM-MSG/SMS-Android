@@ -18,7 +18,5 @@ interface AuthRepository {
 
     suspend fun deleteToken()
 
-    suspend fun saveRoleInfo(role: String)
-
     suspend fun getRoleInfo(): Flow<String>
 }

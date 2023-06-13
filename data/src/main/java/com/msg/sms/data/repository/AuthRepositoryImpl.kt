@@ -31,6 +31,7 @@ class AuthRepositoryImpl @Inject constructor(
             localDataSource.setAccessTime(it.accessTokenExp)
             localDataSource.setRefreshToken(it.refreshToken)
             localDataSource.setRefreshTime(it.refreshTokenExp)
+            localDataSource.setRoleInfo(it.role)
         }
     }
 
@@ -52,10 +53,6 @@ class AuthRepositoryImpl @Inject constructor(
         localDataSource.removeRefreshToken()
         localDataSource.removeRefreshTime()
         localDataSource.removeRoleInfo()
-    }
-
-    override suspend fun saveRoleInfo(role: String) {
-        localDataSource.setRoleInfo(role)
     }
 
     override suspend fun getRoleInfo(): Flow<String> {
