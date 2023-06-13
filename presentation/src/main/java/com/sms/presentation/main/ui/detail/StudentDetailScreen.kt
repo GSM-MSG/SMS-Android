@@ -21,10 +21,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.component.profile.ProfileImageComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
+import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.sms.presentation.main.viewmodel.util.downloader.AndroidDownloader
 
 @Composable
 fun StudentDetailScreen(
-    onDismissButtonClick: () -> Unit,
+    studentDetailData: GetStudentForTeacher,
+    role: String,
+    onDismissButtonClick: () -> Unit
 ) {
     val context = LocalContext.current
     Box(
@@ -37,7 +41,7 @@ fun StudentDetailScreen(
         }
         val localDensity = LocalDensity.current
         ProfileImageComponent(
-            profileImage = "",
+            profileImage = studentDetailData.profileImg,
             modifier = Modifier
                 .onGloballyPositioned { layoutCoordinates ->
                     imageHeight.value = with(localDensity) { layoutCoordinates.size.height.toDp() }
@@ -60,24 +64,26 @@ fun StudentDetailScreen(
                 modifier = modifier
             )
         }
-        // Todo(LeeHyeonbin) - 데이터 띄울 때 파라미터로 넘기기
         StudentDetailComponent(
             imageHeight = imageHeight.value,
-            techStack = listOf("Kotlin", "Compose"),
-            name = "이현빈",
-            major = "Android",
+            techStack = studentDetailData.techStacks,
+            name = studentDetailData.name,
+            major = studentDetailData.major,
             modifier = Modifier.align(Alignment.TopCenter),
-            isNotGuest = true,
-            grade = "3",
-            classNumber = "2",
-            schoolNumber = "15",
-            departments = "사과",
-            introduce = "ljasfd;lsfdlk;asfdloi;jsdf;oijsadfoi;jsadf;jsdfa;lfl;fa;lasfd;l jasfd ; lsdfa;l asf d;l sadf ;l safd;l fads;l sfad;jl af;oij asf;oij fauij fweio;j fewi;o jferai;ojefai;o jeawri;j wfwea rilj f wae iljfaer wi faijl awefj iawef ilj ferw ie iefarijl erfawijlo ;erfi;jlo o ie",
-            isTeacher = true,
+            isNotGuest = role != "Anonymous",
+            grade = studentDetailData.grade.toString(),
+            classNumber = studentDetailData.classNum.toString(),
+            schoolNumber = studentDetailData.number.toString(),
+            departments = studentDetailData.department,
+            introduce = studentDetailData.introduce,
+            isTeacher = role == "Teacher",
             onDreamBookButtonClick = {
-                /* Todo  데이터 여기로도 넘겨줘요 */
-//                val downloader = AndroidDownloader(context = context, fileName = "grade classNumber schoolNumber name 의 드림북")
-//                downloader.downloadFile(url = )
+                val downloader = AndroidDownloader(
+                    context = context,
+                    fileName =
+                    "${studentDetailData.grade} ${studentDetailData.number} ${studentDetailData.classNum} ${studentDetailData.name} 의 드림북"
+                )
+                downloader.downloadFile(url = studentDetailData.dreamBookFileUrl!!)
             }
         )
         IconButton(onClick = onDismissButtonClick, modifier = Modifier.align(Alignment.TopEnd)) {
