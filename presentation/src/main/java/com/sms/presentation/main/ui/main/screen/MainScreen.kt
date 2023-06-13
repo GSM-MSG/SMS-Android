@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     navController: NavController,
-    viewModel: StudentListViewModel
+    viewModel: StudentListViewModel,
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -126,7 +126,9 @@ fun MainScreen(
                         dialogState.value = true
                         dialogTitle.value = "로그아웃"
                         dialogMsg.value = "정말로 로그아웃 하시겠습니까?"
-                        dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 로그아웃 로직 연결 */ }
+                        dialogOnClick.value = {
+                            viewModel.logout()
+                        }
                     },
                     onWithDrawalClick = {
                         scope.launch {
@@ -135,7 +137,9 @@ fun MainScreen(
                         dialogState.value = true
                         dialogTitle.value = "회원탈퇴"
                         dialogMsg.value = "정말로 회원탈퇴 하시겠습니까?"
-                        dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 회원탈퇴 로직 연결 */ }
+                        dialogOnClick.value = {
+                            viewModel.withdrawal()
+                        }
                     }
                 )
             }
@@ -193,7 +197,7 @@ fun MainScreen(
 suspend fun getStudentList(
     viewModel: StudentListViewModel,
     progressState: (Boolean) -> Unit,
-    onSuccess: (studentList: List<StudentModel>, totalListSize: Int) -> Unit
+    onSuccess: (studentList: List<StudentModel>, totalListSize: Int) -> Unit,
 ) {
     viewModel.getStudentListResponse.collect { response ->
         when (response) {
