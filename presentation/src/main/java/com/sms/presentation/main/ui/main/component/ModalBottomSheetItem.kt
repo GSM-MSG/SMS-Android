@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.theme.color.LightColor
 
@@ -32,13 +31,13 @@ fun ModalBottomSheetItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .smsClickable(rippleEnabled = false, onClick = onClick)
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onPress = {
                             backgroundColor = LightColor.N10
                             this.awaitRelease()
                             backgroundColor = Color.Transparent
+                            onClick()
                         },
                     )
                 }

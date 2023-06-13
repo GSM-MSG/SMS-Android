@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListFloatingButton
 import com.msg.sms.design.icon.RedLogoutIcon
 import com.msg.sms.design.icon.RedWithdrawalIcon
@@ -46,6 +47,18 @@ fun MainScreen(
     }
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val dialogState = remember {
+        mutableStateOf(false)
+    }
+    val dialogTitle = remember {
+        mutableStateOf("")
+    }
+    val dialogMsg = remember {
+        mutableStateOf("")
+    }
+    val dialogOnClick = remember {
+        mutableStateOf({})
+    }
 
     LaunchedEffect("GetStudentList") {
         getStudentList(viewModel = viewModel,
@@ -62,6 +75,38 @@ fun MainScreen(
         }
     }
 
+    LaunchedEffect("Pagination") {
+        val response = viewModel.getStudentListResponse.value
+
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }.filter { it == listState.layoutInfo.totalItemsCount - 1 }
+            .collect {
+                val isSuccess = response is Event.Success
+                if (isSuccess && it != 0) {
+                    val isIncompleteData = studentList.value.size < response.data!!.totalSize
+                    if (isIncompleteData) {
+                        viewModel.getStudentListRequest(response.data.page + 1, 20)
+                    }
+                    Log.d("pagination", it.toString())
+                }
+            }
+    }
+
+    if (dialogState.value) {
+        SmsDialog(
+            title = dialogTitle.value,
+            msg = dialogMsg.value,
+            outLineButtonText = "확인",
+            normalButtonText = "취소",
+            outlineButtonOnClick = {
+                dialogOnClick.value()
+                dialogState.value = false
+            },
+            normalButtonOnClick = {
+                dialogState.value = false
+            }
+        )
+    }
+
     ModalBottomSheetLayout(
         sheetContent = {
             Spacer(modifier = Modifier.height(24.dp))
@@ -73,7 +118,13 @@ fun MainScreen(
                     )
                 }
             ) {
-                /*TODO(Kimhyunseung) - 로그아웃 */
+                scope.launch {
+                    bottomSheetState.hide()
+                }
+                dialogState.value = true
+                dialogTitle.value = "로그아웃"
+                dialogMsg.value = "정말로 로그아웃 하시겠습니까?"
+                dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 로그아웃 로직 연결 */ }
             }
             Spacer(modifier = Modifier.height(8.dp))
             ModalBottomSheetItem(
@@ -84,7 +135,13 @@ fun MainScreen(
                     )
                 }
             ) {
-                /*TODO(Kimhyunseung) - 회원탈퇴 */
+                scope.launch {
+                    bottomSheetState.hide()
+                }
+                dialogState.value = true
+                dialogTitle.value = "회원탈퇴"
+                dialogMsg.value = "정말로 회원탈퇴 하시겠습니까?"
+                dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 회원탈퇴 로직 연결 */ }
             }
             Spacer(modifier = Modifier.height(16.dp))
         },
@@ -128,22 +185,6 @@ fun MainScreen(
                 }
             }
         }
-    }
-
-    LaunchedEffect("Pagination") {
-        val response = viewModel.getStudentListResponse.value
-
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }.filter { it == listState.layoutInfo.totalItemsCount - 1 }
-            .collect {
-                val isSuccess = response is Event.Success
-                if (isSuccess && it != 0) {
-                    val isIncompleteData = studentList.value.size < response.data!!.totalSize
-                    if (isIncompleteData) {
-                        viewModel.getStudentListRequest(response.data.page + 1, 20)
-                    }
-                    Log.d("pagination", it.toString())
-                }
-            }
     }
 }
 
