@@ -98,3 +98,12 @@ fun String.militaryServiceEnumToString(): String {
         else -> ""
     }
 }
+
+fun String.departmentEnumToString(): String {
+    return when (this) {
+        "SW_DEVELOPMENT" -> "SW 개발과"
+        "SMART_IOT_DEVELOPMENT" -> "스마트 IOT과"
+        "AI_DEVELOPMENT" -> "인공지능 개발과"
+        else -> ""
+    }
+}

@@ -24,6 +24,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.component.profile.ProfileImageComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.sms.presentation.main.ui.util.departmentEnumToString
 import com.sms.presentation.main.ui.util.employmentEnumToSting
 import com.sms.presentation.main.ui.util.militaryServiceEnumToString
 import com.sms.presentation.main.viewmodel.util.downloader.AndroidDownloader
@@ -82,7 +83,7 @@ fun StudentDetailScreen(
             grade = studentDetailData.grade.toString(),
             classNumber = studentDetailData.classNum.toString(),
             schoolNumber = studentDetailData.number.toString(),
-            departments = studentDetailData.department,
+            departments = studentDetailData.department.departmentEnumToString(),
             introduce = studentDetailData.introduce,
             isTeacher = role == "Teacher",
             onDreamBookButtonClick = {
