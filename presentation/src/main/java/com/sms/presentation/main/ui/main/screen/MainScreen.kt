@@ -222,9 +222,10 @@ fun MainScreen(
                                         dialogMsg.value = msg
                                     },
                                     {
+                                        isDetailBottomSheet.value = true
                                         studentDetailData.value = it
                                         scope.launch {
-                                            bottomSheetState.show()
+                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     }
                                 )
@@ -260,8 +261,9 @@ fun MainScreen(
                                             certificates = listOf(),
                                             techStacks = it.techStack
                                         )
+                                        isDetailBottomSheet.value = true
                                         scope.launch {
-                                            bottomSheetState.show()
+                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
                                     }
                                 )
@@ -297,6 +299,7 @@ fun MainScreen(
                                             certificates = listOf(),
                                             techStacks = it.techStack
                                         )
+                                        isDetailBottomSheet.value = true
                                         scope.launch {
                                             bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
                                         }
@@ -355,6 +358,7 @@ suspend fun getStudentDetailForTeacher(
             }
             is Event.Loading -> {}
             else -> {
+                Log.d("error",response.toString())
                 dialog(true, "에러", response.toString())
             }
         }
@@ -373,6 +377,7 @@ suspend fun getStudentDetailForStudent(
             }
             is Event.Loading -> {}
             else -> {
+                Log.d("error",response.toString())
                 dialog(true, "에러", response.toString())
             }
         }
@@ -391,6 +396,7 @@ suspend fun getStudentDetailForAnonymous(
             }
             is Event.Loading -> {}
             else -> {
+                Log.d("error",response.toString())
                 dialog(true, "에러", response.toString())
             }
         }
