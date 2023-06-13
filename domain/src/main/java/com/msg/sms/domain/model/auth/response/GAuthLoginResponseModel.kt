@@ -5,5 +5,6 @@ data class GAuthLoginResponseModel(
     val refreshToken: String,
     val accessTokenExp: String,
     val refreshTokenExp: String,
-    val isExist: Boolean
+    val isExist: Boolean,
+    val role: String
 )
