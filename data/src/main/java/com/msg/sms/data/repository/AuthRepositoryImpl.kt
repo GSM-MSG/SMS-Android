@@ -47,7 +47,7 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteDataSource.withdrawal()
     }
 
-    override suspend fun deleteToken() {
+    override suspend fun deleteLoginData() {
         localDataSource.removeAccessToken()
         localDataSource.removeAccessTime()
         localDataSource.removeRefreshToken()
