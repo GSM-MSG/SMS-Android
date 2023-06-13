@@ -45,7 +45,11 @@ class AuthViewModel @Inject constructor(
         gAuthLoginUseCase(
             GAuthLoginRequestModel(code = code)
         ).onSuccess {
-            _gAuthLoginRequest.value = Event.Success(data = it)
+            it.catch { remoteError ->
+                _gAuthLoginRequest.value = remoteError.errorHandling()
+            }.collect { response ->
+                _gAuthLoginRequest.value = Event.Success(data = response)
+            }
         }.onFailure {
             _gAuthLoginRequest.value = it.errorHandling()
         }

@@ -45,5 +45,5 @@ fun RecentlyAddedItem(
 @Preview
 @Composable
 fun RecentlyAddedItemPre() {
-    RecentlyAddedItem(stack = "aaa", selectedStack = listOf("false"), { stack, checked -> })
+    RecentlyAddedItem(stack = "aaa", selectedStack = listOf("false")) { _, _ -> }
 }
