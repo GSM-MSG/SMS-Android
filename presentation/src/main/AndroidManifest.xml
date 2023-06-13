@@ -25,6 +25,11 @@
             android:name=".main.ui.main.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_main" />
+        <receiver android:name=".main.viewmodel.util.downloader.DownloadCompletedReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

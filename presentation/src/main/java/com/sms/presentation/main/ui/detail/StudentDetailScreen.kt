@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -23,8 +24,9 @@ import com.msg.sms.design.icon.DeleteButtonIcon
 
 @Composable
 fun StudentDetailScreen(
-    onDissmissButtonClick: () -> Unit
+    onDismissButtonClick: () -> Unit,
 ) {
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -72,9 +74,13 @@ fun StudentDetailScreen(
             departments = "사과",
             introduce = "ljasfd;lsfdlk;asfdloi;jsdf;oijsadfoi;jsadf;jsdfa;lfl;fa;lasfd;l jasfd ; lsdfa;l asf d;l sadf ;l safd;l fads;l sfad;jl af;oij asf;oij fauij fweio;j fewi;o jferai;ojefai;o jeawri;j wfwea rilj f wae iljfaer wi faijl awefj iawef ilj ferw ie iefarijl erfawijlo ;erfi;jlo o ie",
             isTeacher = true,
-            onDreamBookButtonClick = { /* TODO(LeeHyeonbin) - 드림북 다운로드하기*/ }
+            onDreamBookButtonClick = {
+                /* Todo  데이터 여기로도 넘겨줘요 */
+//                val downloader = AndroidDownloader(context = context, fileName = "grade classNumber schoolNumber name 의 드림북")
+//                downloader.downloadFile(url = )
+            }
         )
-        IconButton(onClick = onDissmissButtonClick, modifier = Modifier.align(Alignment.TopEnd)) {
+        IconButton(onClick = onDismissButtonClick, modifier = Modifier.align(Alignment.TopEnd)) {
             DeleteButtonIcon()
         }
     }
