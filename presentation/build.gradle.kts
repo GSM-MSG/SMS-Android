@@ -88,6 +88,8 @@ dependencies {
     implementation(Dependency.Libraries.OKHTTP)
 
     implementation(Dependency.Libraries.COIL)
+
+    implementation(Dependency.AndroidX.SPLASH)
 }
 
 fun getApiKey(propertyKey: String): String {
