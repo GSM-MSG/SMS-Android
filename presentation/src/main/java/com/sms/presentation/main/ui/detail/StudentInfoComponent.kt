@@ -11,20 +11,20 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.divider.SmsDivider
 import com.msg.sms.design.theme.SMSTheme
+import com.msg.sms.domain.model.student.response.CertificationModel
 import com.sms.presentation.main.ui.fill_out_information.data.CertificationData
-import com.sms.presentation.main.ui.fill_out_information.data.SchoolLifeData
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 
 @Composable
 fun StudentInfoComponent(
     modifier: Modifier,
     portfolioLink: String,
-    schoolLifeData: SchoolLifeData,
+    gsmAuthenticationScore: String,
     email: String,
     militaryService: String,
     workConditionData: WorkConditionData,
     certificationData: CertificationData,
-    foreignLanguage: List<Pair<String, String>>,
+    foreignLanguage: List<CertificationModel>,
 ) {
     val context = LocalContext.current
     val titleTextModifier = Modifier
@@ -71,7 +71,7 @@ fun StudentInfoComponent(
                     style = titleTypography
                 )
                 Text(
-                    text = schoolLifeData.gsmAuthenticationScore,
+                    text = gsmAuthenticationScore,
                     modifier = contentTextModifier,
                     color = contentColor,
                     style = contentTypography
@@ -139,13 +139,13 @@ fun StudentInfoComponent(
                     foreignLanguage.forEach {
                         Row {
                             Text(
-                                text = it.first,
+                                text = it.languageCertificateName,
                                 modifier = titleTextModifier,
                                 color = titleColor,
                                 style = titleTypography
                             )
                             Text(
-                                text = it.second,
+                                text = it.score,
                                 modifier = contentTextModifier,
                                 color = contentColor,
                                 style = contentTypography

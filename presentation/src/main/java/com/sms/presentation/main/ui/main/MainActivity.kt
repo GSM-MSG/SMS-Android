@@ -36,7 +36,8 @@ class MainActivity : ComponentActivity() {
                 composable("Main") {
                     MainScreen(
                         navController = navController,
-                        viewModel = viewModel(LocalContext.current as MainActivity)
+                        viewModel = viewModel(LocalContext.current as MainActivity),
+                        lifecycleScope = lifecycleScope
                     )
                 }
             }
