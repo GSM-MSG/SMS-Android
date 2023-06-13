@@ -22,6 +22,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.component.profile.ProfileImageComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.sms.presentation.main.ui.util.employmentEnumToSting
+import com.sms.presentation.main.ui.util.militaryServiceEnumToString
 import com.sms.presentation.main.viewmodel.util.downloader.AndroidDownloader
 
 @Composable
@@ -58,7 +60,7 @@ fun StudentDetailScreen(
         ) { modifier ->
             Image(
                 painter = rememberAsyncImagePainter(
-                    model = "",
+                    model = studentDetailData.profileImg,
                     contentScale = ContentScale.Crop
                 ), contentDescription = "User Image",
                 modifier = modifier
@@ -84,7 +86,16 @@ fun StudentDetailScreen(
                     "${studentDetailData.grade}${studentDetailData.classNum}${studentDetailData.number}${studentDetailData.name} 의 드림북"
                 )
                 downloader.downloadFile(url = studentDetailData.dreamBookFileUrl!!)
-            }
+            },
+            certificationData = studentDetailData.certificates,
+            email = studentDetailData.contactEmail,
+            gsmAuthenticationScore = studentDetailData.gsmAuthenticationScore.toString(),
+            foreignLanguage = studentDetailData.languageCertificates,
+            formOfEmployment = studentDetailData.formOfEmployment.employmentEnumToSting(),
+            militaryService = studentDetailData.militaryService.militaryServiceEnumToString(),
+            portfolioLink = studentDetailData.portfolioUrl!!,
+            region = studentDetailData.regions,
+            salary = studentDetailData.salary.toString()
         )
         IconButton(onClick = onDismissButtonClick, modifier = Modifier.align(Alignment.TopEnd)) {
             DeleteButtonIcon()

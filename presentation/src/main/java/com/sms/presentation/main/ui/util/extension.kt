@@ -78,3 +78,23 @@ fun String.isImageExtensionCorrect(): Boolean {
     val imageExtension = listOf("jpg", "jpeg", "png", "heic")
     return imageExtension.contains(this.substringAfter("."))
 }
+
+fun String.employmentEnumToSting(): String {
+    return when (this) {
+        "FULL_TIME" -> "정규직"
+        "TEMPORARY" -> "비정규직"
+        "CONSTRACT" -> "계약직"
+        "INTERN" -> "인턴"
+        else -> ""
+    }
+}
+
+fun String.militaryServiceEnumToString(): String {
+    return when (this) {
+        "HOPE" -> "병특 희망"
+        "NOT_HOPE" -> "희망하지 않음"
+        "NO_MATTER" -> "상관없음"
+        "NONE" -> "해당 사항 없음"
+        else -> ""
+    }
+}
