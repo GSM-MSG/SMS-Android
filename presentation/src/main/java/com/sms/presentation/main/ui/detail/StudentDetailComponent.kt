@@ -1,10 +1,10 @@
 package com.sms.presentation.main.ui.detail
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.IconButton
@@ -47,10 +47,9 @@ fun StudentDetailComponent(
     foreignLanguage: List<CertificationModel>,
     isNotGuest: Boolean,
     isTeacher: Boolean,
-    onDreamBookButtonClick: (() -> Unit)?
+    onDreamBookButtonClick: (() -> Unit)?,
+    scrollState: ScrollState
 ) {
-    val scrollState = rememberScrollState()
-
     Column(
         modifier = modifier
             .fillMaxWidth()

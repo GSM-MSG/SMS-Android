@@ -4,11 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +27,7 @@ import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 import com.sms.presentation.main.ui.util.employmentEnumToSting
 import com.sms.presentation.main.ui.util.militaryServiceEnumToString
 import com.sms.presentation.main.viewmodel.util.downloader.AndroidDownloader
+import kotlinx.coroutines.launch
 
 @Composable
 fun StudentDetailScreen(
@@ -33,6 +36,9 @@ fun StudentDetailScreen(
     onDismissButtonClick: () -> Unit
 ) {
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -95,9 +101,18 @@ fun StudentDetailScreen(
             militaryService = studentDetailData.militaryService.militaryServiceEnumToString(),
             portfolioLink = studentDetailData.portfolioUrl!!,
             region = studentDetailData.regions,
-            salary = studentDetailData.salary.toString()
+            salary = studentDetailData.salary.toString(),
+            scrollState = scrollState
         )
-        IconButton(onClick = onDismissButtonClick, modifier = Modifier.align(Alignment.TopEnd)) {
+        IconButton(
+            onClick = {
+                onDismissButtonClick()
+                scope.launch {
+                    scrollState.scrollTo(0)
+                }
+            },
+            modifier = Modifier.align(Alignment.TopEnd)
+        ) {
             DeleteButtonIcon()
         }
     }
