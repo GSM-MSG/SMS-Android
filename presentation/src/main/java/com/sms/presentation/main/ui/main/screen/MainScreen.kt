@@ -4,21 +4,28 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListFloatingButton
+import com.msg.sms.design.icon.RedLogoutIcon
+import com.msg.sms.design.icon.RedWithdrawalIcon
 import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
+import com.sms.presentation.main.ui.main.component.ModalBottomSheetItem
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
     navController: NavController,
@@ -38,76 +45,146 @@ fun MainScreen(
     val isScrolled = remember {
         mutableStateOf(false)
     }
+    val bottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val dialogState = remember {
+        mutableStateOf(false)
+    }
+    val dialogTitle = remember {
+        mutableStateOf("")
+    }
+    val dialogMsg = remember {
+        mutableStateOf("")
+    }
+    val dialogOnClick = remember {
+        mutableStateOf({})
+    }
 
     LaunchedEffect("GetStudentList") {
-        getStudentList(
-            viewModel = viewModel,
+        getStudentList(viewModel = viewModel,
             progressState = { progressState.value = it },
             onSuccess = { list, size ->
                 studentList.value += list
                 listTotalSize.value = size
-            }
-        )
+            })
     }
 
     LaunchedEffect("isScrolled") {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.first().index != 0 }
-            .collect {
-                if (isScrolled.value != it)
-                    isScrolled.value = it
-            }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        MainScreenTopBar(
-            profileImageUrl = "",
-            isScolled = isScrolled.value,
-            filterButtonOnClick = { /*TODO (KimHyunseung) : 필터 Screen으로 이동*/ },
-            profileButtonOnClick = { /*TODO (KimHyunseung) : 마이페이지로 이동*/ }
-        )
-        Box(modifier = Modifier.fillMaxSize()) {
-            StudentListComponent(
-                listState = listState,
-                progressState = progressState.value,
-                studentList = studentList.value,
-                listTotalSize = listTotalSize.value
-            ) {
-                //TODO (Kimhyunseung) : 디테일 페이지로 이동
-            }
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 32.dp, end = 20.dp)
-            ) {
-                ListFloatingButton(onClick = {
-                    scope.launch {
-                        listState.animateScrollToItem(0)
-                    }
-                })
-            }
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.first().index != 0 }.collect {
+            if (isScrolled.value != it) isScrolled.value = it
         }
     }
 
     LaunchedEffect("Pagination") {
         val response = viewModel.getStudentListResponse.value
 
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
-            .filter { it == listState.layoutInfo.totalItemsCount - 1 }
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }.filter { it == listState.layoutInfo.totalItemsCount - 1 }
             .collect {
                 val isSuccess = response is Event.Success
                 if (isSuccess && it != 0) {
-                    val isIncompleteData =
-                        studentList.value.size < response.data!!.totalSize
+                    val isIncompleteData = studentList.value.size < response.data!!.totalSize
                     if (isIncompleteData) {
                         viewModel.getStudentListRequest(response.data.page + 1, 20)
                     }
                     Log.d("pagination", it.toString())
                 }
             }
+    }
+
+    if (dialogState.value) {
+        SmsDialog(
+            title = dialogTitle.value,
+            msg = dialogMsg.value,
+            outLineButtonText = "확인",
+            normalButtonText = "취소",
+            outlineButtonOnClick = {
+                dialogOnClick.value()
+                dialogState.value = false
+            },
+            normalButtonOnClick = {
+                dialogState.value = false
+            }
+        )
+    }
+
+    ModalBottomSheetLayout(
+        sheetContent = {
+            Spacer(modifier = Modifier.height(24.dp))
+            ModalBottomSheetItem(
+                text = "로그아웃",
+                icon = {
+                    RedLogoutIcon(
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
+            ) {
+                scope.launch {
+                    bottomSheetState.hide()
+                }
+                dialogState.value = true
+                dialogTitle.value = "로그아웃"
+                dialogMsg.value = "정말로 로그아웃 하시겠습니까?"
+                dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 로그아웃 로직 연결 */ }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            ModalBottomSheetItem(
+                text = "회원탈퇴",
+                icon = {
+                    RedWithdrawalIcon(
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
+            ) {
+                scope.launch {
+                    bottomSheetState.hide()
+                }
+                dialogState.value = true
+                dialogTitle.value = "회원탈퇴"
+                dialogMsg.value = "정말로 회원탈퇴 하시겠습니까?"
+                dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 회원탈퇴 로직 연결 */ }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+        },
+        sheetState = bottomSheetState,
+        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+        ) {
+            MainScreenTopBar(
+                profileImageUrl = "",
+                isScolled = isScrolled.value,
+                filterButtonOnClick = { /*TODO (KimHyunseung) : 필터 Screen으로 이동*/ },
+                profileButtonOnClick = {
+                    scope.launch {
+                        bottomSheetState.show()
+                    }
+                }
+            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                StudentListComponent(
+                    listState = listState,
+                    progressState = progressState.value,
+                    studentList = studentList.value,
+                    listTotalSize = listTotalSize.value
+                ) {
+                    //TODO (Kimhyunseung) : 디테일 페이지로 이동
+                }
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = 32.dp, end = 20.dp)
+                ) {
+                    ListFloatingButton(onClick = {
+                        scope.launch {
+                            listState.animateScrollToItem(0)
+                        }
+                    })
+                }
+            }
+        }
     }
 }
 
