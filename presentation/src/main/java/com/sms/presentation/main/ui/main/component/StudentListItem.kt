@@ -53,7 +53,7 @@ fun StudentListItem(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = name,
+                        text = name.replace("**", "소금"),
                         style = typography.title2,
                         color = colors.BLACK,
                         fontWeight = FontWeight.Bold
@@ -76,7 +76,6 @@ fun StudentListItem(
                                 val isItemOver = remember {
                                     mutableStateOf(false)
                                 }
-
                                 Box(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(8.dp))
