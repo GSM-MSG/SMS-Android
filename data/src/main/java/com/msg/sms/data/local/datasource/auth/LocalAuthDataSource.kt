@@ -37,5 +37,5 @@ interface LocalAuthDataSource {
 
     suspend fun getRoleInfo(): Flow<String>
 
-    suspend fun deleteRoleInfo()
+    suspend fun removeRoleInfo()
 }

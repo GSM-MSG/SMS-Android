@@ -85,7 +85,7 @@ class LocalAuthDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteRoleInfo() {
+    override suspend fun removeRoleInfo() {
         dataStore.edit {
             it.remove(AuthPreferenceKey.ROLE)
         }

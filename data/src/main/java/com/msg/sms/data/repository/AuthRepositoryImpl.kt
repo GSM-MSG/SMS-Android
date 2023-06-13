@@ -51,6 +51,7 @@ class AuthRepositoryImpl @Inject constructor(
         localDataSource.removeAccessTime()
         localDataSource.removeRefreshToken()
         localDataSource.removeRefreshTime()
+        localDataSource.removeRoleInfo()
     }
 
     override suspend fun saveRoleInfo(role: String) {
