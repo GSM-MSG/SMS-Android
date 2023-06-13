@@ -70,6 +70,7 @@ class LoginActivity : ComponentActivity() {
             when (event) {
                 is Event.Success -> {
                     viewModel.saveTheLoginData(event.data!!)
+                    viewModel.saveRoleInfo(event.data.role)
                     isExist = event.data.isExist.toString()
                 }
                 else -> {

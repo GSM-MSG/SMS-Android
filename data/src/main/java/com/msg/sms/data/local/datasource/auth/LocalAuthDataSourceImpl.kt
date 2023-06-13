@@ -75,4 +75,13 @@ class LocalAuthDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun getRoleInfo(): Flow<String> = dataStore.data.map {
+        it[AuthPreferenceKey.ROLE] ?: ""
+    }
+
+    override suspend fun setRoleInfo(role: String) {
+        dataStore.edit {
+            it[AuthPreferenceKey.ROLE] = role
+        }
+    }
 }
