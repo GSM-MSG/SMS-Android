@@ -14,11 +14,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListFloatingButton
-import com.msg.sms.design.icon.RedLogoutIcon
-import com.msg.sms.design.icon.RedWithdrawalIcon
 import com.msg.sms.domain.model.student.response.StudentModel
+import com.sms.presentation.main.ui.main.component.LogoutWithDrawalBottomSheetComponent
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
-import com.sms.presentation.main.ui.main.component.ModalBottomSheetItem
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -109,41 +107,26 @@ fun MainScreen(
 
     ModalBottomSheetLayout(
         sheetContent = {
-            Spacer(modifier = Modifier.height(24.dp))
-            ModalBottomSheetItem(
-                text = "로그아웃",
-                icon = {
-                    RedLogoutIcon(
-                        modifier = Modifier.padding(12.dp)
-                    )
+            LogoutWithDrawalBottomSheetComponent(
+                onLogoutClick = {
+                    scope.launch {
+                        bottomSheetState.hide()
+                    }
+                    dialogState.value = true
+                    dialogTitle.value = "로그아웃"
+                    dialogMsg.value = "정말로 로그아웃 하시겠습니까?"
+                    dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 로그아웃 로직 연결 */ }
+                },
+                onWithDrawalClick = {
+                    scope.launch {
+                        bottomSheetState.hide()
+                    }
+                    dialogState.value = true
+                    dialogTitle.value = "회원탈퇴"
+                    dialogMsg.value = "정말로 회원탈퇴 하시겠습니까?"
+                    dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 회원탈퇴 로직 연결 */ }
                 }
-            ) {
-                scope.launch {
-                    bottomSheetState.hide()
-                }
-                dialogState.value = true
-                dialogTitle.value = "로그아웃"
-                dialogMsg.value = "정말로 로그아웃 하시겠습니까?"
-                dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 로그아웃 로직 연결 */ }
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            ModalBottomSheetItem(
-                text = "회원탈퇴",
-                icon = {
-                    RedWithdrawalIcon(
-                        modifier = Modifier.padding(12.dp)
-                    )
-                }
-            ) {
-                scope.launch {
-                    bottomSheetState.hide()
-                }
-                dialogState.value = true
-                dialogTitle.value = "회원탈퇴"
-                dialogMsg.value = "정말로 회원탈퇴 하시겠습니까?"
-                dialogOnClick.value = { /* TODO(Leehyeonbin) - 뷰모델 회원탈퇴 로직 연결 */ }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
+            )
         },
         sheetState = bottomSheetState,
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
@@ -170,7 +153,7 @@ fun MainScreen(
                     studentList = studentList.value,
                     listTotalSize = listTotalSize.value
                 ) {
-                    //TODO (Kimhyunseung) : 디테일 페이지로 이동
+
                 }
                 Box(
                     modifier = Modifier
