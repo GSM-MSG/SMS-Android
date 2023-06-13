@@ -15,14 +15,14 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteAuthDataSource,
-    private val localDataSource: LocalAuthDataSource
+    private val localDataSource: LocalAuthDataSource,
 ) : AuthRepository {
-    override suspend fun gAuthLogin(body: GAuthLoginRequestModel): GAuthLoginResponseModel {
+    override suspend fun gAuthLogin(body: GAuthLoginRequestModel): Flow<GAuthLoginResponseModel> {
         return remoteDataSource.gAuthLogin(
             body = GAuthLoginRequest(
                 code = body.code
             )
-        ).toLoginModel()
+        ).map { it.toLoginModel() }
     }
 
     override suspend fun saveTheLoginData(data: GAuthLoginResponseModel) {
@@ -36,5 +36,20 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun accessValidation(): Flow<AccessValidationResponseModel> {
         return remoteDataSource.accessValidation().map { it.toModel() }
+    }
+
+    override suspend fun logout(): Flow<Unit> {
+        return remoteDataSource.logout()
+    }
+
+    override suspend fun withdrawal(): Flow<Unit> {
+        return remoteDataSource.withdrawal()
+    }
+
+    override suspend fun deleteToken() {
+        localDataSource.removeAccessToken()
+        localDataSource.removeAccessTime()
+        localDataSource.removeRefreshToken()
+        localDataSource.removeRefreshTime()
     }
 }
