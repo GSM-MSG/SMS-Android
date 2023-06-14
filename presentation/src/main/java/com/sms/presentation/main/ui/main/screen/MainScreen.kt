@@ -76,6 +76,9 @@ fun MainScreen(
     val studentDetailData = remember {
         mutableStateOf(StudentDetailData())
     }
+    val profileImageUrl = remember {
+        mutableStateOf("")
+    }
 
     LaunchedEffect("GetStudentList") {
         getStudentList(viewModel = viewModel,
@@ -84,6 +87,18 @@ fun MainScreen(
                 studentList.value += list
                 listTotalSize.value = size
             })
+    }
+
+    LaunchedEffect("GetProfileImage") {
+        if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
+            viewModel.getProfileImageUrl()
+            getUserProfileImageUrl(
+                viewModel = viewModel,
+                onSuccess = {
+                    profileImageUrl.value = it
+                }
+            )
+        }
     }
 
     LaunchedEffect("isScrolled") {
@@ -171,7 +186,7 @@ fun MainScreen(
                 .background(Color.White)
         ) {
             MainScreenTopBar(
-                profileImageUrl = "",
+                profileImageUrl = profileImageUrl.value,
                 isScolled = isScrolled.value,
                 filterButtonOnClick = { /*TODO (KimHyunseung) : 필터 Screen으로 이동*/ },
                 profileButtonOnClick = {
@@ -375,6 +390,20 @@ suspend fun getStudentDetailForAnonymous(
             else -> {
                 dialog(true, "에러", "알 수 없는 에러 발생")
             }
+        }
+    }
+}
+
+suspend fun getUserProfileImageUrl(
+    viewModel: StudentListViewModel,
+    onSuccess: (profileImageUrl: String) -> Unit
+) {
+    viewModel.getStudentProfileImageResponse.collect { response ->
+        when (response) {
+            is Event.Success -> {
+                onSuccess(response.data!!.profileImgUrl)
+            }
+            else -> {}
         }
     }
 }
