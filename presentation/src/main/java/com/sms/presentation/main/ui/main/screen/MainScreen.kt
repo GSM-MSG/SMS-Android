@@ -23,6 +23,7 @@ import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
 import com.sms.presentation.main.ui.login.LoginActivity
 import com.msg.sms.design.component.bottomsheet.LogoutWithDrawalBottomSheet
+import com.sms.presentation.main.ui.main.MainActivity
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.ui.main.data.StudentDetailData
@@ -40,7 +41,7 @@ fun MainScreen(
     lifecycleScope: CoroutineScope,
     role: String
 ) {
-    val context = LocalContext.current
+    val context = LocalContext.current as MainActivity
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     val studentList = remember {
@@ -181,6 +182,7 @@ fun MainScreen(
                         }
                     } else {
                         context.startActivity(Intent(context, LoginActivity::class.java))
+                        context.finish()
                     }
                 }
             )
