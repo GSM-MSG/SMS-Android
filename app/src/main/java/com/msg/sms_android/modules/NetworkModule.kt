@@ -80,4 +80,10 @@ object NetworkModule {
     fun provideStackService(retrofit: Retrofit): StackAPI {
         return retrofit.create(StackAPI::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideUserService(retrofit: Retrofit): UserAPI {
+        return retrofit.create(UserAPI::class.java)
+    }
 }
