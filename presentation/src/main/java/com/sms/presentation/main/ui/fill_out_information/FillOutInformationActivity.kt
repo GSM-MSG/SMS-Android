@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -34,6 +35,7 @@ class FillOutInformationActivity : ComponentActivity() {
                 startDestination = "Profile"
             ) {
                 composable("Profile") {
+                    setSoftInputMode(true)
                     val data = remember {
                         mutableStateOf(
                             navController.previousBackStackEntry?.savedStateHandle?.get<String>(
@@ -48,37 +50,44 @@ class FillOutInformationActivity : ComponentActivity() {
                     )
                 }
                 composable("SchoolLife") {
+                    setSoftInputMode()
                     SchoolLifeScreen(
                         navController = navController,
                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                     )
                 }
                 composable("WorkCondition") {
+                    setSoftInputMode()
                     WorkConditionScreen(
                         navController = navController,
                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                     )
                 }
                 composable("MilitaryService") {
+                    setSoftInputMode()
                     MilitaryServiceScreen(
                         navController = navController,
                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                     )
                 }
                 composable("Certification") {
+                    setSoftInputMode()
                     CertificationScreen(
                         navController = navController,
                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                     )
                 }
                 composable("ForeignLanguage") {
+                    setSoftInputMode()
                     ForeignLanguageScreen(
                         navController = navController,
                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
                         lifecycleScope = lifecycleScope
                     )
                 }
+
                 composable("Search") {
+                    setSoftInputMode(true)
                     val data = remember {
                         mutableStateOf(
                             navController.previousBackStackEntry?.savedStateHandle?.get<String>(
@@ -94,5 +103,13 @@ class FillOutInformationActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun setSoftInputMode(isRESIZE: Boolean = false) {
+        window.setSoftInputMode(
+            if (isRESIZE)
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+            else WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+        )
     }
 }
