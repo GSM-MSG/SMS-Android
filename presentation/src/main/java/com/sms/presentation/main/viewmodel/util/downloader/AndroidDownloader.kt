@@ -14,6 +14,7 @@ class AndroidDownloader(
 
     override fun downloadFile(url: String): Long {
         val request = DownloadManager.Request(url.toUri())
+            .setMimeType("application/x-hwp")
             .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setTitle(fileName)
