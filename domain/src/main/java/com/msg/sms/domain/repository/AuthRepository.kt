@@ -16,9 +16,7 @@ interface AuthRepository {
 
     suspend fun withdrawal(): Flow<Unit>
 
-    suspend fun deleteToken()
-
-    suspend fun saveRoleInfo(role: String)
+    suspend fun deleteLoginData()
 
     suspend fun getRoleInfo(): Flow<String>
 }

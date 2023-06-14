@@ -25,7 +25,6 @@ class AuthViewModel @Inject constructor(
     private val saveTheLoginDataUseCase: SaveTheLoginDataUseCase,
     private val getMajorListUseCase: GetMajorListUseCase,
     private val accessValidationUseCase: AccessValidationUseCase,
-    private val saveRoleInfoUseCase: SaveRoleInfoUseCase,
     private val getRoleInfoUseCase: GetRoleInfoUseCase
 ) : ViewModel() {
     private val _gAuthLoginRequest = MutableLiveData<Event<GAuthLoginResponseModel>>()
@@ -95,16 +94,6 @@ class AuthViewModel @Inject constructor(
             }.onFailure { error ->
                 _accessValidationResponse.value = error.errorHandling()
             }
-    }
-
-    fun saveRoleInfo(role: String) = viewModelScope.launch {
-        saveRoleInfoUseCase(
-            role = role
-        ).onSuccess {
-            _saveRoleResponse.value = Event.Success()
-        }.onFailure {
-            _saveRoleResponse.value = it.errorHandling()
-        }
     }
 
     fun getRoleInfo() = viewModelScope.launch {
