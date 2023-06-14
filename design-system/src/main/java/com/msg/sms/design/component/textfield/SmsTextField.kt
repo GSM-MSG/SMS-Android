@@ -123,7 +123,8 @@ fun SmsCustomTextField(
                     backgroundColor = colors.N10,
                     placeholderColor = colors.N30,
                     focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
+                    unfocusedBorderColor = Color.Transparent,
+                    cursorColor = colors.P2
                 ),
                 trailingIcon = {
                     if (endIcon != null) {
