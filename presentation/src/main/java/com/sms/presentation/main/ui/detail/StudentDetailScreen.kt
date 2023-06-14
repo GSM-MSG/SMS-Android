@@ -90,7 +90,7 @@ fun StudentDetailScreen(
                 val downloader = AndroidDownloader(
                     context = context,
                     fileName =
-                    "${studentDetailData.grade}${studentDetailData.classNum}${studentDetailData.number}${studentDetailData.name}의 드림북"
+                    "${studentDetailData.grade}${studentDetailData.classNum}${if (studentDetailData.number.toString().length == 1) "0" + studentDetailData.number else studentDetailData.number}${studentDetailData.name}의 드림북"
                 )
                 downloader.downloadFile(url = studentDetailData.dreamBookFileUrl)
             },
