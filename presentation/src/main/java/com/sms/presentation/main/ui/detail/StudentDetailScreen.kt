@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
@@ -34,7 +35,7 @@ import kotlinx.coroutines.launch
 fun StudentDetailScreen(
     studentDetailData: StudentDetailData,
     role: String,
-    onDismissButtonClick: () -> Unit
+    onDismissButtonClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -68,15 +69,15 @@ fun StudentDetailScreen(
             Image(
                 painter = rememberAsyncImagePainter(
                     model = studentDetailData.profileImg,
-                    contentScale = ContentScale.Crop
                 ), contentDescription = "User Image",
+                contentScale = ContentScale.Crop,
                 modifier = modifier
             )
         }
         StudentDetailComponent(
             imageHeight = imageHeight.value,
             techStack = studentDetailData.techStacks,
-            name = studentDetailData.name.replace("**","소금"),
+            name = studentDetailData.name.replace("**", "소금"),
             major = studentDetailData.major,
             modifier = Modifier.align(Alignment.TopCenter),
             isNotGuest = role == "ROLE_TEACHER" || role == "ROLE_STUDENT",
