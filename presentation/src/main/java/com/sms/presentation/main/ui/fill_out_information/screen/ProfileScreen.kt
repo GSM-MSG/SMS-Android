@@ -25,7 +25,6 @@ import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.selector.MajorSelector
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
-import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.ProfileComponent
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isImageExtensionCorrect
@@ -172,78 +171,77 @@ fun ProfileScreen(
         Column {
             TopBarComponent(
                 text = "정보입력",
-                leftIcon = { BackButtonIcon() },
-                rightIcon = null,
-                onClickLeftButton = {
-                }) {
-            }
-            SmsSpacer()
-            Column(
-                Modifier
-                    .verticalScroll(scrollState)
-                    .background(Color.White)) {
-                ProfileComponent(
-                    bottomSheetScaffoldState = bottomSheetState,
-                    isReadOnly = selectedMajor.value != "직접입력",
-                    selectedMajor = selectedMajor.value,
-                    savedData = { getIntroduce: String, getPortfolio: String, getContactEmail: String, getProfileImageUri: Uri ->
-                        introduce.value = getIntroduce
-                        portfolioUrl.value = getPortfolio
-                        contactEmail.value = getContactEmail
-                        profileImageUri.value = getProfileImageUri
-                    },
-                    enteredMajor = enteredMajor.value,
-                    data = data,
-                    isRequired = { result -> isRequired.value = result },
-                    isEnable = list.value.data != null,
-                    profileImageUri = profileImageUri.value,
-                    isProfilePictureBottomSheet = { isProfilePictureBottomSheet.value = it },
-                    changeView = {
-                        viewModel.setEnteredProfileInformation(
-                            major = selectedMajor.value,
-                            techStack = detailStack.joinToString(", "),
-                            profileImgUri = profileImageUri.value,
-                            introduce = introduce.value,
-                            contactEmail = contactEmail.value,
-                            portfolioUrl = portfolioUrl.value,
-                            enteredMajor = enteredMajor.value
-                        )
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            key = "detailStack",
-                            value = detailStack.joinToString(",")
-                        )
-                        navController.navigate("Search")
-                    },
-                    enteringMajor = { string ->
-                        enteredMajor.value = string
-                    },
-                    detailStack = detailStack.joinToString(", ")
-                )
-                Column(modifier = Modifier.padding(horizontal = 20.dp)) {
-                    Spacer(modifier = Modifier.height(32.dp))
-                    SmsRoundedButton(
-                        text = "다음", modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        enabled = isRequired.value
-                    ) {
-                        Log.d(
-                            "TAG",
-                            "whenClickNextButton: ${selectedMajor.value}, ${detailStack}, ${introduce.value}, ${portfolioUrl.value}, ${contactEmail.value}, ${profileImageUri.value}"
-                        )
-                        viewModel.setEnteredProfileInformation(
-                            major = selectedMajor.value,
-                            techStack = detailStack.joinToString(", "),
-                            profileImgUri = profileImageUri.value,
-                            introduce = introduce.value,
-                            contactEmail = contactEmail.value,
-                            portfolioUrl = portfolioUrl.value,
-                            enteredMajor = enteredMajor.value
-                        )
-                        navController.navigate("SchoolLife")
-                    }
-                    Spacer(modifier = Modifier.height(48.dp))
+                leftIcon = null,
+                rightIcon = null
+            )
+        }
+        SmsSpacer()
+        Column(
+            Modifier
+                .verticalScroll(scrollState)
+                .background(Color.White)
+        ) {
+            ProfileComponent(
+                bottomSheetScaffoldState = bottomSheetState,
+                isReadOnly = selectedMajor.value != "직접입력",
+                selectedMajor = selectedMajor.value,
+                savedData = { getIntroduce: String, getPortfolio: String, getContactEmail: String, getProfileImageUri: Uri ->
+                    introduce.value = getIntroduce
+                    portfolioUrl.value = getPortfolio
+                    contactEmail.value = getContactEmail
+                    profileImageUri.value = getProfileImageUri
+                },
+                enteredMajor = enteredMajor.value,
+                data = data,
+                isRequired = { result -> isRequired.value = result },
+                isEnable = list.value.data != null,
+                profileImageUri = profileImageUri.value,
+                isProfilePictureBottomSheet = { isProfilePictureBottomSheet.value = it },
+                changeView = {
+                    viewModel.setEnteredProfileInformation(
+                        major = selectedMajor.value,
+                        techStack = detailStack.joinToString(", "),
+                        profileImgUri = profileImageUri.value,
+                        introduce = introduce.value,
+                        contactEmail = contactEmail.value,
+                        portfolioUrl = portfolioUrl.value,
+                        enteredMajor = enteredMajor.value
+                    )
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        key = "detailStack",
+                        value = detailStack.joinToString(",")
+                    )
+                    navController.navigate("Search")
+                },
+                enteringMajor = { string ->
+                    enteredMajor.value = string
+                },
+                detailStack = detailStack.joinToString(", ")
+            )
+            Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+                Spacer(modifier = Modifier.height(32.dp))
+                SmsRoundedButton(
+                    text = "다음", modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    enabled = isRequired.value
+                ) {
+                    Log.d(
+                        "TAG",
+                        "whenClickNextButton: ${selectedMajor.value}, ${detailStack}, ${introduce.value}, ${portfolioUrl.value}, ${contactEmail.value}, ${profileImageUri.value}"
+                    )
+                    viewModel.setEnteredProfileInformation(
+                        major = selectedMajor.value,
+                        techStack = detailStack.joinToString(", "),
+                        profileImgUri = profileImageUri.value,
+                        introduce = introduce.value,
+                        contactEmail = contactEmail.value,
+                        portfolioUrl = portfolioUrl.value,
+                        enteredMajor = enteredMajor.value
+                    )
+                    navController.navigate("SchoolLife")
                 }
+                Spacer(modifier = Modifier.height(48.dp))
             }
         }
     }
