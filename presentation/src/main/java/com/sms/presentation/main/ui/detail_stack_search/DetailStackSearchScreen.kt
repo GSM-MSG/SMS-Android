@@ -79,6 +79,12 @@ fun DetailStackSearchScreen(
             isSearching = searchQuery.value != "",
             selfAddButtonClick = {
                 if (!selectedStackList.contains(searchQuery.value)) {
+                    scope.launch {
+                        snackBarAdded.value = true
+                        snackBarVisible.value = true
+                        delay(1.5.seconds)
+                        if (snackBarVisible.value) snackBarVisible.value = false
+                    }
                     selectedStackList.add(searchQuery.value)
                 }
             },
