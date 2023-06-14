@@ -1,7 +1,6 @@
 package com.msg.sms.design.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,12 +39,12 @@ fun SmsChip(
         ) {
             Row(
                 modifier = modifier
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
-                    .clickable { onClick() }
+                    .padding(horizontal = 12.dp, vertical = 5.5.dp)
                     .pointerInput(Unit) {
                         detectTapGestures(
                             onPress = {
                                 backgroundColor = LightColor.N20
+                                onClick()
                                 this.awaitRelease()
                                 backgroundColor = Color.Transparent
                             },
