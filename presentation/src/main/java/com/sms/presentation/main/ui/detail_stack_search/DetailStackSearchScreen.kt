@@ -77,6 +77,11 @@ fun DetailStackSearchScreen(
             searchQuery = searchQuery.value,
             onClickRemoveAll = { selectedStackList.clear() },
             isSearching = searchQuery.value != "",
+            selfAddButtonClick = {
+                if (!selectedStackList.contains(searchQuery.value)) {
+                    selectedStackList.add(searchQuery.value)
+                }
+            },
             onClickButton = { stack, checked ->
                 snackBarAdded.value = !checked
                 if (checked) {
