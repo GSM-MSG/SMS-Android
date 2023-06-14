@@ -27,7 +27,11 @@ fun ChooseProfilePictureBottomSheet(
         ProfileBottomSheetComponent(
             coroutineScope = coroutineScope,
             bottomSheetState = bottomSheetState,
-            icon = { GalleryIcon() },
+            icon = {
+                GalleryIcon(
+                    modifier = Modifier.padding(12.dp)
+                )
+            },
             text = "앨범에서 가져오기"
         ) {
             isCamera(false)
@@ -37,7 +41,11 @@ fun ChooseProfilePictureBottomSheet(
         ProfileBottomSheetComponent(
             coroutineScope = coroutineScope,
             bottomSheetState = bottomSheetState,
-            icon = { CameraIcon() },
+            icon = {
+                CameraIcon(
+                    modifier = Modifier.padding(12.dp)
+                )
+            },
             text = "카메라에서 촬영"
         ) {
             isCamera(true)
