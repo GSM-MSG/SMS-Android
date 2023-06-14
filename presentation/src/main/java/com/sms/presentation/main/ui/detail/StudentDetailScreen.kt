@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 fun StudentDetailScreen(
     studentDetailData: StudentDetailData,
     role: String,
-    onDismissButtonClick: () -> Unit
+    onDismissButtonClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -68,15 +68,15 @@ fun StudentDetailScreen(
             Image(
                 painter = rememberAsyncImagePainter(
                     model = studentDetailData.profileImg,
-                    contentScale = ContentScale.Crop
                 ), contentDescription = "User Image",
+                contentScale = ContentScale.Crop,
                 modifier = modifier
             )
         }
         StudentDetailComponent(
             imageHeight = imageHeight.value,
             techStack = studentDetailData.techStacks,
-            name = studentDetailData.name.replace("**","소금"),
+            name = studentDetailData.name.replace("**", "소금"),
             major = studentDetailData.major,
             modifier = Modifier.align(Alignment.TopCenter),
             isNotGuest = role == "ROLE_TEACHER" || role == "ROLE_STUDENT",
