@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.msg.sms.design.component.SmsChip
 import com.msg.sms.design.component.item.RecentlyAddedItem
 import com.msg.sms.design.theme.SMSTheme
 
@@ -21,6 +22,7 @@ fun RecentlyAddedListComponent(
     searchQuery: String,
     isSearching: Boolean,
     selectedList: List<String>,
+    selfAddButtonClick: () -> Unit,
     onClickButton: (stack: String, checked: Boolean) -> Unit,
     onClickRemoveAll: () -> Unit,
 ) {
@@ -75,6 +77,27 @@ fun RecentlyAddedListComponent(
                     selectedStack = selectedList,
                     onClick = { stack, checked -> onClickButton(stack, checked) }
                 )
+            }
+            if (isSearching) {
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        if (currentList.isEmpty()) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "검색 결과가 없습니다.",
+                                color = colors.N30,
+                                style = typography.body1
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        SmsChip(text = "\"$searchQuery\" 직접 추가하기") {
+                            selfAddButtonClick()
+                        }
+                    }
+                }
             }
         }
     }
