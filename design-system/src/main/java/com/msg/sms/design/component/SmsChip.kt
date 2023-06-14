@@ -40,12 +40,12 @@ fun SmsChip(
         ) {
             Row(
                 modifier = modifier
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
-                    .clickable { onClick() }
+                    .padding(horizontal = 12.dp, vertical = 5.5.dp)
                     .pointerInput(Unit) {
                         detectTapGestures(
                             onPress = {
                                 backgroundColor = LightColor.N20
+                                onClick()
                                 this.awaitRelease()
                                 backgroundColor = Color.Transparent
                             },
