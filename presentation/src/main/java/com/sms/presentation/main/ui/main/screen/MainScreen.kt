@@ -22,7 +22,7 @@ import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
 import com.sms.presentation.main.ui.login.LoginActivity
-import com.sms.presentation.main.ui.main.component.LogoutWithDrawalBottomSheetComponent
+import com.msg.sms.design.component.bottomsheet.LogoutWithDrawalBottomSheet
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.ui.main.data.StudentDetailData
@@ -136,11 +136,8 @@ fun MainScreen(
                     }
                 )
             } else {
-                LogoutWithDrawalBottomSheetComponent(
+                LogoutWithDrawalBottomSheet(
                     onLogoutClick = {
-                        scope.launch {
-                            bottomSheetState.hide()
-                        }
                         dialogState.value = true
                         dialogTitle.value = "로그아웃"
                         dialogMsg.value = "정말로 로그아웃 하시겠습니까?"
@@ -149,16 +146,15 @@ fun MainScreen(
                         }
                     },
                     onWithDrawalClick = {
-                        scope.launch {
-                            bottomSheetState.hide()
-                        }
                         dialogState.value = true
                         dialogTitle.value = "회원탈퇴"
                         dialogMsg.value = "정말로 회원탈퇴 하시겠습니까?"
                         dialogOnClick.value = {
                             viewModel.withdrawal()
                         }
-                    }
+                    },
+                    coroutineScope = scope,
+                    bottomSheetState = bottomSheetState
                 )
             }
         },
