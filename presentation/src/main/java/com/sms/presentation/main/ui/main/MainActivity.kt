@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.msg.sms.design.component.SmsDialog
+import com.sms.presentation.main.ui.filter.screen.FilterScreen
 import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.main.screen.MainScreen
 import com.sms.presentation.main.viewmodel.AuthViewModel
@@ -60,6 +61,14 @@ class MainActivity : ComponentActivity() {
                         ) {
                             composable("Main") {
                                 MainScreen(
+                                    navController = navController,
+                                    viewModel = viewModel(LocalContext.current as MainActivity),
+                                    lifecycleScope = lifecycleScope,
+                                    role = response.data!!
+                                )
+                            }
+                            composable("Filter") {
+                                FilterScreen(
                                     navController = navController,
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,

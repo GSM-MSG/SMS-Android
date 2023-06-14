@@ -188,7 +188,7 @@ fun MainScreen(
             MainScreenTopBar(
                 profileImageUrl = profileImageUrl.value,
                 isScolled = isScrolled.value,
-                filterButtonOnClick = { /*TODO (KimHyunseung) : 필터 Screen으로 이동*/ },
+                filterButtonOnClick = { navController.navigate("Filter") },
                 profileButtonOnClick = {
                     if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
                         isDetailBottomSheet.value = false
