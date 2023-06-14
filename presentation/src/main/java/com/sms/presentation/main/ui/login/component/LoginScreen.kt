@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 fun LoginScreen(
     context: Context,
     onLoginButtonClick: () -> Unit,
-    onLookAroundToGuestButtonClick: () -> Unit
+    onLookAroundToGuestButtonClick: () -> Unit,
 ) {
     Box {
         LoginPageBackGround()
@@ -25,8 +25,12 @@ fun LoginScreen(
                 onLoginButtonClick()
             }
             Spacer(modifier = Modifier.height(16.dp))
-            LookAroundToGuestButton {
-                onLookAroundToGuestButtonClick()
+            Row {
+                LookAroundToGuestButton {
+                    onLookAroundToGuestButtonClick()
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                ShowTheTermsOfUse(context = context)
             }
             Spacer(modifier = Modifier.height(73.dp))
         }
