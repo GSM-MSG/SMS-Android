@@ -76,7 +76,7 @@ fun StudentDetailScreen(
         StudentDetailComponent(
             imageHeight = imageHeight.value,
             techStack = studentDetailData.techStacks,
-            name = studentDetailData.name,
+            name = studentDetailData.name.replace("**","소금"),
             major = studentDetailData.major,
             modifier = Modifier.align(Alignment.TopCenter),
             isNotGuest = role == "ROLE_TEACHER" || role == "ROLE_STUDENT",

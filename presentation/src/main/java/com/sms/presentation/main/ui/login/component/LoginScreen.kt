@@ -1,15 +1,11 @@
 package com.sms.presentation.main.ui.login.component
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.modifier.smsClickable
 
 @Composable
 fun LoginScreen(
