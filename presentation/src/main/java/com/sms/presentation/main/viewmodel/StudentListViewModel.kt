@@ -6,6 +6,7 @@ import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
 import com.msg.sms.domain.model.student.response.GetStudentForStudent
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 import com.msg.sms.domain.model.student.response.StudentListModel
+import com.msg.sms.domain.model.user.response.ProfileImageModel
 import com.msg.sms.domain.usecase.auth.DeleteTokenUseCase
 import com.msg.sms.domain.usecase.auth.LogoutUseCase
 import com.msg.sms.domain.usecase.auth.WithdrawalUseCase
@@ -13,6 +14,7 @@ import com.msg.sms.domain.usecase.student.GetStudentDetailForStudentUseCase
 import com.msg.sms.domain.usecase.student.GetStudentListUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForAnonymousUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForTeacherUseCase
+import com.msg.sms.domain.usecase.user.GetProfileImageUseCase
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +33,8 @@ class StudentListViewModel @Inject constructor(
     private val deleteTokenUseCase: DeleteTokenUseCase,
     private val getStudentDetailForTeacherUseCase: GetUserDetailForTeacherUseCase,
     private val getStudentDetailForStudentUseCase: GetStudentDetailForStudentUseCase,
-    private val getStudentDetailForAnonymousUseCase: GetUserDetailForAnonymousUseCase
+    private val getStudentDetailForAnonymousUseCase: GetUserDetailForAnonymousUseCase,
+    private val getProfileImageUseCase: GetProfileImageUseCase
 ) : ViewModel() {
     private val _getStudentListResponse = MutableStateFlow<Event<StudentListModel>>(Event.Loading)
     val getStudentListResponse = _getStudentListResponse.asStateFlow()
@@ -53,6 +56,10 @@ class StudentListViewModel @Inject constructor(
     private val _getStudentDetailForAnonymousResponse =
         MutableStateFlow<Event<GetStudentForAnonymous>>(Event.Loading)
     val getStudentDetailForAnonymousResponse = _getStudentDetailForAnonymousResponse.asStateFlow()
+
+    private val _getStudentProfileImageResponse =
+        MutableStateFlow<Event<ProfileImageModel>>(Event.Loading)
+    val getStudentProfileImageResponse = _getStudentProfileImageResponse.asStateFlow()
 
     fun getStudentListRequest(
         page: Int,
@@ -168,5 +175,19 @@ class StudentListViewModel @Inject constructor(
         }.onFailure { error ->
             _getStudentDetailForAnonymousResponse.value = error.errorHandling()
         }
+    }
+
+    fun getProfileImageUrl() = viewModelScope.launch {
+        _getStudentProfileImageResponse.value = Event.Loading
+        getProfileImageUseCase()
+            .onSuccess {
+                it.catch { remoteError ->
+                    _getStudentProfileImageResponse.value = remoteError.errorHandling()
+                }.collect { response ->
+                    _getStudentProfileImageResponse.value = Event.Success(data = response)
+                }
+            }.onFailure { error ->
+                _getStudentProfileImageResponse.value = error.errorHandling()
+            }
     }
 }

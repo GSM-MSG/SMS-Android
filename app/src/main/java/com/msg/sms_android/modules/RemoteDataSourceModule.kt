@@ -10,6 +10,8 @@ import com.msg.sms.data.remote.datasource.stack.RemoteStackDataSource
 import com.msg.sms.data.remote.datasource.stack.RemoteStackDataSourceImpl
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSource
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSourceImpl
+import com.msg.sms.data.remote.datasource.user.RemoteUserDataSource
+import com.msg.sms.data.remote.datasource.user.RemoteUserDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -42,4 +44,9 @@ abstract class RemoteDataSourceModule {
     abstract fun provideRemoteStackDataSource(
         remoteStackDataSourceImpl: RemoteStackDataSourceImpl,
     ): RemoteStackDataSource
+
+    @Binds
+    abstract fun provideRemoteUserDataSource(
+        remoteUserDataSourceImpl: RemoteUserDataSourceImpl,
+    ): RemoteUserDataSource
 }

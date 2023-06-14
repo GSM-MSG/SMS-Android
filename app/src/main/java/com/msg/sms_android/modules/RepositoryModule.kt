@@ -35,4 +35,9 @@ abstract class RepositoryModule {
     abstract fun provideStackRepository(
         stackRepositoryImpl: StackRepositoryImpl
     ): StackRepository
+
+    @Binds
+    abstract fun provideUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
+    ): UserRepository
 }
