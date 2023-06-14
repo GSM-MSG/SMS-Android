@@ -18,7 +18,7 @@ class AndroidDownloader(
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setTitle(fileName)
             .setDescription("f$fileName 다운 중...")
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$fileName. hwp")
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "$fileName.hwp")
         return downloadManager.enqueue(request)
     }
 
