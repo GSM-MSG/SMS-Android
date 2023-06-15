@@ -7,7 +7,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.msg.sms.design.component.divider.SmsDivider
 import com.msg.sms.design.component.topbar.TopBarComponent
@@ -23,32 +22,6 @@ fun FilterScreen(
     lifecycleScope: CoroutineScope,
     role: String
 ) {
-    SMSTheme { colors, typography ->
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(colors.WHITE)
-        ) {
-            TopBarComponent(
-                text = "필터",
-                leftIcon = {
-                    Text(
-                        text = "초기화",
-                        style = typography.body2,
-                        fontWeight = FontWeight.Normal,
-                        color = colors.BLACK
-                    )
-                },
-                rightIcon = { DeleteButtonIcon() }
-            )
-            SmsDivider()
-        }
-    }
-}
-
-@Preview
-@Composable
-fun FilterScreenPre() {
     SMSTheme { colors, typography ->
         Column(
             Modifier
