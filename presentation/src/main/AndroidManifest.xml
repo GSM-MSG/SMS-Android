@@ -9,12 +9,11 @@
         <activity
             android:name=".main.ui.fill_out_information.FillOutInformationActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/title_activity_fill_out_information" />
+            android:label="@string/title_activity_fill_out_information"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".main.ui.login.LoginActivity"
-            android:exported="true"
-            android:label="@string/title_activity_login">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,9 +24,12 @@
             android:name=".main.ui.main.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_main" />
-        <receiver android:name=".main.viewmodel.util.downloader.DownloadCompletedReceiver" android:exported="true">
+
+        <receiver
+            android:name=".main.viewmodel.util.downloader.DownloadCompletedReceiver"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </receiver>
     </application>
