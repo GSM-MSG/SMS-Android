@@ -35,7 +35,7 @@ fun FilterItem(
                 text = text,
                 style = typography.body2,
                 fontWeight = FontWeight.Normal,
-                color = colors.N50
+                color = if(checked.value) colors.BLACK else colors.N30
             )
         }
     }
