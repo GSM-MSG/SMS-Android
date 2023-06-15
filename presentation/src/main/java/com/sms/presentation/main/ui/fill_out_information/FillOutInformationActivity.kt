@@ -35,7 +35,7 @@ class FillOutInformationActivity : ComponentActivity() {
                 startDestination = "Profile"
             ) {
                 composable("Profile") {
-                    setSoftInputMode(true)
+                    setSoftInputMode("PAN")
                     val data = remember {
                         mutableStateOf(
                             navController.previousBackStackEntry?.savedStateHandle?.get<String>(
@@ -57,7 +57,7 @@ class FillOutInformationActivity : ComponentActivity() {
                     )
                 }
                 composable("WorkCondition") {
-                    setSoftInputMode()
+                    setSoftInputMode("PAN")
                     WorkConditionScreen(
                         navController = navController,
                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
@@ -71,14 +71,14 @@ class FillOutInformationActivity : ComponentActivity() {
                     )
                 }
                 composable("Certification") {
-                    setSoftInputMode()
+                    setSoftInputMode("PAN")
                     CertificationScreen(
                         navController = navController,
                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                     )
                 }
                 composable("ForeignLanguage") {
-                    setSoftInputMode()
+                    setSoftInputMode("PAN")
                     ForeignLanguageScreen(
                         navController = navController,
                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
@@ -87,7 +87,7 @@ class FillOutInformationActivity : ComponentActivity() {
                 }
 
                 composable("Search") {
-                    setSoftInputMode(true)
+                    setSoftInputMode("RESIZE")
                     val data = remember {
                         mutableStateOf(
                             navController.previousBackStackEntry?.savedStateHandle?.get<String>(
@@ -105,11 +105,13 @@ class FillOutInformationActivity : ComponentActivity() {
         }
     }
 
-    private fun setSoftInputMode(isRESIZE: Boolean = false) {
+    private fun setSoftInputMode(isType: String = "NOTHING") {
         window.setSoftInputMode(
-            if (isRESIZE)
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-            else WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+            when (isType) {
+                "PAN" -> WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+                "RESIZE" -> WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                else -> WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+            }
         )
     }
 }
