@@ -8,33 +8,20 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 
 @Composable
 fun FilterSelectorComponent(
     title: String,
-    item: List<String>,
+    itemList: List<String>,
+    selectedItemList: List<String>,
     selectedItem: (List<String>) -> Unit
 ) {
-    val selectedList: Flow<ArrayList<String>> = flow {
-        arrayListOf<String>()
-    }
-
-    LaunchedEffect("SelectedList") {
-        selectedList.collect {
-            selectedItem(it)
-        }
-    }
-
-
+    val selectedList = selectedItemList.toMutableList()
 
     SMSTheme { colors, typography ->
         Column(modifier = Modifier.padding(horizontal = 20.dp)) {
@@ -48,13 +35,21 @@ fun FilterSelectorComponent(
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 150.dp)
             ) {
-                items(item.size) { index ->
+                items(itemList.size) { index ->
                     Column {
-                        FilterItem(text = item[index]) { checked, text ->
-                            if (checked)
-                                selectedList.map { it.add(text) }
-                            else
-                                selectedList.map { it.minus(text) }
+                        FilterItem(
+                            item = Pair(
+                                itemList[index],
+                                selectedItemList.contains(itemList[index])
+                            )
+                        ) { checked, text ->
+                            if (checked) {
+                                selectedList.add(text)
+                                selectedItem(selectedList)
+                            } else {
+                                selectedList.remove(text)
+                                selectedItem(selectedList)
+                            }
                         }
                         Spacer(modifier = Modifier.height(20.dp))
                     }
@@ -69,7 +64,7 @@ fun FilterSelectorComponent(
 fun FilterSelectorComponentPre() {
     FilterSelectorComponent(
         title = "분야",
-        item = listOf(
+        itemList = listOf(
             "FrontEnd",
             "BackEnd",
             "Android",
@@ -80,6 +75,11 @@ fun FilterSelectorComponentPre() {
             "AI",
             "IoT",
             "기타"
+        ),
+        selectedItemList = listOf(
+            "Android",
+            "iOS",
+            "Game"
         )
     ) {
 

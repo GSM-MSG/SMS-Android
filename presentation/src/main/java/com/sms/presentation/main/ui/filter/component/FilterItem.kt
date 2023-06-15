@@ -17,25 +17,25 @@ import com.msg.sms.design.theme.SMSTheme
 
 @Composable
 fun FilterItem(
-    text: String,
+    item: Pair<String, Boolean>,
     isChecked: (checked: Boolean, text: String) -> Unit
 ) {
     val checked = remember {
-        mutableStateOf(false)
+        mutableStateOf(item.second)
     }
 
     SMSTheme { colors, typography ->
         Row(verticalAlignment = Alignment.CenterVertically) {
             SmsCheckBox(checked = checked.value) {
                 checked.value = !checked.value
-                isChecked(checked.value, text)
+                isChecked(checked.value, item.first)
             }
             Spacer(modifier = Modifier.size(8.dp))
             Text(
-                text = text,
+                text = item.first,
                 style = typography.body2,
                 fontWeight = FontWeight.Normal,
-                color = if(checked.value) colors.BLACK else colors.N30
+                color = if (checked.value) colors.BLACK else colors.N30
             )
         }
     }
@@ -44,7 +44,7 @@ fun FilterItem(
 @Preview
 @Composable
 fun FilterItemPre() {
-    FilterItem("Android") { checked, text ->
+    FilterItem(Pair("Android", false)) { checked, text ->
 
     }
 }
