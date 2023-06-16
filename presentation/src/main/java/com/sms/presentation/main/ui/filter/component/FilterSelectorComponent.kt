@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,12 +18,10 @@ import com.msg.sms.design.theme.SMSTheme
 @Composable
 fun FilterSelectorComponent(
     title: String,
-    itemList: List<String>,
-    selectedItemList: List<String>,
-    selectedItem: (List<String>) -> Unit
+    itemList: List<Pair<String, Boolean>>,
+    selectedItem: (List<Pair<String, Boolean>>) -> Unit
 ) {
-    val selectedList = selectedItemList.toMutableList()
-
+    val list = itemList.toMutableStateList()
     SMSTheme { colors, typography ->
         Column(modifier = Modifier.padding(horizontal = 20.dp)) {
             Text(
@@ -38,18 +37,10 @@ fun FilterSelectorComponent(
                 items(itemList.size) { index ->
                     Column {
                         FilterItem(
-                            item = Pair(
-                                itemList[index],
-                                selectedItemList.contains(itemList[index])
-                            )
+                            item = itemList[index]
                         ) { checked, text ->
-                            if (checked) {
-                                selectedList.add(text)
-                                selectedItem(selectedList)
-                            } else {
-                                selectedList.remove(text)
-                                selectedItem(selectedList)
-                            }
+                            list[index] = Pair(text, checked)
+                            selectedItem(list)
                         }
                         Spacer(modifier = Modifier.height(20.dp))
                     }
@@ -62,26 +53,4 @@ fun FilterSelectorComponent(
 @Preview
 @Composable
 fun FilterSelectorComponentPre() {
-    FilterSelectorComponent(
-        title = "분야",
-        itemList = listOf(
-            "FrontEnd",
-            "BackEnd",
-            "Android",
-            "iOS",
-            "Game",
-            "Cyber Security",
-            "Design",
-            "AI",
-            "IoT",
-            "기타"
-        ),
-        selectedItemList = listOf(
-            "Android",
-            "iOS",
-            "Game"
-        )
-    ) {
-
-    }
 }

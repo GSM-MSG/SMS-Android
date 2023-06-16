@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,10 +27,6 @@ fun FilterScreen(
     lifecycleScope: CoroutineScope,
     role: String
 ) {
-    val selectedItemList = remember {
-        mutableStateListOf<String>()
-    }
-
     SMSTheme { colors, typography ->
         Column(
             Modifier
@@ -49,27 +43,22 @@ fun FilterScreen(
                         color = colors.BLACK
                     )
                 },
-                rightIcon = { DeleteButtonIcon() }
+                rightIcon = { DeleteButtonIcon() },
+                onClickLeftButton = {
+
+                },
+                onClickRightButton = {
+                    navController.popBackStack()
+                }
             )
             SmsDivider()
             Spacer(modifier = Modifier.height(20.dp))
             FilterSelectorComponent(
                 title = "분야",
-                itemList = listOf(
-                    "FrontEnd",
-                    "BackEnd",
-                    "Android",
-                    "iOS",
-                    "Game",
-                    "Cyber Security",
-                    "Design",
-                    "AI",
-                    "IoT",
-                    "기타"
-                ),
-                selectedItemList = selectedItemList
+                itemList = viewModel.selectedList
             ) {
-                Log.d("selected", it.toString())
+                viewModel.selectedList = it.toMutableStateList()
+                Log.d("selectedList", it.joinToString())
             }
         }
     }

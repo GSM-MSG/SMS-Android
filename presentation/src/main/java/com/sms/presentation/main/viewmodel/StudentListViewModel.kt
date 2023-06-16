@@ -1,5 +1,6 @@
 package com.sms.presentation.main.viewmodel
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
@@ -60,6 +61,14 @@ class StudentListViewModel @Inject constructor(
     private val _getStudentProfileImageResponse =
         MutableStateFlow<Event<ProfileImageModel>>(Event.Loading)
     val getStudentProfileImageResponse = _getStudentProfileImageResponse.asStateFlow()
+
+    var selectedList = mutableStateListOf(
+        Pair("Android",false),
+        Pair("iOS",false),
+        Pair("FrontEnd",false),
+        Pair("BackEnd",false),
+        Pair("Design",false),
+    )
 
     fun getStudentListRequest(
         page: Int,
