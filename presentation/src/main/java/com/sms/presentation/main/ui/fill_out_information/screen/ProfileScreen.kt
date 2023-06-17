@@ -29,6 +29,7 @@ import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.ProfileComponent
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isImageExtensionCorrect
+import com.sms.presentation.main.ui.util.textFieldChecker
 import com.sms.presentation.main.ui.util.toUri
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import kotlinx.coroutines.launch
@@ -227,7 +228,9 @@ fun ProfileScreen(
                         text = "다음", modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp),
-                        enabled = isRequired.value
+                        enabled = isRequired.value && textFieldChecker(
+                            if (selectedMajor.value == "직접입력") enteredMajor.value else selectedMajor.value
+                        )
                     ) {
                         Log.d(
                             "TAG",
