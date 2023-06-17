@@ -51,7 +51,7 @@ fun WorkConditionComponent(
         }
 
         isRequired.value =
-            wantWorkingArea != listOf("") && wantPayroll.value != "0" && wantWorkingCondition != ""
+            wantWorkingArea != listOf("") && wantPayroll.value != "" && wantWorkingCondition != ""
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -101,14 +101,14 @@ fun WorkConditionComponent(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Done
                         ),
-                        setText = wantPayroll.value,
+                        setText = if (wantPayroll.value != "") "${wantPayroll.value.toInt()}" else wantPayroll.value,
                         onValueChange = { if (it.length < 5) wantPayroll.value = it }
                     ) {
-                        wantPayroll.value = "0"
+                        wantPayroll.value = ""
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = if (wantPayroll.value == "0") "상관없음" else if (wantPayroll.value == "") "" else "${wantPayroll.value}만원",
+                        text = if (wantPayroll.value == "0") "상관없음" else if (wantPayroll.value == "") "" else "${wantPayroll.value.toInt()}만원",
                         color = colors.N30,
                         style = typography.body2
                     )
