@@ -27,6 +27,7 @@ import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.icon.ProfileIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
+import com.sms.presentation.main.ui.util.textFieldChecker
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -67,7 +68,12 @@ fun ProfileComponent(
         )
 
         isRequired(
-            detailStack != "" && introduce.value != "" && portfolioUrl.value != "" && contactEmail.value != "" && profileImageUri != Uri.EMPTY
+            textFieldChecker(
+                detailStack,
+                introduce.value,
+                profileImageUri.toString(),
+                contactEmail.value
+            ) && profileImageUri != Uri.EMPTY
         )
 
         Column(
