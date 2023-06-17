@@ -24,7 +24,7 @@ fun CertificationScreen(
             .background(Color.White)
     ) {
         TopBarComponent(text = "정보기입", leftIcon = { BackButtonIcon() }, rightIcon = null) {
-
+            navController.popBackStack()
         }
         SmsSpacer()
         CertificationComponent(navController = navController, viewModel = viewModel)
