@@ -26,6 +26,7 @@ import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 import com.sms.presentation.main.ui.util.hideKeyboard
+import com.sms.presentation.main.ui.util.textFieldChecker
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import kotlinx.coroutines.launch
 
@@ -56,7 +57,7 @@ fun WorkConditionComponent(
         }
 
         isRequired.value =
-            wantWorkingArea != listOf("") && wantPayroll.value != "" && wantWorkingCondition != ""
+            wantWorkingArea != listOf("") && wantPayroll.value != "0" && textFieldChecker(wantWorkingCondition)
 
         Column(
             modifier = Modifier.fillMaxSize(),

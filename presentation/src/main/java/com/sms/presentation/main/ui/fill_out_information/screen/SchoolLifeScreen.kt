@@ -23,6 +23,7 @@ import com.sms.presentation.main.ui.fill_out_information.component.SchoolLifeCom
 import com.sms.presentation.main.ui.util.getFileFromUri
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isfileExtensionCorrect
+import com.sms.presentation.main.ui.util.textFieldChecker
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @Composable
@@ -121,7 +122,7 @@ fun SchoolLifeScreen(
                         modifier = Modifier
                             .weight(4f)
                             .height(48.dp),
-                        enabled = dreamBookFileUri.value != Uri.EMPTY && gsmAuthenticationScore.value != "",
+                        enabled = dreamBookFileUri.value != Uri.EMPTY && textFieldChecker(gsmAuthenticationScore.value),
                         state = ButtonState.Normal
                     ) {
                         viewModel.setEnteredSchoolLifeInformation(

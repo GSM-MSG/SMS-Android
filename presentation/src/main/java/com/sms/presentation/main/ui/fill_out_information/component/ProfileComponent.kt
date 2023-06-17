@@ -29,6 +29,7 @@ import com.msg.sms.design.icon.ProfileIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
+import com.sms.presentation.main.ui.util.textFieldChecker
 import com.sms.presentation.main.ui.util.hideKeyboard
 import kotlinx.coroutines.launch
 
@@ -72,7 +73,12 @@ fun ProfileComponent(
         )
 
         isRequired(
-            detailStack != "" && introduce.value != "" && portfolioUrl.value != "" && contactEmail.value != "" && profileImageUri != Uri.EMPTY
+            textFieldChecker(
+                detailStack,
+                introduce.value,
+                profileImageUri.toString(),
+                contactEmail.value
+            ) && profileImageUri != Uri.EMPTY
         )
 
         Column(
