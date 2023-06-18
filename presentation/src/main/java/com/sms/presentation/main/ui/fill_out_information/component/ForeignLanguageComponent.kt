@@ -22,7 +22,7 @@ import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.indicator.PagerIndicator
 import com.msg.sms.design.component.text.SmsTitleText
-import com.msg.sms.design.component.textfield.SmsCustomTextField
+import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
@@ -106,26 +106,32 @@ fun ForeignLanguageComponent(
             ) {
                 items(foreignLanguageList.size) {
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        SmsCustomTextField(
+                        SmsTextField(
                             modifier = Modifier
-                                .weight(41f),
-                            clickAction = {},
-                            placeHolder = "예) 토익",
-                            endIcon = null,
-                            onValueChange = { str ->
-                                foreignLanguageList[it] = str
+                                .fillMaxWidth(0.5f),
+                            setText = foreignLanguageList[it],
+                            onClickButton = {
+                                foreignLanguageList[it] = ""
                             },
-                            setChangeText = foreignLanguageList[it]
+                            maxLines = 1,
+                            placeHolder = "예) 토익",
+                            onValueChange = { str ->
+                                foreignLanguageList[it] = str.trim()
+                            }
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        SmsCustomTextField(
+                        SmsTextField(
                             modifier = Modifier
-                                .weight(23f),
-                            clickAction = {},
+                                .fillMaxWidth(0.7f),
+                            setText = foreignLanguageScoreList[it],
+                            onClickButton = {
+                                foreignLanguageScoreList[it] = ""
+                            },
+                            maxLines = 1,
                             placeHolder = "990",
-                            endIcon = null,
-                            onValueChange = { str -> foreignLanguageScoreList[it] = str },
-                            setChangeText = foreignLanguageScoreList[it]
+                            onValueChange = { str ->
+                                foreignLanguageScoreList[it] = str.trim()
+                            }
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         IconButton(onClick = {
@@ -375,7 +381,7 @@ suspend fun enterStudentInformation(
                 dialog(true, "에러", "이메일 형식또는 url형식을 확인해 주세요.")
             }
             is Event.Conflict -> {
-                dialog(true,"에러","이미 존재하는 유저 입니다.")
+                dialog(true, "에러", "이미 존재하는 유저 입니다.")
             }
             is Event.Loading -> {}
             else -> {
