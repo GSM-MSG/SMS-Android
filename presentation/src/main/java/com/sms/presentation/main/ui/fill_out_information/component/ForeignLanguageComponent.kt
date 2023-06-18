@@ -72,6 +72,7 @@ fun ForeignLanguageComponent(
         if (dialogState.value) {
             SmsDialog(
                 widthPercent = 1f,
+                betweenTextAndButtonHeight = 37.dp,
                 title = errorTitle.value,
                 msg = errorMsg.value,
                 outLineButtonText = "취소",
