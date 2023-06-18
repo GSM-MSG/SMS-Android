@@ -88,7 +88,6 @@ fun SmsCustomTextField(
     isError: Boolean = false,
     placeHolder: String = "",
     readOnly: Boolean = false,
-    singleLine: Boolean = false,
     focusRequester: FocusRequester = FocusRequester(),
     errorText: String = "Error",
     setChangeText: String,
@@ -134,8 +133,7 @@ fun SmsCustomTextField(
                         }
                     }
                 },
-                readOnly = readOnly,
-                singleLine = singleLine
+                readOnly = readOnly
             )
             if (isError) {
                 Spacer(modifier = Modifier.height(8.dp))
