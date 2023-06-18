@@ -29,6 +29,8 @@ import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.main.MainActivity
+import com.sms.presentation.main.ui.util.isEmailRegularExpression
+import com.sms.presentation.main.ui.util.isUrlRegularExpression
 import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -292,6 +294,11 @@ fun ForeignLanguageComponent(
                                         )
                                         context.finish()
                                     }
+                                },
+                                onDialogButtonClick = {
+                                    onClick.value = {
+                                        navController.navigate("Profile")
+                                    }
                                 }
                             )
                         }
@@ -362,6 +369,7 @@ suspend fun dreamBookFileUpload(
 suspend fun enterStudentInformation(
     viewModel: FillOutViewModel,
     dialog: (visible: Boolean, title: String, msg: String) -> Unit,
+    onDialogButtonClick: () -> Unit,
     isSuccess: () -> Unit
 ) {
     viewModel.enterInformationResponse.collect { response ->
@@ -372,10 +380,19 @@ suspend fun enterStudentInformation(
                 isSuccess()
             }
             is Event.BadRequest -> {
-                dialog(true, "에러", "이메일 형식또는 url형식을 확인해 주세요.")
+                if (!viewModel.getEnteredProfileInformation().contactEmail.isEmailRegularExpression()) {
+                    dialog(true, "에러", "이메일 형식이 맞지 않습니다. \n수정하시겠습니까?")
+                    onDialogButtonClick()
+                } else if (!viewModel.getEnteredProfileInformation().portfolioUrl.isUrlRegularExpression()) {
+                    dialog(true, "에러", "포트폴리오 Url이 형식에 맞지 않습니다. \n수정하시겠습니까?")
+                    onDialogButtonClick()
+                } else {
+                    dialog(true, "에러", "이메일 형식또는 url형식이 맞지 않습니다. \n수정하시겠습니까?")
+                    onDialogButtonClick()
+                }
             }
             is Event.Conflict -> {
-                dialog(true,"에러","이미 존재하는 유저 입니다.")
+                dialog(true, "에러", "이미 존재하는 유저 입니다.")
             }
             is Event.Loading -> {}
             else -> {
