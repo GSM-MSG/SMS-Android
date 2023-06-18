@@ -22,6 +22,7 @@ fun SmsDialog(
     widthDp: Dp? = null,
     heightPercent: Float? = null,
     heightDp: Dp? = null,
+    betweenTextAndButtonHeight: Dp? = null,
     title: String,
     msg: String,
     outLineButtonText: String,
@@ -75,6 +76,8 @@ fun SmsDialog(
                         style = typography.body1,
                         fontWeight = FontWeight.Normal
                     )
+                    if (betweenTextAndButtonHeight != null)
+                        Spacer(modifier = Modifier.height(betweenTextAndButtonHeight))
                 }
                 Box(
                     modifier = Modifier

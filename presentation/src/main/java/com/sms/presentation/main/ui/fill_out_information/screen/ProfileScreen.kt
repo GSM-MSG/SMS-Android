@@ -139,6 +139,7 @@ fun ProfileScreen(
     if (dialogState.value) {
         SmsDialog(
             widthPercent = 1f,
+            betweenTextAndButtonHeight = 37.dp,
             title = "에러",
             msg = "이메일 형식또는 url형식을 확인해 주세요.",
             outLineButtonText = "취소",
