@@ -87,7 +87,7 @@ fun SchoolLifeScreen(
                 .background(colors.WHITE)
         ) {
             TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
-
+                navController.popBackStack()
             }
             SmsSpacer()
             SchoolLifeComponent(

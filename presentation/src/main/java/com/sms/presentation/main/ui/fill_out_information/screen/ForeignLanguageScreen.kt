@@ -21,7 +21,7 @@ fun ForeignLanguageScreen(
 ) {
     Column(modifier = Modifier.background(Color.White)) {
         TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
-
+            navController.popBackStack()
         }
         SmsSpacer()
         ForeignLanguageComponent(

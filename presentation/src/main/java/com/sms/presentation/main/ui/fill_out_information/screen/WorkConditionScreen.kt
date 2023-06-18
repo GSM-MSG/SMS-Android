@@ -54,6 +54,7 @@ fun WorkConditionScreen(
                 .background(Color.White)
         ) {
             TopBarComponent(text = "정보 입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
+                navController.popBackStack()
             }
             SmsSpacer()
             WorkConditionComponent(
