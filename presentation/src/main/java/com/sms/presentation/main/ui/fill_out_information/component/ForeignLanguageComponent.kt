@@ -123,6 +123,7 @@ fun ForeignLanguageComponent(
                                 .weight(23f),
                             clickAction = {},
                             placeHolder = "990",
+                            singleLine = true,
                             endIcon = null,
                             onValueChange = { str -> foreignLanguageScoreList[it] = str },
                             setChangeText = foreignLanguageScoreList[it]
@@ -375,7 +376,7 @@ suspend fun enterStudentInformation(
                 dialog(true, "에러", "이메일 형식또는 url형식을 확인해 주세요.")
             }
             is Event.Conflict -> {
-                dialog(true,"에러","이미 존재하는 유저 입니다.")
+                dialog(true, "에러", "이미 존재하는 유저 입니다.")
             }
             is Event.Loading -> {}
             else -> {
