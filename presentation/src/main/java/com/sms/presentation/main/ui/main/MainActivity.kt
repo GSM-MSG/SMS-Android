@@ -2,6 +2,7 @@ package com.sms.presentation.main.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -25,6 +26,10 @@ class MainActivity : ComponentActivity() {
 
     private val studentListViewModel by viewModels<StudentListViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
+
+    private var doubleBackToExitPressedOnce = false
+    private var backPressedTimestamp = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeEvent()
@@ -63,8 +68,10 @@ class MainActivity : ComponentActivity() {
                                     navController = navController,
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
-                                    role = response.data!!
-                                )
+                                    role = response.data!!,
+                                ) {
+                                    controlTheStackWhenBackPressed()
+                                }
                             }
                         }
                     }
@@ -81,6 +88,17 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun controlTheStackWhenBackPressed() {
+        val currentTime = System.currentTimeMillis()
+        if (doubleBackToExitPressedOnce && currentTime - backPressedTimestamp <= 2000) {
+            finishAffinity()
+        } else {
+            doubleBackToExitPressedOnce = true
+            backPressedTimestamp = currentTime
+            Toast.makeText(this, "한 번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
         }
     }
 }

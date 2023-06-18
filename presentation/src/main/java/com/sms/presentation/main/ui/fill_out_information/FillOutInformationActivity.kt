@@ -2,6 +2,7 @@ package com.sms.presentation.main.ui.fill_out_information
 
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -24,6 +25,10 @@ class FillOutInformationActivity : ComponentActivity() {
 
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
+
+    private var doubleBackToExitPressedOnce = false
+    private var backPressedTimestamp = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fillOutViewModel.getMajorList()
@@ -102,6 +107,21 @@ class FillOutInformationActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        controlTheStackWhenBackPressed()
+    }
+
+    private fun controlTheStackWhenBackPressed() {
+        val currentTime = System.currentTimeMillis()
+        if (doubleBackToExitPressedOnce && currentTime - backPressedTimestamp <= 2000) {
+            finishAffinity()
+        } else {
+            doubleBackToExitPressedOnce = true
+            backPressedTimestamp = currentTime
+            Toast.makeText(this, "한 번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
         }
     }
 

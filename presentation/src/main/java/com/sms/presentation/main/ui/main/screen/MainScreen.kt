@@ -2,6 +2,7 @@ package com.sms.presentation.main.ui.main.screen
 
 import android.content.Intent
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -43,7 +44,8 @@ fun MainScreen(
     navController: NavController,
     viewModel: StudentListViewModel,
     lifecycleScope: CoroutineScope,
-    role: String
+    role: String,
+    onClickBackPressed: () -> Unit,
 ) {
     val context = LocalContext.current as MainActivity
     val listState = rememberLazyListState()
@@ -62,6 +64,7 @@ fun MainScreen(
     }
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+
     val dialogState = remember {
         mutableStateOf(false)
     }
@@ -85,6 +88,16 @@ fun MainScreen(
     }
     val snackBarVisible = remember {
         mutableStateOf(false)
+    }
+
+    BackHandler {
+        if (bottomSheetState.isVisible) {
+            scope.launch {
+                bottomSheetState.hide()
+            }
+        } else {
+            onClickBackPressed()
+        }
     }
 
     LaunchedEffect("GetStudentList") {
@@ -367,7 +380,7 @@ suspend fun getStudentList(
 suspend fun getStudentDetailForTeacher(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForTeacher) -> Unit
+    onSuccess: (GetStudentForTeacher) -> Unit,
 ) {
     viewModel.getStudentDetailForTeacherResponse.collect { response ->
         when (response) {
@@ -385,7 +398,7 @@ suspend fun getStudentDetailForTeacher(
 suspend fun getStudentDetailForStudent(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForStudent) -> Unit
+    onSuccess: (GetStudentForStudent) -> Unit,
 ) {
     viewModel.getStudentDetailForStudentResponse.collect { response ->
         when (response) {
@@ -403,7 +416,7 @@ suspend fun getStudentDetailForStudent(
 suspend fun getStudentDetailForAnonymous(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForAnonymous) -> Unit
+    onSuccess: (GetStudentForAnonymous) -> Unit,
 ) {
     viewModel.getStudentDetailForAnonymousResponse.collect { response ->
         when (response) {
@@ -420,7 +433,7 @@ suspend fun getStudentDetailForAnonymous(
 
 suspend fun getUserProfileImageUrl(
     viewModel: StudentListViewModel,
-    onSuccess: (profileImageUrl: String) -> Unit
+    onSuccess: (profileImageUrl: String) -> Unit,
 ) {
     viewModel.getStudentProfileImageResponse.collect { response ->
         when (response) {
