@@ -50,13 +50,6 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Tag Release
-        run: |
-          version_name=${GITHUB_REF##*/}
-          echo "Tagging release with tag $version_name"
-          git tag $version_name release/$version_name
-          git push origin --tags
-
       - name: create-json
         id: create-json
         uses: jsdaniell/create-json@1.1.2
