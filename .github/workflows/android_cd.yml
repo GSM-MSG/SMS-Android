@@ -1,7 +1,7 @@
 name: SMS-Android CD
 on:
-  release:
-    types: [published]
+  push:
+    branches: ["develop"]
 
 jobs:
   deploy:
@@ -44,7 +44,7 @@ jobs:
       - name: Sign Release
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: app/build/outputs/bundle/release
+          releaseDirectory: app/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
