@@ -50,16 +50,13 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
           
-      - name: Create json
-        run: |
-          touch service_account.json
-          echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" > service_account.json
-        shell: bash
+      - name: Create service_account.json
+        run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
 
       - name: Deploy to production
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJsonPlainText: service_account.json
+          serviceAccountJson: service_account.json
           packageName: com.msg.sms
           releaseFiles: app/release/app-release.aab
           track: production
