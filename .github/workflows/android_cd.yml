@@ -49,13 +49,12 @@ jobs:
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
-
-      - name: create-json
-        id: create-json
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "service_account.json"
-          json: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          
+      - name: Create json
+        run: |
+          touch service_account.json
+          echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" > service_account.json
+        shell: bash
 
       - name: Deploy to production
         uses: r0adkll/upload-google-play@v1
