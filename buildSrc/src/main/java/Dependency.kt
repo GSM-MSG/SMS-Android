@@ -60,4 +60,8 @@ object Dependency {
     object Navigation {
         const val NAVIGATION = "androidx.navigation:navigation-compose:${Versions.NAVIGATION}"
     }
+
+    object Lottie {
+        const val LOTTIE_COMPOSE = "com.airbnb.android:lottie-compose:${Versions.LOTTIE_COMPOSE}"
+    }
 }
