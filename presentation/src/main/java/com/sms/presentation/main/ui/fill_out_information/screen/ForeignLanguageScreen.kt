@@ -17,7 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 fun ForeignLanguageScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
-    lifecycleScope: CoroutineScope
+    lifecycleScope: CoroutineScope,
 ) {
     Column(modifier = Modifier.background(Color.White)) {
         TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
@@ -27,7 +27,7 @@ fun ForeignLanguageScreen(
         ForeignLanguageComponent(
             navController = navController,
             viewModel = viewModel,
-            lifecycleScope = lifecycleScope
+            lifecycleScope = lifecycleScope,
         )
     }
 }
