@@ -60,6 +60,7 @@ dependencies {
     androidTestImplementation(Dependency.Test.COMPOSE_JUNIT)
     debugImplementation(Dependency.Compose.COMPOSE_TOOLING)
     debugImplementation(Dependency.Test.COMPOSE_MANIFEST)
+    implementation(Dependency.Lottie.LOTTIE_COMPOSE)
 
     implementation(Dependency.Google.HILT)
     kapt(Dependency.Google.HILT_COMPILER)
