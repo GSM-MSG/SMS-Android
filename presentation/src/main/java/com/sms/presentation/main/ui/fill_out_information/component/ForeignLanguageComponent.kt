@@ -32,13 +32,15 @@ import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.indicator.PagerIndicator
 import com.msg.sms.design.component.lottie.SmsLoadingLottie
 import com.msg.sms.design.component.text.SmsTitleText
-import com.msg.sms.design.component.textfield.SmsCustomTextField
+import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.main.MainActivity
+import com.sms.presentation.main.ui.util.isEmailRegularExpression
+import com.sms.presentation.main.ui.util.isUrlRegularExpression
 import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -88,6 +90,8 @@ fun ForeignLanguageComponent(
         if (dialogState.value) {
             SmsDialog(
                 widthPercent = 1f,
+                betweenTextAndButtonHeight = 37.dp,
+                cancelButtonEnabled = false,
                 title = errorTitle.value,
                 msg = errorMsg.value,
                 outLineButtonText = "취소",
@@ -124,26 +128,32 @@ fun ForeignLanguageComponent(
             ) {
                 items(foreignLanguageList.size) {
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        SmsCustomTextField(
+                        SmsTextField(
                             modifier = Modifier
-                                .weight(41f),
-                            clickAction = {},
-                            placeHolder = "예) 토익",
-                            endIcon = null,
-                            onValueChange = { str ->
-                                foreignLanguageList[it] = str
+                                .fillMaxWidth(0.5f),
+                            setText = foreignLanguageList[it],
+                            onClickButton = {
+                                foreignLanguageList[it] = ""
                             },
-                            setChangeText = foreignLanguageList[it]
+                            maxLines = 1,
+                            placeHolder = "예) 토익",
+                            onValueChange = { str ->
+                                foreignLanguageList[it] = str.trim()
+                            }
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        SmsCustomTextField(
+                        SmsTextField(
                             modifier = Modifier
-                                .weight(23f),
-                            clickAction = {},
+                                .fillMaxWidth(0.7f),
+                            setText = foreignLanguageScoreList[it],
+                            onClickButton = {
+                                foreignLanguageScoreList[it] = ""
+                            },
+                            maxLines = 1,
                             placeHolder = "990",
-                            endIcon = null,
-                            onValueChange = { str -> foreignLanguageScoreList[it] = str },
-                            setChangeText = foreignLanguageScoreList[it]
+                            onValueChange = { str ->
+                                foreignLanguageScoreList[it] = str.trim()
+                            }
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         IconButton(onClick = {
@@ -309,6 +319,11 @@ fun ForeignLanguageComponent(
                                         )
                                         context.finish()
                                     }
+                                },
+                                onDialogButtonClick = {
+                                    onClick.value = {
+                                        navController.navigate("Profile")
+                                    }
                                 }
                             )
                         }
@@ -332,17 +347,14 @@ suspend fun imageFileUpload(
             is Event.Success -> {
                 viewModel.setProfileImageUrl(response.data!!.fileUrl)
             }
-
             is Event.Unauthorized -> {
                 dialog(true, "토큰 만료", "다시 로그인 해주세요")
                 isUnauthorized()
             }
-
             is Event.BadRequest -> {
                 dialog(true, "에러", "파일이 jpg, jpeg, png, heic 가 아닙니다.")
                 isBadRequest()
             }
-
             is Event.Loading -> {}
             else -> {
                 dialog(true, "에러", "알 수 없는 오류 발생")
@@ -363,17 +375,14 @@ suspend fun dreamBookFileUpload(
             is Event.Success -> {
                 viewModel.setDreamBookFileUrl(response.data!!.fileUrl)
             }
-
             is Event.Unauthorized -> {
                 dialog(true, "토큰 만료", "다시 로그인 해주세요")
                 isUnauthorized()
             }
-
             is Event.BadRequest -> {
                 dialog(true, "에러", "파일이 hwp, hwpx 가 아닙니다.")
                 isBadRequest()
             }
-
             is Event.Loading -> {}
             else -> {
                 dialog(true, "에러", "알 수 없는 오류 발생")
@@ -385,6 +394,7 @@ suspend fun dreamBookFileUpload(
 suspend fun enterStudentInformation(
     viewModel: FillOutViewModel,
     dialog: (visible: Boolean, title: String, msg: String) -> Unit,
+    onDialogButtonClick: () -> Unit,
     isSuccess: () -> Unit,
 ) {
     viewModel.enterInformationResponse.collect { response ->
@@ -396,7 +406,16 @@ suspend fun enterStudentInformation(
             }
 
             is Event.BadRequest -> {
-                dialog(true, "에러", "이메일 형식또는 url형식을 확인해 주세요.")
+                if (!viewModel.getEnteredProfileInformation().contactEmail.isEmailRegularExpression()) {
+                    dialog(true, "에러", "이메일 형식이 맞지 않습니다. \n수정하시겠습니까?")
+                    onDialogButtonClick()
+                } else if (!viewModel.getEnteredProfileInformation().portfolioUrl.isUrlRegularExpression()) {
+                    dialog(true, "에러", "포트폴리오 Url이 형식에 맞지 않습니다. \n수정하시겠습니까?")
+                    onDialogButtonClick()
+                } else {
+                    dialog(true, "에러", "이메일 형식또는 url형식이 맞지 않습니다. \n수정하시겠습니까?")
+                    onDialogButtonClick()
+                }
             }
 
             is Event.Conflict -> {

@@ -107,3 +107,13 @@ fun String.departmentEnumToString(): String {
         else -> ""
     }
 }
+
+fun String.isEmailRegularExpression(): Boolean {
+    val emailRegex = Regex("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}")
+    return matches(emailRegex)
+}
+
+fun String.isUrlRegularExpression(): Boolean {
+    val urlRegex = Regex("^(http(s)?://)?[\\w.-]+\\.[a-zA-Z]{2,3}(/\\S*)?\$")
+    return matches(urlRegex)
+}
