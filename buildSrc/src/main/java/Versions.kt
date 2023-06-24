@@ -11,8 +11,9 @@ object Versions {
 
     const val SPLASH = "1.0.1"
     const val CORE_KTX = "1.7.0"
-    const val LIFECYCLE = "2.3.1"
+    const val LIFECYCLE = "2.5.1"
     const val MATERIAL = "1.8.0"
+    const val VIEWMODEL_LIFECYCLE = "2.5.1"
 
     const val JUNIT = "4.13.2"
     const val ANDROID_JUNIT = "1.1.5"
@@ -29,4 +30,6 @@ object Versions {
     const val NAVIGATION = "2.5.3"
 
     const val COIL = "2.4.0"
+
+    const val LOTTIE_COMPOSE = "6.0.1"
 }
