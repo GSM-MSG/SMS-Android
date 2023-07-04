@@ -21,8 +21,8 @@ fun TopBarComponent(
     text: String,
     leftIcon: @Composable (() -> Unit)?,
     rightIcon: @Composable (() -> Unit)?,
+    onClickRightButton: (() -> Unit) = {},
     onClickLeftButton: (() -> Unit) = {},
-    onClickRightButton: (() -> Unit) = {}
 ) {
     SMSTheme { colors, typography ->
         Box(

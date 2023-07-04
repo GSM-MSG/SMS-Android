@@ -2,6 +2,7 @@ package com.sms.presentation.main.ui.main.screen
 
 import android.content.Intent
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -15,14 +16,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
+import com.msg.sms.design.component.bottomsheet.LogoutWithDrawalBottomSheet
 import com.msg.sms.design.component.button.ListFloatingButton
+import com.msg.sms.design.component.snackbar.SmsSnackBar
+import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
 import com.msg.sms.domain.model.student.response.GetStudentForStudent
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
 import com.sms.presentation.main.ui.login.LoginActivity
-import com.msg.sms.design.component.bottomsheet.LogoutWithDrawalBottomSheet
 import com.sms.presentation.main.ui.main.MainActivity
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
@@ -30,8 +33,10 @@ import com.sms.presentation.main.ui.main.data.StudentDetailData
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -39,7 +44,8 @@ fun MainScreen(
     navController: NavController,
     viewModel: StudentListViewModel,
     lifecycleScope: CoroutineScope,
-    role: String
+    role: String,
+    onClickBackPressed: () -> Unit,
 ) {
     val context = LocalContext.current as MainActivity
     val listState = rememberLazyListState()
@@ -58,6 +64,7 @@ fun MainScreen(
     }
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+
     val dialogState = remember {
         mutableStateOf(false)
     }
@@ -78,6 +85,19 @@ fun MainScreen(
     }
     val profileImageUrl = remember {
         mutableStateOf("")
+    }
+    val snackBarVisible = remember {
+        mutableStateOf(false)
+    }
+
+    BackHandler {
+        if (bottomSheetState.isVisible) {
+            scope.launch {
+                bottomSheetState.hide()
+            }
+        } else {
+            onClickBackPressed()
+        }
     }
 
     LaunchedEffect("GetStudentList") {
@@ -185,22 +205,39 @@ fun MainScreen(
                 .fillMaxSize()
                 .background(Color.White)
         ) {
-            MainScreenTopBar(
-                profileImageUrl = profileImageUrl.value,
-                isScolled = isScrolled.value,
-                filterButtonOnClick = { navController.navigate("Filter") },
-                profileButtonOnClick = {
-                    if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
-                        isDetailBottomSheet.value = false
+            Box {
+                MainScreenTopBar(
+                    profileImageUrl = profileImageUrl.value,
+                    isScolled = isScrolled.value,
+                    filterButtonOnClick = {
+                        /*TODO (KimHyunseung) : 필터 Screen으로 이동*/
                         scope.launch {
-                            bottomSheetState.show()
+                            snackBarVisible.value = true
+                            delay(1.5.seconds)
+                            if (snackBarVisible.value) snackBarVisible.value = false
                         }
-                    } else {
-                        context.startActivity(Intent(context, LoginActivity::class.java))
-                        context.finish()
+                    },
+                    profileButtonOnClick = {
+                        if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
+                            isDetailBottomSheet.value = false
+                            scope.launch {
+                                bottomSheetState.show()
+                            }
+                        } else {
+                            context.startActivity(Intent(context, LoginActivity::class.java))
+                            context.finish()
+                        }
                     }
+                )
+                SmsSnackBar(
+                    text = "아직 개발 중인 기능입니다.",
+                    modifier = Modifier.align(Alignment.Center),
+                    visible = snackBarVisible.value,
+                    leftIcon = { ExclamationMarkIcon() }
+                ) {
+                    snackBarVisible.value = false
                 }
-            )
+            }
             Box(modifier = Modifier.fillMaxSize()) {
                 StudentListComponent(
                     listState = listState,
@@ -343,7 +380,7 @@ suspend fun getStudentList(
 suspend fun getStudentDetailForTeacher(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForTeacher) -> Unit
+    onSuccess: (GetStudentForTeacher) -> Unit,
 ) {
     viewModel.getStudentDetailForTeacherResponse.collect { response ->
         when (response) {
@@ -361,7 +398,7 @@ suspend fun getStudentDetailForTeacher(
 suspend fun getStudentDetailForStudent(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForStudent) -> Unit
+    onSuccess: (GetStudentForStudent) -> Unit,
 ) {
     viewModel.getStudentDetailForStudentResponse.collect { response ->
         when (response) {
@@ -379,7 +416,7 @@ suspend fun getStudentDetailForStudent(
 suspend fun getStudentDetailForAnonymous(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForAnonymous) -> Unit
+    onSuccess: (GetStudentForAnonymous) -> Unit,
 ) {
     viewModel.getStudentDetailForAnonymousResponse.collect { response ->
         when (response) {
@@ -396,7 +433,7 @@ suspend fun getStudentDetailForAnonymous(
 
 suspend fun getUserProfileImageUrl(
     viewModel: StudentListViewModel,
-    onSuccess: (profileImageUrl: String) -> Unit
+    onSuccess: (profileImageUrl: String) -> Unit,
 ) {
     viewModel.getStudentProfileImageResponse.collect { response ->
         when (response) {

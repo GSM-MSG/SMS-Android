@@ -17,17 +17,17 @@ import kotlinx.coroutines.CoroutineScope
 fun ForeignLanguageScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
-    lifecycleScope: CoroutineScope
+    lifecycleScope: CoroutineScope,
 ) {
     Column(modifier = Modifier.background(Color.White)) {
         TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
-
+            navController.popBackStack()
         }
         SmsSpacer()
         ForeignLanguageComponent(
             navController = navController,
             viewModel = viewModel,
-            lifecycleScope = lifecycleScope
+            lifecycleScope = lifecycleScope,
         )
     }
 }

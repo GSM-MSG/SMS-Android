@@ -22,6 +22,8 @@ fun SmsDialog(
     widthDp: Dp? = null,
     heightPercent: Float? = null,
     heightDp: Dp? = null,
+    betweenTextAndButtonHeight: Dp? = null,
+    cancelButtonEnabled: Boolean = true,
     title: String,
     msg: String,
     outLineButtonText: String,
@@ -75,6 +77,8 @@ fun SmsDialog(
                         style = typography.body1,
                         fontWeight = FontWeight.Normal
                     )
+                    if (betweenTextAndButtonHeight != null)
+                        Spacer(modifier = Modifier.height(betweenTextAndButtonHeight))
                 }
                 Box(
                     modifier = Modifier
@@ -82,20 +86,22 @@ fun SmsDialog(
                         .padding(24.dp)
                         .align(Alignment.BottomCenter)
                 ) {
-                    SmsRoundedButton(
-                        text = outLineButtonText,
-                        state = ButtonState.OutLine,
-                        modifier = Modifier
-                            .fillMaxWidth(0.485f)
-                            .height(48.dp)
-                            .align(Alignment.CenterStart)
-                    ) {
-                        outlineButtonOnClick()
+                    if (cancelButtonEnabled) {
+                        SmsRoundedButton(
+                            text = outLineButtonText,
+                            state = ButtonState.OutLine,
+                            modifier = Modifier
+                                .fillMaxWidth(0.485f)
+                                .height(48.dp)
+                                .align(Alignment.CenterStart)
+                        ) {
+                            outlineButtonOnClick()
+                        }
                     }
                     SmsRoundedButton(
                         text = normalButtonText,
                         modifier = Modifier
-                            .fillMaxWidth(0.485f)
+                            .fillMaxWidth(if (cancelButtonEnabled) 0.485f else 1f)
                             .height(48.dp)
                             .align(Alignment.CenterEnd)
                     ) {

@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -21,8 +20,10 @@ import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.SchoolLifeComponent
+import com.sms.presentation.main.ui.util.getFileFromUri
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isfileExtensionCorrect
+import com.sms.presentation.main.ui.util.textFieldChecker
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @Composable
@@ -53,8 +54,7 @@ fun SchoolLifeScreen(
     val localStorageLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
-                Log.d("filename", getFileNameFromUri(context, uri).toString())
-                if (getFileNameFromUri(context, uri)!!.isfileExtensionCorrect()) {
+                if (getFileFromUri(context, uri)!!.extension.isfileExtensionCorrect()) {
                     isFileExtensionInCorrect.value = false
                     dreamBookFileUri.value = uri
                 } else {
@@ -87,7 +87,7 @@ fun SchoolLifeScreen(
                 .background(colors.WHITE)
         ) {
             TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
-
+                navController.popBackStack()
             }
             SmsSpacer()
             SchoolLifeComponent(
@@ -122,7 +122,7 @@ fun SchoolLifeScreen(
                         modifier = Modifier
                             .weight(4f)
                             .height(48.dp),
-                        enabled = dreamBookFileUri.value != Uri.EMPTY && gsmAuthenticationScore.value != "",
+                        enabled = dreamBookFileUri.value != Uri.EMPTY && textFieldChecker(gsmAuthenticationScore.value),
                         state = ButtonState.Normal
                     ) {
                         viewModel.setEnteredSchoolLifeInformation(

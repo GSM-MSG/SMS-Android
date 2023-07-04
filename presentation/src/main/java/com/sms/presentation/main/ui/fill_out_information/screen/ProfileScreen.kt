@@ -27,9 +27,7 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.ProfileComponent
-import com.sms.presentation.main.ui.util.getFileNameFromUri
-import com.sms.presentation.main.ui.util.isImageExtensionCorrect
-import com.sms.presentation.main.ui.util.toUri
+import com.sms.presentation.main.ui.util.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import kotlinx.coroutines.launch
 
@@ -77,6 +75,9 @@ fun ProfileScreen(
         mutableStateOf(if (data.enteredMajor != "") data.enteredMajor else "")
     }
     val isImageExtensionInCorrect = remember {
+        mutableStateOf(false)
+    }
+    val dialogState = remember {
         mutableStateOf(false)
     }
     val scope = rememberCoroutineScope()
@@ -132,6 +133,19 @@ fun ProfileScreen(
             normalButtonText = "확인",
             outlineButtonOnClick = { isImageExtensionInCorrect.value = false },
             normalButtonOnClick = { isImageExtensionInCorrect.value = false }
+        )
+    }
+
+    if (dialogState.value) {
+        SmsDialog(
+            widthPercent = 1f,
+            betweenTextAndButtonHeight = 37.dp,
+            title = "에러",
+            msg = "이메일 형식또는 url형식을 확인해 주세요.",
+            outLineButtonText = "취소",
+            normalButtonText = "확인",
+            outlineButtonOnClick = { dialogState.value = false },
+            normalButtonOnClick = { dialogState.value = false }
         )
     }
 
@@ -227,22 +241,24 @@ fun ProfileScreen(
                         text = "다음", modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp),
-                        enabled = isRequired.value
+                        enabled = isRequired.value && textFieldChecker(
+                            if (selectedMajor.value == "직접입력") enteredMajor.value else selectedMajor.value
+                        )
                     ) {
-                        Log.d(
-                            "TAG",
-                            "whenClickNextButton: ${selectedMajor.value}, ${detailStack}, ${introduce.value}, ${portfolioUrl.value}, ${contactEmail.value}, ${profileImageUri.value}"
-                        )
-                        viewModel.setEnteredProfileInformation(
-                            major = selectedMajor.value,
-                            techStack = detailStack.joinToString(", "),
-                            profileImgUri = profileImageUri.value,
-                            introduce = introduce.value,
-                            contactEmail = contactEmail.value,
-                            portfolioUrl = portfolioUrl.value,
-                            enteredMajor = enteredMajor.value
-                        )
-                        navController.navigate("SchoolLife")
+                        if (contactEmail.value.isEmailRegularExpression() && portfolioUrl.value.isUrlRegularExpression()) {
+                            viewModel.setEnteredProfileInformation(
+                                major = selectedMajor.value,
+                                techStack = detailStack.joinToString(", "),
+                                profileImgUri = profileImageUri.value,
+                                introduce = introduce.value,
+                                contactEmail = contactEmail.value,
+                                portfolioUrl = portfolioUrl.value,
+                                enteredMajor = enteredMajor.value
+                            )
+                            navController.navigate("SchoolLife")
+                        } else {
+                            dialogState.value = true
+                        }
                     }
                     Spacer(modifier = Modifier.height(48.dp))
                 }

@@ -71,7 +71,7 @@ fun Bitmap?.toUri(context: Context): Uri? {
 
 fun String.isfileExtensionCorrect(): Boolean {
     val fileExtension = listOf("hwp", "hwpx")
-    return fileExtension.contains(this.substringAfter("."))
+    return fileExtension.contains(this)
 }
 
 fun String.isImageExtensionCorrect(): Boolean {
@@ -106,4 +106,14 @@ fun String.departmentEnumToString(): String {
         "AI_DEVELOPMENT" -> "인공지능 개발과"
         else -> ""
     }
+}
+
+fun String.isEmailRegularExpression(): Boolean {
+    val emailRegex = Regex("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}")
+    return matches(emailRegex)
+}
+
+fun String.isUrlRegularExpression(): Boolean {
+    val urlRegex = Regex("^(http(s)?://)?[\\w.-]+\\.[a-zA-Z]{2,3}(/\\S*)?\$")
+    return matches(urlRegex)
 }

@@ -236,3 +236,14 @@ fun RedWithdrawalIcon(
         modifier = modifier
     )
 }
+
+@Composable
+fun ExclamationMarkIcon(
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_exclamation_mark),
+        contentDescription = "Exclamation Mark Icon",
+        modifier = modifier
+    )
+}

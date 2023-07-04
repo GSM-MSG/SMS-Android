@@ -14,6 +14,7 @@ import com.msg.sms.design.component.button.SmsBoxButton
 import com.msg.sms.design.component.snackbar.TechStackSnackBar
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.SearchTopBar
+import com.sms.presentation.main.ui.util.textFieldChecker
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -59,7 +60,7 @@ fun DetailStackSearchScreen(
                 onClickButton = { searchQuery.value = "" },
                 onClickBackButton = { navController.popBackStack() },
                 debounceTime = 300L,
-                debounceTextChanged = { if (it != "") viewModel.searchDetailStack(name = it) }
+                debounceTextChanged = { if (textFieldChecker(it)) viewModel.searchDetailStack(name = it) }
             )
             TechStackSnackBar(
                 modifier = Modifier.align(Alignment.Center),
@@ -76,7 +77,7 @@ fun DetailStackSearchScreen(
             selectedList = selectedStackList,
             searchQuery = searchQuery.value,
             onClickRemoveAll = { selectedStackList.clear() },
-            isSearching = searchQuery.value != "",
+            isSearching = textFieldChecker(searchQuery.value),
             selfAddButtonClick = {
                 if (!selectedStackList.contains(searchQuery.value)) {
                     scope.launch {

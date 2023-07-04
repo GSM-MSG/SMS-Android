@@ -16,6 +16,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -26,7 +27,10 @@ import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.icon.ProfileIcon
 import com.msg.sms.design.theme.SMSTheme
+import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
+import com.sms.presentation.main.ui.util.textFieldChecker
+import com.sms.presentation.main.ui.util.hideKeyboard
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -49,6 +53,8 @@ fun ProfileComponent(
     SMSTheme { _, typography ->
         val coroutineScope = rememberCoroutineScope()
 
+        val context = LocalContext.current as FillOutInformationActivity
+
         val introduce = remember {
             mutableStateOf(if (data.introduce != "") data.introduce else "")
         }
@@ -67,7 +73,12 @@ fun ProfileComponent(
         )
 
         isRequired(
-            detailStack != "" && introduce.value != "" && portfolioUrl.value != "" && contactEmail.value != "" && profileImageUri != Uri.EMPTY
+            textFieldChecker(
+                detailStack,
+                introduce.value,
+                profileImageUri.toString(),
+                contactEmail.value
+            ) && profileImageUri != Uri.EMPTY
         )
 
         Column(
@@ -92,6 +103,7 @@ fun ProfileComponent(
                 ProfileIcon(modifier = Modifier.clickable {
                     isProfilePictureBottomSheet(true)
                     coroutineScope.launch {
+                        context.hideKeyboard()
                         bottomSheetScaffoldState.show()
                     }
                 })
@@ -107,6 +119,7 @@ fun ProfileComponent(
                         .clickable {
                             isProfilePictureBottomSheet(true)
                             coroutineScope.launch {
+                                context.hideKeyboard()
                                 bottomSheetScaffoldState.show()
                             }
                         }
@@ -146,6 +159,7 @@ fun ProfileComponent(
                     isProfilePictureBottomSheet(false)
                     if (isEnable) {
                         coroutineScope.launch {
+                            context.hideKeyboard()
                             bottomSheetScaffoldState.show()
                         }
                     }
