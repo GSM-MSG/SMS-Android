@@ -62,12 +62,32 @@ class StudentListViewModel @Inject constructor(
         MutableStateFlow<Event<ProfileImageModel>>(Event.Loading)
     val getStudentProfileImageResponse = _getStudentProfileImageResponse.asStateFlow()
 
-    var selectedList = mutableStateListOf(
-        Pair("Android",false),
-        Pair("iOS",false),
-        Pair("FrontEnd",false),
-        Pair("BackEnd",false),
-        Pair("Design",false),
+    var selectedMajorList = mutableStateListOf<String>()
+
+    var selectedGradeList = mutableStateListOf(
+        Pair("1학년", false),
+        Pair("2학년", false),
+        Pair("3학년", false)
+    )
+
+    var selectedClassList = mutableStateListOf(
+        Pair("1반", false),
+        Pair("2반", false),
+        Pair("3반", false),
+        Pair("4반", false)
+    )
+
+    var selectedDepartmentList = mutableStateListOf(
+        Pair("소프트웨어개발과", false),
+        Pair("스마트iOT과", false),
+        Pair("인공지능과", false)
+    )
+
+    var selectedTypeOfEmploymentList = mutableStateListOf(
+        Pair("정규직", false),
+        Pair("비정규직", false),
+        Pair("계약직", false),
+        Pair("인턴", false)
     )
 
     fun getStudentListRequest(

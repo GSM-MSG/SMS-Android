@@ -122,7 +122,7 @@ fun ProfileScreen(
         } else {
             Manifest.permission.READ_EXTERNAL_STORAGE
         }
-    val list = viewModel.getMajorListEvent.collectAsState()
+    val list = viewModel.getMajorListResponse.collectAsState()
 
     if (isImageExtensionInCorrect.value) {
         SmsDialog(

@@ -6,6 +6,8 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -17,6 +19,7 @@ import com.sms.presentation.main.ui.filter.screen.FilterScreen
 import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.main.screen.MainScreen
 import com.sms.presentation.main.viewmodel.AuthViewModel
+import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +30,7 @@ class MainActivity : ComponentActivity() {
 
     private val studentListViewModel by viewModels<StudentListViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
+    private val fillOutViewModel by viewModels<FillOutViewModel>()
 
     private var doubleBackToExitPressedOnce = false
     private var backPressedTimestamp = 0L
@@ -36,6 +40,7 @@ class MainActivity : ComponentActivity() {
         observeEvent()
         studentListViewModel.getStudentListRequest(1, 20)
         authViewModel.getRoleInfo()
+        fillOutViewModel.getMajorList()
     }
 
     private fun observeEvent() {
@@ -67,7 +72,7 @@ class MainActivity : ComponentActivity() {
                             composable("Main") {
                                 MainScreen(
                                     navController = navController,
-                                    viewModel = viewModel(LocalContext.current as MainActivity),
+                                    studentListViewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
                                     role = response.data!!,
                                 ) {
@@ -77,7 +82,7 @@ class MainActivity : ComponentActivity() {
                             composable("Filter") {
                                 FilterScreen(
                                     navController = navController,
-                                    viewModel = viewModel(LocalContext.current as MainActivity),
+                                    studentListViewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
                                     role = response.data!!
                                 )
@@ -96,6 +101,16 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
+            }
+        }
+        lifecycleScope.launch {
+            fillOutViewModel.getMajorListResponse.collect { response ->
+                studentListViewModel.selectedMajorList =
+                    if (response is Event.Success) {
+                        response.data!!.major.toMutableStateList()
+                    } else {
+                        mutableStateListOf()
+                    }
             }
         }
     }

@@ -34,8 +34,8 @@ class FillOutViewModel @Inject constructor(
     private val _enterInformationResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val enterInformationResponse = _enterInformationResponse.asStateFlow()
 
-    private val _getMajorListEvent = MutableStateFlow<Event<MajorListModel>>(Event.Loading)
-    val getMajorListEvent = _getMajorListEvent.asStateFlow()
+    private val _getMajorListResponse = MutableStateFlow<Event<MajorListModel>>(Event.Loading)
+    val getMajorListResponse = _getMajorListResponse.asStateFlow()
 
     private val _imageUploadResponse =
         MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
@@ -167,12 +167,12 @@ class FillOutViewModel @Inject constructor(
         viewModelScope.launch {
             getMajorListUseCase().onSuccess {
                 it.catch { remoteError ->
-                    _getMajorListEvent.value = remoteError.errorHandling()
+                    _getMajorListResponse.value = remoteError.errorHandling()
                 }.collect { response ->
-                    _getMajorListEvent.value = Event.Success(data = response)
+                    _getMajorListResponse.value = Event.Success(data = response)
                 }
             }.onFailure {
-                _getMajorListEvent.value = it.errorHandling()
+                _getMajorListResponse.value = it.errorHandling()
             }
         }
     }
