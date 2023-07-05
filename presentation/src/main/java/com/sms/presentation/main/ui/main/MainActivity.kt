@@ -7,7 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -72,7 +71,7 @@ class MainActivity : ComponentActivity() {
                             composable("Main") {
                                 MainScreen(
                                     navController = navController,
-                                    studentListViewModel = viewModel(LocalContext.current as MainActivity),
+                                    viewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
                                     role = response.data!!,
                                 ) {
@@ -82,7 +81,7 @@ class MainActivity : ComponentActivity() {
                             composable("Filter") {
                                 FilterScreen(
                                     navController = navController,
-                                    studentListViewModel = viewModel(LocalContext.current as MainActivity),
+                                    viewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
                                     role = response.data!!
                                 )
@@ -105,9 +104,9 @@ class MainActivity : ComponentActivity() {
         }
         lifecycleScope.launch {
             fillOutViewModel.getMajorListResponse.collect { response ->
-                studentListViewModel.selectedMajorList =
+                studentListViewModel.majorList =
                     if (response is Event.Success) {
-                        response.data!!.major.toMutableStateList()
+                        response.data!!.major
                     } else {
                         mutableStateListOf()
                     }

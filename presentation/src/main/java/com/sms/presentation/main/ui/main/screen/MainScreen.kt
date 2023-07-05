@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     navController: NavController,
-    studentListViewModel: StudentListViewModel,
+    viewModel: StudentListViewModel,
     lifecycleScope: CoroutineScope,
     role: String,
     onClickBackPressed: () -> Unit,
@@ -99,7 +99,7 @@ fun MainScreen(
     }
 
     LaunchedEffect("GetStudentList") {
-        getStudentList(viewModel = studentListViewModel,
+        getStudentList(viewModel = viewModel,
             progressState = { progressState.value = it },
             onSuccess = { list, size ->
                 studentList.value += list
@@ -109,9 +109,9 @@ fun MainScreen(
 
     LaunchedEffect("GetProfileImage") {
         if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
-            studentListViewModel.getProfileImageUrl()
+            viewModel.getProfileImageUrl()
             getUserProfileImageUrl(
-                viewModel = studentListViewModel,
+                viewModel = viewModel,
                 onSuccess = {
                     profileImageUrl.value = it
                 }
@@ -126,7 +126,7 @@ fun MainScreen(
     }
 
     LaunchedEffect("Pagination") {
-        val response = studentListViewModel.getStudentListResponse.value
+        val response = viewModel.getStudentListResponse.value
 
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }.filter { it == listState.layoutInfo.totalItemsCount - 1 }
             .collect {
@@ -134,7 +134,7 @@ fun MainScreen(
                 if (isSuccess && it != 0) {
                     val isIncompleteData = studentList.value.size < response.data!!.totalSize
                     if (isIncompleteData) {
-                        studentListViewModel.getStudentListRequest(response.data.page + 1, 20)
+                        viewModel.getStudentListRequest(response.data.page + 1, 20)
                     }
                     Log.d("pagination", it.toString())
                 }
@@ -176,7 +176,7 @@ fun MainScreen(
                         dialogTitle.value = "로그아웃"
                         dialogMsg.value = "정말로 로그아웃 하시겠습니까?"
                         dialogOnClick.value = {
-                            studentListViewModel.logout()
+                            viewModel.logout()
                         }
                     },
                     onWithDrawalClick = {
@@ -184,7 +184,7 @@ fun MainScreen(
                         dialogTitle.value = "회원탈퇴"
                         dialogMsg.value = "정말로 회원탈퇴 하시겠습니까?"
                         dialogOnClick.value = {
-                            studentListViewModel.withdrawal()
+                            viewModel.withdrawal()
                         }
                     },
                     coroutineScope = scope,
@@ -241,9 +241,9 @@ fun MainScreen(
                     lifecycleScope.launch {
                         when (role) {
                             "ROLE_TEACHER" -> {
-                                studentListViewModel.getStudentDetailForTeacher(it)
+                                viewModel.getStudentDetailForTeacher(it)
                                 getStudentDetailForTeacher(
-                                    studentListViewModel,
+                                    viewModel,
                                     { state, title, msg ->
                                         dialogState.value = state
                                         dialogTitle.value = title
@@ -279,9 +279,9 @@ fun MainScreen(
                                 )
                             }
                             "ROLE_STUDENT" -> {
-                                studentListViewModel.getStudentDetailForStudent(it)
+                                viewModel.getStudentDetailForStudent(it)
                                 getStudentDetailForStudent(
-                                    studentListViewModel,
+                                    viewModel,
                                     { state, title, msg ->
                                         dialogState.value = state
                                         dialogTitle.value = title
@@ -307,9 +307,9 @@ fun MainScreen(
                                 )
                             }
                             else -> {
-                                studentListViewModel.getStudentDetailForAnonymous(it)
+                                viewModel.getStudentDetailForAnonymous(it)
                                 getStudentDetailForAnonymous(
-                                    studentListViewModel,
+                                    viewModel,
                                     { state, title, msg ->
                                         dialogState.value = state
                                         dialogTitle.value = title

@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,7 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun FilterScreen(
     navController: NavController,
-    studentListViewModel: StudentListViewModel,
+    viewModel: StudentListViewModel,
     lifecycleScope: CoroutineScope,
     role: String
 ) {
@@ -46,7 +45,7 @@ fun FilterScreen(
                 },
                 rightIcon = { DeleteButtonIcon() },
                 onClickLeftButton = {
-
+                    viewModel.resetFilter()
                 },
                 onClickRightButton = {
                     navController.popBackStack()
@@ -58,45 +57,65 @@ fun FilterScreen(
                 item {
                     FilterSelectorComponent(
                         title = "학년",
-                        itemList = studentListViewModel.selectedGradeList
-                    ) {
-                        studentListViewModel.selectedGradeList = it.toMutableStateList()
+                        itemList = viewModel.gradeList,
+                        selectedList = viewModel.selectedGradeList
+                    ) { checked, text ->
+                        if (!checked)
+                            viewModel.selectedGradeList.add(text)
+                        else
+                            viewModel.selectedGradeList.remove(text)
                     }
                     Spacer(modifier = Modifier.height(40.dp))
                 }
                 item {
                     FilterSelectorComponent(
                         title = "반",
-                        itemList = studentListViewModel.selectedClassList
-                    ) {
-                        studentListViewModel.selectedClassList = it.toMutableStateList()
+                        itemList = viewModel.classList,
+                        selectedList = viewModel.selectedClassList
+                    ) { checked, text ->
+                        if (!checked)
+                            viewModel.selectedClassList.add(text)
+                        else
+                            viewModel.selectedClassList.remove(text)
                     }
                     Spacer(modifier = Modifier.height(40.dp))
                 }
                 item {
                     FilterSelectorComponent(
                         title = "학과",
-                        itemList = studentListViewModel.selectedDepartmentList
-                    ) {
-                        studentListViewModel.selectedDepartmentList = it.toMutableStateList()
+                        itemList = viewModel.departmentList,
+                        selectedList = viewModel.selectedDepartmentList
+                    ) { checked, text ->
+                        if (!checked)
+                            viewModel.selectedDepartmentList.add(text)
+                        else
+                            viewModel.selectedDepartmentList.remove(text)
                     }
                     Spacer(modifier = Modifier.height(40.dp))
                 }
                 item {
                     FilterSelectorComponent(
                         title = "분야",
-                        itemList = studentListViewModel.selectedMajorList.map { Pair(it, false) }
-                    ) {
-//                        studentListViewModel.selectedMajorList = it.toMutableStateList()
+                        itemList = viewModel.majorList,
+                        selectedList = viewModel.selectedMajorList
+                    ) { checked, text ->
+                        if (!checked)
+                            viewModel.selectedMajorList.add(text)
+                        else
+                            viewModel.selectedMajorList.remove(text)
                     }
                     Spacer(modifier = Modifier.height(40.dp))
                 }
                 item {
                     FilterSelectorComponent(
                         title = "희망 고용 형태",
-                        itemList = studentListViewModel.selectedTypeOfEmploymentList
-                    ) {
-                        studentListViewModel.selectedTypeOfEmploymentList = it.toMutableStateList()
+                        itemList = viewModel.typeOfEmploymentList,
+                        selectedList = viewModel.selectedTypeOfEmploymentList
+                    ) { checked, text ->
+                        if (!checked)
+                            viewModel.selectedTypeOfEmploymentList.add(text)
+                        else
+                            viewModel.selectedTypeOfEmploymentList.remove(text)
                     }
                 }
             }

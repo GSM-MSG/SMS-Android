@@ -62,33 +62,16 @@ class StudentListViewModel @Inject constructor(
         MutableStateFlow<Event<ProfileImageModel>>(Event.Loading)
     val getStudentProfileImageResponse = _getStudentProfileImageResponse.asStateFlow()
 
+    var majorList = listOf<String>()
+    val gradeList = listOf("1학년", "2학년", "3학년")
+    val classList = listOf("1반", "2반", "3반", "4반")
+    val departmentList = listOf("소프트웨어개발과", "스마트iOT과", "인공지능과")
+    val typeOfEmploymentList = listOf("정규직", "비정규직", "계약직", "인턴")
     var selectedMajorList = mutableStateListOf<String>()
-
-    var selectedGradeList = mutableStateListOf(
-        Pair("1학년", false),
-        Pair("2학년", false),
-        Pair("3학년", false)
-    )
-
-    var selectedClassList = mutableStateListOf(
-        Pair("1반", false),
-        Pair("2반", false),
-        Pair("3반", false),
-        Pair("4반", false)
-    )
-
-    var selectedDepartmentList = mutableStateListOf(
-        Pair("소프트웨어개발과", false),
-        Pair("스마트iOT과", false),
-        Pair("인공지능과", false)
-    )
-
-    var selectedTypeOfEmploymentList = mutableStateListOf(
-        Pair("정규직", false),
-        Pair("비정규직", false),
-        Pair("계약직", false),
-        Pair("인턴", false)
-    )
+    var selectedGradeList = mutableStateListOf<String>()
+    var selectedClassList = mutableStateListOf<String>()
+    var selectedDepartmentList = mutableStateListOf<String>()
+    var selectedTypeOfEmploymentList = mutableStateListOf<String>()
 
     fun getStudentListRequest(
         page: Int,
@@ -208,15 +191,22 @@ class StudentListViewModel @Inject constructor(
 
     fun getProfileImageUrl() = viewModelScope.launch {
         _getStudentProfileImageResponse.value = Event.Loading
-        getProfileImageUseCase()
-            .onSuccess {
-                it.catch { remoteError ->
-                    _getStudentProfileImageResponse.value = remoteError.errorHandling()
-                }.collect { response ->
-                    _getStudentProfileImageResponse.value = Event.Success(data = response)
-                }
-            }.onFailure { error ->
-                _getStudentProfileImageResponse.value = error.errorHandling()
+        getProfileImageUseCase().onSuccess {
+            it.catch { remoteError ->
+                _getStudentProfileImageResponse.value = remoteError.errorHandling()
+            }.collect { response ->
+                _getStudentProfileImageResponse.value = Event.Success(data = response)
             }
+        }.onFailure { error ->
+            _getStudentProfileImageResponse.value = error.errorHandling()
+        }
+    }
+
+    fun resetFilter() {
+        selectedMajorList.clear()
+        selectedGradeList.clear()
+        selectedClassList.clear()
+        selectedDepartmentList.clear()
+        selectedTypeOfEmploymentList.clear()
     }
 }
