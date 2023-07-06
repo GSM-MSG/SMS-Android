@@ -11,12 +11,13 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun FilterSelectorComponent(
+fun <T> FilterSelectorComponent(
     title: String,
-    itemList: List<String>,
-    selectedList: List<String>,
-    onItemSelected: (checked: Boolean, text: String) -> Unit
+    itemList: List<T>,
+    selectedList: List<T>,
+    onItemSelected: (checked: Boolean, value: T) -> Unit
 ) {
+
     SMSTheme { colors, typography ->
         Column(
             modifier = Modifier

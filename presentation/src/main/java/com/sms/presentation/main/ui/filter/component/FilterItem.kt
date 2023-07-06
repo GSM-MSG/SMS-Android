@@ -12,12 +12,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.selector.SmsCheckBox
 import com.msg.sms.design.theme.SMSTheme
+import com.sms.presentation.main.ui.filter.data.FilterClass
+import com.sms.presentation.main.ui.filter.data.FilterDepartment
+import com.sms.presentation.main.ui.filter.data.FilterGrade
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
 
 @Composable
-fun FilterItem(
-    item: String,
+fun <T> FilterItem(
+    item: T,
     checked: Boolean,
-    onItemClick: (checked: Boolean, text: String) -> Unit
+    onItemClick: (checked: Boolean, value: T) -> Unit
 ) {
     SMSTheme { colors, typography ->
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -26,7 +30,13 @@ fun FilterItem(
             }
             Spacer(modifier = Modifier.size(8.dp))
             Text(
-                text = item,
+                text = when (item) {
+                    is FilterGrade -> item.grade
+                    is FilterDepartment -> item.department
+                    is FilterClass -> item.`class`
+                    is FilterTypeOfEmployment -> item.typeOfEmployment
+                    else -> item.toString()
+                },
                 style = typography.body2,
                 fontWeight = FontWeight.Normal,
                 color = if (checked) colors.BLACK else colors.N30
@@ -38,5 +48,5 @@ fun FilterItem(
 @Preview
 @Composable
 fun FilterItemPre() {
-    FilterItem(item = "Pre", checked = true) { _, _ -> }
+    FilterItem(item = FilterGrade.FIRST_GRADE, checked = true) { _, _ -> }
 }

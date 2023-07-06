@@ -54,44 +54,46 @@ fun FilterScreen(
             Divider(thickness = 16.dp, color = colors.N10)
             Spacer(modifier = Modifier.height(20.dp))
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                item {
-                    FilterSelectorComponent(
-                        title = "학년",
-                        itemList = viewModel.gradeList,
-                        selectedList = viewModel.selectedGradeList
-                    ) { checked, text ->
-                        if (!checked)
-                            viewModel.selectedGradeList.add(text)
-                        else
-                            viewModel.selectedGradeList.remove(text)
+                if (role != "") {
+                    item {
+                        FilterSelectorComponent(
+                            title = "학년",
+                            itemList = viewModel.gradeList,
+                            selectedList = viewModel.selectedGradeList
+                        ) { checked, text ->
+                            if (!checked)
+                                viewModel.selectedGradeList.add(text)
+                            else
+                                viewModel.selectedGradeList.remove(text)
+                        }
+                        Spacer(modifier = Modifier.height(40.dp))
                     }
-                    Spacer(modifier = Modifier.height(40.dp))
-                }
-                item {
-                    FilterSelectorComponent(
-                        title = "반",
-                        itemList = viewModel.classList,
-                        selectedList = viewModel.selectedClassList
-                    ) { checked, text ->
-                        if (!checked)
-                            viewModel.selectedClassList.add(text)
-                        else
-                            viewModel.selectedClassList.remove(text)
+                    item {
+                        FilterSelectorComponent(
+                            title = "반",
+                            itemList = viewModel.classList,
+                            selectedList = viewModel.selectedClassList
+                        ) { checked, text ->
+                            if (!checked)
+                                viewModel.selectedClassList.add(text)
+                            else
+                                viewModel.selectedClassList.remove(text)
+                        }
+                        Spacer(modifier = Modifier.height(40.dp))
                     }
-                    Spacer(modifier = Modifier.height(40.dp))
-                }
-                item {
-                    FilterSelectorComponent(
-                        title = "학과",
-                        itemList = viewModel.departmentList,
-                        selectedList = viewModel.selectedDepartmentList
-                    ) { checked, text ->
-                        if (!checked)
-                            viewModel.selectedDepartmentList.add(text)
-                        else
-                            viewModel.selectedDepartmentList.remove(text)
+                    item {
+                        FilterSelectorComponent(
+                            title = "학과",
+                            itemList = viewModel.departmentList,
+                            selectedList = viewModel.selectedDepartmentList
+                        ) { checked, text ->
+                            if (!checked)
+                                viewModel.selectedDepartmentList.add(text)
+                            else
+                                viewModel.selectedDepartmentList.remove(text)
+                        }
+                        Spacer(modifier = Modifier.height(40.dp))
                     }
-                    Spacer(modifier = Modifier.height(40.dp))
                 }
                 item {
                     FilterSelectorComponent(
@@ -106,16 +108,18 @@ fun FilterScreen(
                     }
                     Spacer(modifier = Modifier.height(40.dp))
                 }
-                item {
-                    FilterSelectorComponent(
-                        title = "희망 고용 형태",
-                        itemList = viewModel.typeOfEmploymentList,
-                        selectedList = viewModel.selectedTypeOfEmploymentList
-                    ) { checked, text ->
-                        if (!checked)
-                            viewModel.selectedTypeOfEmploymentList.add(text)
-                        else
-                            viewModel.selectedTypeOfEmploymentList.remove(text)
+                if (role == "ROLE_TEACHER") {
+                    item {
+                        FilterSelectorComponent(
+                            title = "희망 고용 형태",
+                            itemList = viewModel.typeOfEmploymentList,
+                            selectedList = viewModel.selectedTypeOfEmploymentList
+                        ) { checked, text ->
+                            if (!checked)
+                                viewModel.selectedTypeOfEmploymentList.add(text)
+                            else
+                                viewModel.selectedTypeOfEmploymentList.remove(text)
+                        }
                     }
                 }
             }

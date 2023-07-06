@@ -16,6 +16,7 @@ import com.msg.sms.domain.usecase.student.GetStudentListUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForAnonymousUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForTeacherUseCase
 import com.msg.sms.domain.usecase.user.GetProfileImageUseCase
+import com.sms.presentation.main.ui.filter.data.FilterClass
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +26,13 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+import com.sms.presentation.main.ui.filter.data.FilterGrade.*
+import com.sms.presentation.main.ui.filter.data.FilterClass.*
+import com.sms.presentation.main.ui.filter.data.FilterDepartment
+import com.sms.presentation.main.ui.filter.data.FilterDepartment.*
+import com.sms.presentation.main.ui.filter.data.FilterGrade
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment.*
 
 @HiltViewModel
 class StudentListViewModel @Inject constructor(
@@ -63,15 +71,15 @@ class StudentListViewModel @Inject constructor(
     val getStudentProfileImageResponse = _getStudentProfileImageResponse.asStateFlow()
 
     var majorList = listOf<String>()
-    val gradeList = listOf("1학년", "2학년", "3학년")
-    val classList = listOf("1반", "2반", "3반", "4반")
-    val departmentList = listOf("소프트웨어개발과", "스마트iOT과", "인공지능과")
-    val typeOfEmploymentList = listOf("정규직", "비정규직", "계약직", "인턴")
+    val gradeList = listOf(FIRST_GRADE, SECOND_GRADE, THIRD_GRADE)
+    val classList = listOf(FIRST, SECOND, THIRD, FOURTH)
+    val departmentList = listOf(SW_DEVELOPMENT, SMART_IOT_DEVELOPMENT, AI_DEVELOPMENT)
+    val typeOfEmploymentList = listOf(FULL_TIME, TEMPORARY, CONTRACT, INTERN)
     var selectedMajorList = mutableStateListOf<String>()
-    var selectedGradeList = mutableStateListOf<String>()
-    var selectedClassList = mutableStateListOf<String>()
-    var selectedDepartmentList = mutableStateListOf<String>()
-    var selectedTypeOfEmploymentList = mutableStateListOf<String>()
+    var selectedGradeList = mutableStateListOf<FilterGrade>()
+    var selectedClassList = mutableStateListOf<FilterClass>()
+    var selectedDepartmentList = mutableStateListOf<FilterDepartment>()
+    var selectedTypeOfEmploymentList = mutableStateListOf<FilterTypeOfEmployment>()
 
     fun getStudentListRequest(
         page: Int,
