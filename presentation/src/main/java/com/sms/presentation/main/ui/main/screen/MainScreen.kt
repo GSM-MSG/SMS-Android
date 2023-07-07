@@ -273,7 +273,7 @@ fun MainScreen(
                                             techStacks = it.techStacks
                                         )
                                         scope.launch {
-                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                            bottomSheetState.show()
                                         }
                                     }
                                 )
@@ -301,7 +301,7 @@ fun MainScreen(
                                             techStacks = it.techStack
                                         )
                                         scope.launch {
-                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                            bottomSheetState.show()
                                         }
                                     }
                                 )
@@ -325,7 +325,7 @@ fun MainScreen(
                                             techStacks = it.techStack
                                         )
                                         scope.launch {
-                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                            bottomSheetState.show()
                                         }
                                     }
                                 )
