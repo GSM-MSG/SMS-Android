@@ -177,7 +177,9 @@ fun FilterTextFiled(
             textStyle = typography.body1,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = onValueChange
+            onValueChange = {
+                onValueChange(it.replace(" ".toRegex(), ""))
+            }
         )
     }
 }
