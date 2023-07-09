@@ -126,44 +126,33 @@ fun FilterScreen(
                         startValue = gsmScoreSliderValues.value.start.toInt().toString(),
                         endValue = gsmScoreSliderValues.value.endInclusive.toInt().toString(),
                         onStartValueChange = {
-                            if (it.isNotBlank()) {
-                                if (it.toFloat() in 0f..gsmScoreSliderValues.value.endInclusive) {
-                                    gsmScoreSliderValues.value = when {
-                                        it == "00" -> 0f
-                                        gsmScoreSliderValues.value.start.toInt() == 0 -> it.replace(
-                                            "0",
-                                            ""
-                                        ).toFloat()
-                                        else -> it.toFloat()
-                                    }..gsmScoreSliderValues.value.endInclusive
-                                } else {
-                                    gsmScoreSliderValues.value =
-                                        gsmScoreSliderValues.value.endInclusive..gsmScoreSliderValues.value.endInclusive
-                                }
-                            } else {
-                                gsmScoreSliderValues.value =
-                                    0f..gsmScoreSliderValues.value.endInclusive
-                            }
+                            val inputValue = if (it.isNotBlank()) it.toFloat() else 0f
+                            val startValue = gsmScoreSliderValues.value.start
+                            val endValue = gsmScoreSliderValues.value.endInclusive
+
+                            gsmScoreSliderValues.value = when (inputValue) {
+                                0f -> if (startValue.toInt() == 0) 0f else inputValue
+                                in 0f..endValue -> if (startValue.toInt() == 0) it.replace("0", "")
+                                    .toFloat() else inputValue
+                                else -> endValue
+                            }..endValue
                         },
                         onEndValueChange = {
-                            if (it.isNotBlank()) {
-                                if (it.toFloat() in gsmScoreSliderValues.value.start..990f) {
-                                    gsmScoreSliderValues.value =
-                                        gsmScoreSliderValues.value.start..when {
-                                            it == "00" -> 0f
-                                            gsmScoreSliderValues.value.endInclusive.toInt() == 0 -> it.replace(
-                                                "0",
-                                                ""
-                                            ).toFloat()
-                                            else -> it.toFloat()
-                                        }
-                                } else {
-                                    gsmScoreSliderValues.value =
-                                        gsmScoreSliderValues.value.start..gsmScoreSliderValues.value.start
+                            val inputValue = it.toFloatOrNull() ?: 0f
+                            val startValue = gsmScoreSliderValues.value.start
+                            val endValue = gsmScoreSliderValues.value.endInclusive
+
+                            gsmScoreSliderValues.value = when {
+                                inputValue in startValue..990f -> {
+                                    val updatedStartValue = when {
+                                        inputValue == 0f && endValue.toInt() == 0 -> 0f
+                                        inputValue != 0f && endValue.toInt() == 0 -> inputValue.toInt().toString().replace("0", "").toFloat()
+                                        else -> inputValue
+                                    }
+                                    startValue..updatedStartValue
                                 }
-                            } else {
-                                gsmScoreSliderValues.value =
-                                    0f..0f
+                                inputValue > endValue -> startValue..990f
+                                else -> startValue..startValue
                             }
                         }
                     )
@@ -171,11 +160,13 @@ fun FilterScreen(
                 item {
                     FilterSliderComponent(
                         title = "희망연봉",
+                        isHopeSalary = true,
                         sliderValue = desiredAnnualSalarySliderValues.value,
                         valueRange = 0f..9999f,
                         onSliderValueChange = { desiredAnnualSalarySliderValues.value = it },
-                        startValue = "${desiredAnnualSalarySliderValues.value.start.toInt()} 만원",
-                        endValue = "${desiredAnnualSalarySliderValues.value.endInclusive.toInt()} 만원",
+                        startValue = desiredAnnualSalarySliderValues.value.start.toInt().toString(),
+                        endValue = desiredAnnualSalarySliderValues.value.endInclusive.toInt()
+                            .toString(),
                         onStartValueChange = {},
                         onEndValueChange = {}
                     )

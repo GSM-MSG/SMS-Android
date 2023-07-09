@@ -148,13 +148,14 @@ fun SmsCustomTextField(
 fun FilterTextFiled(
     value: String,
     modifier: Modifier = Modifier,
+    isHopeSalary: Boolean = false,
     onValueChange: (String) -> Unit
 ) {
     val isFocused = remember { mutableStateOf(false) }
     val focusRequester = FocusRequester()
     SMSTheme { colors, typography ->
         OutlinedTextField(
-            value = value,
+            value = if (isHopeSalary) "$value 만원" else value,
             modifier = modifier
                 .focusRequester(focusRequester)
                 .border(

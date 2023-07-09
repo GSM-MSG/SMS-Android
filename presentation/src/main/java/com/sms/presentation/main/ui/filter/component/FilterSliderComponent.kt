@@ -17,6 +17,7 @@ import com.msg.sms.design.theme.SMSTheme
 @Composable
 fun FilterSliderComponent(
     title: String,
+    isHopeSalary: Boolean = false,
     sliderValue: ClosedFloatingPointRange<Float>,
     valueRange: ClosedFloatingPointRange<Float>,
     onSliderValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
@@ -48,6 +49,7 @@ fun FilterSliderComponent(
             Box(modifier = Modifier.fillMaxWidth()) {
                 FilterTextFiled(
                     value = startValue,
+                    isHopeSalary = isHopeSalary,
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .clip(RoundedCornerShape(10.dp))
@@ -59,6 +61,7 @@ fun FilterSliderComponent(
                 }
                 FilterTextFiled(
                     value = endValue,
+                    isHopeSalary = isHopeSalary,
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .clip(RoundedCornerShape(10.dp))
