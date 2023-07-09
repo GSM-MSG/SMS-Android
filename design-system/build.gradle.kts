@@ -61,6 +61,7 @@ dependencies {
     debugImplementation(Dependency.Compose.COMPOSE_TOOLING)
     debugImplementation(Dependency.Test.COMPOSE_MANIFEST)
     implementation(Dependency.Lottie.LOTTIE_COMPOSE)
+    implementation(Dependency.Compose.COMPOSE_MATERIAL3)
 
     implementation(Dependency.Google.HILT)
     kapt(Dependency.Google.HILT_COMPILER)

@@ -8,12 +8,15 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.DeleteButtonIcon
@@ -140,6 +143,43 @@ fun SmsCustomTextField(
                 Text(text = errorText, color = colors.ERROR, style = typography.caption1)
             }
         }
+    }
+}
+
+@Composable
+fun FilterTextFiled(
+    value: String,
+    modifier: Modifier = Modifier,
+    onValueChange: (String) -> Unit
+) {
+    val isFocused = remember { mutableStateOf(false) }
+    val focusRequester = FocusRequester()
+    SMSTheme { colors, typography ->
+        OutlinedTextField(
+            value = value,
+            modifier = modifier
+                .focusRequester(focusRequester)
+                .border(
+                    width = 1.dp,
+                    color = if (isFocused.value) colors.P2 else colors.N10,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .onFocusChanged {
+                    isFocused.value = it.isFocused
+                },
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledContainerColor = colors.N10,
+                focusedContainerColor = colors.N10,
+                disabledBorderColor = Color.Transparent,
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                cursorColor = colors.P2
+            ),
+            textStyle = typography.body1,
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            onValueChange = onValueChange
+        )
     }
 }
 
