@@ -38,7 +38,6 @@ fun FilterScreen(
         mutableStateOf(0f..9999f)
     }
 
-
     SMSTheme { colors, typography ->
         Column(
             Modifier
@@ -121,20 +120,57 @@ fun FilterScreen(
                 item {
                     FilterSliderComponent(
                         title = "인증제 점수",
-                        textFieldWidth = 80.dp,
                         sliderValue = gsmScoreSliderValues.value,
                         valueRange = 0f..990f,
                         onSliderValueChange = { gsmScoreSliderValues.value = it },
                         startValue = gsmScoreSliderValues.value.start.toInt().toString(),
                         endValue = gsmScoreSliderValues.value.endInclusive.toInt().toString(),
-                        onStartValueChange = {},
-                        onEndValueChange = {}
+                        onStartValueChange = {
+                            if (it.isNotBlank()) {
+                                if (it.toFloat() in 0f..gsmScoreSliderValues.value.endInclusive) {
+                                    gsmScoreSliderValues.value = when {
+                                        it == "00" -> 0f
+                                        gsmScoreSliderValues.value.start.toInt() == 0 -> it.replace(
+                                            "0",
+                                            ""
+                                        ).toFloat()
+                                        else -> it.toFloat()
+                                    }..gsmScoreSliderValues.value.endInclusive
+                                } else {
+                                    gsmScoreSliderValues.value =
+                                        gsmScoreSliderValues.value.endInclusive..gsmScoreSliderValues.value.endInclusive
+                                }
+                            } else {
+                                gsmScoreSliderValues.value =
+                                    0f..gsmScoreSliderValues.value.endInclusive
+                            }
+                        },
+                        onEndValueChange = {
+                            if (it.isNotBlank()) {
+                                if (it.toFloat() in gsmScoreSliderValues.value.start..990f) {
+                                    gsmScoreSliderValues.value =
+                                        gsmScoreSliderValues.value.start..when {
+                                            it == "00" -> 0f
+                                            gsmScoreSliderValues.value.endInclusive.toInt() == 0 -> it.replace(
+                                                "0",
+                                                ""
+                                            ).toFloat()
+                                            else -> it.toFloat()
+                                        }
+                                } else {
+                                    gsmScoreSliderValues.value =
+                                        gsmScoreSliderValues.value.start..gsmScoreSliderValues.value.start
+                                }
+                            } else {
+                                gsmScoreSliderValues.value =
+                                    0f..0f
+                            }
+                        }
                     )
                 }
                 item {
                     FilterSliderComponent(
                         title = "희망연봉",
-                        textFieldWidth = 95.dp,
                         sliderValue = desiredAnnualSalarySliderValues.value,
                         valueRange = 0f..9999f,
                         onSliderValueChange = { desiredAnnualSalarySliderValues.value = it },

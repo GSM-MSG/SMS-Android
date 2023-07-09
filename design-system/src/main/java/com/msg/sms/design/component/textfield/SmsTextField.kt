@@ -8,8 +8,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -162,19 +160,19 @@ fun FilterTextFiled(
                 .border(
                     width = 1.dp,
                     color = if (isFocused.value) colors.P2 else colors.N10,
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(10.dp)
                 )
                 .onFocusChanged {
                     isFocused.value = it.isFocused
                 },
-            colors = OutlinedTextFieldDefaults.colors(
-                disabledContainerColor = colors.N10,
-                focusedContainerColor = colors.N10,
-                disabledBorderColor = Color.Transparent,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                backgroundColor = colors.N10,
+                placeholderColor = colors.N30,
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent,
                 cursorColor = colors.P2
             ),
+            label = null,
             textStyle = typography.body1,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

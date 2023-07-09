@@ -14,7 +14,8 @@ fun SmsSlider(
     onValueChange: (ClosedFloatingPointRange<Float>) -> Unit
 ) {
     SMSTheme { colors, _ ->
-        RangeSlider(value = value,
+        RangeSlider(
+            value = value,
             valueRange = valueRange,
             onValueChange = onValueChange,
             colors = SliderDefaults.colors(

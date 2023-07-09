@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.slider.SmsSlider
 import com.msg.sms.design.component.textfield.FilterTextFiled
@@ -18,7 +17,6 @@ import com.msg.sms.design.theme.SMSTheme
 @Composable
 fun FilterSliderComponent(
     title: String,
-    textFieldWidth: Dp,
     sliderValue: ClosedFloatingPointRange<Float>,
     valueRange: ClosedFloatingPointRange<Float>,
     onSliderValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
@@ -53,7 +51,7 @@ fun FilterSliderComponent(
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .clip(RoundedCornerShape(10.dp))
-                        .width(textFieldWidth)
+                        .widthIn(min = 80.dp, max = 100.dp)
                         .height(50.dp)
                         .background(colors.N10)
                 ) {
@@ -64,7 +62,7 @@ fun FilterSliderComponent(
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .clip(RoundedCornerShape(10.dp))
-                        .width(textFieldWidth)
+                        .widthIn(min = 80.dp, max = 100.dp)
                         .height(50.dp)
                         .background(colors.N10)
                 ) {
