@@ -167,8 +167,36 @@ fun FilterScreen(
                         startValue = desiredAnnualSalarySliderValues.value.start.toInt().toString(),
                         endValue = desiredAnnualSalarySliderValues.value.endInclusive.toInt()
                             .toString(),
-                        onStartValueChange = {},
-                        onEndValueChange = {}
+                        onStartValueChange = {
+                            val inputValue = if (it.isNotBlank()) it.toFloat() else 0f
+                            val startValue = desiredAnnualSalarySliderValues.value.start
+                            val endValue = desiredAnnualSalarySliderValues.value.endInclusive
+
+                            desiredAnnualSalarySliderValues.value = when (inputValue) {
+                                0f -> if (startValue.toInt() == 0) 0f else inputValue
+                                in 0f..endValue -> if (startValue.toInt() == 0) it.replace("0", "")
+                                    .toFloat() else inputValue
+                                else -> endValue
+                            }..endValue
+                        },
+                        onEndValueChange = {
+                            val inputValue = it.toFloatOrNull() ?: 0f
+                            val startValue = desiredAnnualSalarySliderValues.value.start
+                            val endValue = desiredAnnualSalarySliderValues.value.endInclusive
+
+                            desiredAnnualSalarySliderValues.value = when {
+                                inputValue in startValue..9999f -> {
+                                    val updatedStartValue = when {
+                                        inputValue == 0f && endValue.toInt() == 0 -> 0f
+                                        inputValue != 0f && endValue.toInt() == 0 -> inputValue.toInt().toString().replace("0", "").toFloat()
+                                        else -> inputValue
+                                    }
+                                    startValue..updatedStartValue
+                                }
+                                inputValue > endValue -> startValue..9999f
+                                else -> startValue..startValue
+                            }
+                        }
                     )
                 }
             }

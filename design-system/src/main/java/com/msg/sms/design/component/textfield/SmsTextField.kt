@@ -178,7 +178,7 @@ fun FilterTextFiled(
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             onValueChange = {
-                onValueChange(it.replace(" ".toRegex(), ""))
+                onValueChange(it.replace("\\D".toRegex(), ""))
             }
         )
     }
