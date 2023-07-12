@@ -119,118 +119,123 @@ fun FilterScreen(
                         else viewModel.selectedTypeOfEmploymentList.remove(text)
                     }
                     Spacer(modifier = Modifier.height(40.dp))
+                    FilterSliderComponent(
+                        title = "인증제 점수",
+                        sliderValue = gsmScoreSliderValues.value,
+                        valueRange = 0f..990f,
+                        onSliderValueChange = { gsmScoreSliderValues.value = it },
+                        startValue = gsmScoreSliderValues.value.start.toInt().toString(),
+                        endValue = gsmScoreSliderValues.value.endInclusive.toInt().toString(),
+                        onStartValueChange = {
+                            val inputValue = if (it.isNotBlank()) it.toFloat() else 0f
+                            val startValue = gsmScoreSliderValues.value.start
+                            val endValue = gsmScoreSliderValues.value.endInclusive
+
+                            gsmScoreSliderValues.value = when (inputValue) {
+                                0f -> if (startValue.toInt() == 0) 0f else inputValue
+                                in 0f..endValue -> if (startValue.toInt() == 0) it.replace("0", "")
+                                    .toFloat() else inputValue
+                                else -> endValue
+                            }..endValue
+                        },
+                        onEndValueChange = {
+                            val inputValue = it.toFloatOrNull() ?: 0f
+                            val startValue = gsmScoreSliderValues.value.start
+                            val endValue = gsmScoreSliderValues.value.endInclusive
+
+                            gsmScoreSliderValues.value = when {
+                                inputValue in startValue..990f -> {
+                                    val updatedStartValue = when {
+                                        inputValue == 0f && endValue.toInt() == 0 -> 0f
+                                        inputValue != 0f && endValue.toInt() == 0 -> inputValue.toInt()
+                                            .toString().replace("0", "").toFloat()
+                                        else -> inputValue
+                                    }
+                                    startValue..updatedStartValue
+                                }
+                                inputValue > endValue -> startValue..990f
+                                else -> startValue..startValue
+                            }
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(40.dp))
+                    FilterSliderComponent(
+                        title = "희망연봉",
+                        isHopeSalary = true,
+                        sliderValue = desiredAnnualSalarySliderValues.value,
+                        valueRange = 0f..9999f,
+                        onSliderValueChange = { desiredAnnualSalarySliderValues.value = it },
+                        startValue = desiredAnnualSalarySliderValues.value.start.toInt().toString(),
+                        endValue = desiredAnnualSalarySliderValues.value.endInclusive.toInt()
+                            .toString(),
+                        onStartValueChange = {
+                            val inputValue = if (it.isNotBlank()) it.toFloat() else 0f
+                            val startValue = desiredAnnualSalarySliderValues.value.start
+                            val endValue = desiredAnnualSalarySliderValues.value.endInclusive
+
+                            desiredAnnualSalarySliderValues.value = when (inputValue) {
+                                0f -> if (startValue.toInt() == 0) 0f else inputValue
+                                in 0f..endValue -> if (startValue.toInt() == 0) it.replace("0", "")
+                                    .toFloat() else inputValue
+                                else -> endValue
+                            }..endValue
+                        },
+                        onEndValueChange = {
+                            val inputValue = it.toFloatOrNull() ?: 0f
+                            val startValue = desiredAnnualSalarySliderValues.value.start
+                            val endValue = desiredAnnualSalarySliderValues.value.endInclusive
+
+                            desiredAnnualSalarySliderValues.value = when {
+                                inputValue in startValue..9999f -> {
+                                    val updatedStartValue = when {
+                                        inputValue == 0f && endValue.toInt() == 0 -> 0f
+                                        inputValue != 0f && endValue.toInt() == 0 -> inputValue.toInt()
+                                            .toString().replace("0", "").toFloat()
+                                        else -> inputValue
+                                    }
+                                    startValue..updatedStartValue
+                                }
+                                inputValue > endValue -> startValue..9999f
+                                else -> startValue..startValue
+                            }
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(40.dp))
                 }
-                FilterSliderComponent(
-                    title = "인증제 점수",
-                    sliderValue = gsmScoreSliderValues.value,
-                    valueRange = 0f..990f,
-                    onSliderValueChange = { gsmScoreSliderValues.value = it },
-                    startValue = gsmScoreSliderValues.value.start.toInt().toString(),
-                    endValue = gsmScoreSliderValues.value.endInclusive.toInt().toString(),
-                    onStartValueChange = {
-                        val inputValue = if (it.isNotBlank()) it.toFloat() else 0f
-                        val startValue = gsmScoreSliderValues.value.start
-                        val endValue = gsmScoreSliderValues.value.endInclusive
-
-                        gsmScoreSliderValues.value = when (inputValue) {
-                            0f -> if (startValue.toInt() == 0) 0f else inputValue
-                            in 0f..endValue -> if (startValue.toInt() == 0) it.replace("0", "")
-                                .toFloat() else inputValue
-                            else -> endValue
-                        }..endValue
-                    },
-                    onEndValueChange = {
-                        val inputValue = it.toFloatOrNull() ?: 0f
-                        val startValue = gsmScoreSliderValues.value.start
-                        val endValue = gsmScoreSliderValues.value.endInclusive
-
-                        gsmScoreSliderValues.value = when {
-                            inputValue in startValue..990f -> {
-                                val updatedStartValue = when {
-                                    inputValue == 0f && endValue.toInt() == 0 -> 0f
-                                    inputValue != 0f && endValue.toInt() == 0 -> inputValue.toInt()
-                                        .toString().replace("0", "").toFloat()
-                                    else -> inputValue
-                                }
-                                startValue..updatedStartValue
-                            }
-                            inputValue > endValue -> startValue..990f
-                            else -> startValue..startValue
+                if (role != "") {
+                    FilterSelectionControls(
+                        title = "학번",
+                        firstSelectionName = "오름차순",
+                        secondSelectionName = "내림차순",
+                        selectionValue = isSchoolNumberAscendingOrder.value,
+                        onSelectionClick = {
+                            isSchoolNumberAscendingOrder.value = it
                         }
-                    }
-                )
-                Spacer(modifier = Modifier.height(40.dp))
-                FilterSliderComponent(
-                    title = "희망연봉",
-                    isHopeSalary = true,
-                    sliderValue = desiredAnnualSalarySliderValues.value,
-                    valueRange = 0f..9999f,
-                    onSliderValueChange = { desiredAnnualSalarySliderValues.value = it },
-                    startValue = desiredAnnualSalarySliderValues.value.start.toInt().toString(),
-                    endValue = desiredAnnualSalarySliderValues.value.endInclusive.toInt()
-                        .toString(),
-                    onStartValueChange = {
-                        val inputValue = if (it.isNotBlank()) it.toFloat() else 0f
-                        val startValue = desiredAnnualSalarySliderValues.value.start
-                        val endValue = desiredAnnualSalarySliderValues.value.endInclusive
-
-                        desiredAnnualSalarySliderValues.value = when (inputValue) {
-                            0f -> if (startValue.toInt() == 0) 0f else inputValue
-                            in 0f..endValue -> if (startValue.toInt() == 0) it.replace("0", "")
-                                .toFloat() else inputValue
-                            else -> endValue
-                        }..endValue
-                    },
-                    onEndValueChange = {
-                        val inputValue = it.toFloatOrNull() ?: 0f
-                        val startValue = desiredAnnualSalarySliderValues.value.start
-                        val endValue = desiredAnnualSalarySliderValues.value.endInclusive
-
-                        desiredAnnualSalarySliderValues.value = when {
-                            inputValue in startValue..9999f -> {
-                                val updatedStartValue = when {
-                                    inputValue == 0f && endValue.toInt() == 0 -> 0f
-                                    inputValue != 0f && endValue.toInt() == 0 -> inputValue.toInt()
-                                        .toString().replace("0", "").toFloat()
-                                    else -> inputValue
-                                }
-                                startValue..updatedStartValue
-                            }
-                            inputValue > endValue -> startValue..9999f
-                            else -> startValue..startValue
+                    )
+                    Spacer(modifier = Modifier.height(40.dp))
+                }
+                if (role == "ROLE_TEACHER") {
+                    FilterSelectionControls(
+                        title = "인증제 점수",
+                        firstSelectionName = "오름차순",
+                        secondSelectionName = "내림차순",
+                        selectionValue = isGsmScoreAscendingOrder.value,
+                        onSelectionClick = {
+                            isGsmScoreAscendingOrder.value = it
                         }
-                    }
-                )
-                Spacer(modifier = Modifier.height(40.dp))
-                FilterSelectionControls(
-                    title = "학번",
-                    firstSelectionName = "오름차순",
-                    secondSelectionName = "내림차순",
-                    selectionValue = isSchoolNumberAscendingOrder.value,
-                    onSelectionClick = {
-                        isSchoolNumberAscendingOrder.value = it
-                    }
-                )
-                Spacer(modifier = Modifier.height(40.dp))
-                FilterSelectionControls(
-                    title = "인증제 점수",
-                    firstSelectionName = "오름차순",
-                    secondSelectionName = "내림차순",
-                    selectionValue = isGsmScoreAscendingOrder.value,
-                    onSelectionClick = {
-                        isGsmScoreAscendingOrder.value = it
-                    }
-                )
-                Spacer(modifier = Modifier.height(40.dp))
-                FilterSelectionControls(
-                    title = "희망 연봉",
-                    firstSelectionName = "오름차순",
-                    secondSelectionName = "내림차순",
-                    selectionValue = isDesiredAnnualSalaryAscendingOrder.value,
-                    onSelectionClick = {
-                        isDesiredAnnualSalaryAscendingOrder.value = it
-                    }
-                )
+                    )
+                    Spacer(modifier = Modifier.height(40.dp))
+                    FilterSelectionControls(
+                        title = "희망 연봉",
+                        firstSelectionName = "오름차순",
+                        secondSelectionName = "내림차순",
+                        selectionValue = isDesiredAnnualSalaryAscendingOrder.value,
+                        onSelectionClick = {
+                            isDesiredAnnualSalaryAscendingOrder.value = it
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(40.dp))
+                }
             }
         }
     }
