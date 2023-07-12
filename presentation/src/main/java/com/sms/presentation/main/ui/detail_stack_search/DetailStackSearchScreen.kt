@@ -25,6 +25,7 @@ fun DetailStackSearchScreen(
     navController: NavController,
     viewModel: SearchDetailStackViewModel,
     selectedStack: List<String>,
+    onAddButtonClick: () -> Unit
 ) {
     val searchQuery = remember {
         mutableStateOf("")
@@ -107,13 +108,13 @@ fun DetailStackSearchScreen(
             modifier = Modifier
                 .fillMaxWidth(),
             text = nextButtonText,
-            enabled = selectedStackList.isNotEmpty()
+            enabled = selectedStackList.isNotEmpty(),
         ) {
             navController.currentBackStackEntry?.savedStateHandle?.set(
                 key = "detailStack",
                 value = selectedStackList.joinToString(",")
             )
-            navController.navigate("Profile")
+            onAddButtonClick()
         }
     }
 }
@@ -125,5 +126,5 @@ fun DetailStackSearchScreenPre() {
         navController = rememberNavController(),
         viewModel = viewModel(),
         listOf()
-    )
+    ) {}
 }

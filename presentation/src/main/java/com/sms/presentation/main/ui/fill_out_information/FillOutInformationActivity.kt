@@ -104,7 +104,9 @@ class FillOutInformationActivity : ComponentActivity() {
                         navController = navController,
                         viewModel = searchDetailStackViewModel,
                         selectedStack = (if (data.value != null) data.value!!.split(",") else listOf())
-                    )
+                    ) {
+                        navController.navigate("Profile")
+                    }
                 }
             }
         }

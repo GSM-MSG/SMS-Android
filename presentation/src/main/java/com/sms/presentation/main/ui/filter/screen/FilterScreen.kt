@@ -32,7 +32,8 @@ fun FilterScreen(
     navController: NavController,
     viewModel: StudentListViewModel,
     lifecycleScope: CoroutineScope,
-    role: String
+    role: String,
+    detailStack: List<String>
 ) {
     val gsmScoreSliderValues = remember {
         mutableStateOf(0f..990f)
@@ -257,10 +258,10 @@ fun FilterScreen(
                             .focusRequester(FocusRequester())
                             .onFocusChanged {
                                 if (it.isFocused) {
-
+                                    navController.navigate("Search")
                                 }
                             },
-                        setChangeText = "",
+                        setChangeText = detailStack.joinToString(", "),
                         readOnly = true,
                         endIcon = null,
                         leadingIcon = { SearchIcon() },

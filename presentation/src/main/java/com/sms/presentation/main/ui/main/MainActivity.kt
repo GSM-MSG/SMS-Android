@@ -2,11 +2,14 @@ package com.sms.presentation.main.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -14,11 +17,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.msg.sms.design.component.SmsDialog
+import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.filter.screen.FilterScreen
 import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.main.screen.MainScreen
 import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
+import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +35,7 @@ class MainActivity : ComponentActivity() {
     private val studentListViewModel by viewModels<StudentListViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
     private val fillOutViewModel by viewModels<FillOutViewModel>()
+    private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
 
     private var doubleBackToExitPressedOnce = false
     private var backPressedTimestamp = 0L
@@ -79,12 +85,37 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                             composable("Filter") {
+                                val data = remember {
+                                    mutableStateOf(
+                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
+                                            "detailStack"
+                                        )
+                                    )
+                                }
                                 FilterScreen(
                                     navController = navController,
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
-                                    role = response.data!!
+                                    role = response.data!!,
+                                    detailStack = (if (data.value != null) data.value!!.split(",") else listOf())
                                 )
+                            }
+                            composable("Search") {
+                                setSoftInputMode("RESIZE")
+                                val data = remember {
+                                    mutableStateOf(
+                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
+                                            "detailStack"
+                                        )
+                                    )
+                                }
+                                DetailStackSearchScreen(
+                                    navController = navController,
+                                    viewModel = searchDetailStackViewModel,
+                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(""))
+                                ) {
+                                    navController.navigate("Filter")
+                                }
                             }
                         }
                     }
@@ -123,5 +154,15 @@ class MainActivity : ComponentActivity() {
             backPressedTimestamp = currentTime
             Toast.makeText(this, "한 번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setSoftInputMode(isType: String = "NOTHING") {
+        window.setSoftInputMode(
+            when (isType) {
+                "PAN" -> WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+                "RESIZE" -> WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                else -> WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+            }
+        )
     }
 }
