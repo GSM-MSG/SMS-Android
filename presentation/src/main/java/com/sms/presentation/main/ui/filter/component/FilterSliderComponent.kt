@@ -29,7 +29,7 @@ fun FilterSliderComponent(
     SMSTheme { colors, typography ->
         Column(
             modifier = Modifier
-                .padding(20.dp)
+                .padding(horizontal = 20.dp)
                 .fillMaxWidth()
         ) {
             Text(
