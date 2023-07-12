@@ -1,10 +1,7 @@
 package com.sms.presentation.main.ui.filter.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
@@ -13,11 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
+import com.msg.sms.design.icon.SearchIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.filter.component.FilterSelectionControls
 import com.sms.presentation.main.ui.filter.component.FilterSelectorComponent
@@ -235,6 +237,36 @@ fun FilterScreen(
                         }
                     )
                     Spacer(modifier = Modifier.height(40.dp))
+                }
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = "세부스택",
+                        style = typography.body1,
+                        fontWeight = FontWeight.Normal,
+                        color = colors.BLACK
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    SmsCustomTextField(
+                        placeHolder = "찾고 싶은 세부스택 입력",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(FocusRequester())
+                            .onFocusChanged {
+                                if (it.isFocused) {
+
+                                }
+                            },
+                        setChangeText = "",
+                        readOnly = true,
+                        endIcon = null,
+                        leadingIcon = { SearchIcon() },
+                        onValueChange = {},
+                        clickAction = {}
+                    )
                 }
             }
         }

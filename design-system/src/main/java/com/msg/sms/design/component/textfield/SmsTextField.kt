@@ -85,6 +85,7 @@ fun SmsTextField(
 fun SmsCustomTextField(
     modifier: Modifier = Modifier,
     endIcon: @Composable (() -> Unit)?,
+    leadingIcon: @Composable (() -> Unit)? = null,
     clickAction: () -> Unit,
     isError: Boolean = false,
     placeHolder: String = "",
@@ -127,6 +128,13 @@ fun SmsCustomTextField(
                     unfocusedBorderColor = Color.Transparent,
                     cursorColor = colors.P2
                 ),
+                leadingIcon = {
+                    if (leadingIcon != null) {
+                        IconButton(onClick = { clickAction() }) {
+                            leadingIcon()
+                        }
+                    }
+                },
                 trailingIcon = {
                     if (endIcon != null) {
                         IconButton(onClick = { clickAction() }) {
