@@ -223,5 +223,8 @@ class StudentListViewModel @Inject constructor(
         selectedClassList.clear()
         selectedDepartmentList.clear()
         selectedTypeOfEmploymentList.clear()
+        isSchoolNumberAscendingOrder.value = true
+        isGsmScoreAscendingOrder.value = true
+        isDesiredAnnualSalaryAscendingOrder.value = true
     }
 }
