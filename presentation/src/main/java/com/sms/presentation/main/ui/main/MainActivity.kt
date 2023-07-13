@@ -1,10 +1,6 @@
 package com.sms.presentation.main.ui.main
 
 import android.content.Intent
-import android.os.Bundle
-import android.view.WindowManager
-import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf
@@ -17,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.msg.sms.design.component.SmsDialog
+import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.filter.screen.FilterScreen
 import com.sms.presentation.main.ui.login.LoginActivity
@@ -30,25 +27,20 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseActivity(backPressedEnabled = false) {
 
     private val studentListViewModel by viewModels<StudentListViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
 
-    private var doubleBackToExitPressedOnce = false
-    private var backPressedTimestamp = 0L
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        observeEvent()
+    override fun viewSetting() {
         studentListViewModel.getStudentListRequest(1, 20)
         authViewModel.getRoleInfo()
         fillOutViewModel.getMajorList()
     }
 
-    private fun observeEvent() {
+    override fun observeEvent() {
         lifecycleScope.launch {
             studentListViewModel.logoutResponse.collect {
                 if (it is Event.Success) {
@@ -112,7 +104,9 @@ class MainActivity : ComponentActivity() {
                                 DetailStackSearchScreen(
                                     navController = navController,
                                     viewModel = searchDetailStackViewModel,
-                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(""))
+                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(
+                                        ""
+                                    ))
                                 ) {
                                     navController.navigate("Filter")
                                 }
@@ -143,26 +137,5 @@ class MainActivity : ComponentActivity() {
                     }
             }
         }
-    }
-
-    private fun controlTheStackWhenBackPressed() {
-        val currentTime = System.currentTimeMillis()
-        if (doubleBackToExitPressedOnce && currentTime - backPressedTimestamp <= 2000) {
-            finishAffinity()
-        } else {
-            doubleBackToExitPressedOnce = true
-            backPressedTimestamp = currentTime
-            Toast.makeText(this, "한 번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun setSoftInputMode(isType: String = "NOTHING") {
-        window.setSoftInputMode(
-            when (isType) {
-                "PAN" -> WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
-                "RESIZE" -> WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                else -> WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-            }
-        )
     }
 }

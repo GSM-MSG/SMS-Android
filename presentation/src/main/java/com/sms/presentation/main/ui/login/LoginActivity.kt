@@ -1,15 +1,14 @@
 package com.sms.presentation.main.ui.login
 
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.msg.gauthsignin.GAuthSigninWebView
 import com.sms.presentation.BuildConfig
+import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.component.LoginScreen
 import com.sms.presentation.main.ui.main.MainActivity
@@ -20,12 +19,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class LoginActivity : ComponentActivity() {
+class LoginActivity : BaseActivity() {
     private val viewModel by viewModels<AuthViewModel>()
     private lateinit var isExist: String
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun viewSetting() {
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 viewModel.accessValidationResponse.value is Event.Loading
@@ -54,7 +52,7 @@ class LoginActivity : ComponentActivity() {
         }
     }
 
-    private fun observeEvent() {
+    override fun observeEvent() {
         observeLoginEvent()
         observeAutoLoginCheck()
         observeSaveTokenEvent()
