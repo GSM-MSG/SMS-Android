@@ -1,6 +1,7 @@
 package com.sms.presentation.main.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
@@ -80,6 +81,12 @@ class StudentListViewModel @Inject constructor(
     var selectedClassList = mutableStateListOf<FilterClass>()
     var selectedDepartmentList = mutableStateListOf<FilterDepartment>()
     var selectedTypeOfEmploymentList = mutableStateListOf<FilterTypeOfEmployment>()
+    var gsmScoreSliderValues = mutableStateOf(0f..990f)
+    var desiredAnnualSalarySliderValues = mutableStateOf(0f..9999f)
+    var isSchoolNumberAscendingOrder = mutableStateOf(true)
+    var isGsmScoreAscendingOrder = mutableStateOf(true)
+    var isDesiredAnnualSalaryAscendingOrder = mutableStateOf(true)
+
 
     fun getStudentListRequest(
         page: Int,
