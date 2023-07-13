@@ -27,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity(backPressedEnabled = false) {
+class MainActivity : BaseActivity() {
 
     private val studentListViewModel by viewModels<StudentListViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
@@ -104,9 +104,7 @@ class MainActivity : BaseActivity(backPressedEnabled = false) {
                                 DetailStackSearchScreen(
                                     navController = navController,
                                     viewModel = searchDetailStackViewModel,
-                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(
-                                        ""
-                                    ))
+                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(""))
                                 ) {
                                     navController.navigate("Filter")
                                 }

@@ -6,12 +6,10 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 
-
-abstract class BaseActivity(backPressedEnabled: Boolean = true) : ComponentActivity() {
-
+abstract class BaseActivity : ComponentActivity() {
     private var doubleBackToExitPressedOnce = false
     private var backPressedTimestamp = 0L
-    private val onBackPressedCallback = object : OnBackPressedCallback(backPressedEnabled) {
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             controlTheStackWhenBackPressed()
         }

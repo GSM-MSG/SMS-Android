@@ -39,10 +39,10 @@ fun FilterScreen(
                 SmsBoxButton(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = "학생 몇명 보기",
+                    text = "확인",
                     enabled = true
                 ) {
-                    navController.clearBackStack("Main")
+                    navController.navigate("Main")
                 }
             }
         ) {
