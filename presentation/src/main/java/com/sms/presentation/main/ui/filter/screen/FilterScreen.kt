@@ -28,8 +28,7 @@ fun FilterScreen(
     navController: NavController,
     viewModel: StudentListViewModel,
     lifecycleScope: CoroutineScope,
-    role: String,
-    detailStack: List<String>
+    role: String
 ) {
     val scrollState = rememberScrollState()
 
@@ -67,7 +66,9 @@ fun FilterScreen(
                         viewModel.resetFilter()
                     },
                     onClickRightButton = {
-                        navController.popBackStack()
+                        navController.navigate("Main") {
+                            popUpTo("Main") { inclusive = false }
+                        }
                     }
                 )
                 Divider(thickness = 16.dp, color = colors.N10)
@@ -76,7 +77,7 @@ fun FilterScreen(
                     FilterSelectorGroup(role = role, viewModel = viewModel)
                     FilterSliderGroup(role = role, viewModel = viewModel)
                     FilterSelectionControlsGroup(role = role, viewModel = viewModel)
-                    FilterDetailStackSearchComponent(detailStack = detailStack) {
+                    FilterDetailStackSearchComponent(detailStack = viewModel.detailStackList.value) {
                         navController.navigate("Search")
                     }
                     Spacer(modifier = Modifier.height(it.calculateBottomPadding() + 64.dp))

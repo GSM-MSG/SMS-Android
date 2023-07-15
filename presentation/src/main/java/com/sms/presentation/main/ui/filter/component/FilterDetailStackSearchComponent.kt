@@ -14,7 +14,7 @@ import com.msg.sms.design.icon.SearchIcon
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun FilterDetailStackSearchComponent(detailStack: List<String>, onClick: () -> Unit) {
+fun FilterDetailStackSearchComponent(detailStack: String, onClick: () -> Unit) {
     SMSTheme { colors, typography ->
         Column(
             modifier = Modifier
@@ -38,7 +38,7 @@ fun FilterDetailStackSearchComponent(detailStack: List<String>, onClick: () -> U
                             onClick()
                         }
                     },
-                setChangeText = detailStack.joinToString(", "),
+                setChangeText = detailStack,
                 readOnly = true,
                 endIcon = null,
                 leadingIcon = { SearchIcon() },

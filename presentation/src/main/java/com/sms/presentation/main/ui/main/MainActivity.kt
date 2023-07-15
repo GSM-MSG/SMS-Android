@@ -77,19 +77,11 @@ class MainActivity : BaseActivity() {
                                 }
                             }
                             composable("Filter") {
-                                val data = remember {
-                                    mutableStateOf(
-                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
-                                            "detailStack"
-                                        )
-                                    )
-                                }
                                 FilterScreen(
                                     navController = navController,
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
-                                    role = response.data!!,
-                                    detailStack = (if (data.value != null) data.value!!.split(",") else listOf())
+                                    role = response.data!!
                                 )
                             }
                             composable("Search") {
@@ -107,6 +99,10 @@ class MainActivity : BaseActivity() {
                                     selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(""))
                                 ) {
                                     navController.navigate("Filter")
+                                    studentListViewModel.detailStackList.value =
+                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
+                                            "detailStack"
+                                        ) ?: ""
                                 }
                             }
                         }
