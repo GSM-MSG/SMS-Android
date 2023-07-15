@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.filter.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -31,6 +32,12 @@ fun FilterScreen(
     role: String
 ) {
     val scrollState = rememberScrollState()
+
+    BackHandler {
+        navController.navigate("Main") {
+            popUpTo("Main") { inclusive = false }
+        }
+    }
 
     SMSTheme { colors, typography ->
         Scaffold(
