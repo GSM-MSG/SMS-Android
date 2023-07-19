@@ -62,4 +62,4 @@ jobs:
           serviceAccountJson: service_account.json
           packageName: com.msg.sms_android
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
-          track: production
+          track: beta
