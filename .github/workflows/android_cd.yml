@@ -37,9 +37,6 @@ jobs:
         
       - name: Create service_account.json
         run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
-        
-#       - name: Build
-#         run: ./gradlew build
 
       - name: Assemble Release Bundle
         run: ./gradlew bundleRelease
@@ -57,12 +54,12 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: app
-          path: app/release/app-release.aab
+          path: app/build/outputs/bundle/release/app-release.aab
 
       - name: Deploy to production
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service_account.json
           packageName: com.msg.sms_android
-          releaseFiles: app/release/app-release.aab
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
           track: production
