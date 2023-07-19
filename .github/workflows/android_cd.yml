@@ -63,6 +63,6 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service_account.json
-          packageName: com.msg.sms
+          packageName: com.msg.sms_android
           releaseFiles: app/release/app-release.aab
           track: production
