@@ -34,11 +34,11 @@ fun SmsSliderCustomTrack(sliderPositions: SliderPositions) {
             val tickSize = 2.dp.toPx()
             val trackStrokeWidth = 2.dp.toPx()
             drawLine(
-                inactiveTrackColor,
-                sliderStart,
-                sliderEnd,
-                trackStrokeWidth,
-                StrokeCap.Round
+                color = inactiveTrackColor,
+                start = sliderStart,
+                end = sliderEnd,
+                strokeWidth = trackStrokeWidth,
+                cap = StrokeCap.Round
             )
             val sliderValueEnd = Offset(
                 sliderStart.x +
@@ -53,11 +53,11 @@ fun SmsSliderCustomTrack(sliderPositions: SliderPositions) {
             )
 
             drawLine(
-                activeTrackColor,
-                sliderValueStart,
-                sliderValueEnd,
-                trackStrokeWidth,
-                StrokeCap.Round
+                color = activeTrackColor,
+                start = sliderValueStart,
+                end = sliderValueEnd,
+                strokeWidth = trackStrokeWidth,
+                cap = StrokeCap.Round
             )
             sliderPositions.tickFractions.groupBy {
                 it > sliderPositions.activeRange.endInclusive ||
