@@ -66,7 +66,7 @@ fun SmsTextField(
                     cursorColor = colors.P2
                 ),
                 trailingIcon = {
-                    IconButton(onClick = { onClickButton() }, enabled = setText.isNotEmpty())
+                    IconButton(onClick = onClickButton, enabled = setText.isNotEmpty())
                     {
                         if (setText.isNotEmpty()) DeleteButtonIcon()
                     }
@@ -130,14 +130,14 @@ fun SmsCustomTextField(
                 ),
                 leadingIcon = {
                     if (leadingIcon != null) {
-                        IconButton(onClick = { clickAction() }) {
+                        IconButton(onClick = clickAction) {
                             leadingIcon()
                         }
                     }
                 },
                 trailingIcon = {
                     if (endIcon != null) {
-                        IconButton(onClick = { clickAction() }) {
+                        IconButton(onClick = clickAction) {
                             endIcon()
                         }
                     }
