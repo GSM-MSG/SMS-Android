@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,14 +64,14 @@ fun SmsBoxButton(
                 contentColor = contentFor(state),
                 disabledBackgroundColor = colors.N20,
                 disabledContentColor = colors.N30
-            )
-
+            ),
+            shape = RectangleShape,
+            contentPadding = PaddingValues(vertical = 13.5.dp)
         ) {
             Text(
                 text = text,
                 style = typography.title2,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 13.5.dp)
+                fontWeight = FontWeight.Bold
             )
         }
     }
@@ -84,7 +85,8 @@ fun BoxButtonPre() {
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         SmsBoxButton(
-            text = "Text", modifier = Modifier
+            text = "Text",
+            modifier = Modifier
                 .width(200.dp)
                 .height(48.dp),
             state = ButtonState.Normal

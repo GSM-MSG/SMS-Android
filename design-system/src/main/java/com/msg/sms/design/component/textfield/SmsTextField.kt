@@ -14,6 +14,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.DeleteButtonIcon
@@ -33,7 +34,10 @@ fun SmsTextField(
     onValueChange: (String) -> Unit = {},
     onClickButton: () -> Unit,
 ) {
-    val isFocused = remember { mutableStateOf(false) }
+    val isFocused = remember {
+        mutableStateOf(false)
+    }
+
     SMSTheme { colors, typography ->
         Column {
             OutlinedTextField(
@@ -65,7 +69,7 @@ fun SmsTextField(
                     cursorColor = colors.P2
                 ),
                 trailingIcon = {
-                    IconButton(onClick = { onClickButton() }, enabled = setText.isNotEmpty())
+                    IconButton(onClick = onClickButton, enabled = setText.isNotEmpty())
                     {
                         if (setText.isNotEmpty()) DeleteButtonIcon()
                     }
@@ -84,6 +88,7 @@ fun SmsTextField(
 fun SmsCustomTextField(
     modifier: Modifier = Modifier,
     endIcon: @Composable (() -> Unit)?,
+    leadingIcon: @Composable (() -> Unit)? = null,
     clickAction: () -> Unit,
     isError: Boolean = false,
     placeHolder: String = "",
@@ -126,9 +131,16 @@ fun SmsCustomTextField(
                     unfocusedBorderColor = Color.Transparent,
                     cursorColor = colors.P2
                 ),
+                leadingIcon = {
+                    if (leadingIcon != null) {
+                        IconButton(onClick = clickAction) {
+                            leadingIcon()
+                        }
+                    }
+                },
                 trailingIcon = {
                     if (endIcon != null) {
-                        IconButton(onClick = { clickAction() }) {
+                        IconButton(onClick = clickAction) {
                             endIcon()
                         }
                     }
@@ -140,6 +152,46 @@ fun SmsCustomTextField(
                 Text(text = errorText, color = colors.ERROR, style = typography.caption1)
             }
         }
+    }
+}
+
+@Composable
+fun FilterTextFiled(
+    value: String,
+    modifier: Modifier = Modifier,
+    isHopeSalary: Boolean = false,
+    onValueChange: (String) -> Unit
+) {
+    val isFocused = remember { mutableStateOf(false) }
+    val focusRequester = FocusRequester()
+    SMSTheme { colors, typography ->
+        OutlinedTextField(
+            value = if (isHopeSalary) "$value 만원" else value,
+            modifier = modifier
+                .focusRequester(focusRequester)
+                .border(
+                    width = 1.dp,
+                    color = if (isFocused.value) colors.P2 else colors.N10,
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .onFocusChanged {
+                    isFocused.value = it.isFocused
+                },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                backgroundColor = colors.N10,
+                placeholderColor = colors.N30,
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                cursorColor = colors.P2
+            ),
+            label = null,
+            textStyle = typography.body1,
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            onValueChange = {
+                onValueChange(it.replace("\\D".toRegex(), ""))
+            }
+        )
     }
 }
 

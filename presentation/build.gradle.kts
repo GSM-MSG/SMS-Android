@@ -72,6 +72,7 @@ dependencies {
     implementation(Dependency.Compose.COMPOSE)
     implementation(Dependency.Compose.COMPOSE_TOOLING)
     implementation(Dependency.Compose.COMPOSE_MATERIAL)
+    implementation(Dependency.Compose.COMPOSE_MATERIAL3)
     implementation(Dependency.Compose.COMPOSE_PREVIEW)
     implementation(Dependency.Msg.GAUTH)
     testImplementation(Dependency.Test.JUNIT)

@@ -33,7 +33,9 @@ fun TopBarComponent(
             if (leftIcon != null) {
                 IconButton(
                     onClick = onClickLeftButton,
-                    modifier = Modifier.align(Alignment.CenterStart)
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(start = 20.dp)
                 ) {
                     leftIcon()
                 }
@@ -49,7 +51,9 @@ fun TopBarComponent(
             if (rightIcon != null) {
                 IconButton(
                     onClick = onClickRightButton,
-                    modifier = Modifier.align(Alignment.CenterEnd)
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 20.dp)
                 ) {
                     rightIcon()
                 }

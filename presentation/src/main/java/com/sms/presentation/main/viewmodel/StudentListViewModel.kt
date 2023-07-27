@@ -1,5 +1,7 @@
 package com.sms.presentation.main.viewmodel
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
@@ -15,6 +17,7 @@ import com.msg.sms.domain.usecase.student.GetStudentListUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForAnonymousUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForTeacherUseCase
 import com.msg.sms.domain.usecase.user.GetProfileImageUseCase
+import com.sms.presentation.main.ui.filter.data.FilterClass
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +27,13 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+import com.sms.presentation.main.ui.filter.data.FilterGrade.*
+import com.sms.presentation.main.ui.filter.data.FilterClass.*
+import com.sms.presentation.main.ui.filter.data.FilterDepartment
+import com.sms.presentation.main.ui.filter.data.FilterDepartment.*
+import com.sms.presentation.main.ui.filter.data.FilterGrade
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment.*
 
 @HiltViewModel
 class StudentListViewModel @Inject constructor(
@@ -60,6 +70,23 @@ class StudentListViewModel @Inject constructor(
     private val _getStudentProfileImageResponse =
         MutableStateFlow<Event<ProfileImageModel>>(Event.Loading)
     val getStudentProfileImageResponse = _getStudentProfileImageResponse.asStateFlow()
+
+    var majorList = listOf<String>()
+    val gradeList = listOf(FIRST_GRADE, SECOND_GRADE, THIRD_GRADE)
+    val classList = listOf(FIRST, SECOND, THIRD, FOURTH)
+    val departmentList = listOf(SW_DEVELOPMENT, SMART_IOT_DEVELOPMENT, AI_DEVELOPMENT)
+    val typeOfEmploymentList = listOf(FULL_TIME, TEMPORARY, CONTRACT, INTERN)
+    var selectedMajorList = mutableStateListOf<String>()
+    var selectedGradeList = mutableStateListOf<FilterGrade>()
+    var selectedClassList = mutableStateListOf<FilterClass>()
+    var selectedDepartmentList = mutableStateListOf<FilterDepartment>()
+    var selectedTypeOfEmploymentList = mutableStateListOf<FilterTypeOfEmployment>()
+    var gsmScoreSliderValues = mutableStateOf(0f..990f)
+    var desiredAnnualSalarySliderValues = mutableStateOf(0f..9999f)
+    var isSchoolNumberAscendingOrder = mutableStateOf(true)
+    var isGsmScoreAscendingOrder = mutableStateOf(true)
+    var isDesiredAnnualSalaryAscendingOrder = mutableStateOf(true)
+    var detailStackList = mutableStateOf("")
 
     fun getStudentListRequest(
         page: Int,
@@ -179,15 +206,26 @@ class StudentListViewModel @Inject constructor(
 
     fun getProfileImageUrl() = viewModelScope.launch {
         _getStudentProfileImageResponse.value = Event.Loading
-        getProfileImageUseCase()
-            .onSuccess {
-                it.catch { remoteError ->
-                    _getStudentProfileImageResponse.value = remoteError.errorHandling()
-                }.collect { response ->
-                    _getStudentProfileImageResponse.value = Event.Success(data = response)
-                }
-            }.onFailure { error ->
-                _getStudentProfileImageResponse.value = error.errorHandling()
+        getProfileImageUseCase().onSuccess {
+            it.catch { remoteError ->
+                _getStudentProfileImageResponse.value = remoteError.errorHandling()
+            }.collect { response ->
+                _getStudentProfileImageResponse.value = Event.Success(data = response)
             }
+        }.onFailure { error ->
+            _getStudentProfileImageResponse.value = error.errorHandling()
+        }
+    }
+
+    fun resetFilter() {
+        selectedMajorList.clear()
+        selectedGradeList.clear()
+        selectedClassList.clear()
+        selectedDepartmentList.clear()
+        selectedTypeOfEmploymentList.clear()
+        detailStackList.value = ""
+        isSchoolNumberAscendingOrder.value = true
+        isGsmScoreAscendingOrder.value = true
+        isDesiredAnnualSalaryAscendingOrder.value = true
     }
 }

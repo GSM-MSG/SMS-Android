@@ -33,10 +33,8 @@ import com.sms.presentation.main.ui.main.data.StudentDetailData
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -210,12 +208,7 @@ fun MainScreen(
                     profileImageUrl = profileImageUrl.value,
                     isScolled = isScrolled.value,
                     filterButtonOnClick = {
-                        /*TODO (KimHyunseung) : 필터 Screen으로 이동*/
-                        scope.launch {
-                            snackBarVisible.value = true
-                            delay(1.5.seconds)
-                            if (snackBarVisible.value) snackBarVisible.value = false
-                        }
+                        navController.navigate("Filter")
                     },
                     profileButtonOnClick = {
                         if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
@@ -280,7 +273,7 @@ fun MainScreen(
                                             techStacks = it.techStacks
                                         )
                                         scope.launch {
-                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                            bottomSheetState.show()
                                         }
                                     }
                                 )
@@ -308,7 +301,7 @@ fun MainScreen(
                                             techStacks = it.techStack
                                         )
                                         scope.launch {
-                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                            bottomSheetState.show()
                                         }
                                     }
                                 )
@@ -332,7 +325,7 @@ fun MainScreen(
                                             techStacks = it.techStack
                                         )
                                         scope.launch {
-                                            bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                                            bottomSheetState.show()
                                         }
                                     }
                                 )
