@@ -41,15 +41,17 @@ fun FilterSelectorGroup(
         }
         Spacer(modifier = Modifier.height(40.dp))
     }
-    FilterSelectorComponent(
-        title = "분야",
-        itemList = viewModel.majorList,
-        selectedList = viewModel.selectedMajorList
-    ) { checked, text ->
-        if (!checked) viewModel.selectedMajorList.add(text)
-        else viewModel.selectedMajorList.remove(text)
+    if (viewModel.majorList.isNotEmpty()) {
+        FilterSelectorComponent(
+            title = "분야",
+            itemList = viewModel.majorList,
+            selectedList = viewModel.selectedMajorList
+        ) { checked, text ->
+            if (!checked) viewModel.selectedMajorList.add(text)
+            else viewModel.selectedMajorList.remove(text)
+        }
+        Spacer(modifier = Modifier.height(40.dp))
     }
-    Spacer(modifier = Modifier.height(40.dp))
     if (role == "ROLE_TEACHER") {
         FilterSelectorComponent(
             title = "희망 고용 형태",
