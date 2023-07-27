@@ -34,13 +34,14 @@ class MainActivity : BaseActivity() {
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
 
-    override fun viewSetting() {
+    override fun init() {
+        observeEvent()
         studentListViewModel.getStudentListRequest(1, 20)
         authViewModel.getRoleInfo()
         fillOutViewModel.getMajorList()
     }
 
-    override fun observeEvent() {
+    private fun observeEvent() {
         lifecycleScope.launch {
             studentListViewModel.logoutResponse.collect {
                 if (it is Event.Success) {

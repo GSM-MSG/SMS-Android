@@ -23,7 +23,7 @@ class LoginActivity : BaseActivity() {
     private val viewModel by viewModels<AuthViewModel>()
     private lateinit var isExist: String
 
-    override fun viewSetting() {
+    override fun init() {
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 viewModel.accessValidationResponse.value is Event.Loading
@@ -52,7 +52,7 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    override fun observeEvent() {
+    private fun observeEvent() {
         observeLoginEvent()
         observeAutoLoginCheck()
         observeSaveTokenEvent()

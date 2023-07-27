@@ -18,13 +18,10 @@ abstract class BaseActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        viewSetting()
-        observeEvent()
+        init()
     }
 
-    abstract fun viewSetting()
-
-    abstract fun observeEvent()
+    abstract fun init()
 
     protected fun controlTheStackWhenBackPressed() {
         val currentTime = System.currentTimeMillis()

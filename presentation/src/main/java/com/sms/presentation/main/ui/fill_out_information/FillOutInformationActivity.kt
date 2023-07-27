@@ -23,7 +23,7 @@ class FillOutInformationActivity : BaseActivity() {
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
 
-    override fun viewSetting() {
+    override fun init() {
         fillOutViewModel.getMajorList()
 
         setContent {
@@ -104,6 +104,4 @@ class FillOutInformationActivity : BaseActivity() {
             }
         }
     }
-
-    override fun observeEvent() {}
 }

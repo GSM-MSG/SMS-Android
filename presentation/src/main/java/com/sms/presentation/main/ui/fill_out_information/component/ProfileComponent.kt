@@ -164,11 +164,10 @@ fun ProfileComponent(
                         }
                     }
                 },
-                setChangeText = if (selectedMajor == "직접입력") enteredMajor else selectedMajor,
-                onValueChange = {
-                    enteringMajor(it)
-                }
-            )
+                setChangeText = if (selectedMajor == "직접입력") enteredMajor else selectedMajor
+            ) {
+                enteringMajor(it)
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "포트폴리오 URL", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
