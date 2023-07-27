@@ -34,7 +34,10 @@ fun SmsTextField(
     onValueChange: (String) -> Unit = {},
     onClickButton: () -> Unit,
 ) {
-    val isFocused = remember { mutableStateOf(false) }
+    val isFocused = remember {
+        mutableStateOf(false)
+    }
+
     SMSTheme { colors, typography ->
         Column {
             OutlinedTextField(
