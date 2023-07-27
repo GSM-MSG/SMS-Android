@@ -88,7 +88,6 @@ class StudentListViewModel @Inject constructor(
     var isDesiredAnnualSalaryAscendingOrder = mutableStateOf(true)
     var detailStackList = mutableStateOf("")
 
-
     fun getStudentListRequest(
         page: Int,
         size: Int,
