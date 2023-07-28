@@ -131,13 +131,7 @@ fun SmsCustomTextField(
                     unfocusedBorderColor = Color.Transparent,
                     cursorColor = colors.P2
                 ),
-                leadingIcon = {
-                    if (leadingIcon != null) {
-                        IconButton(onClick = clickAction) {
-                            leadingIcon()
-                        }
-                    }
-                },
+                leadingIcon = leadingIcon,
                 trailingIcon = {
                     if (endIcon != null) {
                         IconButton(onClick = clickAction) {
