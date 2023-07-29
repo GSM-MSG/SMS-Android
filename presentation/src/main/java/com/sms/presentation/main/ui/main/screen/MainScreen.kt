@@ -18,8 +18,6 @@ import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.bottomsheet.LogoutWithDrawalBottomSheet
 import com.msg.sms.design.component.button.ListFloatingButton
-import com.msg.sms.design.component.snackbar.SmsSnackBar
-import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
 import com.msg.sms.domain.model.student.response.GetStudentForStudent
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
@@ -84,9 +82,8 @@ fun MainScreen(
     val profileImageUrl = remember {
         mutableStateOf("")
     }
-    val snackBarVisible = remember {
-        mutableStateOf(false)
-    }
+
+    viewModel.getStudentListRequest(1, 20)
 
     BackHandler {
         if (bottomSheetState.isVisible) {
@@ -102,7 +99,7 @@ fun MainScreen(
         getStudentList(viewModel = viewModel,
             progressState = { progressState.value = it },
             onSuccess = { list, size ->
-                studentList.value += list
+                studentList.value = list
                 listTotalSize.value = size
             })
     }
@@ -222,14 +219,6 @@ fun MainScreen(
                         }
                     }
                 )
-                SmsSnackBar(
-                    text = "아직 개발 중인 기능입니다.",
-                    modifier = Modifier.align(Alignment.Center),
-                    visible = snackBarVisible.value,
-                    leftIcon = { ExclamationMarkIcon() }
-                ) {
-                    snackBarVisible.value = false
-                }
             }
             Box(modifier = Modifier.fillMaxSize()) {
                 StudentListComponent(
@@ -358,7 +347,7 @@ suspend fun getStudentList(
         when (response) {
             is Event.Success -> {
                 progressState(false)
-                onSuccess(response.data!!.content, response.data.totalSize)
+                onSuccess(response.data!!.content, response.data.contentSize)
             }
             is Event.Loading -> {
                 progressState(true)

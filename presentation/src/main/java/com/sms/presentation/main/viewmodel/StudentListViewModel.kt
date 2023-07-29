@@ -90,25 +90,38 @@ class StudentListViewModel @Inject constructor(
 
     fun getStudentListRequest(
         page: Int,
-        size: Int
+        size: Int,
+        majors: List<String>? = null,
+        techStacks: List<String>? = null,
+        grade: List<Int>? = null,
+        classNum: List<Int>? = null,
+        department: List<String>? = null,
+        stuNumSort: String? = null,
+        formOfEmployment: List<String>? = null,
+        minGsmAuthenticationScore: Int? = null,
+        maxGsmAuthenticationScore: Int? = null,
+        minSalary: Int? = null,
+        maxSalary: Int? = null,
+        gsmAuthenticationScoreSort: String? = null,
+        salarySort: String? = null,
     ) = viewModelScope.launch {
         _getStudentListResponse.value = Event.Loading
         getStudentListUseCase(
             page = page,
             size = size,
-            majors = majorList,
-            techStacks = detailStackList.value.split(", "),
-            grade = selectedGradeList.map { it.grade[0].toString().toInt() },
-            classNum = selectedClassList.map { it.`class`[0].toString().toInt() },
-            department = selectedDepartmentList.map { it.toString() },
-            stuNumSort = if (isSchoolNumberAscendingOrder.value) "ASCENDING" else "DESCENDING",
-            formOfEmployment = selectedTypeOfEmploymentList.map { it.toString() },
-            minGsmAuthenticationScore = gsmScoreSliderValues.value.start.toInt(),
-            maxGsmAuthenticationScore = gsmScoreSliderValues.value.endInclusive.toInt(),
-            minSalary = gsmScoreSliderValues.value.start.toInt(),
-            maxSalary = gsmScoreSliderValues.value.endInclusive.toInt(),
-            gsmAuthenticationScoreSort = if (isGsmScoreAscendingOrder.value) "ASCENDING" else "DESCENDING",
-            salarySort = if (isDesiredAnnualSalaryAscendingOrder.value) "ASCENDING" else "DESCENDING"
+            majors = selectedMajorList.ifEmpty { null },
+            techStacks = techStacks,
+            grade = grade,
+            classNum = classNum,
+            department = department,
+            stuNumSort = stuNumSort,
+            formOfEmployment = formOfEmployment,
+            minGsmAuthenticationScore = minGsmAuthenticationScore,
+            maxGsmAuthenticationScore = maxGsmAuthenticationScore,
+            minSalary = minSalary,
+            maxSalary = maxSalary,
+            gsmAuthenticationScoreSort = gsmAuthenticationScoreSort,
+            salarySort = salarySort
         ).onSuccess {
             it.catch { remoteError ->
                 _getStudentListResponse.value = remoteError.errorHandling()
