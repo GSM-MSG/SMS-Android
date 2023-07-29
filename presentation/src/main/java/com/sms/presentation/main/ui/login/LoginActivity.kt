@@ -6,8 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import com.msg.gauthsignin.GAuthSigninWebView
-import com.sms.presentation.BuildConfig
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.component.LoginScreen
@@ -35,15 +33,8 @@ class LoginActivity : BaseActivity() {
         setContent {
             LoginScreen(
                 context = this@LoginActivity,
-                onLoginButtonClick = {
-                    setContent {
-                        GAuthSigninWebView(
-                            clientId = BuildConfig.CLIENT_ID,
-                            redirectUri = BuildConfig.REDIRECT_URI
-                        ) { code ->
-                            viewModel.gAuthLogin(code = code)
-                        }
-                    }
+                loginCallBack = { code ->
+                    viewModel.gAuthLogin(code)
                 },
                 onLookAroundToGuestButtonClick = {
                     pageController(true)
