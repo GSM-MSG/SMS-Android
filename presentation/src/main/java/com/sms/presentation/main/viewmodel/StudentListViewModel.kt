@@ -1,5 +1,6 @@
 package com.sms.presentation.main.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -90,38 +91,26 @@ class StudentListViewModel @Inject constructor(
 
     fun getStudentListRequest(
         page: Int,
-        size: Int,
-        majors: List<String>? = null,
-        techStacks: List<String>? = null,
-        grade: List<Int>? = null,
-        classNum: List<Int>? = null,
-        department: List<String>? = null,
-        stuNumSort: String? = null,
-        formOfEmployment: List<String>? = null,
-        minGsmAuthenticationScore: Int? = null,
-        maxGsmAuthenticationScore: Int? = null,
-        minSalary: Int? = null,
-        maxSalary: Int? = null,
-        gsmAuthenticationScoreSort: String? = null,
-        salarySort: String? = null,
+        size: Int
     ) = viewModelScope.launch {
+        Log.d("detailStack", detailStackList.value.split(",").toString())
         _getStudentListResponse.value = Event.Loading
         getStudentListUseCase(
             page = page,
             size = size,
             majors = selectedMajorList.ifEmpty { null },
-            techStacks = techStacks,
-            grade = grade,
-            classNum = classNum,
-            department = department,
-            stuNumSort = stuNumSort,
-            formOfEmployment = formOfEmployment,
-            minGsmAuthenticationScore = minGsmAuthenticationScore,
-            maxGsmAuthenticationScore = maxGsmAuthenticationScore,
-            minSalary = minSalary,
-            maxSalary = maxSalary,
-            gsmAuthenticationScoreSort = gsmAuthenticationScoreSort,
-            salarySort = salarySort
+            techStacks = null,
+            grade = selectedGradeList.map { it.grade[0].toString().toInt() }.ifEmpty { null },
+            classNum = selectedClassList.map { it.`class`[0].toString().toInt() }.ifEmpty { null },
+            department = selectedDepartmentList.map { it.toString() }.ifEmpty { null },
+            stuNumSort = if (isSchoolNumberAscendingOrder.value) "ASCENDING" else "DESCENDING",
+            formOfEmployment = selectedTypeOfEmploymentList.map { it.toString() }.ifEmpty { null },
+            minGsmAuthenticationScore = gsmScoreSliderValues.value.start.toInt(),
+            maxGsmAuthenticationScore = gsmScoreSliderValues.value.endInclusive.toInt(),
+            minSalary = desiredAnnualSalarySliderValues.value.start.toInt(),
+            maxSalary = desiredAnnualSalarySliderValues.value.endInclusive.toInt(),
+            gsmAuthenticationScoreSort = if (isGsmScoreAscendingOrder.value) "ASCENDING" else "DESCENDING",
+            salarySort = if (isDesiredAnnualSalaryAscendingOrder.value) "ASCENDING" else "DESCENDING"
         ).onSuccess {
             it.catch { remoteError ->
                 _getStudentListResponse.value = remoteError.errorHandling()
