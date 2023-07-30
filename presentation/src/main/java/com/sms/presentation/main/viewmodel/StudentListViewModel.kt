@@ -93,13 +93,12 @@ class StudentListViewModel @Inject constructor(
         page: Int,
         size: Int
     ) = viewModelScope.launch {
-        Log.d("detailStack", detailStackList.value.split(",").toString())
         _getStudentListResponse.value = Event.Loading
         getStudentListUseCase(
             page = page,
             size = size,
             majors = selectedMajorList.ifEmpty { null },
-            techStacks = null,
+            techStacks = if (detailStackList.value.isNotBlank()) detailStackList.value.split(",") else null,
             grade = selectedGradeList.map { it.grade[0].toString().toInt() }.ifEmpty { null },
             classNum = selectedClassList.map { it.`class`[0].toString().toInt() }.ifEmpty { null },
             department = selectedDepartmentList.map { it.toString() }.ifEmpty { null },
