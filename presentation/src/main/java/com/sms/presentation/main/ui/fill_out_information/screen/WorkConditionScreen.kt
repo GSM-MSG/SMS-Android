@@ -16,9 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
-import com.msg.sms.design.component.spacer.SmsSpacer
-import com.msg.sms.design.component.topbar.TopBarComponent
-import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.WorkConditionComponent
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 
@@ -53,10 +50,6 @@ fun WorkConditionScreen(
                 .fillMaxWidth()
                 .background(Color.White)
         ) {
-            TopBarComponent(text = "정보 입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
-                navController.popBackStack()
-            }
-            SmsSpacer()
             WorkConditionComponent(
                 bottomSheetState = bottomSheetState,
                 wantWorkingCondition = if (selectedWorkingCondition.value == "") data.formOfEmployment else selectedWorkingCondition.value.filter { it.toString() != "" },

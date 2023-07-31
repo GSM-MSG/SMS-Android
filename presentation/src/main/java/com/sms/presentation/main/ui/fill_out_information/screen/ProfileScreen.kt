@@ -23,8 +23,6 @@ import com.msg.sms.design.component.bottomsheet.ChooseProfilePictureBottomSheet
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.selector.MajorSelector
-import com.msg.sms.design.component.spacer.SmsSpacer
-import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.ProfileComponent
 import com.sms.presentation.main.ui.util.*
@@ -184,11 +182,6 @@ fun ProfileScreen(
         sheetState = bottomSheetState,
     ) {
         Column {
-            TopBarComponent(
-                text = "정보입력",
-                leftIcon = null,
-                rightIcon = null
-            )
             SMSTheme { colors, _ ->
                 Divider(color = colors.N10, thickness = 1.dp)
             }
@@ -197,7 +190,6 @@ fun ProfileScreen(
                     .verticalScroll(scrollState)
                     .background(Color.White)
             ) {
-                SmsSpacer()
                 ProfileComponent(
                     bottomSheetScaffoldState = bottomSheetState,
                     isReadOnly = selectedMajor.value != "직접입력",

@@ -15,9 +15,6 @@ import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
-import com.msg.sms.design.component.spacer.SmsSpacer
-import com.msg.sms.design.component.topbar.TopBarComponent
-import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.SchoolLifeComponent
 import com.sms.presentation.main.ui.util.getFileFromUri
@@ -86,10 +83,6 @@ fun SchoolLifeScreen(
                 .fillMaxWidth()
                 .background(colors.WHITE)
         ) {
-            TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
-                navController.popBackStack()
-            }
-            SmsSpacer()
             SchoolLifeComponent(
                 fileName = fileName.value,
                 enteredGsmAuthenticationScore = gsmAuthenticationScore.value,

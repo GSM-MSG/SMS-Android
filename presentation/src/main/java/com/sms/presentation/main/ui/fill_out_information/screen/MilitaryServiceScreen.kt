@@ -17,9 +17,6 @@ import androidx.navigation.NavController
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
-import com.msg.sms.design.component.spacer.SmsSpacer
-import com.msg.sms.design.component.topbar.TopBarComponent
-import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.MilitaryServiceComponent
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 
@@ -54,10 +51,6 @@ fun MilitaryServiceScreen(
                 .fillMaxSize()
                 .background(Color.White)
         ) {
-            TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
-                navController.popBackStack()
-            }
-            SmsSpacer()
             MilitaryServiceComponent(
                 bottomSheetState = bottomSheetState,
                 selectedMilitaryService = if (selectedMilitaryService.value == "") data.militaryService else selectedMilitaryService.value
