@@ -23,7 +23,6 @@ import com.msg.sms.design.component.bottomsheet.ChooseProfilePictureBottomSheet
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.selector.MajorSelector
-import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.ProfileComponent
 import com.sms.presentation.main.ui.util.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
@@ -182,9 +181,6 @@ fun ProfileScreen(
         sheetState = bottomSheetState,
     ) {
         Column {
-            SMSTheme { colors, _ ->
-                Divider(color = colors.N10, thickness = 1.dp)
-            }
             Column(
                 Modifier
                     .verticalScroll(scrollState)
