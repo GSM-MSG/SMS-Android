@@ -22,20 +22,20 @@ fun FilloutStatusProgressBar(progressCount: Int) {
 
     when (progressCount) {
         0 -> progress = 0.025f
-        1 -> progress = 0.25f
-        2 -> progress = 0.375f
-        3 -> progress = 0.5f
-        4 -> progress = 0.625f
-        5 -> progress = 0.75f
-        6 -> progress = 0.875f
-        7 -> progress = 0.1f
+        1 -> progress = 0.16f
+        2 -> progress = 0.3f
+        3 -> progress = 0.44f
+        4 -> progress = 0.575f
+        5 -> progress = 0.72f
+        6 -> progress = 0.85f
+        7 -> progress = 1f
     }
 
     val size by animateFloatAsState(
         targetValue = progress,
         tween(
             durationMillis = 1000,
-            delayMillis = 200,
+            delayMillis = 100,
             easing = LinearOutSlowInEasing
         )
     )

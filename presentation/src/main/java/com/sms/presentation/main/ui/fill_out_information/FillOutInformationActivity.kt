@@ -51,6 +51,7 @@ class FillOutInformationActivity : BaseActivity() {
                         leftIcon = { BackButtonIcon() },
                         rightIcon = null
                     ) {
+                        currentNavBackStackSize.value++
                         navController.popBackStack()
                     }
                     FilloutStatusProgressBar(currentNavBackStackSize.value)
