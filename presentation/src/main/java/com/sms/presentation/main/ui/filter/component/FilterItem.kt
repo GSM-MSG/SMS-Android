@@ -31,10 +31,10 @@ fun <T> FilterItem(
             Spacer(modifier = Modifier.size(8.dp))
             Text(
                 text = when (item) {
-                    is FilterGrade -> item.grade
-                    is FilterDepartment -> item.department
-                    is FilterClass -> item.`class`
-                    is FilterTypeOfEmployment -> item.typeOfEmployment
+                    is FilterGrade -> item.value
+                    is FilterDepartment -> item.value
+                    is FilterClass -> item.value
+                    is FilterTypeOfEmployment -> item.value
                     else -> item.toString()
                 },
                 style = typography.body2,
