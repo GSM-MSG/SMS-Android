@@ -1,13 +1,11 @@
-package com.msg.sms.design.component.item
+package com.msg.sms.design.component.text
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
@@ -16,22 +14,19 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun TechStackItem(techStack: String) {
+fun TechStackTextComponent(text: String, modifier: Modifier = Modifier) {
     SMSTheme { colors, typography ->
         Box(
-            modifier = Modifier
-                .wrapContentSize()
-                .clip(RoundedCornerShape(8.dp))
+            modifier = modifier
                 .background(colors.N10)
+                .clip(RoundedCornerShape(8.dp))
         ) {
             Text(
-                text = techStack,
-                style = typography.caption2,
-                fontWeight = FontWeight.Normal,
-                color = colors.N40,
+                text = text,
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(vertical = 6.5.dp, horizontal = 12.dp)
+                    .padding(vertical = 6.5.dp, horizontal = 12.dp), style = typography.caption2,
+                color = colors.N40,
+                fontWeight = FontWeight.Normal
             )
         }
     }
@@ -39,11 +34,6 @@ fun TechStackItem(techStack: String) {
 
 @Preview
 @Composable
-private fun TechStackItemPre() {
-    TechStackItem(techStack = "aa")
-}
-@Preview
-@Composable
-private fun TechStackItemLongTextPre() {
-    TechStackItem(techStack = "Android Studio")
+fun TechStackTextComponentPre() {
+    TechStackTextComponent(text = "테스트")
 }

@@ -317,13 +317,16 @@ fun MainScreen(
                                     },
                                     {
                                         isDetailBottomSheet.value = true
-                                        studentDetailData.value = StudentDetailData(
-                                            name = it.name,
-                                            introduce = it.introduce,
-                                            major = it.major,
-                                            profileImg = it.profileImg,
-                                            techStacks = it.techStack
-                                        )
+                                        // Todo(LeeHyeonbin): 디테일 페이지 API 수정하면서 여기 변경하기
+//                                        studentDetailData.value = StudentDetailData(
+//                                            name = it.name,
+//                                            introduce = it.introduce,
+//                                            major = it.major,
+//                                            profileImg = it.profileImg,
+//                                            techStacks = it.techStack,
+//                                            awardData = it.awardData,
+//                                            projectList = it.projectList
+//                                        )
                                         scope.launch {
                                             bottomSheetState.show()
                                         }

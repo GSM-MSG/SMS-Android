@@ -36,7 +36,6 @@ fun StudentDetailScreen(
     role: String,
     onDismissButtonClick: () -> Unit,
 ) {
-    val context = LocalContext.current
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
 
@@ -86,14 +85,6 @@ fun StudentDetailScreen(
             departments = studentDetailData.department.departmentEnumToString(),
             introduce = studentDetailData.introduce,
             isTeacher = role == "ROLE_TEACHER",
-            onDreamBookButtonClick = {
-                val downloader = AndroidDownloader(
-                    context = context,
-                    fileName =
-                    "${studentDetailData.grade}${studentDetailData.classNum}${if (studentDetailData.number.toString().length == 1) "0" + studentDetailData.number else studentDetailData.number}${studentDetailData.name}의 드림북.hwp"
-                )
-                downloader.downloadFile(url = studentDetailData.dreamBookFileUrl)
-            },
             certificationData = studentDetailData.certificates,
             email = studentDetailData.contactEmail,
             gsmAuthenticationScore = studentDetailData.gsmAuthenticationScore.toString(),
@@ -103,7 +94,9 @@ fun StudentDetailScreen(
             portfolioLink = studentDetailData.portfolioUrl,
             region = studentDetailData.regions,
             salary = studentDetailData.salary.toString(),
-            scrollState = scrollState
+            scrollState = scrollState,
+            awardData = studentDetailData.awardData,
+            projectList = studentDetailData.projectList
         )
         IconButton(
             onClick = {
