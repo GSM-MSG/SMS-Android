@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun TechStackTextComponent(str: String, modifier: Modifier = Modifier) {
+fun TechStackTextComponent(text: String, modifier: Modifier = Modifier) {
     SMSTheme { colors, typography ->
         Box(
             modifier = modifier
@@ -22,7 +22,7 @@ fun TechStackTextComponent(str: String, modifier: Modifier = Modifier) {
                 .clip(RoundedCornerShape(8.dp))
         ) {
             Text(
-                text = str,
+                text = text,
                 modifier = Modifier
                     .padding(vertical = 6.5.dp, horizontal = 12.dp), style = typography.caption2,
                 color = colors.N40,
@@ -35,5 +35,5 @@ fun TechStackTextComponent(str: String, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun TechStackTextComponentPre() {
-    TechStackTextComponent(str = "테스트")
+    TechStackTextComponent(text = "테스트")
 }
