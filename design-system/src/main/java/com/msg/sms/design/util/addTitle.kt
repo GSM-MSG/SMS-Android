@@ -26,8 +26,7 @@ fun Body1Text(titleText: String) {
 @Composable
 fun AddBody1TitleText(
     modifier: Modifier = Modifier,
-    titleText
-    : String,
+    titleText: String,
     spaceSize: Int = 16,
     component: @Composable () -> Unit,
 ) {
