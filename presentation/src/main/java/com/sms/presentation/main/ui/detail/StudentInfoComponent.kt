@@ -1,14 +1,15 @@
 package com.sms.presentation.main.ui.detail
 
-import android.content.Intent
-import android.net.Uri
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.divider.SmsDivider
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.student.response.CertificationModel
@@ -18,7 +19,6 @@ import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 @Composable
 fun StudentInfoComponent(
     modifier: Modifier,
-    portfolioLink: String,
     gsmAuthenticationScore: String,
     email: String,
     militaryService: String,
@@ -26,7 +26,6 @@ fun StudentInfoComponent(
     certificationData: CertificationData,
     foreignLanguage: List<CertificationModel>,
 ) {
-    val context = LocalContext.current
     val titleTextModifier = Modifier
         .fillMaxWidth(0.4f)
         .padding(vertical = 8.dp)
@@ -175,18 +174,7 @@ fun StudentInfoComponent(
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(44.dp))
-            SmsRoundedButton(
-                text = "포트폴리오", modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-            ) {
-                val urlIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(portfolioLink)
-                )
-                context.startActivity(urlIntent)
-            }
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
