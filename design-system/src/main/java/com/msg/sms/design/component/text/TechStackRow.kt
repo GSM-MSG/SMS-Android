@@ -3,7 +3,6 @@ package com.msg.sms.design.component.text
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -21,10 +20,10 @@ fun TechStackRow(modifier: Modifier, techStack: List<String>) {
     LazyHorizontalStaggeredGrid(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(max = if (techStack.size <= 5) 30.dp else if (techStack.size in 5..12) 64.dp else 98.dp),
+            .heightIn(max = if (techStack.size <= 5) 30.dp else if (techStack.size in 5..10) 64.dp else if (techStack.size in 11..15) 98.dp else 132.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalItemSpacing = 4.dp,
-        rows = StaggeredGridCells.Fixed(if (techStack.size <= 5) 1 else if (techStack.size in 5..12) 2 else 3)
+        rows = StaggeredGridCells.Fixed(if (techStack.size <= 5) 1 else if (techStack.size in 5..10) 2 else if (techStack.size in 11..15) 3 else 4)
     ) {
         itemsIndexed(techStack) { _: Int, item: String ->
             TechStackItem(techStack = item)
