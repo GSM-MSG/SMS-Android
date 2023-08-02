@@ -255,6 +255,6 @@ fun TopEndArrowIcon(
     Image(
         painter = painterResource(id = R.drawable.ic_top_end_arrow),
         contentDescription = "화살표 아이콘",
-                modifier = modifier
+        modifier = modifier
     )
 }
