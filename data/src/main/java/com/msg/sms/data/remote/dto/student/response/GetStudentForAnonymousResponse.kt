@@ -8,6 +8,8 @@ data class GetStudentForAnonymousResponse(
     val major: String,
     val profileImg: String,
     val techStack: List<String>,
+    val projectList: List<String>,
+    val awardData: List<String>
 )
 
 fun GetStudentForAnonymousResponse.toGetStudentForAnonymous(): GetStudentForAnonymous {
@@ -16,6 +18,8 @@ fun GetStudentForAnonymousResponse.toGetStudentForAnonymous(): GetStudentForAnon
         introduce = introduce,
         major = major,
         profileImg = profileImg,
-        techStack = techStack
+        techStack = techStack,
+        projectList = projectList,
+        awardData = awardData
     )
 }

@@ -6,4 +6,6 @@ data class GetStudentForAnonymous(
     val major: String,
     val profileImg: String,
     val techStack: List<String>,
+    val projectList: List<String>,
+    val awardData: List<String>
 )
