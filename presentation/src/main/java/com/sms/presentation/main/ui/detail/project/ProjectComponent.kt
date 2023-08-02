@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.component.text.TechStackRow
 import com.msg.sms.design.theme.SMSTheme
+import com.msg.sms.design.util.AddBody1TitleText
 import com.sms.presentation.main.ui.detail.ImportantTaskComponent
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
@@ -89,14 +90,9 @@ fun ProjectComponent(data: ProjectData) {
                     }
                 }
             }
-            Text(
-                text = "사용기술",
-                style = typography.body1,
-                color = colors.BLACK,
-                fontWeight = FontWeight.Normal
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            TechStackRow(modifier = Modifier, techStack = data.techStack)
+            AddBody1TitleText(titleText = "사용기술", spaceSize = 8) {
+                TechStackRow(modifier = Modifier, techStack = data.techStack)
+            }
             Spacer(modifier = Modifier.height(24.dp))
             ImportantTaskComponent(importantTask = data.keyTask)
             Spacer(modifier = Modifier.height(24.dp))
