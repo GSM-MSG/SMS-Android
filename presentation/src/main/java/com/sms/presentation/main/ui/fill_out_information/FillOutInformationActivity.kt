@@ -38,7 +38,7 @@ class FillOutInformationActivity : BaseActivity() {
         setContent {
             val navController = rememberNavController()
             val currentNavBackStackSize = remember {
-                mutableStateOf(navController.backQueue.size)
+                mutableStateOf(navController.currentDestination?.route)
             }
             SMSTheme { colors, _ ->
                 Column(
@@ -51,7 +51,6 @@ class FillOutInformationActivity : BaseActivity() {
                         leftIcon = { BackButtonIcon() },
                         rightIcon = null
                     ) {
-                        currentNavBackStackSize.value++
                         navController.popBackStack()
                     }
                     FilloutStatusProgressBar(currentNavBackStackSize.value)

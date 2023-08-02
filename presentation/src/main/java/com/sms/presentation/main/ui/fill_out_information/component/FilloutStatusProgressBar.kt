@@ -17,18 +17,18 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun FilloutStatusProgressBar(progressCount: Int) {
+fun FilloutStatusProgressBar(currentRoute: String?) {
     var progress by remember { mutableStateOf(0f) }
 
-    when (progressCount) {
-        0 -> progress = 0.025f
-        1 -> progress = 0.16f
-        2 -> progress = 0.3f
-        3 -> progress = 0.44f
-        4 -> progress = 0.575f
-        5 -> progress = 0.72f
-        6 -> progress = 0.85f
-        7 -> progress = 1f
+    progress = when (currentRoute) {
+        "SchoolLife" -> 0.16f
+        "WorkCondition" -> 0.3f
+        "MilitaryService" -> 0.44f
+        "Certification" -> 0.575f
+        "ForeignLanguage" -> 0.72f
+        "Search" -> 0.85f
+        "" -> 1f
+        else -> 0.025f
     }
 
     val size by animateFloatAsState(
@@ -73,10 +73,4 @@ fun FilloutStatusProgressBar(progressCount: Int) {
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun CustomProgressBarPre() {
-    FilloutStatusProgressBar(progressCount = 2)
 }
