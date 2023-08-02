@@ -232,7 +232,20 @@ private fun StudentDetailComponentPre() {
                 activityDuration = "2023 ~",
                 projectImage = listOf("https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"),
                 icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                techStack = listOf("Github", "Git", "Kotlin", "Android Studio"),
+                techStack = listOf(
+                    "Github",
+                    "Git",
+                    "Kotlin",
+                    "Android Studio",
+                    "Github",
+                    "Git",
+                    "Kotlin",
+                    "Android Studio",
+                    "Github",
+                    "Git",
+                    "Kotlin",
+                    "Android Studio"
+                ),
                 keyTask = "모이자 ㅋㅋ",
                 relatedLinks = listOf(
                     RelatedLinksData("Youtube", "https://dolmc.com"),
