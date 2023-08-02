@@ -1,6 +1,10 @@
 package com.sms.presentation.main.ui.detail.link
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,17 +18,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.TopEndArrowIcon
+import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 
 @Composable
-fun LinkComponent(linksData: RelatedLinksData, getHeight: (height: Dp) -> Unit) {
+fun LinkComponent(context: Context = LocalContext.current, linksData: RelatedLinksData, getHeight: (height: Dp) -> Unit) {
     SMSTheme { colors, typography ->
         Box(
             modifier = Modifier
@@ -32,6 +38,13 @@ fun LinkComponent(linksData: RelatedLinksData, getHeight: (height: Dp) -> Unit) 
                 .background(color = colors.N10)
                 .onGloballyPositioned {
                     getHeight(it.size.height.dp)
+                }
+                .smsClickable {
+                    val urlIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(linksData.link)
+                    )
+                    context.startActivity(urlIntent)
                 }
         ) {
             Row(
