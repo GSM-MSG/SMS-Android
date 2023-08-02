@@ -12,31 +12,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.selector.SmsCheckBox
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.filter.data.FilterClass
-import com.sms.presentation.main.ui.filter.data.FilterDepartment
 import com.sms.presentation.main.ui.filter.data.FilterGrade
-import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
 
 @Composable
-fun <T> FilterItem(
-    item: T,
+fun FilterItem(
+    item: String,
     checked: Boolean,
-    onItemClick: (checked: Boolean, value: T) -> Unit
+    onItemClick: (checked: Boolean) -> Unit
 ) {
     SMSTheme { colors, typography ->
         Row(verticalAlignment = Alignment.CenterVertically) {
             SmsCheckBox(checked = checked) {
-                onItemClick(checked, item)
+                onItemClick(checked)
             }
             Spacer(modifier = Modifier.size(8.dp))
             Text(
-                text = when (item) {
-                    is FilterGrade -> item.value
-                    is FilterDepartment -> item.value
-                    is FilterClass -> item.value
-                    is FilterTypeOfEmployment -> item.value
-                    else -> item.toString()
-                },
+                text = item,
                 style = typography.body2,
                 fontWeight = FontWeight.Normal,
                 color = if (checked) colors.BLACK else colors.N30
@@ -48,5 +39,5 @@ fun <T> FilterItem(
 @Preview
 @Composable
 fun FilterItemPre() {
-    FilterItem(item = FilterGrade.FIRST_GRADE, checked = true) { _, _ -> }
+    FilterItem(item = FilterGrade.FIRST_GRADE.value, checked = true) {}
 }
