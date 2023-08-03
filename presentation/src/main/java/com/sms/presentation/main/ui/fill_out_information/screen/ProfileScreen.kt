@@ -23,6 +23,7 @@ import com.msg.sms.design.component.bottomsheet.ChooseProfilePictureBottomSheet
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.selector.MajorSelector
+import com.msg.sms.design.component.spacer.SmsSpacer
 import com.sms.presentation.main.ui.fill_out_information.component.ProfileComponent
 import com.sms.presentation.main.ui.util.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
@@ -186,6 +187,7 @@ fun ProfileScreen(
                     .verticalScroll(scrollState)
                     .background(Color.White)
             ) {
+                SmsSpacer()
                 ProfileComponent(
                     bottomSheetScaffoldState = bottomSheetState,
                     isReadOnly = selectedMajor.value != "직접입력",

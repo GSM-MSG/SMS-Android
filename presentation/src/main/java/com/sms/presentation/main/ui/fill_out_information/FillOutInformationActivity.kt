@@ -14,7 +14,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
@@ -38,7 +37,7 @@ class FillOutInformationActivity : BaseActivity() {
         setContent {
             val navController = rememberNavController()
             val currentRoute = remember {
-                mutableStateOf("")
+                mutableStateOf("Profile")
             }
 
             SMSTheme { colors, _ ->
@@ -50,13 +49,16 @@ class FillOutInformationActivity : BaseActivity() {
                     if (currentRoute.value != "Search") {
                         TopBarComponent(
                             text = "정보 입력",
-                            leftIcon = { BackButtonIcon() },
+                            leftIcon = {
+                                if (currentRoute.value == "Profile") {
+                                    BackButtonIcon()
+                                }
+                            },
                             rightIcon = null
                         ) {
                             navController.popBackStack()
                         }
                         FilloutStatusProgressBar(currentRoute.value)
-                        SmsSpacer()
                     }
                     NavHost(
                         navController = navController,
