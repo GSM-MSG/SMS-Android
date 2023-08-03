@@ -229,37 +229,6 @@ fun ForeignLanguageComponent(
                         }
 
                         lifecycleScope.launch {
-                            viewModel.dreamBookUpload(
-                                enteredSchoolLifeData.dreamBookFileUri.toMultipartBody(
-                                    context
-                                )!!
-                            )
-                            dreamBookFileUpload(
-                                viewModel = viewModel,
-                                dialog = { errorState, title, msg ->
-                                    dialogState.value = errorState
-                                    errorTitle.value = title
-                                    errorMsg.value = msg
-                                },
-                                isUnauthorized = {
-                                    onClick.value = {
-                                        context.startActivity(
-                                            Intent(
-                                                context,
-                                                LoginActivity::class.java
-                                            )
-                                        )
-                                        context.finish()
-                                    }
-                                },
-                                isBadRequest = {
-                                    onClick.value = {
-                                        navController.navigate("SchoolLife")
-                                    }
-                                }
-                            )
-                        }
-                        lifecycleScope.launch {
                             viewModel.fileUploadCompleted.collect { isComplete ->
                                 Log.d("fileUploadCompleted", isComplete.toString())
                                 if (isComplete) {
@@ -276,7 +245,6 @@ fun ForeignLanguageComponent(
                                         salary = enteredWorkConditionData.salary.toInt(),
                                         region = enteredWorkConditionData.region,
                                         languageCertificate = foreignLanguage,
-                                        dreamBookFileUrl = viewModel.getDreamBookFileUrl(),
                                         militaryService = enteredMilitaryServiceData.militaryService.toEnum(),
                                         certificate = enteredCertificateData.certification
                                     )
@@ -336,34 +304,6 @@ suspend fun imageFileUpload(
             }
             is Event.BadRequest -> {
                 dialog(true, "에러", "파일이 jpg, jpeg, png, heic 가 아닙니다.")
-                isBadRequest()
-            }
-            is Event.Loading -> {}
-            else -> {
-                dialog(true, "에러", "알 수 없는 오류 발생")
-            }
-        }
-    }
-}
-
-suspend fun dreamBookFileUpload(
-    viewModel: FillOutViewModel,
-    dialog: (visible: Boolean, title: String, msg: String) -> Unit,
-    isUnauthorized: () -> Unit,
-    isBadRequest: () -> Unit,
-) {
-    viewModel.dreamBookUploadResponse.collect { response ->
-        viewModel.specifyWhenCompleteFileUpload()
-        when (response) {
-            is Event.Success -> {
-                viewModel.setDreamBookFileUrl(response.data!!.fileUrl)
-            }
-            is Event.Unauthorized -> {
-                dialog(true, "토큰 만료", "다시 로그인 해주세요")
-                isUnauthorized()
-            }
-            is Event.BadRequest -> {
-                dialog(true, "에러", "파일이 hwp, hwpx 가 아닙니다.")
                 isBadRequest()
             }
             is Event.Loading -> {}
