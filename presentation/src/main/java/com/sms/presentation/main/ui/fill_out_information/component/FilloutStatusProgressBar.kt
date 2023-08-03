@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 
@@ -29,7 +28,7 @@ fun FilloutStatusProgressBar(currentRoute: String?) {
         "Search" -> 0.85f
         "" -> 1f
         else -> 0.025f
-    }
+    } // TODO 프로젝트 입력 페이지 추가되면 "" 공백에 프로젝트 Route 등록
 
     val size by animateFloatAsState(
         targetValue = progress,

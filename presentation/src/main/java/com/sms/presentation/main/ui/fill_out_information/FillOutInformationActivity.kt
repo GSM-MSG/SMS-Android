@@ -37,29 +37,33 @@ class FillOutInformationActivity : BaseActivity() {
 
         setContent {
             val navController = rememberNavController()
-            val currentNavBackStackSize = remember {
-                mutableStateOf(navController.currentDestination?.route)
+            val currentRoute = remember {
+                mutableStateOf("")
             }
+
             SMSTheme { colors, _ ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(colors.WHITE)
                 ) {
-                    TopBarComponent(
-                        text = "정보 입력",
-                        leftIcon = { BackButtonIcon() },
-                        rightIcon = null
-                    ) {
-                        navController.popBackStack()
+                    if (currentRoute.value != "Search") {
+                        TopBarComponent(
+                            text = "정보 입력",
+                            leftIcon = { BackButtonIcon() },
+                            rightIcon = null
+                        ) {
+                            navController.popBackStack()
+                        }
+                        FilloutStatusProgressBar(currentRoute.value)
+                        SmsSpacer()
                     }
-                    FilloutStatusProgressBar(currentNavBackStackSize.value)
-                    SmsSpacer()
                     NavHost(
                         navController = navController,
                         startDestination = "Profile"
                     ) {
                         composable("Profile") {
+                            currentRoute.value = "Profile"
                             setSoftInputMode("PAN")
                             val data = remember {
                                 mutableStateOf(
@@ -75,6 +79,7 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         composable("SchoolLife") {
+                            currentRoute.value = "SchoolLife"
                             setSoftInputMode()
                             SchoolLifeScreen(
                                 navController = navController,
@@ -82,6 +87,7 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         composable("WorkCondition") {
+                            currentRoute.value = "WorkCondition"
                             setSoftInputMode("PAN")
                             WorkConditionScreen(
                                 navController = navController,
@@ -89,6 +95,7 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         composable("MilitaryService") {
+                            currentRoute.value = "MilitaryService"
                             setSoftInputMode()
                             MilitaryServiceScreen(
                                 navController = navController,
@@ -96,6 +103,7 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         composable("Certification") {
+                            currentRoute.value = "Certification"
                             setSoftInputMode("PAN")
                             CertificationScreen(
                                 navController = navController,
@@ -103,6 +111,7 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         composable("ForeignLanguage") {
+                            currentRoute.value = "ForeignLanguage"
                             setSoftInputMode("PAN")
                             ForeignLanguageScreen(
                                 navController = navController,
@@ -112,6 +121,7 @@ class FillOutInformationActivity : BaseActivity() {
                         }
 
                         composable("Search") {
+                            currentRoute.value = "Search"
                             setSoftInputMode("RESIZE")
                             val data = remember {
                                 mutableStateOf(
