@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
 import androidx.compose.runtime.Composable
+import com.msg.sms.design.component.progressbar.FilloutStatusProgressBar
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 
@@ -15,6 +16,16 @@ fun FillOutInformationTopBarComponent(currentRoute: String, onBackButtonClick: (
             rightIcon = null,
             onClickLeftButton = onBackButtonClick
         )
-        FilloutStatusProgressBar(currentRoute)
+        FilloutStatusProgressBar(
+            routeList = listOf(
+                "Profile",
+                "SchoolLife",
+                "WorkCondition",
+                "MilitaryService",
+                "Certification",
+                "ForeignLanguage"
+            ),
+            currentRoute = currentRoute
+        )
     }
 }

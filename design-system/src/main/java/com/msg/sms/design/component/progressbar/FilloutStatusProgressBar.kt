@@ -1,37 +1,34 @@
-package com.sms.presentation.main.ui.fill_out_information.component
+package com.msg.sms.design.component.progressbar
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun FilloutStatusProgressBar(currentRoute: String?) {
-    var progress by remember { mutableStateOf(0f) }
-
-    progress = when (currentRoute) {
-        "SchoolLife" -> 0.16f
-        "WorkCondition" -> 0.3f
-        "MilitaryService" -> 0.44f
-        "Certification" -> 0.575f
-        "ForeignLanguage" -> 0.72f
-        "Search" -> 0.85f
-        "" -> 1f
-        else -> 0.025f
-    } // TODO 프로젝트 입력 페이지 추가되면 "" 공백에 프로젝트 Route 등록
-
-    val size by animateFloatAsState(
-        targetValue = progress,
+fun FilloutStatusProgressBar(routeList: List<String>, currentRoute: String?) {
+    val progress = remember { mutableStateOf(0.dp) }
+    val dotLocationInfoList = remember {
+        mutableStateListOf<Float>()
+    }
+    val size = animateDpAsState(
+        targetValue = progress.value,
         tween(
             durationMillis = 1000,
             delayMillis = 100,
@@ -39,8 +36,17 @@ fun FilloutStatusProgressBar(currentRoute: String?) {
         )
     )
 
+    if (dotLocationInfoList.isNotEmpty()) {
+        with(LocalDensity.current) {
+            progress.value = dotLocationInfoList[routeList.indexOf(currentRoute)].toDp() + 9.dp
+        }
+    }
+
     SMSTheme { colors, _ ->
-        Box(modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)) {
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 20.dp, vertical = 12.dp)
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -51,19 +57,22 @@ fun FilloutStatusProgressBar(currentRoute: String?) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                (1..8).forEach { _ ->
+                (1..routeList.size).forEach { _ ->
                     Box(
                         modifier = Modifier
                             .size(12.dp)
                             .padding(3.dp)
                             .clip(CircleShape)
                             .background(colors.N20)
+                            .onGloballyPositioned {
+                                dotLocationInfoList.add(it.positionInParent().x)
+                            }
                     )
                 }
             }
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(size)
+                    .width(size.value)
                     .height(9.dp)
                     .clip(RoundedCornerShape(9.dp))
                     .background(colors.P2)
