@@ -14,12 +14,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.msg.sms.design.component.topbar.TopBarComponent
-import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
-import com.sms.presentation.main.ui.fill_out_information.component.FilloutStatusProgressBar
+import com.sms.presentation.main.ui.fill_out_information.component.FillOutInformationTopBarComponent
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
@@ -46,19 +44,8 @@ class FillOutInformationActivity : BaseActivity() {
                         .fillMaxSize()
                         .background(colors.WHITE)
                 ) {
-                    if (currentRoute.value != "Search") {
-                        TopBarComponent(
-                            text = "정보 입력",
-                            leftIcon = {
-                                if (currentRoute.value == "Profile") {
-                                    BackButtonIcon()
-                                }
-                            },
-                            rightIcon = null
-                        ) {
-                            navController.popBackStack()
-                        }
-                        FilloutStatusProgressBar(currentRoute.value)
+                    FillOutInformationTopBarComponent(currentRoute = currentRoute.value) {
+                        navController.popBackStack()
                     }
                     NavHost(
                         navController = navController,
