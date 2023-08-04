@@ -96,6 +96,7 @@ fun SmsCustomTextField(
     focusRequester: FocusRequester = FocusRequester(),
     errorText: String = "Error",
     setChangeText: String,
+    singleLine: Boolean = false,
     onValueChange: (String) -> Unit = {},
 ) {
     var text by remember { mutableStateOf("") }
@@ -109,6 +110,7 @@ fun SmsCustomTextField(
                     text = it
                     onValueChange(it)
                 },
+                singleLine = singleLine,
                 placeholder = {
                     Text(text = placeHolder, style = typography.body1)
                 },
