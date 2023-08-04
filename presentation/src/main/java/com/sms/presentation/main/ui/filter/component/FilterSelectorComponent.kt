@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.util.AddBody1TitleText
+import com.msg.sms.design.util.AddBody1Title
 
 @Composable
 fun <T> FilterSelectorComponent(
@@ -25,7 +25,7 @@ fun <T> FilterSelectorComponent(
             .padding(horizontal = 20.dp)
             .heightIn(max = 300.dp)
     ) {
-        AddBody1TitleText(titleText = title) {
+        AddBody1Title(titleText = title) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 150.dp),
                 userScrollEnabled = false
