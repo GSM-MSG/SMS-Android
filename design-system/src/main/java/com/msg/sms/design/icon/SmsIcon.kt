@@ -227,6 +227,17 @@ fun RedLogoutIcon(
 }
 
 @Composable
+fun BlackLogoutIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_logout_btn),
+        contentDescription = "뭔가 대충 밖으로 나갈 것 같은 아이콘",
+        modifier = modifier
+    )
+}
+
+@Composable
 fun RedWithdrawalIcon(
     modifier: Modifier = Modifier,
 ) {
@@ -256,5 +267,16 @@ fun TopEndArrowIcon(
         painter = painterResource(id = R.drawable.ic_top_end_arrow),
         contentDescription = "화살표 아이콘",
         modifier = modifier
+    )
+}
+
+@Composable
+fun CloseIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_close_btn),
+        contentDescription = "엑스 버튼"
     )
 }
