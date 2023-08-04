@@ -17,7 +17,10 @@ import com.msg.sms.domain.usecase.student.GetStudentListUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForAnonymousUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForTeacherUseCase
 import com.msg.sms.domain.usecase.user.GetProfileImageUseCase
-import com.sms.presentation.main.ui.filter.data.FilterClass
+import com.sms.presentation.main.ui.filter.data.FilterClass.*
+import com.sms.presentation.main.ui.filter.data.FilterDepartment.*
+import com.sms.presentation.main.ui.filter.data.FilterGrade.*
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment.*
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,13 +30,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
-import com.sms.presentation.main.ui.filter.data.FilterGrade.*
-import com.sms.presentation.main.ui.filter.data.FilterClass.*
-import com.sms.presentation.main.ui.filter.data.FilterDepartment
-import com.sms.presentation.main.ui.filter.data.FilterDepartment.*
-import com.sms.presentation.main.ui.filter.data.FilterGrade
-import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
-import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment.*
 
 @HiltViewModel
 class StudentListViewModel @Inject constructor(
@@ -77,10 +73,10 @@ class StudentListViewModel @Inject constructor(
     val departmentList = listOf(SW_DEVELOPMENT, SMART_IOT_DEVELOPMENT, AI_DEVELOPMENT)
     val typeOfEmploymentList = listOf(FULL_TIME, TEMPORARY, CONTRACT, INTERN)
     var selectedMajorList = mutableStateListOf<String>()
-    var selectedGradeList = mutableStateListOf<FilterGrade>()
-    var selectedClassList = mutableStateListOf<FilterClass>()
-    var selectedDepartmentList = mutableStateListOf<FilterDepartment>()
-    var selectedTypeOfEmploymentList = mutableStateListOf<FilterTypeOfEmployment>()
+    var selectedGradeList = mutableStateListOf<Int>()
+    var selectedClassList = mutableStateListOf<Int>()
+    var selectedDepartmentList = mutableStateListOf<String>()
+    var selectedTypeOfEmploymentList = mutableStateListOf<String>()
     var gsmScoreSliderValues = mutableStateOf(0f..990f)
     var desiredAnnualSalarySliderValues = mutableStateOf(0f..9999f)
     var isSchoolNumberAscendingOrder = mutableStateOf(true)
@@ -90,38 +86,25 @@ class StudentListViewModel @Inject constructor(
 
     fun getStudentListRequest(
         page: Int,
-        size: Int,
-        majors: List<String>? = null,
-        techStacks: List<String>? = null,
-        grade: Int? = null,
-        classNum: Int? = null,
-        department: List<String>? = null,
-        stuNumSort: String? = null,
-        formOfEmployment: String? = null,
-        minGsmAuthenticationScore: Int? = null,
-        maxGsmAuthenticationScore: Int? = null,
-        minSalary: Int? = null,
-        maxSalary: Int? = null,
-        gsmAuthenticationScoreSort: String? = null,
-        salarySort: String? = null,
+        size: Int
     ) = viewModelScope.launch {
         _getStudentListResponse.value = Event.Loading
         getStudentListUseCase(
             page = page,
             size = size,
-            majors = majors,
-            techStacks = techStacks,
-            grade = grade,
-            classNum = classNum,
-            department = department,
-            stuNumSort = stuNumSort,
-            formOfEmployment = formOfEmployment,
-            minGsmAuthenticationScore = minGsmAuthenticationScore,
-            maxGsmAuthenticationScore = maxGsmAuthenticationScore,
-            minSalary = minSalary,
-            maxSalary = maxSalary,
-            gsmAuthenticationScoreSort = gsmAuthenticationScoreSort,
-            salarySort = salarySort
+            majors = selectedMajorList.ifEmpty { null },
+            techStacks = if (detailStackList.value.isNotBlank()) detailStackList.value.split(",") else null,
+            grade = selectedGradeList.ifEmpty { null },
+            classNum = selectedClassList.ifEmpty { null },
+            department = selectedDepartmentList.ifEmpty { null },
+            stuNumSort = if (isSchoolNumberAscendingOrder.value) "ASCENDING" else "DESCENDING",
+            formOfEmployment = selectedTypeOfEmploymentList.ifEmpty { null },
+            minGsmAuthenticationScore = gsmScoreSliderValues.value.start.toInt(),
+            maxGsmAuthenticationScore = gsmScoreSliderValues.value.endInclusive.toInt(),
+            minSalary = desiredAnnualSalarySliderValues.value.start.toInt(),
+            maxSalary = desiredAnnualSalarySliderValues.value.endInclusive.toInt(),
+            gsmAuthenticationScoreSort = if (isGsmScoreAscendingOrder.value) "ASCENDING" else "DESCENDING",
+            salarySort = if (isDesiredAnnualSalaryAscendingOrder.value) "ASCENDING" else "DESCENDING"
         ).onSuccess {
             it.catch { remoteError ->
                 _getStudentListResponse.value = remoteError.errorHandling()
