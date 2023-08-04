@@ -12,6 +12,12 @@ fun ProjectsScreen() {
         name = "프로젝트",
         onCancelButtonClick = {}
     ) {
-        Text(text = "dfdkojfhkosfjsojf")
+        Text(text = "ddfkpsfsdifkdsopkfdsfsdf")
+        Text(text = "ddfkpsfsdifkdsopkfdsfsdf")
+        Text(text = "ddfkpsfsdifkdsopkfdsfsdf")
+        Text(text = "ddfkpsfsdifkdsopkfdsfsdf")
+        Text(text = "ddfkpsfsdifkdsopkfdsfsdf")
+        Text(text = "ddfkpsfsdifkdsopkfdsfsdf")
+        Text(text = "ddfkpsfsdifkdsopkfdsfsdf")
     }
 }

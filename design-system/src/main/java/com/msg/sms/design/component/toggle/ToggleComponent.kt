@@ -1,13 +1,18 @@
 package com.msg.sms.design.component.toggle
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.CancelIcon
@@ -19,10 +24,31 @@ import com.msg.sms.design.theme.SMSTheme
 fun ToggleComponent(
     name: String,
     onCancelButtonClick: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     val contentVisible = remember {
         mutableStateOf(false)
+    }
+    val currentRotation = remember {
+        mutableStateOf(0f)
+    }
+    val rotation = remember {
+        Animatable(currentRotation.value)
+    }
+
+    LaunchedEffect(contentVisible.value) {
+        rotation.animateTo(
+            targetValue =
+            if (contentVisible.value) currentRotation.value - 90f
+            else if (currentRotation.value != 0f) currentRotation.value + 90f
+            else currentRotation.value,
+            animationSpec = tween(
+                durationMillis = 300,
+                easing = LinearEasing
+            )
+        ) {
+            currentRotation.value = value
+        }
     }
 
     SMSTheme { colors, typography ->
@@ -30,7 +56,7 @@ fun ToggleComponent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 20.dp)
+                    .padding(top = 20.dp, start = 20.dp, end = 20.dp)
             ) {
                 Text(
                     text = name,
@@ -43,18 +69,31 @@ fun ToggleComponent(
                     modifier = Modifier.align(Alignment.CenterEnd),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ToggleArrowIcon(modifier = Modifier.smsClickable {
-                        contentVisible.value = !contentVisible.value
-                    })
+                    ToggleArrowIcon(
+                        modifier = Modifier
+                            .rotate(rotation.value)
+                            .smsClickable {
+                                contentVisible.value = !contentVisible.value
+                            }
+                    )
                     Spacer(modifier = Modifier.width(16.dp))
                     CancelIcon(modifier = Modifier.smsClickable(onClick = onCancelButtonClick))
                 }
             }
-            if (contentVisible.value) content()
+            AnimatedVisibility(visible = contentVisible.value) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                        .animateContentSize()
+                ) {
+                    content()
+                }
+            }
             Divider(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 4.dp),
+                    .padding(start = 20.dp, end = 20.dp, top = 24.dp, bottom = 4.dp),
                 color = colors.N20,
                 thickness = 1.dp
             )
