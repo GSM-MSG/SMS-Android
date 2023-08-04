@@ -4,11 +4,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -29,102 +32,122 @@ class FillOutInformationActivity : BaseActivity() {
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
 
+    @OptIn(ExperimentalMaterialApi::class)
     override fun init() {
         fillOutViewModel.getMajorList()
 
         setContent {
             val navController = rememberNavController()
+            val bottomSheetState =
+                rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+            val bottomSheetContent = remember {
+                mutableStateOf<@Composable ColumnScope.() -> Unit>({})
+            }
             val currentRoute = remember {
                 mutableStateOf("Profile")
             }
 
-            SMSTheme { colors, _ ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(colors.WHITE)
-                ) {
-                    FillOutInformationTopBarComponent(currentRoute = currentRoute.value) {
-                        navController.popBackStack()
-                    }
-                    NavHost(
-                        navController = navController,
-                        startDestination = "Profile"
+            ModalBottomSheetLayout(
+                sheetContent = bottomSheetContent.value,
+                sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                sheetState = bottomSheetState
+            ) {
+                SMSTheme { colors, _ ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(colors.WHITE)
                     ) {
-                        composable("Profile") {
-                            currentRoute.value = "Profile"
-                            setSoftInputMode("PAN")
-                            val data = remember {
-                                mutableStateOf(
-                                    navController.previousBackStackEntry?.savedStateHandle?.get<String>(
-                                        "detailStack"
+                        FillOutInformationTopBarComponent(currentRoute = currentRoute.value) {
+                            navController.popBackStack()
+                        }
+                        NavHost(
+                            navController = navController,
+                            startDestination = "Profile"
+                        ) {
+                            composable("Profile") {
+                                currentRoute.value = "Profile"
+                                setSoftInputMode("PAN")
+                                val data = remember {
+                                    mutableStateOf(
+                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
+                                            "detailStack"
+                                        )
                                     )
+                                }
+                                ProfileScreen(
+                                    navController = navController,
+                                    viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                                    detailStack = (if (data.value != null) data.value!!.split(",") else listOf()),
+                                    bottomSheetState = bottomSheetState
+                                ) {
+                                    bottomSheetContent.value = it
+                                }
+                            }
+                            composable("SchoolLife") {
+                                currentRoute.value = "SchoolLife"
+                                setSoftInputMode()
+                                SchoolLifeScreen(
+                                    navController = navController,
+                                    viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                                 )
                             }
-                            ProfileScreen(
-                                navController = navController,
-                                viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                detailStack = (if (data.value != null) data.value!!.split(",") else listOf())
-                            )
-                        }
-                        composable("SchoolLife") {
-                            currentRoute.value = "SchoolLife"
-                            setSoftInputMode()
-                            SchoolLifeScreen(
-                                navController = navController,
-                                viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
-                            )
-                        }
-                        composable("WorkCondition") {
-                            currentRoute.value = "WorkCondition"
-                            setSoftInputMode("PAN")
-                            WorkConditionScreen(
-                                navController = navController,
-                                viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
-                            )
-                        }
-                        composable("MilitaryService") {
-                            currentRoute.value = "MilitaryService"
-                            setSoftInputMode()
-                            MilitaryServiceScreen(
-                                navController = navController,
-                                viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
-                            )
-                        }
-                        composable("Certification") {
-                            currentRoute.value = "Certification"
-                            setSoftInputMode("PAN")
-                            CertificationScreen(
-                                navController = navController,
-                                viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
-                            )
-                        }
-                        composable("ForeignLanguage") {
-                            currentRoute.value = "ForeignLanguage"
-                            setSoftInputMode("PAN")
-                            ForeignLanguageScreen(
-                                navController = navController,
-                                viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                lifecycleScope = lifecycleScope
-                            )
-                        }
-
-                        composable("Search") {
-                            currentRoute.value = "Search"
-                            setSoftInputMode("RESIZE")
-                            val data = remember {
-                                mutableStateOf(
-                                    navController.previousBackStackEntry?.savedStateHandle?.get<String>(
-                                        "detailStack"
-                                    )
+                            composable("WorkCondition") {
+                                currentRoute.value = "WorkCondition"
+                                setSoftInputMode("PAN")
+                                WorkConditionScreen(
+                                    navController = navController,
+                                    viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                                    bottomSheetState = bottomSheetState
+                                ) {
+                                    bottomSheetContent.value = it
+                                }
+                            }
+                            composable("MilitaryService") {
+                                currentRoute.value = "MilitaryService"
+                                setSoftInputMode()
+                                MilitaryServiceScreen(
+                                    navController = navController,
+                                    viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                                    bottomSheetState = bottomSheetState
+                                ) {
+                                    bottomSheetContent.value = it
+                                }
+                            }
+                            composable("Certification") {
+                                currentRoute.value = "Certification"
+                                setSoftInputMode("PAN")
+                                CertificationScreen(
+                                    navController = navController,
+                                    viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                                 )
                             }
-                            DetailStackSearchScreen(
-                                navController = navController,
-                                viewModel = searchDetailStackViewModel,
-                                selectedStack = (if (data.value != null) data.value!!.split(",") else listOf())
-                            ) {
-                                navController.navigate("Profile")
+                            composable("ForeignLanguage") {
+                                currentRoute.value = "ForeignLanguage"
+                                setSoftInputMode("PAN")
+                                ForeignLanguageScreen(
+                                    navController = navController,
+                                    viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                                    lifecycleScope = lifecycleScope
+                                )
+                            }
+                            composable("Search") {
+                                currentRoute.value = "Search"
+                                setSoftInputMode("RESIZE")
+                                val data = remember {
+                                    mutableStateOf(
+                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
+                                            "detailStack"
+                                        )
+                                    )
+                                }
+                                DetailStackSearchScreen(
+                                    navController = navController,
+                                    viewModel = searchDetailStackViewModel,
+                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf())
+                                ) {
+                                    navController.navigate("Profile")
+                                }
                             }
                         }
                     }
