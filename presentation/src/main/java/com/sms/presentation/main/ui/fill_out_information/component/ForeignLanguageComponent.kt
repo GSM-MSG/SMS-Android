@@ -188,96 +188,98 @@ fun ForeignLanguageComponent(
                         text = "다음",
                         state = ButtonState.Normal
                     ) {
-                        loadingModalState.value = true
-                        val foreignLanguage =
-                            foreignLanguageList.mapIndexed { index: Int, name: String ->
-                                CertificateInformationModel(
-                                    languageCertificateName = name,
-                                    score = foreignLanguageScoreList[index]
-                                )
-                            }
-                        lifecycleScope.launch {
-                            viewModel.imageUpload(
-                                enteredProfileData.profileImageUri.toMultipartBody(
-                                    context
-                                )!!
-                            )
-                            imageFileUpload(
-                                viewModel = viewModel,
-                                dialog = { errorState, title, msg ->
-                                    dialogState.value = errorState
-                                    errorTitle.value = title
-                                    errorMsg.value = msg
-                                },
-                                isUnauthorized = {
-                                    onClick.value = {
-                                        context.startActivity(
-                                            Intent(
-                                                context,
-                                                LoginActivity::class.java
-                                            )
-                                        )
-                                        context.finish()
-                                    }
-                                },
-                                isBadRequest = {
-                                    onClick.value = {
-                                        navController.navigate("Profile")
-                                    }
-                                }
-                            )
-                        }
-
-                        lifecycleScope.launch {
-                            viewModel.fileUploadCompleted.collect { isComplete ->
-                                Log.d("fileUploadCompleted", isComplete.toString())
-                                if (isComplete) {
-                                    viewModel.enterStudentInformation(
-                                        major = if (enteredProfileData.major == "직접입력") enteredProfileData.enteredMajor else enteredProfileData.major,
-                                        techStack = enteredProfileData.techStack.split(",")
-                                            .map { it.trim() },
-                                        profileImgUrl = viewModel.getProfileImageUrl(),
-                                        introduce = enteredProfileData.introduce,
-                                        portfolioUrl = enteredProfileData.portfolioUrl,
-                                        contactEmail = enteredProfileData.contactEmail,
-                                        formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
-                                        gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
-                                        salary = enteredWorkConditionData.salary.toInt(),
-                                        region = enteredWorkConditionData.region,
-                                        languageCertificate = foreignLanguage,
-                                        militaryService = enteredMilitaryServiceData.militaryService.toEnum(),
-                                        certificate = enteredCertificateData.certification
-                                    )
-                                }
-                            }
-                        }
-
-                        lifecycleScope.launch {
-                            enterStudentInformation(
-                                viewModel = viewModel,
-                                dialog = { visible, title, msg ->
-                                    dialogState.value = visible
-                                    errorTitle.value = title
-                                    errorMsg.value = msg
-                                },
-                                isSuccess = {
-                                    onClick.value = {
-                                        context.startActivity(
-                                            Intent(
-                                                context,
-                                                MainActivity::class.java
-                                            )
-                                        )
-                                        context.finish()
-                                    }
-                                },
-                                onDialogButtonClick = {
-                                    onClick.value = {
-                                        navController.navigate("Profile")
-                                    }
-                                }
-                            )
-                        }
+//                        loadingModalState.value = true
+//                        val foreignLanguage =
+//                            foreignLanguageList.mapIndexed { index: Int, name: String ->
+//                                CertificateInformationModel(
+//                                    languageCertificateName = name,
+//                                    score = foreignLanguageScoreList[index]
+//                                )
+//                            }
+//                        lifecycleScope.launch {
+//                            viewModel.imageUpload(
+//                                enteredProfileData.profileImageUri.toMultipartBody(
+//                                    context
+//                                )!!
+//                            )
+//                            imageFileUpload(
+//                                viewModel = viewModel,
+//                                dialog = { errorState, title, msg ->
+//                                    dialogState.value = errorState
+//                                    errorTitle.value = title
+//                                    errorMsg.value = msg
+//                                },
+//                                isUnauthorized = {
+//                                    onClick.value = {
+//                                        context.startActivity(
+//                                            Intent(
+//                                                context,
+//                                                LoginActivity::class.java
+//                                            )
+//                                        )
+//                                        context.finish()
+//                                    }
+//                                },
+//                                isBadRequest = {
+//                                    onClick.value = {
+//                                        navController.navigate("Profile")
+//                                    }
+//                                }
+//                            )
+//                        }
+//
+//                        lifecycleScope.launch {
+//                            viewModel.fileUploadCompleted.collect { isComplete ->
+//                                Log.d("fileUploadCompleted", isComplete.toString())
+//                                if (isComplete) {
+//                                    viewModel.enterStudentInformation(
+//                                        major = if (enteredProfileData.major == "직접입력") enteredProfileData.enteredMajor else enteredProfileData.major,
+//                                        techStack = enteredProfileData.techStack.split(",")
+//                                            .map { it.trim() },
+//                                        profileImgUrl = viewModel.getProfileImageUrl(),
+//                                        introduce = enteredProfileData.introduce,
+//                                        portfolioUrl = enteredProfileData.portfolioUrl,
+//                                        contactEmail = enteredProfileData.contactEmail,
+//                                        formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
+//                                        gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
+//                                        salary = enteredWorkConditionData.salary.toInt(),
+//                                        region = enteredWorkConditionData.region,
+//                                        languageCertificate = foreignLanguage,
+//                                        militaryService = enteredMilitaryServiceData.militaryService.toEnum(),
+//                                        certificate = enteredCertificateData.certification
+//                                    )
+//                                }
+//                            }
+//                        }
+//
+//                        lifecycleScope.launch {
+//                            enterStudentInformation(
+//                                viewModel = viewModel,
+//                                dialog = { visible, title, msg ->
+//                                    dialogState.value = visible
+//                                    errorTitle.value = title
+//                                    errorMsg.value = msg
+//                                },
+//                                isSuccess = {
+//                                    onClick.value = {
+//                                        context.startActivity(
+//                                            Intent(
+//                                                context,
+//                                                MainActivity::class.java
+//                                            )
+//                                        )
+//                                        context.finish()
+//                                    }
+//                                },
+//                                onDialogButtonClick = {
+//                                    onClick.value = {
+//                                        navController.navigate("Profile")
+//                                    }
+//                                }
+//                            )
+//                        }
+                        navController.navigate("Projects")
+                        //TODO (kim hyunseung) - 서버 통신 관련 로직들 수상경력 페이지 퍼블리싱 후에 그쪽으로 이전하기
                     }
                 }
             }

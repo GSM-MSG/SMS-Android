@@ -131,6 +131,14 @@ class FillOutInformationActivity : BaseActivity() {
                                     lifecycleScope = lifecycleScope
                                 )
                             }
+                            composable("Projects") {
+                                currentRoute.value = "Projects"
+                                setSoftInputMode("PAN")
+                                ProjectsScreen(
+                                    navController = navController,
+                                    viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
+                                )
+                            }
                             composable("Search") {
                                 currentRoute.value = "Search"
                                 setSoftInputMode("RESIZE")
