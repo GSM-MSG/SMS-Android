@@ -68,8 +68,7 @@ fun MilitaryServiceScreen(
                     SmsRoundedButton(
                         text = "이전",
                         modifier = Modifier
-                            .weight(2f)
-                            .height(48.dp),
+                            .weight(2f),
                         state = ButtonState.OutLine
                     ) {
                         navController.popBackStack()
@@ -78,8 +77,7 @@ fun MilitaryServiceScreen(
                     SmsRoundedButton(
                         text = "다음",
                         modifier = Modifier
-                            .weight(4f)
-                            .height(48.dp),
+                            .weight(4f),
                         state = ButtonState.Normal,
                         enabled = selectedMilitaryService.value != "" || (selectedMilitaryService.value == "" && data.militaryService != "")
                     ) {

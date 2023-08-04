@@ -239,8 +239,7 @@ fun ProfileScreen(
                     Spacer(modifier = Modifier.height(32.dp))
                     SmsRoundedButton(
                         text = "다음", modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
+                            .fillMaxWidth(),
                         enabled = isRequired.value && textFieldChecker(
                             if (selectedMajor.value == "직접입력") enteredMajor.value else selectedMajor.value
                         )

@@ -190,8 +190,7 @@ fun ForeignLanguageComponent(
                 ) {
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(2f)
-                            .height(48.dp),
+                            .weight(2f),
                         text = "이전",
                         state = ButtonState.OutLine
                     ) {
@@ -200,8 +199,7 @@ fun ForeignLanguageComponent(
                     Spacer(modifier = Modifier.width(8.dp))
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(4f)
-                            .height(48.dp),
+                            .weight(4f),
                         text = "다음",
                         state = ButtonState.Normal
                     ) {
@@ -347,14 +345,17 @@ suspend fun imageFileUpload(
             is Event.Success -> {
                 viewModel.setProfileImageUrl(response.data!!.fileUrl)
             }
+
             is Event.Unauthorized -> {
                 dialog(true, "토큰 만료", "다시 로그인 해주세요")
                 isUnauthorized()
             }
+
             is Event.BadRequest -> {
                 dialog(true, "에러", "파일이 jpg, jpeg, png, heic 가 아닙니다.")
                 isBadRequest()
             }
+
             is Event.Loading -> {}
             else -> {
                 dialog(true, "에러", "알 수 없는 오류 발생")
@@ -375,14 +376,17 @@ suspend fun dreamBookFileUpload(
             is Event.Success -> {
                 viewModel.setDreamBookFileUrl(response.data!!.fileUrl)
             }
+
             is Event.Unauthorized -> {
                 dialog(true, "토큰 만료", "다시 로그인 해주세요")
                 isUnauthorized()
             }
+
             is Event.BadRequest -> {
                 dialog(true, "에러", "파일이 hwp, hwpx 가 아닙니다.")
                 isBadRequest()
             }
+
             is Event.Loading -> {}
             else -> {
                 dialog(true, "에러", "알 수 없는 오류 발생")
