@@ -36,7 +36,6 @@ class MainActivity : BaseActivity() {
 
     override fun init() {
         observeEvent()
-        studentListViewModel.getStudentListRequest(1, 20)
         authViewModel.getRoleInfo()
         fillOutViewModel.getMajorList()
     }

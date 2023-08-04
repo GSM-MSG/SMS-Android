@@ -12,7 +12,6 @@ data class EnterStudentInformationModel(
     val salary: Int,
     val region: List<String>,
     val languageCertificate: List<CertificateInformationModel>,
-    val dreamBookFileUrl: String,
     val militaryService: String,
     val certificate: List<String>
 )

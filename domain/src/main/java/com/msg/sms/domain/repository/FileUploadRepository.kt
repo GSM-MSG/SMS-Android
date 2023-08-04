@@ -6,6 +6,4 @@ import okhttp3.MultipartBody
 
 interface FileUploadRepository {
     suspend fun imageUpload(file: MultipartBody.Part): Flow<FileUploadResponseModel>
-
-    suspend fun dreamBookUpload(file: MultipartBody.Part): Flow<FileUploadResponseModel>
 }

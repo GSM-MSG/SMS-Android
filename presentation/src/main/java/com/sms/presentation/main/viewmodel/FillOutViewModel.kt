@@ -9,7 +9,6 @@ import com.msg.sms.domain.model.fileupload.response.FileUploadResponseModel
 import com.msg.sms.domain.model.major.MajorListModel
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
-import com.msg.sms.domain.usecase.fileupload.DreamBookUploadUseCase
 import com.msg.sms.domain.usecase.fileupload.ImageUploadUseCase
 import com.msg.sms.domain.usecase.major.GetMajorListUseCase
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
@@ -29,7 +28,6 @@ class FillOutViewModel @Inject constructor(
     private val enterStudentInformationUseCase: EnterStudentInformationUseCase,
     private val getMajorListUseCase: GetMajorListUseCase,
     private val imageUploadUseCase: ImageUploadUseCase,
-    private val dreamBookUploadUseCase: DreamBookUploadUseCase
 ) : ViewModel() {
     private val _enterInformationResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val enterInformationResponse = _enterInformationResponse.asStateFlow()
@@ -40,10 +38,6 @@ class FillOutViewModel @Inject constructor(
     private val _imageUploadResponse =
         MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
     val imageUploadResponse = _imageUploadResponse.asStateFlow()
-
-    private val _dreamBookUploadResponse =
-        MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
-    val dreamBookUploadResponse = _dreamBookUploadResponse.asStateFlow()
 
     private val _fileUploadCompleted = MutableStateFlow(false)
     val fileUploadCompleted = _fileUploadCompleted.asStateFlow()
@@ -59,11 +53,9 @@ class FillOutViewModel @Inject constructor(
     private val gsmAuthenticationScore = mutableStateOf("")
     private val salary = mutableStateOf(0)
     private val region = mutableStateListOf("")
-    private val dreamBookFileUri = mutableStateOf(Uri.EMPTY)
     private val militaryService = mutableStateOf("")
     private val certificate = mutableStateListOf("")
     private lateinit var profileImageUrl: String
-    private lateinit var dreamBookFileUrl: String
 
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(
@@ -133,17 +125,14 @@ class FillOutViewModel @Inject constructor(
 
     fun getEnteredSchoolLifeInformation(): SchoolLifeData {
         return SchoolLifeData(
-            gsmAuthenticationScore = gsmAuthenticationScore.value,
-            dreamBookFileUri = dreamBookFileUri.value
+            gsmAuthenticationScore = gsmAuthenticationScore.value
         )
     }
 
     fun setEnteredSchoolLifeInformation(
         gsmAuthenticationScore: String,
-        dreamBookFileUri: Uri
     ) {
         this.gsmAuthenticationScore.value = gsmAuthenticationScore
-        this.dreamBookFileUri.value = dreamBookFileUri
     }
 
     fun getProfileImageUrl(): String {
@@ -153,15 +142,6 @@ class FillOutViewModel @Inject constructor(
     fun setProfileImageUrl(profileImageUrl: String) {
         this.profileImageUrl = profileImageUrl
     }
-
-    fun getDreamBookFileUrl(): String {
-        return dreamBookFileUrl
-    }
-
-    fun setDreamBookFileUrl(dreamBookFileUrl: String) {
-        this.dreamBookFileUrl = dreamBookFileUrl
-    }
-
 
     fun getMajorList() {
         viewModelScope.launch {
@@ -189,7 +169,6 @@ class FillOutViewModel @Inject constructor(
         salary: Int,
         region: List<String>,
         languageCertificate: List<CertificateInformationModel>,
-        dreamBookFileUrl: String,
         militaryService: String,
         certificate: List<String>,
     ) = viewModelScope.launch {
@@ -206,7 +185,6 @@ class FillOutViewModel @Inject constructor(
                 salary = salary,
                 region = region,
                 languageCertificate = languageCertificate,
-                dreamBookFileUrl = dreamBookFileUrl,
                 militaryService = militaryService,
                 certificate = certificate
             )
@@ -235,22 +213,8 @@ class FillOutViewModel @Inject constructor(
         }
     }
 
-    fun dreamBookUpload(file: MultipartBody.Part) = viewModelScope.launch {
-        dreamBookUploadUseCase(
-            file = file
-        ).onSuccess {
-            it.catch { remoteError ->
-                _dreamBookUploadResponse.value = remoteError.errorHandling()
-            }.collect { response ->
-                _dreamBookUploadResponse.value = Event.Success(data = response)
-            }
-        }.onFailure { error ->
-            _dreamBookUploadResponse.value = error.errorHandling()
-        }
-    }
-
     fun specifyWhenCompleteFileUpload() {
         _fileUploadCompleted.value =
-            _imageUploadResponse.value is Event.Success && _dreamBookUploadResponse.value is Event.Success
+            _imageUploadResponse.value is Event.Success
     }
 }

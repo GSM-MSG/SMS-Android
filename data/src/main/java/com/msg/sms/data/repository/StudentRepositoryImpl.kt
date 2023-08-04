@@ -40,7 +40,6 @@ class StudentRepositoryImpl @Inject constructor(
                         score = it.score
                     )
                 },
-                dreamBookFileUrl = body.dreamBookFileUrl,
                 militaryService = body.militaryService,
                 certificate = body.certificate
             )
@@ -52,11 +51,11 @@ class StudentRepositoryImpl @Inject constructor(
         size: Int,
         majors: List<String>?,
         techStacks: List<String>?,
-        grade: Int?,
-        classNum: Int?,
+        grade: List<Int>?,
+        classNum: List<Int>?,
         department: List<String>?,
         stuNumSort: String?,
-        formOfEmployment: String?,
+        formOfEmployment: List<String>?,
         minGsmAuthenticationScore: Int?,
         maxGsmAuthenticationScore: Int?,
         minSalary: Int?,
