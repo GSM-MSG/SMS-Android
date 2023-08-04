@@ -40,7 +40,6 @@ class StudentRepositoryImpl @Inject constructor(
                         score = it.score
                     )
                 },
-                dreamBookFileUrl = body.dreamBookFileUrl,
                 militaryService = body.militaryService,
                 certificate = body.certificate
             )

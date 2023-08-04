@@ -7,8 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import com.msg.sms.design.component.spacer.SmsSpacer
-import com.msg.sms.design.component.topbar.TopBarComponent
-import com.msg.sms.design.icon.BackButtonIcon
 import com.sms.presentation.main.ui.fill_out_information.component.ForeignLanguageComponent
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -20,9 +18,6 @@ fun ForeignLanguageScreen(
     lifecycleScope: CoroutineScope,
 ) {
     Column(modifier = Modifier.background(Color.White)) {
-        TopBarComponent(text = "정보입력", leftIcon = { BackButtonIcon() }, rightIcon = null) {
-            navController.popBackStack()
-        }
         SmsSpacer()
         ForeignLanguageComponent(
             navController = navController,
