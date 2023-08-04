@@ -51,8 +51,9 @@ fun FilloutStatusProgressBar(routeList: List<String>, currentRoute: String?) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .clip(RoundedCornerShape(9.dp))
+                    .clip(RoundedCornerShape(20.dp))
                     .background(colors.N10)
+                    .padding(3.dp)
                     .align(Alignment.CenterStart),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -60,8 +61,7 @@ fun FilloutStatusProgressBar(routeList: List<String>, currentRoute: String?) {
                 (1..routeList.size).forEach { _ ->
                     Box(
                         modifier = Modifier
-                            .size(12.dp)
-                            .padding(3.dp)
+                            .size(8.dp)
                             .clip(CircleShape)
                             .background(colors.N20)
                             .onGloballyPositioned {
@@ -72,13 +72,19 @@ fun FilloutStatusProgressBar(routeList: List<String>, currentRoute: String?) {
             }
             Box(
                 modifier = Modifier
-                    .width(size.value)
-                    .height(9.dp)
-                    .clip(RoundedCornerShape(9.dp))
-                    .background(colors.P2)
-                    .animateContentSize()
+                    .padding(2.dp)
                     .align(Alignment.CenterStart)
-            )
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(size.value)
+                        .height(9.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(colors.P2)
+                        .animateContentSize()
+                        .padding(1.dp)
+                )
+            }
         }
     }
 }
