@@ -135,8 +135,8 @@ class FillOutInformationActivity : BaseActivity() {
                                 currentRoute.value = "Projects"
                                 setSoftInputMode("PAN")
                                 ProjectsScreen(
-                                    navController = navController,
-                                    viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
+//                                    navController = navController,
+//                                    viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                                 )
                             }
                             composable("Search") {

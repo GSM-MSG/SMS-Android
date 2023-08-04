@@ -258,3 +258,25 @@ fun TopEndArrowIcon(
         modifier = modifier
     )
 }
+
+@Composable
+fun CancelIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_cancel),
+        contentDescription = "취소 아이콘",
+        modifier = modifier
+    )
+}
+
+@Composable
+fun ToggleArrowIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_toggle),
+        contentDescription = "토글 화살표 아이콘",
+        modifier = modifier
+    )
+}
