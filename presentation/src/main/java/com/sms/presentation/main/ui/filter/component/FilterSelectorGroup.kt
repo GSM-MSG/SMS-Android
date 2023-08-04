@@ -16,19 +16,19 @@ fun FilterSelectorGroup(
         FilterSelectorComponent(
             title = "학년",
             itemList = viewModel.gradeList,
-            selectedList = viewModel.selectedGradeList
+            selectedList = viewModel.selectedGradeList.map { it.toString() }
         ) { checked, text ->
-            if (!checked) viewModel.selectedGradeList.add(text)
-            else viewModel.selectedGradeList.remove(text)
+            if (!checked) viewModel.selectedGradeList.add(text.toInt())
+            else viewModel.selectedGradeList.remove(text.toInt())
         }
         Spacer(modifier = Modifier.height(40.dp))
         FilterSelectorComponent(
             title = "반",
             itemList = viewModel.classList,
-            selectedList = viewModel.selectedClassList
+            selectedList = viewModel.selectedClassList.map { it.toString() }
         ) { checked, text ->
-            if (!checked) viewModel.selectedClassList.add(text)
-            else viewModel.selectedClassList.remove(text)
+            if (!checked) viewModel.selectedClassList.add(text.toInt())
+            else viewModel.selectedClassList.remove(text.toInt())
         }
         Spacer(modifier = Modifier.height(40.dp))
         FilterSelectorComponent(
