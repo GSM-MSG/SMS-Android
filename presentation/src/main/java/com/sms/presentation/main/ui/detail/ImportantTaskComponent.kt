@@ -8,11 +8,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.design.util.AddBody1TitleText
+import com.msg.sms.design.util.AddBody1Title
 
 @Composable
 fun ImportantTaskComponent(importantTask: String) {
-    AddBody1TitleText(titleText = "주요 작업 서술", spaceSize = 8, modifier = Modifier.heightIn(max = 1000.dp)) {
+    AddBody1Title(titleText = "주요 작업 서술", spaceSize = 8, modifier = Modifier.heightIn(max = 1000.dp)) {
         SMSTheme { colors, typography ->
             Text(
                 text = importantTask,

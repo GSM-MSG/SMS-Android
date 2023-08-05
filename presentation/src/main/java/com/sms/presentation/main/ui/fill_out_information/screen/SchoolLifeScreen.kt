@@ -1,7 +1,13 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,7 +25,7 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 @Composable
 fun SchoolLifeScreen(
     navController: NavController,
-    viewModel: FillOutViewModel
+    viewModel: FillOutViewModel,
 ) {
     val data = viewModel.getEnteredSchoolLifeInformation()
 
@@ -50,8 +56,7 @@ fun SchoolLifeScreen(
                     SmsRoundedButton(
                         text = "이전",
                         modifier = Modifier
-                            .weight(2f)
-                            .height(48.dp),
+                            .weight(2f),
                         state = ButtonState.OutLine
                     ) {
                         navController.popBackStack()
@@ -60,8 +65,7 @@ fun SchoolLifeScreen(
                     SmsRoundedButton(
                         text = "다음",
                         modifier = Modifier
-                            .weight(4f)
-                            .height(48.dp),
+                            .weight(4f),
                         enabled = textFieldChecker(gsmAuthenticationScore.value),
                         state = ButtonState.Normal
                     ) {

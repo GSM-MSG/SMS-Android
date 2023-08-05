@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.item.TechStackItem
-import com.msg.sms.design.util.AddBody1TitleText
+import com.msg.sms.design.util.AddBody1Title
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -34,7 +34,7 @@ fun TechStackRow(modifier: Modifier, techStack: List<String>) {
 @Preview
 @Composable
 fun TechStackRowPre() {
-    AddBody1TitleText(titleText = "asddf", spaceSize = 8) {
+    AddBody1Title(titleText = "asddf", spaceSize = 8) {
         TechStackRow(
             modifier = Modifier,
             techStack = listOf(

@@ -1,14 +1,23 @@
 package com.msg.sms.design.component.textfield
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -96,6 +105,7 @@ fun SmsCustomTextField(
     focusRequester: FocusRequester = FocusRequester(),
     errorText: String = "Error",
     setChangeText: String,
+    singleLine: Boolean = false,
     onValueChange: (String) -> Unit = {},
 ) {
     var text by remember { mutableStateOf("") }
@@ -109,6 +119,7 @@ fun SmsCustomTextField(
                     text = it
                     onValueChange(it)
                 },
+                singleLine = singleLine,
                 placeholder = {
                     Text(text = placeHolder, style = typography.body1)
                 },
@@ -154,7 +165,7 @@ fun FilterTextFiled(
     value: String,
     modifier: Modifier = Modifier,
     isHopeSalary: Boolean = false,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
 ) {
     val isFocused = remember { mutableStateOf(false) }
     val focusRequester = FocusRequester()
@@ -186,6 +197,57 @@ fun FilterTextFiled(
                 onValueChange(it.replace("\\D".toRegex(), ""))
             }
         )
+    }
+}
+
+@Composable
+fun NoneIconTextField(
+    modifier: Modifier = Modifier,
+    placeHolder: String = "",
+    readOnly: Boolean = false,
+    focusRequester: FocusRequester = FocusRequester(),
+    setChangeText: String,
+    singleLine: Boolean = false,
+    onValueChange: (String) -> Unit = {},
+) {
+    var text by remember { mutableStateOf("") }
+    val isFocused = remember { mutableStateOf(false) }
+    text = setChangeText
+    SMSTheme { colors, typography ->
+        Box(modifier = modifier) {
+            OutlinedTextField(
+                value = text,
+                onValueChange = {
+                    text = it
+                    onValueChange(it)
+                },
+                singleLine = singleLine,
+                placeholder = {
+                    Text(text = placeHolder, style = typography.body1)
+                },
+                modifier = Modifier
+                    .focusRequester(focusRequester)
+                    .border(
+                        width = 1.dp,
+                        color = if (isFocused.value) colors.P2 else colors.N10,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .onFocusChanged {
+                        isFocused.value = it.isFocused
+                    }
+                    .fillMaxWidth(),
+                textStyle = typography.body1,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    backgroundColor = colors.N10,
+                    placeholderColor = colors.N30,
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                    cursorColor = colors.P2
+                ),
+                readOnly = readOnly
+            )
+        }
+
     }
 }
 
