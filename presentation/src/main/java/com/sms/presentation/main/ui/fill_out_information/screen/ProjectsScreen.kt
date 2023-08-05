@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +22,7 @@ import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.ProjectIconInputComponent
 import com.sms.presentation.main.ui.fill_out_information.component.ProjectNameInputComponent
 import com.sms.presentation.main.ui.fill_out_information.component.ProjectPreviewInputComponent
+import com.sms.presentation.main.ui.fill_out_information.component.ProjectTechStackInputComponent
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isImageExtensionCorrect
 
@@ -85,29 +87,35 @@ fun ProjectsScreen() {
     }
 
     SMSTheme { colors, typography ->
-        ToggleComponent(name = "프로젝트", onCancelButtonClick = {}) {
-            Spacer(modifier = Modifier.height(32.dp))
-            ProjectNameInputComponent(
-                text = projectName.value,
-                onButtonClick = { projectName.value = "" }
-            ) {
-                projectName.value = it
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-            ProjectIconInputComponent(iconImageUri = projectIconUri.value) {
-                isImportingProjectIcons.value = true
-                permissionLauncher.launch(permission)
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-            ProjectPreviewInputComponent(
-                previewUriList = projectPreviewUriList,
-                deletedIndex = { projectPreviewUriList.removeAt(it) }
-            ) {
-                isImportingProjectIcons.value = false
-                permissionLauncher.launch(permission)
-            }
-            Spacer(modifier = Modifier.height(24.dp))
+        LazyColumn {
+            item {
+                ToggleComponent(name = "프로젝트", onCancelButtonClick = {}) {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    ProjectNameInputComponent(
+                        text = projectName.value,
+                        onButtonClick = { projectName.value = "" }
+                    ) {
+                        projectName.value = it
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    ProjectIconInputComponent(iconImageUri = projectIconUri.value) {
+                        isImportingProjectIcons.value = true
+                        permissionLauncher.launch(permission)
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    ProjectPreviewInputComponent(
+                        previewUriList = projectPreviewUriList,
+                        deletedIndex = { projectPreviewUriList.removeAt(it) }
+                    ) {
+                        isImportingProjectIcons.value = false
+                        permissionLauncher.launch(permission)
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    ProjectTechStackInputComponent(techStack = listOf("a","a","a","a")) {
 
+                    }
+                }
+            }
         }
     }
 }
