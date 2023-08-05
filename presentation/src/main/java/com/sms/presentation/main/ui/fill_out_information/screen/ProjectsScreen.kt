@@ -5,19 +5,22 @@ import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.toggle.ToggleComponent
+import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.*
 import com.sms.presentation.main.ui.util.getFileNameFromUri
@@ -123,7 +126,7 @@ fun ProjectsScreen() {
                         permissionLauncher.launch(permission)
                     }
                     Spacer(modifier = Modifier.height(24.dp))
-                    ProjectTechStackInputComponent(techStack = listOf("a", "a", "a", "a")) {
+                    ProjectTechStackInputComponent(techStack = listOf()) {
 
                     }
                     Spacer(modifier = Modifier.height(24.dp))
@@ -153,6 +156,28 @@ fun ProjectsScreen() {
                             projectRelatedLinkList[idx] = Pair(name, link)
                         }
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+            item {
+                SMSTheme { colors, typography ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = "+  추가",
+                            style = typography.title2,
+                            fontWeight = FontWeight.Bold,
+                            color = colors.BLACK,
+                            modifier = Modifier.smsClickable {
+
+                            }
+                        )
+                    }
                 }
             }
         }
