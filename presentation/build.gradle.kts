@@ -91,6 +91,8 @@ dependencies {
     implementation(Dependency.Libraries.COIL)
 
     implementation(Dependency.AndroidX.SPLASH)
+
+    implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
 }
 
 fun getApiKey(propertyKey: String): String {

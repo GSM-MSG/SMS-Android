@@ -63,7 +63,7 @@ class FillOutInformationActivity : BaseActivity() {
                         }
                         NavHost(
                             navController = navController,
-                            startDestination = "Profile"
+                            startDestination = "Projects"
                         ) {
                             composable("Profile") {
                                 currentRoute.value = "Profile"
@@ -135,9 +135,12 @@ class FillOutInformationActivity : BaseActivity() {
                                 currentRoute.value = "Projects"
                                 setSoftInputMode("PAN")
                                 ProjectsScreen(
-//                                    navController = navController,
-//                                    viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
-                                )
+                                    navController = navController,
+                                    viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                                    bottomSheetState = bottomSheetState
+                                ) {
+                                    bottomSheetContent.value = it
+                                }
                             }
                             composable("Search") {
                                 currentRoute.value = "Search"

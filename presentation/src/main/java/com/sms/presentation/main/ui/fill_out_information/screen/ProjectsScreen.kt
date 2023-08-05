@@ -5,19 +5,22 @@ import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.commandiron.wheel_picker_compose.WheelDatePicker
+import com.commandiron.wheel_picker_compose.core.WheelPickerDefaults
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
@@ -27,10 +30,18 @@ import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.*
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isImageExtensionCorrect
+import com.sms.presentation.main.viewmodel.FillOutViewModel
+import kotlinx.coroutines.launch
 
-@Preview
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ProjectsScreen() {
+fun ProjectsScreen(
+    navController: NavController,
+    viewModel: FillOutViewModel,
+    bottomSheetState: ModalBottomSheetState,
+    bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit
+) {
+    val coroutineScope = rememberCoroutineScope()
     val projectName = remember {
         mutableStateOf("")
     }
@@ -59,6 +70,9 @@ fun ProjectsScreen() {
         mutableStateOf(false)
     }
     val isImportingProjectIcons = remember {
+        mutableStateOf(true)
+    }
+    val isProjectStartDate = remember {
         mutableStateOf(true)
     }
     val context = LocalContext.current
@@ -103,6 +117,66 @@ fun ProjectsScreen() {
         )
     }
 
+    bottomSheetContent(
+        content = {
+            val month = remember {
+                mutableStateOf(0)
+            }
+            val year = remember {
+                mutableStateOf(0)
+            }
+
+            SMSTheme { colors, typography ->
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
+                ) {
+                    Text(
+                        text = "날짜 선택",
+                        style = typography.title2,
+                        color = colors.BLACK,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "완료",
+                        style = typography.body2,
+                        color = colors.P2,
+                        fontWeight = FontWeight.Normal,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .smsClickable {
+                                if (isProjectStartDate.value) projectStartDate.value =
+                                    "${year.value}.${month.value}"
+                                else projectEndDate.value =
+                                    "${year.value}.${month.value}"
+                                coroutineScope.launch { bottomSheetState.hide() }
+                            }
+                    )
+                }
+                Spacer(modifier = Modifier.height(19.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(38.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    WheelDatePicker(
+                        textStyle = typography.title1,
+                        textColor = colors.BLACK,
+                        selectorProperties = WheelPickerDefaults.selectorProperties(
+                            border = BorderStroke(0.dp, Color.Transparent),
+                            color = colors.N10.copy(alpha = 0.5f)
+                        )
+                    ) {
+//                        year.value = it.year
+//                        month.value = it.month.value
+                    }
+                }
+            }
+        }
+    )
+
     SMSTheme { colors, typography ->
         LazyColumn {
             item {
@@ -143,8 +217,14 @@ fun ProjectsScreen() {
                         startDateText = projectStartDate.value,
                         endDateText = projectEndDate.value,
                         isProjectProgress = isProjectProgress.value,
-                        onStartDateCalendarClick = {},
-                        onEndDateCalendarClick = {},
+                        onStartDateCalendarClick = {
+                            isProjectStartDate.value = true
+                            coroutineScope.launch { bottomSheetState.show() }
+                        },
+                        onEndDateCalendarClick = {
+                            isProjectStartDate.value = true
+                            coroutineScope.launch { bottomSheetState.show() }
+                        },
                         onProgressButtonClick = {
                             isProjectProgress.value = !isProjectProgress.value
                         }
