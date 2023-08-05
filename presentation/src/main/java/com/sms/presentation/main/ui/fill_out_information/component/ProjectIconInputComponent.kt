@@ -40,7 +40,8 @@ fun ProjectIconInputComponent(iconImageUri: Uri, onClick: () -> Unit) {
                 modifier = Modifier
                     .size(108.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(colors.N10),
+                    .background(colors.N10)
+                    .smsClickable(onClick = onClick),
                 contentScale = ContentScale.FillBounds
             )
         }
