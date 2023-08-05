@@ -19,10 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.toggle.ToggleComponent
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.fill_out_information.component.ProjectIconInputComponent
-import com.sms.presentation.main.ui.fill_out_information.component.ProjectNameInputComponent
-import com.sms.presentation.main.ui.fill_out_information.component.ProjectPreviewInputComponent
-import com.sms.presentation.main.ui.fill_out_information.component.ProjectTechStackInputComponent
+import com.sms.presentation.main.ui.fill_out_information.component.*
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isImageExtensionCorrect
 
@@ -37,6 +34,9 @@ fun ProjectsScreen() {
     }
     val projectPreviewUriList = remember {
         mutableStateListOf<Uri>(Uri.EMPTY, Uri.EMPTY, Uri.EMPTY)
+    }
+    val projectKeyTask = remember {
+        mutableStateOf("")
     }
     val isImageExtensionInCorrect = remember {
         mutableStateOf(false)
@@ -111,8 +111,15 @@ fun ProjectsScreen() {
                         permissionLauncher.launch(permission)
                     }
                     Spacer(modifier = Modifier.height(24.dp))
-                    ProjectTechStackInputComponent(techStack = listOf("a","a","a","a")) {
+                    ProjectTechStackInputComponent(techStack = listOf("a", "a", "a", "a")) {
 
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    ProjectKeyTaskInputComponent(
+                        text = projectKeyTask.value,
+                        onButtonClick = { projectKeyTask.value = "" }
+                    ) {
+                        projectKeyTask.value = it
                     }
                 }
             }
