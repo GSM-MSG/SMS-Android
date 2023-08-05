@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
-import com.msg.sms.design.component.indicator.PagerIndicator
 import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.component.textfield.SmsTextField
@@ -57,7 +56,9 @@ fun WorkConditionComponent(
         }
 
         isRequired.value =
-            wantWorkingArea != listOf("") && wantPayroll.value != "0" && textFieldChecker(wantWorkingCondition)
+            wantWorkingArea != listOf("") && wantPayroll.value != "0" && textFieldChecker(
+                wantWorkingCondition
+            )
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -70,17 +71,7 @@ fun WorkConditionComponent(
                     .weight(1f)
             ) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        SmsTitleText(text = "근무 조건", isRequired = true)
-                        PagerIndicator(
-                            indexOfPointingNumber = 2, size = 6, modifier = Modifier.align(
-                                Alignment.CenterEnd
-                            )
-                        )
-                    }
+                    SmsTitleText(text = "근무 조건", isRequired = true)
                     Spacer(modifier = Modifier.height(32.dp))
                     Text(text = "희망 고용 형태", style = typography.body2)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -168,8 +159,7 @@ fun WorkConditionComponent(
                 ) {
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(2f)
-                            .height(48.dp),
+                            .weight(2f),
                         text = "이전",
                         state = ButtonState.OutLine
                     ) {
@@ -178,8 +168,7 @@ fun WorkConditionComponent(
                     Spacer(modifier = Modifier.width(8.dp))
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(4f)
-                            .height(48.dp),
+                            .weight(4f),
                         text = "다음",
                         state = ButtonState.Normal,
                         enabled = isRequired.value

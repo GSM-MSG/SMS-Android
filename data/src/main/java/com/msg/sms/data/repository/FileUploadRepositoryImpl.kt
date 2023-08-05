@@ -17,10 +17,4 @@ class FileUploadRepositoryImpl @Inject constructor(
             file = file
         ).map { it.toFileUploadModel() }
     }
-
-    override suspend fun dreamBookUpload(file: MultipartBody.Part): Flow<FileUploadResponseModel> {
-        return dataSource.dreamBookUpload(
-            file = file
-        ).map { it.toFileUploadModel() }
-    }
 }

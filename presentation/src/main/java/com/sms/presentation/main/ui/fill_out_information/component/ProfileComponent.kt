@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
@@ -20,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.msg.sms.design.component.indicator.PagerIndicator
 import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.component.textfield.SmsTextField
@@ -29,8 +27,8 @@ import com.msg.sms.design.icon.ProfileIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
-import com.sms.presentation.main.ui.util.textFieldChecker
 import com.sms.presentation.main.ui.util.hideKeyboard
+import com.sms.presentation.main.ui.util.textFieldChecker
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -88,14 +86,7 @@ fun ProfileComponent(
                 .padding(start = 20.dp, end = 20.dp)
         ) {
             Spacer(modifier = Modifier.height(20.dp))
-            Box(modifier = Modifier.fillMaxWidth()) {
-                SmsTitleText(text = "프로필", isRequired = true)
-                PagerIndicator(
-                    modifier = Modifier.align(
-                        Alignment.CenterEnd
-                    ), indexOfPointingNumber = 0, size = 6
-                )
-            }
+            SmsTitleText(text = "프로필", isRequired = true)
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "사진", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))

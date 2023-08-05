@@ -17,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -27,7 +26,6 @@ import com.sms.presentation.main.ui.main.data.StudentDetailData
 import com.sms.presentation.main.ui.util.departmentEnumToString
 import com.sms.presentation.main.ui.util.employmentEnumToSting
 import com.sms.presentation.main.ui.util.militaryServiceEnumToString
-import com.sms.presentation.main.viewmodel.util.downloader.AndroidDownloader
 import kotlinx.coroutines.launch
 
 @Composable

@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
-import com.msg.sms.design.component.indicator.PagerIndicator
 import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.TrashCanIcon
@@ -37,14 +36,7 @@ fun CertificationComponent(
                 .fillMaxWidth()
                 .padding(start = 20.dp, end = 20.dp, top = 20.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                SmsTitleText(text = "자격증", isRequired = false)
-                PagerIndicator(indexOfPointingNumber = 4, size = 6)
-            }
+            SmsTitleText(text = "자격증", isRequired = false)
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "자격증", style = typography.body2, color = colors.N40)
             Spacer(modifier = Modifier.height(8.dp))
@@ -98,8 +90,7 @@ fun CertificationComponent(
                 ) {
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(2f)
-                            .height(48.dp),
+                            .weight(2f),
                         text = "이전",
                         state = ButtonState.OutLine
                     ) {
@@ -108,8 +99,7 @@ fun CertificationComponent(
                     Spacer(modifier = Modifier.width(8.dp))
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(4f)
-                            .height(48.dp),
+                            .weight(4f),
                         text = "다음",
                         state = ButtonState.Normal
                     ) {

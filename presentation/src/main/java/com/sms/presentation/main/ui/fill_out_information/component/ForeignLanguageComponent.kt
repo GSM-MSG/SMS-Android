@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -29,7 +28,6 @@ import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
-import com.msg.sms.design.component.indicator.PagerIndicator
 import com.msg.sms.design.component.lottie.SmsLoadingLottie
 import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsTextField
@@ -111,14 +109,7 @@ fun ForeignLanguageComponent(
                 .fillMaxWidth()
                 .padding(start = 20.dp, end = 20.dp, top = 20.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                SmsTitleText(text = "외국어", isRequired = false)
-                PagerIndicator(indexOfPointingNumber = 5, size = 6)
-            }
+            SmsTitleText(text = "외국어", isRequired = false)
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "외국어", style = typography.body2, color = colors.N40)
             Spacer(modifier = Modifier.height(8.dp))
@@ -190,8 +181,7 @@ fun ForeignLanguageComponent(
                 ) {
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(2f)
-                            .height(48.dp),
+                            .weight(2f),
                         text = "이전",
                         state = ButtonState.OutLine
                     ) {
@@ -200,8 +190,7 @@ fun ForeignLanguageComponent(
                     Spacer(modifier = Modifier.width(8.dp))
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(4f)
-                            .height(48.dp),
+                            .weight(4f),
                         text = "다음",
                         state = ButtonState.Normal
                     ) {
@@ -246,37 +235,6 @@ fun ForeignLanguageComponent(
                         }
 
                         lifecycleScope.launch {
-                            viewModel.dreamBookUpload(
-                                enteredSchoolLifeData.dreamBookFileUri.toMultipartBody(
-                                    context
-                                )!!
-                            )
-                            dreamBookFileUpload(
-                                viewModel = viewModel,
-                                dialog = { errorState, title, msg ->
-                                    dialogState.value = errorState
-                                    errorTitle.value = title
-                                    errorMsg.value = msg
-                                },
-                                isUnauthorized = {
-                                    onClick.value = {
-                                        context.startActivity(
-                                            Intent(
-                                                context,
-                                                LoginActivity::class.java
-                                            )
-                                        )
-                                        context.finish()
-                                    }
-                                },
-                                isBadRequest = {
-                                    onClick.value = {
-                                        navController.navigate("SchoolLife")
-                                    }
-                                }
-                            )
-                        }
-                        lifecycleScope.launch {
                             viewModel.fileUploadCompleted.collect { isComplete ->
                                 Log.d("fileUploadCompleted", isComplete.toString())
                                 if (isComplete) {
@@ -293,7 +251,6 @@ fun ForeignLanguageComponent(
                                         salary = enteredWorkConditionData.salary.toInt(),
                                         region = enteredWorkConditionData.region,
                                         languageCertificate = foreignLanguage,
-                                        dreamBookFileUrl = viewModel.getDreamBookFileUrl(),
                                         militaryService = enteredMilitaryServiceData.militaryService.toEnum(),
                                         certificate = enteredCertificateData.certification
                                     )
@@ -353,34 +310,6 @@ suspend fun imageFileUpload(
             }
             is Event.BadRequest -> {
                 dialog(true, "에러", "파일이 jpg, jpeg, png, heic 가 아닙니다.")
-                isBadRequest()
-            }
-            is Event.Loading -> {}
-            else -> {
-                dialog(true, "에러", "알 수 없는 오류 발생")
-            }
-        }
-    }
-}
-
-suspend fun dreamBookFileUpload(
-    viewModel: FillOutViewModel,
-    dialog: (visible: Boolean, title: String, msg: String) -> Unit,
-    isUnauthorized: () -> Unit,
-    isBadRequest: () -> Unit,
-) {
-    viewModel.dreamBookUploadResponse.collect { response ->
-        viewModel.specifyWhenCompleteFileUpload()
-        when (response) {
-            is Event.Success -> {
-                viewModel.setDreamBookFileUrl(response.data!!.fileUrl)
-            }
-            is Event.Unauthorized -> {
-                dialog(true, "토큰 만료", "다시 로그인 해주세요")
-                isUnauthorized()
-            }
-            is Event.BadRequest -> {
-                dialog(true, "에러", "파일이 hwp, hwpx 가 아닙니다.")
                 isBadRequest()
             }
             is Event.Loading -> {}

@@ -24,7 +24,19 @@ fun Body1Text(titleText: String) {
 }
 
 @Composable
-fun AddBody1TitleText(
+fun GrayBody1Text(titleText: String) {
+    SMSTheme { colors, typography ->
+        Text(
+            text = titleText,
+            style = typography.body1,
+            fontWeight = FontWeight.Normal,
+            color = colors.N40
+        )
+    }
+}
+
+@Composable
+fun AddBody1Title(
     modifier: Modifier = Modifier,
     titleText: String,
     spaceSize: Int = 16,
@@ -37,10 +49,24 @@ fun AddBody1TitleText(
     }
 }
 
+@Composable
+fun AddGrayBody1Title(
+    modifier: Modifier = Modifier,
+    titleText: String,
+    spaceSize: Int = 8,
+    component: @Composable () -> Unit,
+) {
+    Column(modifier = modifier) {
+        GrayBody1Text(titleText = titleText)
+        Spacer(modifier = Modifier.height(spaceSize.dp))
+        component()
+    }
+}
+
 @Preview
 @Composable
 fun AddTitlePre() {
-    AddBody1TitleText(titleText = "text") {
+    AddBody1Title(titleText = "text") {
         Text(text = "lsdjkf")
     }
 }
