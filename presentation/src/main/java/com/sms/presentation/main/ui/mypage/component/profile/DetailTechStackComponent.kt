@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.component.item.DetailTechStackItem
+import com.msg.sms.design.component.button.DetailTechStackItem
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable

@@ -1,4 +1,4 @@
-package com.msg.sms.design.component.item
+package com.msg.sms.design.component.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
