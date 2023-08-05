@@ -19,6 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.SmsDialog
+import com.msg.sms.design.component.button.ButtonState
+import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.toggle.ToggleComponent
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
@@ -178,6 +180,29 @@ fun ProjectsScreen() {
                             }
                         )
                     }
+                }
+            }
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(52.dp))
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        SmsRoundedButton(
+                            text = "이전",
+                            modifier = Modifier.weight(1f),
+                            state = ButtonState.OutLine
+                        ) {
+
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        SmsRoundedButton(text = "다음", modifier = Modifier.weight(2.25f)) {
+
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(48.dp))
                 }
             }
         }
