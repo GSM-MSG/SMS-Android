@@ -201,7 +201,7 @@ fun FilterTextFiled(
 }
 
 @Composable
-fun NonIconTextField(
+fun NoneIconTextField(
     modifier: Modifier = Modifier,
     placeHolder: String = "",
     readOnly: Boolean = false,

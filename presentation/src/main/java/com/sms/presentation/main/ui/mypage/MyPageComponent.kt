@@ -18,10 +18,12 @@ import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.icon.BlackLogoutIcon
 import com.sms.presentation.main.ui.mypage.component.button.SaveButtonComponent
+import com.sms.presentation.main.ui.mypage.section.AwardSection
 import com.sms.presentation.main.ui.mypage.section.CertificationsSection
 import com.sms.presentation.main.ui.mypage.section.ForeignLanguagesSection
 import com.sms.presentation.main.ui.mypage.section.MilitaryServiceSection
 import com.sms.presentation.main.ui.mypage.section.ProfileSection
+import com.sms.presentation.main.ui.mypage.section.ProjectsSection
 import com.sms.presentation.main.ui.mypage.section.SchoolLifeSection
 import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
 
@@ -94,12 +96,14 @@ fun MyPageComponent(clickTopLeftButton: () -> Unit, clickTopRightButton: () -> U
                 TitleHeader(titleText = "프로젝트")
             }
             item {
+                ProjectsSection(list = listOf("1", "2"))
                 SmsSpacer()
             }
             stickyHeader {
                 TitleHeader(titleText = "수상")
             }
             item {
+                AwardSection(list = listOf("1", "2"))
                 SmsSpacer()
             }
             item {
