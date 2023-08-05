@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.SmsChip
-import com.msg.sms.design.component.textfield.SmsCustomTextField
+import com.msg.sms.design.component.textfield.NoneIconTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 
@@ -36,19 +36,15 @@ fun ForeignLanguagesComponent(foreignLanguages: List<Pair<String, String>>) {
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            SmsCustomTextField(
+                            NoneIconTextField(
                                 modifier = Modifier.fillMaxWidth(0.64f),
-                                endIcon = null,
-                                clickAction = {},
                                 singleLine = true,
                                 placeHolder = "예) 토익",
                                 setChangeText = ""
                             )
                             Box(modifier = Modifier.weight(1f)) {
-                                SmsCustomTextField(
+                                NoneIconTextField(
                                     modifier = Modifier.fillMaxWidth(),
-                                    endIcon = null,
-                                    clickAction = {},
                                     singleLine = true,
                                     placeHolder = "990",
                                     setChangeText = ""
