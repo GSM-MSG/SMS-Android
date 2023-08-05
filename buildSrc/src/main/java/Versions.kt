@@ -33,5 +33,5 @@ object Versions {
 
     const val COIL = "2.4.0"
 
-    const val LOTTIE_COMPOSE = "6.0.1"
+    const val LOTTIE_COMPOSE = "6.1.0"
 }
