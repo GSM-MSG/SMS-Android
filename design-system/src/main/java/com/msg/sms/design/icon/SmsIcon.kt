@@ -277,6 +277,39 @@ fun CloseIcon(
     Image(
         modifier = modifier,
         painter = painterResource(id = R.drawable.ic_close_btn),
-        contentDescription = "엑스 버튼"
+        contentDescription = "배경 없는 엑스 아이콘"
+    )
+}
+
+@Composable
+fun CalendarIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_calendar),
+        contentDescription = "캘린더 아이콘"
+    )
+}
+
+@Composable
+fun FlowIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_flow),
+        contentDescription = "물결모양"
+    )
+}
+
+@Composable
+fun SmallPlusIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_small_plus),
+        contentDescription = "추가 아이콘"
     )
 }
