@@ -10,13 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.DetailTechStackItem
 import com.msg.sms.design.modifier.smsClickable
-import com.msg.sms.design.util.AddBody1Title
+import com.msg.sms.design.util.AddGrayBody1Title
 import com.sms.presentation.main.ui.mypage.component.profile.DisplaySearchBar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProjectTechStackInputComponent(techStack: List<String>, onClick: () -> Unit) {
-    AddBody1Title(titleText = "사용기술 (최대 20개)") {
+    AddGrayBody1Title(titleText = "사용기술 (최대 20개)") {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)

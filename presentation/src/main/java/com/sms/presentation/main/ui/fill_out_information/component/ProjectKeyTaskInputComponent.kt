@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.msg.sms.design.component.textfield.SmsTextField
-import com.msg.sms.design.util.AddBody1Title
+import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
 fun ProjectKeyTaskInputComponent(
@@ -12,7 +12,7 @@ fun ProjectKeyTaskInputComponent(
     onButtonClick: () -> Unit,
     onValueChange: (String) -> Unit,
 ) {
-    AddBody1Title(titleText = "주요 작업") {
+    AddGrayBody1Title(titleText = "주요 작업") {
         SmsTextField(
             setText = text,
             placeHolder = "주요 작업 내용서술",

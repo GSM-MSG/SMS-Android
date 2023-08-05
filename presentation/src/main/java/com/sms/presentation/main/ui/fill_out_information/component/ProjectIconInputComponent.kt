@@ -16,13 +16,13 @@ import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.icon.GalleryIcon
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.design.util.AddBody1Title
+import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
 fun ProjectIconInputComponent(iconImageUri: Uri, onClick: () -> Unit) {
     SMSTheme { colors, _ ->
-        if (iconImageUri == Uri.EMPTY) {
-            AddBody1Title(titleText = "아이콘") {
+        AddGrayBody1Title(titleText = "아이콘") {
+            if (iconImageUri == Uri.EMPTY) {
                 Box(
                     modifier = Modifier
                         .size(108.dp)
@@ -32,18 +32,18 @@ fun ProjectIconInputComponent(iconImageUri: Uri, onClick: () -> Unit) {
                 ) {
                     GalleryIcon(modifier = Modifier.align(Alignment.Center))
                 }
+            } else {
+                Image(
+                    painter = rememberAsyncImagePainter(iconImageUri),
+                    contentDescription = "프로젝트 아이콘",
+                    modifier = Modifier
+                        .size(108.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(colors.N10)
+                        .smsClickable(onClick = onClick),
+                    contentScale = ContentScale.FillBounds
+                )
             }
-        } else {
-            Image(
-                painter = rememberAsyncImagePainter(iconImageUri),
-                contentDescription = "프로젝트 아이콘",
-                modifier = Modifier
-                    .size(108.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(colors.N10)
-                    .smsClickable(onClick = onClick),
-                contentScale = ContentScale.FillBounds
-            )
         }
     }
 }
