@@ -39,6 +39,9 @@ fun ProjectsScreen() {
     val isImageExtensionInCorrect = remember {
         mutableStateOf(false)
     }
+    val isImportingProjectIcons = remember {
+        mutableStateOf(true)
+    }
     val context = LocalContext.current
 
     val galleryLauncher =
@@ -46,7 +49,11 @@ fun ProjectsScreen() {
             if (uri != null) {
                 if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
                     isImageExtensionInCorrect.value = false
-                    projectIconUri.value = uri
+                    if (isImportingProjectIcons.value) {
+                        projectIconUri.value = uri
+                    } else {
+                        if (projectPreviewUriList.size < 4) projectPreviewUriList.add(uri)
+                    }
                 } else {
                     isImageExtensionInCorrect.value = true
                 }
@@ -88,6 +95,7 @@ fun ProjectsScreen() {
             }
             Spacer(modifier = Modifier.height(24.dp))
             ProjectIconInputComponent(iconImageUri = projectIconUri.value) {
+                isImportingProjectIcons.value = true
                 permissionLauncher.launch(permission)
             }
             Spacer(modifier = Modifier.height(24.dp))
@@ -95,7 +103,8 @@ fun ProjectsScreen() {
                 previewUriList = projectPreviewUriList,
                 deletedIndex = { projectPreviewUriList.removeAt(it) }
             ) {
-
+                isImportingProjectIcons.value = false
+                permissionLauncher.launch(permission)
             }
         }
     }
