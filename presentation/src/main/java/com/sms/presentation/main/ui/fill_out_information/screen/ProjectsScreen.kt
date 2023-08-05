@@ -44,6 +44,9 @@ fun ProjectsScreen() {
     val projectEndDate = remember {
         mutableStateOf("")
     }
+    val projectRelatedLinkList = remember {
+        mutableStateListOf(Pair("", ""))
+    }
     val isProjectProgress = remember {
         mutableStateOf(false)
     }
@@ -137,7 +140,18 @@ fun ProjectsScreen() {
                         isProjectProgress = isProjectProgress.value,
                         onStartDateCalendarClick = {},
                         onEndDateCalendarClick = {},
-                        onProgressButtonClick = { isProjectProgress.value = !isProjectProgress.value }
+                        onProgressButtonClick = {
+                            isProjectProgress.value = !isProjectProgress.value
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    ProjectRelatedLinksInputComponent(
+                        relatedLinks = projectRelatedLinkList,
+                        onAddButtonClick = { projectRelatedLinkList.add(Pair("", "")) },
+                        onDeleteButtonClick = { projectRelatedLinkList.removeAt(it) },
+                        onValueChange = { idx, name, link ->
+                            projectRelatedLinkList[idx] = Pair(name, link)
+                        }
                     )
                 }
             }
