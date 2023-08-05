@@ -20,7 +20,7 @@ import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.design.icon.GalleryIcon
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.design.util.AddBody1TitleText
+import com.msg.sms.design.util.AddBody1Title
 
 @Composable
 fun ProjectPreviewInputComponent(
@@ -29,7 +29,7 @@ fun ProjectPreviewInputComponent(
     onClick: () -> Unit
 ) {
     SMSTheme { colors, typography ->
-        AddBody1TitleText(titleText = "미리보기 사진") {
+        AddBody1Title(titleText = "미리보기 사진") {
             LazyRow(modifier = Modifier.fillMaxWidth()) {
                 item {
                     Box(

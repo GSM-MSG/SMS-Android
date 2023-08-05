@@ -16,13 +16,13 @@ import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.icon.GalleryIcon
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.design.util.AddBody1TitleText
+import com.msg.sms.design.util.AddBody1Title
 
 @Composable
 fun ProjectIconInputComponent(iconImageUri: Uri, onClick: () -> Unit) {
     SMSTheme { colors, _ ->
         if (iconImageUri == Uri.EMPTY) {
-            AddBody1TitleText(titleText = "아이콘") {
+            AddBody1Title(titleText = "아이콘") {
                 Box(
                     modifier = Modifier
                         .size(108.dp)

@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.icon.CancelIcon
-import com.msg.sms.design.icon.ToggleArrowIcon
+import com.msg.sms.design.icon.CloseIcon
+import com.msg.sms.design.icon.ToggleIcon
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 
@@ -69,7 +69,7 @@ fun ToggleComponent(
                     modifier = Modifier.align(Alignment.CenterEnd),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ToggleArrowIcon(
+                    ToggleIcon(
                         modifier = Modifier
                             .rotate(rotation.value)
                             .smsClickable {
@@ -77,7 +77,7 @@ fun ToggleComponent(
                             }
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    CancelIcon(modifier = Modifier.smsClickable(onClick = onCancelButtonClick))
+                    CloseIcon(modifier = Modifier.smsClickable(onClick = onCancelButtonClick))
                 }
             }
             AnimatedVisibility(visible = contentVisible.value) {
