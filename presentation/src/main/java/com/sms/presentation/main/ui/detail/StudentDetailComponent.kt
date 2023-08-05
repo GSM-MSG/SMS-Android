@@ -171,7 +171,6 @@ fun StudentDetailComponent(
                         text = "포트폴리오",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp)
                     ) {
                         val urlIntent = Intent(
                             Intent.ACTION_VIEW,

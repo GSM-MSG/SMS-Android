@@ -92,7 +92,6 @@ fun SmsDialog(
                             state = ButtonState.OutLine,
                             modifier = Modifier
                                 .fillMaxWidth(0.485f)
-                                .height(48.dp)
                                 .align(Alignment.CenterStart)
                         ) {
                             outlineButtonOnClick()
@@ -102,7 +101,6 @@ fun SmsDialog(
                         text = normalButtonText,
                         modifier = Modifier
                             .fillMaxWidth(if (cancelButtonEnabled) 0.485f else 1f)
-                            .height(48.dp)
                             .align(Alignment.CenterEnd)
                     ) {
                         normalButtonOnClick()

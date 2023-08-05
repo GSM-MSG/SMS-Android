@@ -227,6 +227,17 @@ fun RedLogoutIcon(
 }
 
 @Composable
+fun BlackLogoutIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_logout_btn),
+        contentDescription = "뭔가 대충 밖으로 나갈 것 같은 아이콘",
+        modifier = modifier
+    )
+}
+
+@Composable
 fun RedWithdrawalIcon(
     modifier: Modifier = Modifier,
 ) {
@@ -260,23 +271,45 @@ fun TopEndArrowIcon(
 }
 
 @Composable
-fun CancelIcon(
+fun CloseIcon(
     modifier: Modifier = Modifier,
 ) {
     Image(
-        painter = painterResource(id = R.drawable.ic_cancel),
-        contentDescription = "취소 아이콘",
-        modifier = modifier
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_close_btn),
+        contentDescription = "배경 없는 엑스 아이콘"
     )
 }
 
 @Composable
-fun ToggleArrowIcon(
+fun CalendarIcon(
     modifier: Modifier = Modifier,
 ) {
     Image(
-        painter = painterResource(id = R.drawable.ic_toggle),
-        contentDescription = "토글 화살표 아이콘",
-        modifier = modifier
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_calendar),
+        contentDescription = "캘린더 아이콘"
+    )
+}
+
+@Composable
+fun FlowIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_flow),
+        contentDescription = "물결모양"
+    )
+}
+
+@Composable
+fun SmallPlusIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_small_plus),
+        contentDescription = "추가 아이콘"
     )
 }

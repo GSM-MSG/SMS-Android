@@ -1,6 +1,5 @@
 package com.sms.presentation.main.ui.fill_out_information.component
 
-import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,17 +24,12 @@ import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
-import com.sms.presentation.main.ui.login.LoginActivity
-import com.sms.presentation.main.ui.main.MainActivity
 import com.sms.presentation.main.ui.util.isEmailRegularExpression
 import com.sms.presentation.main.ui.util.isUrlRegularExpression
-import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun ForeignLanguageComponent(
@@ -173,8 +167,7 @@ fun ForeignLanguageComponent(
                 ) {
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(2f)
-                            .height(48.dp),
+                            .weight(2f),
                         text = "이전",
                         state = ButtonState.OutLine
                     ) {
@@ -183,8 +176,7 @@ fun ForeignLanguageComponent(
                     Spacer(modifier = Modifier.width(8.dp))
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(4f)
-                            .height(48.dp),
+                            .weight(4f),
                         text = "다음",
                         state = ButtonState.Normal
                     ) {

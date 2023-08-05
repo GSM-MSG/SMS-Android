@@ -106,6 +106,8 @@ fun ProjectsScreen() {
                 isImportingProjectIcons.value = false
                 permissionLauncher.launch(permission)
             }
+            Spacer(modifier = Modifier.height(24.dp))
+
         }
     }
 }

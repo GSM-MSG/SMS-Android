@@ -159,8 +159,7 @@ fun WorkConditionComponent(
                 ) {
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(2f)
-                            .height(48.dp),
+                            .weight(2f),
                         text = "이전",
                         state = ButtonState.OutLine
                     ) {
@@ -169,8 +168,7 @@ fun WorkConditionComponent(
                     Spacer(modifier = Modifier.width(8.dp))
                     SmsRoundedButton(
                         modifier = Modifier
-                            .weight(4f)
-                            .height(48.dp),
+                            .weight(4f),
                         text = "다음",
                         state = ButtonState.Normal,
                         enabled = isRequired.value
