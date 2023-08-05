@@ -15,12 +15,10 @@ fun MajorComponent() {
             placeHolder = "FrondEnd",
             modifier = Modifier.fillMaxWidth(),
             endIcon = { OpenButtonIcon() },
-//            readOnly = isReadOnly,
             clickAction = {},
             setChangeText = ""
-//            setChangeText = if (selectedMajor == "직접입력") enteredMajor else selectedMajor
         ) {
-//            enteringMajor(it)
+
         }
     }
 }
