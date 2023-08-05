@@ -33,10 +33,19 @@ fun ProjectsScreen() {
         mutableStateOf(Uri.EMPTY)
     }
     val projectPreviewUriList = remember {
-        mutableStateListOf<Uri>(Uri.EMPTY, Uri.EMPTY, Uri.EMPTY)
+        mutableStateListOf<Uri>()
     }
     val projectKeyTask = remember {
         mutableStateOf("")
+    }
+    val projectStartDate = remember {
+        mutableStateOf("")
+    }
+    val projectEndDate = remember {
+        mutableStateOf("")
+    }
+    val isProjectProgress = remember {
+        mutableStateOf(false)
     }
     val isImageExtensionInCorrect = remember {
         mutableStateOf(false)
@@ -121,6 +130,15 @@ fun ProjectsScreen() {
                     ) {
                         projectKeyTask.value = it
                     }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    ProjectScheduleInputComponent(
+                        startDateText = projectStartDate.value,
+                        endDateText = projectEndDate.value,
+                        isProjectProgress = isProjectProgress.value,
+                        onStartDateCalendarClick = {},
+                        onEndDateCalendarClick = {},
+                        onProgressButtonClick = { isProjectProgress.value = !isProjectProgress.value }
+                    )
                 }
             }
         }
