@@ -10,14 +10,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ProjectComponent() {
+fun ProjectComponent(data: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 20.dp, top = 24.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        ProjectNameComponent()
+        ProjectNameComponent(name = data)
         ProjectIconComponent()
         ProjectPreviewComponent(
             list = listOf(
@@ -50,5 +50,5 @@ fun ProjectComponent() {
 @Preview
 @Composable
 private fun ProjectComponentPre() {
-    ProjectComponent()
+    ProjectComponent(data = "프로젝트 1")
 }
