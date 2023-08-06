@@ -73,6 +73,17 @@ fun OpenButtonIcon(
 }
 
 @Composable
+fun ChevronDownIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_chevron_down),
+        contentDescription = "Plus Button Icon",
+    )
+}
+
+@Composable
 fun PlusButtonIcon(
     modifier: Modifier = Modifier,
 ) {
