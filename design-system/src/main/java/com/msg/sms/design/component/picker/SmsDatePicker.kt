@@ -20,14 +20,12 @@ import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.theme.SMSTypography
 
 @Composable
-fun DatePicker() {
-    val year = remember {
-        mutableStateOf(0)
-    }
-    val month = remember {
-        mutableStateOf(0)
-    }
-
+fun SmsDatePicker(
+    monthValue: Int,
+    yearValue: Int,
+    onMonthValueChange: (Int) -> Unit,
+    onYearValueChange: (Int) -> Unit
+) {
     SMSTheme { colors, _ ->
         Box(
             modifier = Modifier
@@ -49,7 +47,7 @@ fun DatePicker() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 NumberPicker(
-                    value = year.value,
+                    value = yearValue,
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
@@ -61,10 +59,10 @@ fun DatePicker() {
                         lineHeight = 24.sp,
                         fontWeight = FontWeight.Bold
                     ),
-                    onValueChange = { year.value = it }
+                    onValueChange = onYearValueChange
                 )
                 NumberPicker(
-                    value = month.value,
+                    value = monthValue,
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
@@ -76,7 +74,7 @@ fun DatePicker() {
                         lineHeight = 24.sp,
                         fontWeight = FontWeight.Bold
                     ),
-                    onValueChange = { month.value = it }
+                    onValueChange = onMonthValueChange
                 )
             }
         }
@@ -86,5 +84,16 @@ fun DatePicker() {
 @Preview
 @Composable
 fun DatePickerPre() {
-    DatePicker()
+    val month = remember {
+        mutableStateOf(0)
+    }
+    val year = remember {
+        mutableStateOf(0)
+    }
+    SmsDatePicker(
+        monthValue = month.value,
+        yearValue = year.value,
+        onMonthValueChange = {},
+        onYearValueChange = {}
+    )
 }

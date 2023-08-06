@@ -20,7 +20,7 @@ import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
-import com.msg.sms.design.component.picker.DatePicker
+import com.msg.sms.design.component.picker.SmsDatePicker
 import com.msg.sms.design.component.toggle.ToggleComponent
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
@@ -152,7 +152,12 @@ fun ProjectsScreen(
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-                DatePicker()
+                SmsDatePicker(
+                    yearValue = year.value,
+                    monthValue = month.value,
+                    onYearValueChange = { year.value = it },
+                    onMonthValueChange = { month.value = it }
+                )
             }
         }
     )
