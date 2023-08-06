@@ -36,7 +36,7 @@ fun ProjectRelatedLinksInputComponent(
                         NoneIconTextField(
                             singleLine = true,
                             setChangeText = item.first,
-                            placeHolder = "Github"
+                            placeHolder = "Link"
                         ) {
                             onValueChange(idx, it, relatedLinks[idx].second)
                         }
