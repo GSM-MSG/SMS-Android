@@ -24,8 +24,6 @@ fun ProjectRelatedLinksInputComponent(
         LazyColumn(
             modifier = Modifier
                 .heightIn(max = 640.dp)
-                .padding(end = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             itemsIndexed(relatedLinks) { idx, item ->
                 Row(
@@ -45,7 +43,7 @@ fun ProjectRelatedLinksInputComponent(
                     Box(modifier = Modifier.weight(2.5f)) {
                         NoneIconTextField(
                             singleLine = true,
-                            setChangeText = item.second,
+                            setChangeText = "",
                             placeHolder = "https://github.com"
                         ) {
                             onValueChange(idx, relatedLinks[idx].first, it)

@@ -26,8 +26,7 @@ fun ProjectScheduleInputComponent(
     AddGrayBody1Title(titleText = "진행 기간") {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 20.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(

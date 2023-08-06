@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
@@ -14,13 +13,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.commandiron.wheel_picker_compose.WheelDatePicker
-import com.commandiron.wheel_picker_compose.core.WheelPickerDefaults
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
@@ -161,129 +157,117 @@ fun ProjectsScreen(
                         .padding(38.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    WheelDatePicker(
-                        textStyle = typography.title1,
-                        textColor = colors.BLACK,
-                        selectorProperties = WheelPickerDefaults.selectorProperties(
-                            border = BorderStroke(0.dp, Color.Transparent),
-                            color = colors.N10.copy(alpha = 0.5f)
-                        )
-                    ) {
-//                        year.value = it.year
-//                        month.value = it.month.value
-                    }
+                    //TODO (Kimhyunseung) - DatePicker 구현해서 한꺼번에 컴포넌트 분리하기
                 }
             }
         }
     )
-
-    SMSTheme { colors, typography ->
-        LazyColumn {
-            item {
-                ToggleComponent(name = "프로젝트", onCancelButtonClick = {}) {
-                    Spacer(modifier = Modifier.height(32.dp))
-                    ProjectNameInputComponent(
-                        text = projectName.value,
-                        onButtonClick = { projectName.value = "" }
-                    ) {
-                        projectName.value = it
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                    ProjectIconInputComponent(iconImageUri = projectIconUri.value) {
-                        isImportingProjectIcons.value = true
-                        permissionLauncher.launch(permission)
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                    ProjectPreviewInputComponent(
-                        previewUriList = projectPreviewUriList,
-                        deletedIndex = { projectPreviewUriList.removeAt(it) }
-                    ) {
-                        isImportingProjectIcons.value = false
-                        permissionLauncher.launch(permission)
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                    ProjectTechStackInputComponent(techStack = listOf()) {
-
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                    ProjectKeyTaskInputComponent(
-                        text = projectKeyTask.value,
-                        onButtonClick = { projectKeyTask.value = "" }
-                    ) {
-                        projectKeyTask.value = it
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                    ProjectScheduleInputComponent(
-                        startDateText = projectStartDate.value,
-                        endDateText = projectEndDate.value,
-                        isProjectProgress = isProjectProgress.value,
-                        onStartDateCalendarClick = {
-                            isProjectStartDate.value = true
-                            coroutineScope.launch { bottomSheetState.show() }
-                        },
-                        onEndDateCalendarClick = {
-                            isProjectStartDate.value = true
-                            coroutineScope.launch { bottomSheetState.show() }
-                        },
-                        onProgressButtonClick = {
-                            isProjectProgress.value = !isProjectProgress.value
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(24.dp))
-                    ProjectRelatedLinksInputComponent(
-                        relatedLinks = projectRelatedLinkList,
-                        onAddButtonClick = { projectRelatedLinkList.add(Pair("", "")) },
-                        onDeleteButtonClick = { projectRelatedLinkList.removeAt(it) },
-                        onValueChange = { idx, name, link ->
-                            projectRelatedLinkList[idx] = Pair(name, link)
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
+    LazyColumn {
+        item {
+            ToggleComponent(name = "프로젝트", onCancelButtonClick = {}) {
+                Spacer(modifier = Modifier.height(32.dp))
+                ProjectNameInputComponent(
+                    text = projectName.value,
+                    onButtonClick = { projectName.value = "" }
+                ) {
+                    projectName.value = it
                 }
-            }
-            item {
-                SMSTheme { colors, typography ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp),
-                        horizontalAlignment = Alignment.End
-                    ) {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "+  추가",
-                            style = typography.title2,
-                            fontWeight = FontWeight.Bold,
-                            color = colors.BLACK,
-                            modifier = Modifier.smsClickable {
-
-                            }
-                        )
-                    }
+                Spacer(modifier = Modifier.height(24.dp))
+                ProjectIconInputComponent(iconImageUri = projectIconUri.value) {
+                    isImportingProjectIcons.value = true
+                    permissionLauncher.launch(permission)
                 }
+                Spacer(modifier = Modifier.height(24.dp))
+                ProjectPreviewInputComponent(
+                    previewUriList = projectPreviewUriList,
+                    deletedIndex = { projectPreviewUriList.removeAt(it) }
+                ) {
+                    isImportingProjectIcons.value = false
+                    permissionLauncher.launch(permission)
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+                ProjectTechStackInputComponent(techStack = listOf()) {
+
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+                ProjectKeyTaskInputComponent(
+                    text = projectKeyTask.value,
+                    onButtonClick = { projectKeyTask.value = "" }
+                ) {
+                    projectKeyTask.value = it
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+                ProjectScheduleInputComponent(
+                    startDateText = projectStartDate.value,
+                    endDateText = projectEndDate.value,
+                    isProjectProgress = isProjectProgress.value,
+                    onStartDateCalendarClick = {
+                        isProjectStartDate.value = true
+                        coroutineScope.launch { bottomSheetState.show() }
+                    },
+                    onEndDateCalendarClick = {
+                        isProjectStartDate.value = true
+                        coroutineScope.launch { bottomSheetState.show() }
+                    },
+                    onProgressButtonClick = {
+                        isProjectProgress.value = !isProjectProgress.value
+                    }
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                ProjectRelatedLinksInputComponent(
+                    relatedLinks = projectRelatedLinkList,
+                    onAddButtonClick = { projectRelatedLinkList.add(Pair("", "")) },
+                    onDeleteButtonClick = { projectRelatedLinkList.removeAt(it) },
+                    onValueChange = { idx, name, link ->
+                        projectRelatedLinkList[idx] = Pair(name, link)
+                    }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
             }
-            item {
+        }
+        item {
+            SMSTheme { colors, typography ->
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
+                        .padding(horizontal = 20.dp),
+                    horizontalAlignment = Alignment.End
                 ) {
-                    Spacer(modifier = Modifier.height(52.dp))
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        SmsRoundedButton(
-                            text = "이전",
-                            modifier = Modifier.weight(1f),
-                            state = ButtonState.OutLine
-                        ) {
-
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "+  추가",
+                        style = typography.title2,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.BLACK,
+                        modifier = Modifier.smsClickable {
+                            //TODO (Kimhyunseung) - 데이터 저장 구현하면서 같이 구현 예정 (프로젝트 추가)
                         }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        SmsRoundedButton(text = "다음", modifier = Modifier.weight(2.25f)) {
-
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(48.dp))
+                    )
                 }
+            }
+        }
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+            ) {
+                Spacer(modifier = Modifier.height(52.dp))
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    SmsRoundedButton(
+                        text = "이전",
+                        modifier = Modifier.weight(1f),
+                        state = ButtonState.OutLine
+                    ) {
+                        navController.popBackStack()
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    SmsRoundedButton(text = "다음", modifier = Modifier.weight(2.25f)) {
+                        //TODO (Kimhyunseung) - 데이터 저장
+                        //TODO (Kimhyunseung) - 수상경력 완성 후 navigate 로직 작성
+                    }
+                }
+                Spacer(modifier = Modifier.height(48.dp))
             }
         }
     }

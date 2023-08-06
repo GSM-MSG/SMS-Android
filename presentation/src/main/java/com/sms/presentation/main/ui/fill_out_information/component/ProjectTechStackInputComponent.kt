@@ -24,7 +24,6 @@ fun ProjectTechStackInputComponent(techStack: List<String>, onClick: () -> Unit)
             DisplaySearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 20.dp)
                     .smsClickable(onClick = onClick)
             )
             LazyHorizontalStaggeredGrid(
