@@ -7,12 +7,12 @@ object Versions {
     const val COMPOSE = "1.2.0"
     const val APPCOMPAT = "1.6.1"
     const val ACTIVITY_COMPOSE = "1.7.2"
-    const val COMPOSE_MATERIAL = "1.2.0"
+    const val COMPOSE_MATERIAL = "1.4.3"
     const val COMPOSE_MATERIAL3 = "1.1.1"
 
     const val SPLASH = "1.0.1"
-    const val CORE_KTX = "1.7.0"
-    const val LIFECYCLE = "2.5.1"
+    const val LIFECYCLE = "2.6.1"
+    const val CORE_KTX = "1.10.1"
     const val MATERIAL = "1.8.0"
     const val VIEWMODEL_LIFECYCLE = "2.5.1"
 
@@ -28,9 +28,9 @@ object Versions {
 
     const val PREFERENCES = "1.0.0"
 
-    const val NAVIGATION = "2.5.3"
+    const val NAVIGATION = "2.6.0"
 
     const val COIL = "2.4.0"
 
-    const val LOTTIE_COMPOSE = "6.0.1"
+    const val LOTTIE_COMPOSE = "6.1.0"
 }

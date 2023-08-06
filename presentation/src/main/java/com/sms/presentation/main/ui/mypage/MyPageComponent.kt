@@ -1,5 +1,8 @@
 package com.sms.presentation.main.ui.mypage
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -7,11 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.msg.sms.design.component.button.BlackAddItemButton
 import com.msg.sms.design.component.header.TitleHeader
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
@@ -30,9 +36,16 @@ import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MyPageComponent(clickTopLeftButton: () -> Unit, clickTopRightButton: () -> Unit) {
+
+    val projectExpandList = remember {
+        mutableStateListOf(*listOf("프로젝트 1", "프로젝트 2").map { true }.toTypedArray())
+    }
+    val awardExpandList = remember {
+        mutableStateListOf(*listOf("수상 1", "수상 2").map { true }.toTypedArray())
+    }
+
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
         LazyColumn(
             modifier = Modifier
@@ -92,19 +105,71 @@ fun MyPageComponent(clickTopLeftButton: () -> Unit, clickTopRightButton: () -> U
                 ForeignLanguagesSection()
                 SmsSpacer()
             }
-            stickyHeader {
-                TitleHeader(titleText = "프로젝트")
+            listOf("프로젝트 1", "프로젝트 2").forEachIndexed { index, it ->
+                stickyHeader {
+                    TitleHeader(
+                        titleText = it,
+                        isExpandable = true,
+                        isRemovable = true,
+                        onClickToggleButton = { projectExpandList[index] = it },
+                        onClickRemoveButton = {})
+                }
+                item {
+                    AnimatedVisibility(
+                        modifier = Modifier.fillMaxWidth(),
+                        visible = projectExpandList[index],
+                        enter = expandVertically(),
+                        exit = shrinkVertically(),
+                    ) {
+                        ProjectsSection(data = it)
+                        SmsSpacer()
+                    }
+                }
             }
             item {
-                ProjectsSection(list = listOf("1", "2"))
-                SmsSpacer()
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp, end = 20.dp, bottom = 20.dp)
+                ) {
+                    BlackAddItemButton(modifier = Modifier.align(Alignment.TopEnd)) {
+
+                    }
+                }
             }
-            stickyHeader {
-                TitleHeader(titleText = "수상")
+            listOf("수상 1", "수상 2").forEachIndexed { index, it ->
+                stickyHeader {
+                    TitleHeader(
+                        titleText = it,
+                        isExpandable = true,
+                        isRemovable = true,
+                        onClickRemoveButton = {},
+                        onClickToggleButton = { rotateState ->
+                            awardExpandList[index] = rotateState
+                        })
+                }
+                item {
+                    AnimatedVisibility(
+                        modifier = Modifier.fillMaxWidth(),
+                        visible = awardExpandList[index],
+                        enter = expandVertically(),
+                        exit = shrinkVertically(),
+                    ) {
+                        AwardSection(awardData = it)
+                        SmsSpacer()
+                    }
+                }
             }
             item {
-                AwardSection(list = listOf("1", "2"))
-                SmsSpacer()
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp, end = 20.dp, bottom = 20.dp)
+                ) {
+                    BlackAddItemButton(modifier = Modifier.align(Alignment.TopEnd)) {
+
+                    }
+                }
             }
             item {
                 SmsSpacer(height = 128)

@@ -73,6 +73,17 @@ fun OpenButtonIcon(
 }
 
 @Composable
+fun ChevronDownIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_chevron_down),
+        contentDescription = "Plus Button Icon",
+    )
+}
+
+@Composable
 fun PlusButtonIcon(
     modifier: Modifier = Modifier,
 ) {
@@ -211,6 +222,17 @@ fun ArrowUpWardIcon(
     Image(
         painter = painterResource(id = R.drawable.ic_arrow_upward),
         contentDescription = "Arrow UpWard Icon",
+        modifier = modifier
+    )
+}
+
+@Composable
+fun GrayLogoutIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_gray_logout_btn),
+        contentDescription = "로그아웃 버튼",
         modifier = modifier
     )
 }

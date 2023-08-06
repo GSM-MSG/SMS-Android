@@ -11,14 +11,14 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.divider.SmsDivider
 
 @Composable
-fun AwardComponent() {
+fun AwardComponent(awardData: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 20.dp, top = 24.dp, end = 20.dp, bottom = 20.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        AwardNameComponent()
+        AwardNameComponent(name = awardData)
         AwardTypeComponent()
         AwardDateComponent()
         SmsDivider()
@@ -28,5 +28,5 @@ fun AwardComponent() {
 @Preview
 @Composable
 private fun AwardComponentPre() {
-    AwardComponent()
+    AwardComponent("제 1회 스마틴 앱 챌린지 대상")
 }
