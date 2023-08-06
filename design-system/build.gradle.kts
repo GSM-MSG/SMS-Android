@@ -65,4 +65,6 @@ dependencies {
 
     implementation(Dependency.Google.HILT)
     kapt(Dependency.Google.HILT_COMPILER)
+
+    implementation("com.chargemap.compose:numberpicker:1.0.3")
 }

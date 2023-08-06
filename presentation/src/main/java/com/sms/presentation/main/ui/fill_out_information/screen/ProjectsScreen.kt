@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
+import com.msg.sms.design.component.picker.DatePicker
 import com.msg.sms.design.component.toggle.ToggleComponent
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
@@ -150,15 +151,8 @@ fun ProjectsScreen(
                             }
                     )
                 }
-                Spacer(modifier = Modifier.height(19.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(38.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    //TODO (Kimhyunseung) - DatePicker 구현해서 한꺼번에 컴포넌트 분리하기
-                }
+                Spacer(modifier = Modifier.height(16.dp))
+                DatePicker()
             }
         }
     )
