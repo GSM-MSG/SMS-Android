@@ -23,7 +23,8 @@ fun ProjectRelatedLinksInputComponent(
     AddGrayBody1Title(titleText = "관련 링크") {
         LazyColumn(
             modifier = Modifier
-                .heightIn(max = 640.dp)
+                .heightIn(max = 640.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             itemsIndexed(relatedLinks) { idx, item ->
                 Row(
@@ -43,7 +44,7 @@ fun ProjectRelatedLinksInputComponent(
                     Box(modifier = Modifier.weight(2.5f)) {
                         NoneIconTextField(
                             singleLine = true,
-                            setChangeText = "",
+                            setChangeText = item.second,
                             placeHolder = "https://github.com"
                         ) {
                             onValueChange(idx, relatedLinks[idx].first, it)
