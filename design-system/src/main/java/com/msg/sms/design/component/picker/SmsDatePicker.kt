@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.chargemap.compose.numberpicker.NumberPicker
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.design.theme.SMSTypography
 
 @Composable
 fun SmsDatePicker(
@@ -28,7 +27,7 @@ fun SmsDatePicker(
     onYearValueChange: (Int) -> Unit,
     onMonthValueChange: (Int) -> Unit
 ) {
-    SMSTheme { colors, _ ->
+    SMSTheme { colors, typography ->
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,7 +55,7 @@ fun SmsDatePicker(
                     range = yearRange,
                     dividersColor = Color.Transparent,
                     textStyle = TextStyle(
-                        fontFamily = SMSTypography.pretendard,
+                        fontFamily = typography.pretendard,
                         fontSize = 20.sp,
                         lineHeight = 24.sp,
                         fontWeight = FontWeight.Bold
@@ -71,7 +70,7 @@ fun SmsDatePicker(
                     range = monthRange,
                     dividersColor = Color.Transparent,
                     textStyle = TextStyle(
-                        fontFamily = SMSTypography.pretendard,
+                        fontFamily = typography.pretendard,
                         fontSize = 20.sp,
                         lineHeight = 24.sp,
                         fontWeight = FontWeight.Bold
