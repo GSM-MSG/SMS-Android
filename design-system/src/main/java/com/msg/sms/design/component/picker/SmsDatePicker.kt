@@ -21,10 +21,12 @@ import com.msg.sms.design.theme.SMSTypography
 
 @Composable
 fun SmsDatePicker(
-    monthValue: Int,
     yearValue: Int,
-    onMonthValueChange: (Int) -> Unit,
-    onYearValueChange: (Int) -> Unit
+    monthValue: Int,
+    yearRange: Iterable<Int>,
+    monthRange: Iterable<Int>,
+    onYearValueChange: (Int) -> Unit,
+    onMonthValueChange: (Int) -> Unit
 ) {
     SMSTheme { colors, _ ->
         Box(
@@ -51,7 +53,7 @@ fun SmsDatePicker(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
-                    range = 2000..2030,
+                    range = yearRange,
                     dividersColor = Color.Transparent,
                     textStyle = TextStyle(
                         fontFamily = SMSTypography.pretendard,
@@ -66,7 +68,7 @@ fun SmsDatePicker(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
-                    range = 1..12,
+                    range = monthRange,
                     dividersColor = Color.Transparent,
                     textStyle = TextStyle(
                         fontFamily = SMSTypography.pretendard,
@@ -93,6 +95,8 @@ fun DatePickerPre() {
     SmsDatePicker(
         monthValue = month.value,
         yearValue = year.value,
+        monthRange = 0..12,
+        yearRange = 2000..2030,
         onMonthValueChange = {},
         onYearValueChange = {}
     )

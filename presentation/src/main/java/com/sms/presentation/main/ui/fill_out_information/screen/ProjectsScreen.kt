@@ -116,11 +116,17 @@ fun ProjectsScreen(
 
     bottomSheetContent(
         content = {
+            val year = remember {
+                mutableStateOf(0)
+            }
             val month = remember {
                 mutableStateOf(0)
             }
-            val year = remember {
-                mutableStateOf(0)
+            val yearRange = remember {
+                mutableStateOf(2000..2030)
+            }
+            val monthRange = remember {
+                mutableStateOf(1..12)
             }
 
             SMSTheme { colors, typography ->
@@ -155,6 +161,8 @@ fun ProjectsScreen(
                 SmsDatePicker(
                     yearValue = year.value,
                     monthValue = month.value,
+                    yearRange = yearRange.value,
+                    monthRange = monthRange.value,
                     onYearValueChange = { year.value = it },
                     onMonthValueChange = { month.value = it }
                 )
@@ -205,7 +213,7 @@ fun ProjectsScreen(
                         coroutineScope.launch { bottomSheetState.show() }
                     },
                     onEndDateCalendarClick = {
-                        isProjectStartDate.value = true
+                        isProjectStartDate.value = false
                         coroutineScope.launch { bottomSheetState.show() }
                     },
                     onProgressButtonClick = {
