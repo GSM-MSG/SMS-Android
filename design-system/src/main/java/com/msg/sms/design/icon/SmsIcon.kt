@@ -335,14 +335,3 @@ fun SmallPlusIcon(
         contentDescription = "추가 아이콘"
     )
 }
-
-@Composable
-fun ToggleIcon(
-    modifier: Modifier = Modifier
-) {
-    Image(
-        modifier = modifier,
-        painter = painterResource(id = R.drawable.ic_toggle),
-        contentDescription = "토글 아이콘"
-    )
-}
