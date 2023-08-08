@@ -10,7 +10,7 @@ import com.sms.design_system.R
 
 object SMSTypography {
 
-    private val pretendard = FontFamily(
+    internal val pretendard = FontFamily(
         Font(R.font.pretendard_extralight, FontWeight.ExtraLight),
         Font(R.font.pretendard_thin, FontWeight.Thin),
         Font(R.font.pretendard_light, FontWeight.Light),

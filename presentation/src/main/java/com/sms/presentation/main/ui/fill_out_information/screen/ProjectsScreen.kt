@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
+import com.msg.sms.design.component.picker.SmsDatePicker
 import com.msg.sms.design.component.toggle.ToggleComponent
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
@@ -115,11 +116,17 @@ fun ProjectsScreen(
 
     bottomSheetContent(
         content = {
+            val year = remember {
+                mutableStateOf(0)
+            }
             val month = remember {
                 mutableStateOf(0)
             }
-            val year = remember {
-                mutableStateOf(0)
+            val yearRange = remember {
+                mutableStateOf(2000..2030)
+            }
+            val monthRange = remember {
+                mutableStateOf(1..12)
             }
 
             SMSTheme { colors, typography ->
@@ -150,15 +157,15 @@ fun ProjectsScreen(
                             }
                     )
                 }
-                Spacer(modifier = Modifier.height(19.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(38.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    //TODO (Kimhyunseung) - DatePicker 구현해서 한꺼번에 컴포넌트 분리하기
-                }
+                Spacer(modifier = Modifier.height(16.dp))
+                SmsDatePicker(
+                    yearValue = year.value,
+                    monthValue = month.value,
+                    yearRange = yearRange.value,
+                    monthRange = monthRange.value,
+                    onYearValueChange = { year.value = it },
+                    onMonthValueChange = { month.value = it }
+                )
             }
         }
     )
@@ -206,7 +213,7 @@ fun ProjectsScreen(
                         coroutineScope.launch { bottomSheetState.show() }
                     },
                     onEndDateCalendarClick = {
-                        isProjectStartDate.value = true
+                        isProjectStartDate.value = false
                         coroutineScope.launch { bottomSheetState.show() }
                     },
                     onProgressButtonClick = {
