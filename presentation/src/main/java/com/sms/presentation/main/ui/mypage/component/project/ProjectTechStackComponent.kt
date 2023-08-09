@@ -49,7 +49,7 @@ fun ProjectTechStackComponent(techStack: List<String>) {
             )
         ) {
             itemsIndexed(techStack) { _: Int, item: String ->
-                DetailTechStackItem(stack = item)
+                DetailTechStackItem(stack = item, onClick = {})
             }
         }
     }
