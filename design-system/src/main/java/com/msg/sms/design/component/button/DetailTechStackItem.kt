@@ -1,8 +1,6 @@
 package com.msg.sms.design.component.button
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -17,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.CloseIcon
+import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
@@ -39,11 +38,7 @@ fun DetailTechStackItem(stack: String, onClick: () -> Unit) {
             CloseIcon(
                 modifier = Modifier
                     .padding(end = 8.dp)
-                    .clickable(
-                        indication = null,
-                        interactionSource = MutableInteractionSource(),
-                        onClick = onClick
-                    )
+                    .smsClickable(rippleEnabled = false, onClick = onClick)
             )
         }
     }
