@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
@@ -16,7 +18,7 @@ import com.msg.sms.design.component.selector.MajorSelector
 import com.sms.presentation.main.ui.mypage.modal.MyPageBottomSheet
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MyPageScreen() {
     val bottomSheetState =
@@ -32,6 +34,7 @@ fun MyPageScreen() {
     val isMajor = remember {
         mutableStateOf(false)
     }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     ModalBottomSheetLayout(
         sheetContent = {
@@ -80,11 +83,13 @@ fun MyPageScreen() {
             clickTopRightButton = {
                 coroutineScope.launch {
                     isMajor.value = false
+                    keyboardController!!.hide()
                     bottomSheetState.show()
                 }
             }, onClickMajorButton = {
                 coroutineScope.launch {
                     isMajor.value = true
+                    keyboardController!!.hide()
                     bottomSheetState.show()
                 }
             })
