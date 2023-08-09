@@ -1,6 +1,8 @@
 package com.msg.sms.design.component.button
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -18,7 +20,7 @@ import com.msg.sms.design.icon.CloseIcon
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun DetailTechStackItem(stack: String, ) {
+fun DetailTechStackItem(stack: String, onClick: () -> Unit) {
     SMSTheme { colors, typography ->
         Row(
             modifier = Modifier
@@ -34,7 +36,15 @@ fun DetailTechStackItem(stack: String, ) {
                 color = colors.N50
             )
             Spacer(modifier = Modifier.width(4.dp))
-            CloseIcon(modifier = Modifier.padding(end = 8.dp))
+            CloseIcon(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = MutableInteractionSource(),
+                        onClick = onClick
+                    )
+            )
         }
     }
 }
@@ -42,5 +52,5 @@ fun DetailTechStackItem(stack: String, ) {
 @Preview
 @Composable
 private fun DetailTechStackItemPre() {
-    DetailTechStackItem(stack = "Adobe Photoshop")
+    DetailTechStackItem(stack = "Adobe Photoshop", onClick = {})
 }
