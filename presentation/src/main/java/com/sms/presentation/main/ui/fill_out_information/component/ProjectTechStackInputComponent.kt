@@ -47,7 +47,7 @@ fun ProjectTechStackInputComponent(techStack: List<String>, onClick: () -> Unit)
                 )
             ) {
                 itemsIndexed(techStack) { _: Int, item: String ->
-                    DetailTechStackItem(stack = item)
+                    DetailTechStackItem(stack = item, onClick = onClick)
                 }
             }
         }

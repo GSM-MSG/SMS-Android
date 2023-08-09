@@ -35,7 +35,12 @@ import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MyPageComponent(clickTopLeftButton: () -> Unit, clickTopRightButton: () -> Unit) {
+fun MyPageComponent(
+    setMajor: String,
+    clickTopLeftButton: () -> Unit,
+    clickTopRightButton: () -> Unit,
+    onClickMajorButton: () -> Unit,
+) {
 
     val projectExpandList = remember {
         mutableStateListOf(*listOf("프로젝트 1", "프로젝트 2").map { true }.toTypedArray())
@@ -67,7 +72,7 @@ fun MyPageComponent(clickTopLeftButton: () -> Unit, clickTopRightButton: () -> U
                 TitleHeader(titleText = "프로필 *")
             }
             item {
-                ProfileSection()
+                ProfileSection(setMajor = setMajor, onClickMajorComponent = onClickMajorButton)
                 SmsSpacer()
             }
             stickyHeader {
@@ -189,5 +194,5 @@ fun MyPageComponent(clickTopLeftButton: () -> Unit, clickTopRightButton: () -> U
 @Preview
 @Composable
 private fun MyPageComponentPre() {
-    MyPageComponent(clickTopLeftButton = {}, clickTopRightButton = {})
+    MyPageComponent(setMajor = "Android", clickTopLeftButton = {}, clickTopRightButton = {}, onClickMajorButton = {})
 }

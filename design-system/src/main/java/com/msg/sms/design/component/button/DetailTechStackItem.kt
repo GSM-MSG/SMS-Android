@@ -15,10 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.CloseIcon
+import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun DetailTechStackItem(stack: String, ) {
+fun DetailTechStackItem(stack: String, onClick: () -> Unit) {
     SMSTheme { colors, typography ->
         Row(
             modifier = Modifier
@@ -34,7 +35,11 @@ fun DetailTechStackItem(stack: String, ) {
                 color = colors.N50
             )
             Spacer(modifier = Modifier.width(4.dp))
-            CloseIcon(modifier = Modifier.padding(end = 8.dp))
+            CloseIcon(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .smsClickable(rippleEnabled = false, onClick = onClick)
+            )
         }
     }
 }
@@ -42,5 +47,5 @@ fun DetailTechStackItem(stack: String, ) {
 @Preview
 @Composable
 private fun DetailTechStackItemPre() {
-    DetailTechStackItem(stack = "Adobe Photoshop")
+    DetailTechStackItem(stack = "Adobe Photoshop", onClick = {})
 }

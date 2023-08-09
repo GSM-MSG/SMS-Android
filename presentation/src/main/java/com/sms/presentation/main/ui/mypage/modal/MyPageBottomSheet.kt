@@ -18,7 +18,6 @@ import com.sms.presentation.main.ui.mypage.component.button.WithdrawalButton
 
 @Composable
 fun MyPageBottomSheet(onClickLogout: () -> Unit, onClickWithdrawal: () -> Unit) {
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
