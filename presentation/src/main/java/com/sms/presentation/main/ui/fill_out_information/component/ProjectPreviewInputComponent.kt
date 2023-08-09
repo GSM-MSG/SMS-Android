@@ -71,7 +71,9 @@ fun ProjectPreviewInputComponent(
                             modifier = Modifier
                                 .align(Alignment.TopEnd)
                                 .padding(6.dp)
-                                .smsClickable { deletedIndex(idx) }
+                                .smsClickable(
+                                    bounded = false
+                                ) { deletedIndex(idx) }
                         )
                     }
                 }

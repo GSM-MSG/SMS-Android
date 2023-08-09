@@ -4,6 +4,7 @@ import android.Manifest
 import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,6 +39,7 @@ fun ProjectsScreen(
     bottomSheetState: ModalBottomSheetState,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val projectName = remember {
         mutableStateOf("")
@@ -72,27 +74,39 @@ fun ProjectsScreen(
     val isProjectStartDate = remember {
         mutableStateOf(true)
     }
-    val context = LocalContext.current
-
-    val galleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+    val singleSelectGalleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
                     isImageExtensionInCorrect.value = false
-                    if (isImportingProjectIcons.value) {
-                        projectIconUri.value = uri
-                    } else {
-                        if (projectPreviewUriList.size < 4) projectPreviewUriList.add(uri)
-                    }
+                    projectIconUri.value = uri
                 } else {
                     isImageExtensionInCorrect.value = true
                 }
             }
         }
+    val multipleSelectGalleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItems = 4)) { uris ->
+            if (uris.isNotEmpty()) {
+                if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
+                    isImageExtensionInCorrect.value = false
+                    projectPreviewUriList.clear()
+                    projectPreviewUriList.addAll(uris)
+                } else {
+                    isImageExtensionInCorrect.value = true
+                }
+            }
+        }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        if (isGranted) galleryLauncher.launch("image/*")
+        if (isGranted) {
+            if (isImportingProjectIcons.value)
+                singleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            else
+                multipleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
     }
 
     val permission =
