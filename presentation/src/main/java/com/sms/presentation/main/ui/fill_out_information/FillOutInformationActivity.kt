@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information
 
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -63,7 +64,7 @@ class FillOutInformationActivity : BaseActivity() {
                         }
                         NavHost(
                             navController = navController,
-                            startDestination = "Projects"
+                            startDestination = "Profile"
                         ) {
                             composable("Profile") {
                                 currentRoute.value = "Profile"
@@ -134,9 +135,17 @@ class FillOutInformationActivity : BaseActivity() {
                             composable("Projects") {
                                 currentRoute.value = "Projects"
                                 setSoftInputMode("PAN")
+                                val data = remember {
+                                    mutableStateOf(
+                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
+                                            "detailStack"
+                                        )
+                                    )
+                                }
                                 ProjectsScreen(
                                     navController = navController,
                                     viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                                    detailStack = (if (data.value != null) data.value!!.split(",") else listOf()),
                                     bottomSheetState = bottomSheetState
                                 ) {
                                     bottomSheetContent.value = it
@@ -155,9 +164,15 @@ class FillOutInformationActivity : BaseActivity() {
                                 DetailStackSearchScreen(
                                     navController = navController,
                                     viewModel = searchDetailStackViewModel,
-                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf())
+                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(
+                                        ""
+                                    ))
                                 ) {
-                                    navController.navigate("Profile")
+                                    val backStackList =
+                                        navController.currentBackStack.value.map { it.destination.route }
+
+                                    Log.d("dddd", backStackList.toString())
+                                    navController.navigate(if (backStackList[backStackList.lastIndex - 1] == "Profile") "Profile" else "Projects")
                                 }
                             }
                         }

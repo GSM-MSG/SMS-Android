@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 fun ProjectsScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
+    detailStack: List<String>,
     bottomSheetState: ModalBottomSheetState,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit
 ) {
@@ -88,7 +89,12 @@ fun ProjectsScreen(
     val multipleSelectGalleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItems = 4)) { uris ->
             if (uris.isNotEmpty()) {
-                if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
+                if (uris.all { uri ->
+                        getFileNameFromUri(
+                            context,
+                            uri
+                        )?.isImageExtensionCorrect() == true
+                    }) {
                     isImageExtensionInCorrect.value = false
                     projectPreviewUriList.clear()
                     projectPreviewUriList.addAll(uris)
@@ -207,8 +213,8 @@ fun ProjectsScreen(
                     permissionLauncher.launch(permission)
                 }
                 Spacer(modifier = Modifier.height(24.dp))
-                ProjectTechStackInputComponent(techStack = listOf()) {
-
+                ProjectTechStackInputComponent(techStack = detailStack) {
+                    navController.navigate("Search")
                 }
                 Spacer(modifier = Modifier.height(24.dp))
                 ProjectKeyTaskInputComponent(

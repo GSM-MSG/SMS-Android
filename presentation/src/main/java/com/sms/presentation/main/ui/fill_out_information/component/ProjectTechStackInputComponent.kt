@@ -7,9 +7,9 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.DetailTechStackItem
-import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.util.AddGrayBody1Title
 import com.sms.presentation.main.ui.mypage.component.profile.DisplaySearchBar
 
@@ -23,8 +23,11 @@ fun ProjectTechStackInputComponent(techStack: List<String>, onClick: () -> Unit)
         ) {
             DisplaySearchBar(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .smsClickable(onClick = onClick)
+                    .onFocusChanged {
+                        if (it.isFocused) {
+                            onClick()
+                        }
+                    }
             )
             LazyHorizontalStaggeredGrid(
                 modifier = Modifier
@@ -47,7 +50,7 @@ fun ProjectTechStackInputComponent(techStack: List<String>, onClick: () -> Unit)
                 )
             ) {
                 itemsIndexed(techStack) { _: Int, item: String ->
-                    DetailTechStackItem(stack = item, onClick = onClick)
+                    DetailTechStackItem(stack = item, onClick = {})
                 }
             }
         }
