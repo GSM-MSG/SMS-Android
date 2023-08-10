@@ -89,12 +89,7 @@ fun ProjectsScreen(
     val multipleSelectGalleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItems = 4)) { uris ->
             if (uris.isNotEmpty()) {
-                if (uris.all { uri ->
-                        getFileNameFromUri(
-                            context,
-                            uri
-                        )?.isImageExtensionCorrect() == true
-                    }) {
+                if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
                     isImageExtensionInCorrect.value = false
                     projectPreviewUriList.clear()
                     projectPreviewUriList.addAll(uris)
