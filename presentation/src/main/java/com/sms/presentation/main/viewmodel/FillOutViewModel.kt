@@ -55,7 +55,7 @@ class FillOutViewModel @Inject constructor(
     private val region = mutableStateListOf("")
     private val militaryService = mutableStateOf("")
     private val certificate = mutableStateListOf("")
-    private val projects = mutableStateListOf<ProjectData>()
+    private val projects = mutableStateListOf<ProjectInfo>()
     private lateinit var profileImageUrl: String
 
     fun getEnteredProfileInformation(): ProfileData {
@@ -136,12 +136,12 @@ class FillOutViewModel @Inject constructor(
         this.gsmAuthenticationScore.value = gsmAuthenticationScore
     }
 
-    fun getEnteredProjectsInformation(): List<ProjectData> {
-        return projects
+    fun getEnteredProjectsInformation(): ProjectsData {
+        return ProjectsData(projects = projects)
     }
 
     fun setEnteredProjectsInformation(
-        projects: List<ProjectData>
+        projects: List<ProjectInfo>
     ) {
         this.projects.removeAll { !projects.contains(it) }
         this.projects.addAll(projects.filter { !this.projects.contains(it) })
