@@ -46,76 +46,67 @@ fun ProjectsScreen(
     Log.d("ddd", data.projects.joinToString())
 
     if (isImageExtensionInCorrect.value) {
-        SmsDialog(
-            widthPercent = 1f,
+        SmsDialog(widthPercent = 1f,
             title = "에러",
             msg = "이미지의 확장자가 jpg, jpeg, png, heic가 아닙니다.",
             outLineButtonText = "취소",
             normalButtonText = "확인",
             outlineButtonOnClick = { isImageExtensionInCorrect.value = false },
-            normalButtonOnClick = { isImageExtensionInCorrect.value = false }
-        )
+            normalButtonOnClick = { isImageExtensionInCorrect.value = false })
     }
 
-    bottomSheetContent(
-        content = {
-            val year = remember {
-                mutableStateOf(0)
-            }
-            val month = remember {
-                mutableStateOf(0)
-            }
-            val yearRange = remember {
-                mutableStateOf(2000..2030)
-            }
-            val monthRange = remember {
-                mutableStateOf(1..12)
-            }
+    bottomSheetContent(content = {
+        val year = remember {
+            mutableStateOf(0)
+        }
+        val month = remember {
+            mutableStateOf(0)
+        }
+        val yearRange = remember {
+            mutableStateOf(2000..2030)
+        }
+        val monthRange = remember {
+            mutableStateOf(1..12)
+        }
 
-            SMSTheme { colors, typography ->
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp)
-                ) {
-                    Text(
-                        text = "날짜 선택",
-                        style = typography.title2,
-                        color = colors.BLACK,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "완료",
-                        style = typography.body2,
-                        color = colors.P2,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .smsClickable {
+        SMSTheme { colors, typography ->
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+            ) {
+                Text(
+                    text = "날짜 선택",
+                    style = typography.title2,
+                    color = colors.BLACK,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(text = "완료",
+                    style = typography.body2,
+                    color = colors.P2,
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .smsClickable {
 //                                if (isProjectStartDate.value) projectStartDate.value =
 //                                    "${year.value}.${month.value}"
 //                                else projectEndDate.value =
 //                                    "${year.value}.${month.value}"
-                                coroutineScope.launch { bottomSheetState.hide() }
-                            }
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                SmsDatePicker(
-                    yearValue = year.value,
-                    monthValue = month.value,
-                    yearRange = yearRange.value,
-                    monthRange = monthRange.value,
-                    onYearValueChange = { year.value = it },
-                    onMonthValueChange = { month.value = it }
-                )
+                            coroutineScope.launch { bottomSheetState.hide() }
+                        })
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            SmsDatePicker(yearValue = year.value,
+                monthValue = month.value,
+                yearRange = yearRange.value,
+                monthRange = monthRange.value,
+                onYearValueChange = { year.value = it },
+                onMonthValueChange = { month.value = it })
         }
-    )
+    })
     LazyColumn {
         itemsIndexed(projectList) { idx, item ->
-            ProjectsComponent(
-                navController = navController,
+            ProjectsComponent(navController = navController,
                 viewModel = viewModel,
                 detailStack = detailStack,
                 bottomSheetState = bottomSheetState,
@@ -137,8 +128,7 @@ fun ProjectsScreen(
                 },
                 onCancelButtonClick = {
                     projectList.removeAt(idx)
-                }
-            )
+                })
         }
         item {
             SMSTheme { colors, typography ->
@@ -149,8 +139,7 @@ fun ProjectsScreen(
                     horizontalAlignment = Alignment.End
                 ) {
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "+  추가",
+                    Text(text = "+  추가",
                         style = typography.title2,
                         fontWeight = FontWeight.Bold,
                         color = colors.BLACK,
@@ -167,8 +156,7 @@ fun ProjectsScreen(
                                     relatedLinkList = emptyList()
                                 )
                             )
-                        }
-                    )
+                        })
                 }
             }
         }
@@ -181,25 +169,14 @@ fun ProjectsScreen(
                 Spacer(modifier = Modifier.height(52.dp))
                 Row(modifier = Modifier.fillMaxWidth()) {
                     SmsRoundedButton(
-                        text = "이전",
-                        modifier = Modifier.weight(1f),
-                        state = ButtonState.OutLine
+                        text = "이전", modifier = Modifier.weight(1f), state = ButtonState.OutLine
                     ) {
                         navController.popBackStack()
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     SmsRoundedButton(text = "다음", modifier = Modifier.weight(2.25f)) {
                         viewModel.setEnteredProjectsInformation(projectList.filter {
-                            it != ProjectInfo(
-                                name = "",
-                                icon = Uri.EMPTY,
-                                preview = emptyList(),
-                                technologyOfUse = emptyList(),
-                                keyTask = "",
-                                startDate = "",
-                                endDate = "",
-                                relatedLinkList = emptyList()
-                            )
+                            it.name != "" || it.icon != Uri.EMPTY || it.keyTask != "" || it.preview.isNotEmpty() || it.endDate != "" || it.startDate != "" || it.technologyOfUse.isNotEmpty() || it.relatedLinkList.isNotEmpty()
                         })
                     }
                 }
