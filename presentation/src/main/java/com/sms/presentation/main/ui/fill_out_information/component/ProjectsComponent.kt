@@ -37,6 +37,7 @@ fun ProjectsComponent(
         name: String,
         icon: Uri,
         preview: List<Uri>,
+        techOfUse: List<String>,
         keyTask: String,
         startDate: String,
         endDate: String,
@@ -129,10 +130,16 @@ fun ProjectsComponent(
         projectName.value,
         projectIconUri.value,
         projectPreviewUriList,
+        detailStack,
         projectKeyTask.value,
         projectStartDate.value,
         if (!isProjectProgress.value) projectEndDate.value else "",
         projectRelatedLinkList
+    )
+
+    navController.currentBackStackEntry?.savedStateHandle?.set(
+        key = "detailStack",
+        value = detailStack.joinToString(",")
     )
 
     bottomSheetContent(content = {

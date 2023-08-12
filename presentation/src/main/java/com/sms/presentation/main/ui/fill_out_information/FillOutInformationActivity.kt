@@ -64,7 +64,7 @@ class FillOutInformationActivity : BaseActivity() {
                         }
                         NavHost(
                             navController = navController,
-                            startDestination = "Profile"
+                            startDestination = "Projects"
                         ) {
                             composable("Profile") {
                                 currentRoute.value = "Profile"
@@ -154,25 +154,12 @@ class FillOutInformationActivity : BaseActivity() {
                             composable("Search") {
                                 currentRoute.value = "Search"
                                 setSoftInputMode("RESIZE")
-                                val data = remember {
-                                    mutableStateOf(
-                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
-                                            "detailStack"
-                                        )
-                                    )
-                                }
                                 DetailStackSearchScreen(
                                     navController = navController,
                                     viewModel = searchDetailStackViewModel,
-                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(
-                                        ""
-                                    ))
-                                ) {
-                                    val backStackList =
-                                        navController.currentBackStack.value.map { it.destination.route }
-
-                                    Log.d("dddd", backStackList.toString())
-                                    navController.navigate(if (backStackList[backStackList.lastIndex - 1] == "Profile") "Profile" else "Projects")
+                                    selectedStack = listOf()
+                                ) { list ->
+                                    navController.popBackStack()
                                 }
                             }
                         }

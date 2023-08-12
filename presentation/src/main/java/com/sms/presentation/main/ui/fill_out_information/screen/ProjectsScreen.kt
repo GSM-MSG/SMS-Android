@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -53,18 +54,18 @@ fun ProjectsScreen(
         itemsIndexed(projectList) { idx, item ->
             ProjectsComponent(
                 navController = navController,
-                detailStack = detailStack,
                 data = item,
-                savedData = { name, icon, preview, keyTask, startDate, endDate, relatedLink ->
+                detailStack = detailStack,
+                savedData = { name, icon, preview, techOfUse, keyTask, startDate, endDate, relatedLink ->
                     projectList[idx] = ProjectInfo(
                         name = name,
                         icon = icon,
                         preview = preview,
+                        technologyOfUse = techOfUse,
                         keyTask = keyTask,
                         startDate = startDate,
                         endDate = endDate,
-                        relatedLinkList = relatedLink,
-                        technologyOfUse = detailStack
+                        relatedLinkList = relatedLink
                     )
                 },
                 bottomSheetState = bottomSheetState,
@@ -118,14 +119,18 @@ fun ProjectsScreen(
                         viewModel.setEnteredProjectsInformation(
                             projectList.filter { project ->
                                 project.name.isNotEmpty() ||
-                                project.icon != Uri.EMPTY ||
-                                project.keyTask.isNotEmpty() ||
-                                project.preview.isNotEmpty() ||
-                                project.endDate.isNotEmpty() ||
-                                project.startDate.isNotEmpty() ||
-                                project.technologyOfUse.isNotEmpty() ||
-                                project.relatedLinkList.first() != Pair("", "")
+                                        project.icon != Uri.EMPTY ||
+                                        project.keyTask.isNotEmpty() ||
+                                        project.preview.isNotEmpty() ||
+                                        project.endDate.isNotEmpty() ||
+                                        project.startDate.isNotEmpty() ||
+                                        project.technologyOfUse.isNotEmpty() ||
+                                        project.relatedLinkList.first() != Pair("", "")
                             }
+                        )
+                        Log.d(
+                            "dddd",
+                            viewModel.getEnteredProjectsInformation().projects.joinToString()
                         )
                     }
                 }
