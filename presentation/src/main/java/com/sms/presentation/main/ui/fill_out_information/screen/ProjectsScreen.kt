@@ -100,7 +100,7 @@ fun ProjectsScreen(
                                     keyTask = "",
                                     startDate = "",
                                     endDate = "",
-                                    relatedLinkList = emptyList()
+                                    relatedLinkList = listOf(Pair("", ""))
                                 )
                             )
                         })
@@ -122,9 +122,11 @@ fun ProjectsScreen(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     SmsRoundedButton(text = "다음", modifier = Modifier.weight(2.25f)) {
-                        viewModel.setEnteredProjectsInformation(projectList.filter {
-                            it.name != "" || it.icon != Uri.EMPTY || it.keyTask != "" || it.preview.isNotEmpty() || it.endDate != "" || it.startDate != "" || it.technologyOfUse.isNotEmpty() || it.relatedLinkList.isNotEmpty()
-                        })
+                        viewModel.setEnteredProjectsInformation(
+                            projectList.filter {
+                                it.name != "" || it.icon != Uri.EMPTY || it.keyTask != "" || it.preview.isNotEmpty() || it.endDate != "" || it.startDate != "" || it.technologyOfUse.isNotEmpty() || it.relatedLinkList.first() != Pair("", "")
+                            }
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.height(48.dp))

@@ -64,7 +64,7 @@ class FillOutViewModel @Inject constructor(
             technologyOfUse = emptyList(),
             startDate = "",
             endDate = "",
-            relatedLinkList = emptyList()
+            relatedLinkList = listOf(Pair("", ""))
         )
     )
     private lateinit var profileImageUrl: String
