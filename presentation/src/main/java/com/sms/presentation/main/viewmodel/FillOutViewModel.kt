@@ -55,18 +55,7 @@ class FillOutViewModel @Inject constructor(
     private val region = mutableStateListOf("")
     private val militaryService = mutableStateOf("")
     private val certificate = mutableStateListOf("")
-    private val projects = mutableStateListOf(
-        ProjectInfo(
-            name = "",
-            icon = Uri.EMPTY,
-            preview = emptyList(),
-            keyTask = "",
-            technologyOfUse = emptyList(),
-            startDate = "",
-            endDate = "",
-            relatedLinkList = listOf(Pair("", ""))
-        )
-    )
+    private val projects = mutableStateListOf(ProjectInfo())
     private lateinit var profileImageUrl: String
 
     fun getEnteredProfileInformation(): ProfileData {

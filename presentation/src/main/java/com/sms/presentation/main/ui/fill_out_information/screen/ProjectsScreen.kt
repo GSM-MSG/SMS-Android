@@ -86,24 +86,15 @@ fun ProjectsScreen(
                     horizontalAlignment = Alignment.End
                 ) {
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text(text = "+  추가",
+                    Text(
+                        text = "+  추가",
                         style = typography.title2,
                         fontWeight = FontWeight.Bold,
                         color = colors.BLACK,
                         modifier = Modifier.smsClickable {
-                            projectList.add(
-                                ProjectInfo(
-                                    name = "",
-                                    icon = Uri.EMPTY,
-                                    preview = emptyList(),
-                                    technologyOfUse = emptyList(),
-                                    keyTask = "",
-                                    startDate = "",
-                                    endDate = "",
-                                    relatedLinkList = listOf(Pair("", ""))
-                                )
-                            )
-                        })
+                            projectList.add(ProjectInfo())
+                        }
+                    )
                 }
             }
         }
@@ -124,7 +115,10 @@ fun ProjectsScreen(
                     SmsRoundedButton(text = "다음", modifier = Modifier.weight(2.25f)) {
                         viewModel.setEnteredProjectsInformation(
                             projectList.filter {
-                                it.name != "" || it.icon != Uri.EMPTY || it.keyTask != "" || it.preview.isNotEmpty() || it.endDate != "" || it.startDate != "" || it.technologyOfUse.isNotEmpty() || it.relatedLinkList.first() != Pair("", "")
+                                it.name != "" || it.icon != Uri.EMPTY || it.keyTask != "" || it.preview.isNotEmpty() || it.endDate != "" || it.startDate != "" || it.technologyOfUse.isNotEmpty() || it.relatedLinkList.first() != Pair(
+                                    "",
+                                    ""
+                                )
                             }
                         )
                     }
