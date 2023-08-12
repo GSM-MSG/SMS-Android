@@ -79,7 +79,7 @@ fun MyPageComponent(
                 TitleHeader(titleText = "학교생활 *")
             }
             item {
-                SchoolLifeSection()
+                SchoolLifeSection(score = 800)
                 SmsSpacer()
             }
             stickyHeader {
