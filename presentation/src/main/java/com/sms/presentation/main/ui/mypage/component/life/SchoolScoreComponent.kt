@@ -31,7 +31,7 @@ fun SchoolScoreComponent(score: Int) {
             keyboardActions = KeyboardActions(onDone = {
                 keyboardController?.hide()
             }),
-            onValueChange = { gsmScore.value = it.toInt() }
+            onValueChange = { runCatching { it.toInt() }.onSuccess { gsmScore.value = it } }
         ) {
             gsmScore.value = 0
         }
