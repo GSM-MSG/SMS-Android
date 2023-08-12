@@ -112,13 +112,19 @@ fun ProjectsScreen(
                         navController.popBackStack()
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    SmsRoundedButton(text = "다음", modifier = Modifier.weight(2.25f)) {
+                    SmsRoundedButton(
+                        text = "다음", modifier = Modifier.weight(2.25f)
+                    ) {
                         viewModel.setEnteredProjectsInformation(
-                            projectList.filter {
-                                it.name != "" || it.icon != Uri.EMPTY || it.keyTask != "" || it.preview.isNotEmpty() || it.endDate != "" || it.startDate != "" || it.technologyOfUse.isNotEmpty() || it.relatedLinkList.first() != Pair(
-                                    "",
-                                    ""
-                                )
+                            projectList.filter { project ->
+                                project.name.isNotEmpty() ||
+                                project.icon != Uri.EMPTY ||
+                                project.keyTask.isNotEmpty() ||
+                                project.preview.isNotEmpty() ||
+                                project.endDate.isNotEmpty() ||
+                                project.startDate.isNotEmpty() ||
+                                project.technologyOfUse.isNotEmpty() ||
+                                project.relatedLinkList.first() != Pair("", "")
                             }
                         )
                     }
