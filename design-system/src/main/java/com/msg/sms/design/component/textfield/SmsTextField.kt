@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
@@ -39,6 +40,7 @@ fun SmsTextField(
     errorText: String = "Error",
     setText: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     maxLines: Int = Int.MAX_VALUE,
     onValueChange: (String) -> Unit = {},
     onClickButton: () -> Unit,
@@ -55,6 +57,7 @@ fun SmsTextField(
                     onValueChange(it)
                 },
                 keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
                 placeholder = {
                     Text(text = placeHolder, style = typography.body1)
                 },
