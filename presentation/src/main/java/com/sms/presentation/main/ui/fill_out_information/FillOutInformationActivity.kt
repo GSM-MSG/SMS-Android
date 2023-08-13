@@ -46,9 +46,6 @@ class FillOutInformationActivity : BaseActivity() {
             val currentRoute = remember {
                 mutableStateOf("Profile")
             }
-            val profileDetailStack = remember {
-                mutableStateListOf("")
-            }
 
             ModalBottomSheetLayout(
                 sheetContent = bottomSheetContent.value,
@@ -71,10 +68,18 @@ class FillOutInformationActivity : BaseActivity() {
                             composable("Profile") {
                                 currentRoute.value = "Profile"
                                 setSoftInputMode("PAN")
+                                val data = remember {
+                                    mutableStateOf(
+                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
+                                            "detailStack"
+                                        )
+                                    )
+                                }
+
                                 ProfileScreen(
                                     navController = navController,
                                     viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                    detailStack = profileDetailStack,
+                                    detailStack = (if (data.value != null) data.value!!.split(",") else listOf()),
                                     bottomSheetState = bottomSheetState
                                 ) {
                                     bottomSheetContent.value = it
@@ -134,7 +139,8 @@ class FillOutInformationActivity : BaseActivity() {
                                     navController = navController,
                                     viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
                                     detailStack = emptyList(),
-                                    bottomSheetState = bottomSheetState
+                                    bottomSheetState = bottomSheetState,
+                                    onDetailStackSearchBarClick = { idx -> }
                                 ) {
                                     bottomSheetContent.value = it
                                 }
@@ -142,14 +148,20 @@ class FillOutInformationActivity : BaseActivity() {
                             composable("Search") {
                                 currentRoute.value = "Search"
                                 setSoftInputMode("RESIZE")
+                                val data = remember {
+                                    mutableStateOf(
+                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
+                                            "detailStack"
+                                        )
+                                    )
+                                }
+
                                 DetailStackSearchScreen(
                                     navController = navController,
                                     viewModel = searchDetailStackViewModel,
-                                    selectedStack = profileDetailStack
-                                ) { list ->
-                                    profileDetailStack.clear()
-                                    profileDetailStack.addAll(list)
-                                    navController.popBackStack()
+                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(""))
+                                ) {
+                                    navController.navigate("Profile")
                                 }
                             }
                         }

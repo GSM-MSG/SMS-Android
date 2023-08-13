@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -30,6 +29,7 @@ fun ProjectsScreen(
     viewModel: FillOutViewModel,
     detailStack: List<String>,
     bottomSheetState: ModalBottomSheetState,
+    onDetailStackSearchBarClick: (idx: Int) -> Unit,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit
 ) {
     val data = viewModel.getEnteredProjectsInformation()
@@ -75,6 +75,9 @@ fun ProjectsScreen(
                 },
                 onCancelButtonClick = {
                     projectList.removeAt(idx)
+                },
+                onDetailStackSearchBarClick = {
+                    onDetailStackSearchBarClick(idx)
                 }
             )
         }
@@ -127,10 +130,6 @@ fun ProjectsScreen(
                                         project.technologyOfUse.isNotEmpty() ||
                                         project.relatedLinkList.first() != Pair("", "")
                             }
-                        )
-                        Log.d(
-                            "dddd",
-                            viewModel.getEnteredProjectsInformation().projects.joinToString()
                         )
                     }
                 }

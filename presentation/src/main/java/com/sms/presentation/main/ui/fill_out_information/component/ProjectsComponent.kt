@@ -45,7 +45,8 @@ fun ProjectsComponent(
     ) -> Unit,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit,
     isImageExtensionInCorrect: (Boolean) -> Unit,
-    onCancelButtonClick: () -> Unit
+    onCancelButtonClick: () -> Unit,
+    onDetailStackSearchBarClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -137,11 +138,6 @@ fun ProjectsComponent(
         projectRelatedLinkList
     )
 
-    navController.currentBackStackEntry?.savedStateHandle?.set(
-        key = "detailStack",
-        value = detailStack.joinToString(",")
-    )
-
     bottomSheetContent(content = {
         val year = remember {
             mutableStateOf(0)
@@ -209,9 +205,7 @@ fun ProjectsComponent(
             permissionLauncher.launch(permission)
         }
         Spacer(modifier = Modifier.height(24.dp))
-        ProjectTechStackInputComponent(techStack = detailStack) {
-            navController.navigate("Search")
-        }
+        ProjectTechStackInputComponent(techStack = detailStack, onClick = onDetailStackSearchBarClick)
         Spacer(modifier = Modifier.height(24.dp))
         ProjectKeyTaskInputComponent(
             text = projectKeyTask.value,
