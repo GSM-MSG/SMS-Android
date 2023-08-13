@@ -21,6 +21,7 @@ import com.msg.sms.design.component.picker.SmsDatePicker
 import com.msg.sms.design.component.toggle.ToggleComponent
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
+import com.sms.presentation.main.ui.fill_out_information.component.projects.*
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isImageExtensionCorrect

@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.spacer.SmsSpacer
-import com.sms.presentation.main.ui.fill_out_information.component.WorkConditionComponent
+import com.sms.presentation.main.ui.fill_out_information.component.workcondition.WorkConditionComponent
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
