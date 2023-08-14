@@ -37,6 +37,8 @@ import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
 @Composable
 fun MyPageComponent(
     setMajor: String,
+    setWantWorkForm: String,
+    onClickOpenWorkForm: () -> Unit,
     clickTopLeftButton: () -> Unit,
     clickTopRightButton: () -> Unit,
     onClickMajorButton: () -> Unit,
@@ -91,6 +93,9 @@ fun MyPageComponent(
             item {
                 WorkConditionSection(
                     wantWorkingAreas = wantWorkingArea,
+                    wantPay = "2000",
+                    wantWorkForm = setWantWorkForm,
+                    onClickOpenButton = onClickOpenWorkForm,
                     onValueChange = { index, item ->
                         wantWorkingArea[index] = item
                     },
@@ -206,7 +211,10 @@ fun MyPageComponent(
 private fun MyPageComponentPre() {
     MyPageComponent(
         setMajor = "Android",
+        setWantWorkForm = "정규직",
         clickTopLeftButton = {},
         clickTopRightButton = {},
-        onClickMajorButton = {})
+        onClickMajorButton = {},
+        onClickOpenWorkForm = {}
+    )
 }
