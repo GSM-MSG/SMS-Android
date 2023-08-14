@@ -41,6 +41,9 @@ fun MyPageScreen() {
     val selectedWorkForm = remember {
         mutableStateOf("정규직")
     }
+    val selectedMilitary = remember {
+        mutableStateOf("")
+    }
     val bottomSheetValues = remember {
         mutableStateOf(BottomSheetValues.MyPage)
     }
@@ -94,7 +97,14 @@ fun MyPageScreen() {
                         })
                 }
 
-                else -> {}
+                BottomSheetValues.Military -> {
+                    SelectorBottomSheet(
+                        list = listOf("병특 희망", "희망 하지 않음", "상관 없음", "해당 사항 없음"),
+                        bottomSheetState = bottomSheetState,
+                        selected = selectedMilitary.value,
+                        itemChange = { selectedMilitary.value = it }
+                    )
+                }
             }
         },
         sheetState = bottomSheetState,
@@ -103,7 +113,8 @@ fun MyPageScreen() {
         MyPageComponent(
             setMajor = selectedMajor.value,
             setWantWorkForm = selectedWorkForm.value,
-            clickTopLeftButton = {},
+            setMilitary = selectedMilitary.value,
+            onClickTopLeftButton = {},
             onClickOpenWorkForm = {
                 coroutineScope.launch {
                     bottomSheetValues.value = BottomSheetValues.WorkingForm
@@ -111,7 +122,14 @@ fun MyPageScreen() {
                     bottomSheetState.show()
                 }
             },
-            clickTopRightButton = {
+            onClickMilitaryOpenButton = {
+                coroutineScope.launch {
+                    bottomSheetValues.value = BottomSheetValues.Military
+                    keyboardController!!.hide()
+                    bottomSheetState.show()
+                }
+            },
+            onClickTopRightButton = {
                 coroutineScope.launch {
                     bottomSheetValues.value = BottomSheetValues.MyPage
                     keyboardController!!.hide()
