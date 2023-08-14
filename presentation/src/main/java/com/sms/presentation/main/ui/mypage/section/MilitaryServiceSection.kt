@@ -10,18 +10,24 @@ import androidx.compose.ui.unit.dp
 import com.sms.presentation.main.ui.mypage.component.military.MilitaryServiceTypeComponent
 
 @Composable
-fun MilitaryServiceSection() {
+fun MilitaryServiceSection(
+    setMilitary: String,
+    onClickMilitaryOpenButton: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 24.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
     ) {
-        MilitaryServiceTypeComponent()
+        MilitaryServiceTypeComponent(
+            setMilitary = setMilitary,
+            onClickMilitaryOpenButton = onClickMilitaryOpenButton
+        )
     }
 }
 
 @Preview
 @Composable
 private fun MilitaryServiceSectionPre() {
-    MilitaryServiceSection()
+    MilitaryServiceSection("병특 희망") {}
 }

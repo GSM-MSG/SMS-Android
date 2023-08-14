@@ -38,9 +38,11 @@ import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
 fun MyPageComponent(
     setMajor: String,
     setWantWorkForm: String,
+    setMilitary: String,
+    onClickMilitaryOpenButton: () -> Unit,
     onClickOpenWorkForm: () -> Unit,
-    clickTopLeftButton: () -> Unit,
-    clickTopRightButton: () -> Unit,
+    onClickTopLeftButton: () -> Unit,
+    onClickTopRightButton: () -> Unit,
     onClickMajorButton: () -> Unit,
 ) {
 
@@ -68,8 +70,8 @@ fun MyPageComponent(
                     text = "마이페이지",
                     leftIcon = { BackButtonIcon() },
                     rightIcon = { BlackLogoutIcon() },
-                    onClickRightButton = clickTopRightButton,
-                    onClickLeftButton = clickTopLeftButton,
+                    onClickRightButton = onClickTopRightButton,
+                    onClickLeftButton = onClickTopLeftButton,
                 )
                 SmsSpacer()
             }
@@ -108,7 +110,10 @@ fun MyPageComponent(
                 TitleHeader(titleText = "병역 *")
             }
             item {
-                MilitaryServiceSection()
+                MilitaryServiceSection(
+                    setMilitary = setMilitary,
+                    onClickMilitaryOpenButton = onClickMilitaryOpenButton
+                )
                 SmsSpacer()
             }
             stickyHeader {
@@ -212,9 +217,11 @@ private fun MyPageComponentPre() {
     MyPageComponent(
         setMajor = "Android",
         setWantWorkForm = "정규직",
-        clickTopLeftButton = {},
-        clickTopRightButton = {},
+        setMilitary = "병특 희망",
+        onClickMilitaryOpenButton = {},
+        onClickTopLeftButton = {},
+        onClickTopRightButton = {},
         onClickMajorButton = {},
-        onClickOpenWorkForm = {}
+        onClickOpenWorkForm = {},
     )
 }
