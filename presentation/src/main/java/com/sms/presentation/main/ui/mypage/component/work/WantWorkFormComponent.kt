@@ -9,13 +9,17 @@ import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
-fun WantWorkFormComponent() {
+fun WantWorkFormComponent(
+    setText: String,
+    onClickOpenButton: () -> Unit,
+) {
     AddGrayBody1Title(titleText = "희망 고용 형태") {
         SmsCustomTextField(
             modifier = Modifier.fillMaxWidth(),
             endIcon = { OpenButtonIcon() },
-            clickAction = { /*TODO(Leehyeonbin): 바텀 시트 띄우는거 구현해야지*/ },
-            setChangeText = "",
+            clickAction = onClickOpenButton,
+            setChangeText = setText,
+            readOnly = true,
             placeHolder = "내가 뭐가 될 상인가?"
         )
     }
@@ -24,5 +28,5 @@ fun WantWorkFormComponent() {
 @Preview
 @Composable
 private fun WantWorkFormComponentPre() {
-    WantWorkFormComponent()
+    WantWorkFormComponent("정규직", {})
 }
