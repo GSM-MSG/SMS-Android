@@ -51,7 +51,7 @@ fun WantPayComponent(wantPay: String) {
                 keyboardController?.hide()
             }),
         ) {
-            desiredSalary.value = ""
+            desiredSalary.value = "0"
         }
         Spacer(modifier = Modifier.height(4.dp))
         SMSTheme { colors, typography ->
