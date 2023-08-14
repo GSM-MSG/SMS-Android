@@ -18,6 +18,13 @@ import com.msg.sms.design.component.selector.MajorSelector
 import com.sms.presentation.main.ui.mypage.modal.MyPageBottomSheet
 import kotlinx.coroutines.launch
 
+enum class BottomSheetValues {
+    Major,
+    MyPage,
+    WorkingForm,
+    Military
+}
+
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MyPageScreen() {
@@ -31,47 +38,63 @@ fun MyPageScreen() {
     val selectedMajor = remember {
         mutableStateOf("")
     }
-    val isMajor = remember {
-        mutableStateOf(false)
+    val selectedWorkForm = remember {
+        mutableStateOf("정규직")
+    }
+    val bottomSheetValues = remember {
+        mutableStateOf(BottomSheetValues.MyPage)
     }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     ModalBottomSheetLayout(
         sheetContent = {
-            if (isMajor.value) {
-                SelectorBottomSheet(
-                    // Todo(LeeHyeonbin): 바텀 시트 불러오는 로직 사용해서 리스트 열 때나, 언제든 예외처리 하기
-//                    list = if (list.value.data != null) list.value.data!!.major else emptyList(),
-                    list = list.value,
-                    bottomSheetState = bottomSheetState,
-                    selected = selectedMajor.value,
-                    itemChange = {
-                        selectedMajor.value = it
-                    },
-                    lastItem = {
-                        MajorSelector(
-                            major = "직접입력",
-                            selected = selectedMajor.value == "직접입력"
-                        ) {
-                            selectedMajor.value = "직접입력"
+            when (bottomSheetValues.value) {
+                BottomSheetValues.Major -> {
+                    SelectorBottomSheet(
+                        list = list.value,
+                        bottomSheetState = bottomSheetState,
+                        selected = selectedMajor.value,
+                        itemChange = {
+                            selectedMajor.value = it
+                        },
+                        lastItem = {
+                            MajorSelector(
+                                major = "직접입력",
+                                selected = selectedMajor.value == "직접입력"
+                            ) {
+                                selectedMajor.value = "직접입력"
+                                coroutineScope.launch {
+                                    bottomSheetState.hide()
+                                }
+                            }
+                        }
+                    )
+                }
+
+                BottomSheetValues.WorkingForm -> {
+                    SelectorBottomSheet(
+                        list = listOf("정규직", "비정규직", "계약직", "인턴"),
+                        bottomSheetState = bottomSheetState,
+                        selected = selectedWorkForm.value,
+                        itemChange = { selectedWorkForm.value = it }
+                    )
+                }
+
+                BottomSheetValues.MyPage -> {
+                    MyPageBottomSheet(
+                        onClickLogout = {
                             coroutineScope.launch {
                                 bottomSheetState.hide()
                             }
-                        }
-                    }
-                )
-            } else {
-                MyPageBottomSheet(
-                    onClickLogout = {
-                        coroutineScope.launch {
-                            bottomSheetState.hide()
-                        }
-                    },
-                    onClickWithdrawal = {
-                        coroutineScope.launch {
-                            bottomSheetState.hide()
-                        }
-                    })
+                        },
+                        onClickWithdrawal = {
+                            coroutineScope.launch {
+                                bottomSheetState.hide()
+                            }
+                        })
+                }
+
+                else -> {}
             }
         },
         sheetState = bottomSheetState,
@@ -79,16 +102,24 @@ fun MyPageScreen() {
     ) {
         MyPageComponent(
             setMajor = selectedMajor.value,
+            setWantWorkForm = selectedWorkForm.value,
             clickTopLeftButton = {},
+            onClickOpenWorkForm = {
+                coroutineScope.launch {
+                    bottomSheetValues.value = BottomSheetValues.WorkingForm
+                    keyboardController!!.hide()
+                    bottomSheetState.show()
+                }
+            },
             clickTopRightButton = {
                 coroutineScope.launch {
-                    isMajor.value = false
+                    bottomSheetValues.value = BottomSheetValues.MyPage
                     keyboardController!!.hide()
                     bottomSheetState.show()
                 }
             }, onClickMajorButton = {
                 coroutineScope.launch {
-                    isMajor.value = true
+                    bottomSheetValues.value = BottomSheetValues.Major
                     keyboardController!!.hide()
                     bottomSheetState.show()
                 }
