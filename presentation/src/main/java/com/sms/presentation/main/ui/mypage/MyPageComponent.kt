@@ -48,6 +48,9 @@ fun MyPageComponent(
     val awardExpandList = remember {
         mutableStateListOf(*listOf("수상 1", "수상 2").map { true }.toTypedArray())
     }
+    val wantWorkingArea = remember {
+        mutableStateListOf(*listOf("광저우", "충칭", "하노이", "도쿄").toTypedArray())
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -86,7 +89,14 @@ fun MyPageComponent(
                 TitleHeader(titleText = "근무 조건 *")
             }
             item {
-                WorkConditionSection()
+                WorkConditionSection(
+                    wantWorkingAreas = wantWorkingArea,
+                    onValueChange = { index, item ->
+                        wantWorkingArea[index] = item
+                    },
+                    onClickAddButton = { wantWorkingArea.add("") }) {
+                    wantWorkingArea.remove(it)
+                }
                 SmsSpacer()
             }
             stickyHeader {
@@ -194,5 +204,9 @@ fun MyPageComponent(
 @Preview
 @Composable
 private fun MyPageComponentPre() {
-    MyPageComponent(setMajor = "Android", clickTopLeftButton = {}, clickTopRightButton = {}, onClickMajorButton = {})
+    MyPageComponent(
+        setMajor = "Android",
+        clickTopLeftButton = {},
+        clickTopRightButton = {},
+        onClickMajorButton = {})
 }

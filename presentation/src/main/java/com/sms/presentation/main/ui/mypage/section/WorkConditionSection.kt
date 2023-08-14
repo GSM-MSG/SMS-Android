@@ -13,7 +13,12 @@ import com.sms.presentation.main.ui.mypage.component.work.WantWorkFormComponent
 import com.sms.presentation.main.ui.mypage.component.work.WorkLocationComponent
 
 @Composable
-fun WorkConditionSection() {
+fun WorkConditionSection(
+    wantWorkingAreas: List<String>,
+    onValueChange: (index: Int, item: String) -> Unit,
+    onClickAddButton: () -> Unit,
+    onClickRemoveButton: (String) -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -22,12 +27,20 @@ fun WorkConditionSection() {
     ) {
         WantWorkFormComponent()
         WantPayComponent()
-        WorkLocationComponent(workLocationsList = listOf("광저우", "도쿄", "충칭"))
+        WorkLocationComponent(
+            workLocationsList = wantWorkingAreas,
+            onValueChange = onValueChange,
+            onClickAddButton = onClickAddButton,
+            onClickRemoveButton = onClickRemoveButton
+        )
     }
 }
 
 @Preview
 @Composable
 private fun WorkConditionSectionPre() {
-    WorkConditionSection()
+    WorkConditionSection(
+        listOf("베이징", "도쿄", "서울"),
+        onValueChange = { index, item -> },
+        onClickAddButton = {}) {}
 }
