@@ -38,6 +38,8 @@ import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
 fun MyPageComponent(
     setMajor: String,
     setWantWorkForm: String,
+    setMilitary: String,
+    onClickMilitaryOpenButton: () -> Unit,
     onClickOpenWorkForm: () -> Unit,
     onClickTopLeftButton: () -> Unit,
     onClickTopRightButton: () -> Unit,
