@@ -23,6 +23,8 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.icon.BlackLogoutIcon
+import com.sms.presentation.main.ui.detail.data.AwardNameData
+import com.sms.presentation.main.ui.detail.data.ProjectNameData
 import com.sms.presentation.main.ui.mypage.component.button.SaveButtonComponent
 import com.sms.presentation.main.ui.mypage.section.AwardSection
 import com.sms.presentation.main.ui.mypage.section.CertificationsSection
@@ -45,12 +47,11 @@ fun MyPageComponent(
     onClickTopRightButton: () -> Unit,
     onClickMajorButton: () -> Unit,
 ) {
-
-    val projectExpandList = remember {
-        mutableStateListOf(*listOf("프로젝트 1", "프로젝트 2").map { true }.toTypedArray())
+    val expandProjects = remember {
+        mutableStateListOf(ProjectNameData("SMS", true), ProjectNameData("모이자", true))
     }
-    val awardExpandList = remember {
-        mutableStateListOf(*listOf("수상 1", "수상 2").map { true }.toTypedArray())
+    val awards = remember {
+        mutableStateListOf(AwardNameData("수상 1", true), AwardNameData("수상 2", true))
     }
     val wantWorkingArea = remember {
         mutableStateListOf(*listOf("광저우", "충칭", "하노이", "도쿄").toTypedArray())
@@ -130,23 +131,24 @@ fun MyPageComponent(
                 ForeignLanguagesSection()
                 SmsSpacer()
             }
-            listOf("프로젝트 1", "프로젝트 2").forEachIndexed { index, it ->
+            expandProjects.forEachIndexed { index, it ->
                 stickyHeader {
                     TitleHeader(
-                        titleText = it,
+                        titleText = it.projectName,
                         isExpandable = true,
                         isRemovable = true,
-                        onClickToggleButton = { projectExpandList[index] = it },
+                        isExpand = it.isExpand,
+                        onClickToggleButton = { expandProjects[index] = expandProjects[index].copy(isExpand = !it.isExpand) },
                         onClickRemoveButton = {})
                 }
                 item {
                     AnimatedVisibility(
                         modifier = Modifier.fillMaxWidth(),
-                        visible = projectExpandList[index],
+                        visible = expandProjects[index].isExpand,
                         enter = expandVertically(),
                         exit = shrinkVertically(),
                     ) {
-                        ProjectsSection(data = it)
+                        ProjectsSection(data = it.projectName)
                         SmsSpacer()
                     }
                 }
@@ -162,25 +164,26 @@ fun MyPageComponent(
                     }
                 }
             }
-            listOf("수상 1", "수상 2").forEachIndexed { index, it ->
+            awards.forEachIndexed { index, it ->
                 stickyHeader {
                     TitleHeader(
-                        titleText = it,
+                        titleText = it.awardName,
                         isExpandable = true,
                         isRemovable = true,
+                        isExpand = it.isExpand,
                         onClickRemoveButton = {},
-                        onClickToggleButton = { rotateState ->
-                            awardExpandList[index] = rotateState
+                        onClickToggleButton = {
+                            awards[index] = awards[index].copy(isExpand = !it.isExpand)
                         })
                 }
                 item {
                     AnimatedVisibility(
                         modifier = Modifier.fillMaxWidth(),
-                        visible = awardExpandList[index],
+                        visible = awards[index].isExpand,
                         enter = expandVertically(),
                         exit = shrinkVertically(),
                     ) {
-                        AwardSection(awardData = it)
+                        AwardSection(awardData = it.awardName)
                         SmsSpacer()
                     }
                 }
