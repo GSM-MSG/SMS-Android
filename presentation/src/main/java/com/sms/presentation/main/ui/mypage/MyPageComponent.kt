@@ -58,6 +58,9 @@ fun MyPageComponent(
     val foreignLanguages = remember {
         mutableStateListOf(*listOf(Pair("한국어", "원어민"), Pair("토익", "990")).toTypedArray())
     }
+    val certifications = remember {
+        mutableStateListOf(*listOf("정보처리 산업기사").toTypedArray())
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -123,7 +126,12 @@ fun MyPageComponent(
                 TitleHeader(titleText = "자격증")
             }
             item {
-                CertificationsSection()
+                CertificationsSection(
+                    certifications = certifications,
+                    onValueChange = { index, value -> certifications[index] = value },
+                    onClickRemoveButton = { certifications.removeAt(index = it)},
+                    onClickAddButton = { certifications.add("") }
+                )
                 SmsSpacer()
             }
             stickyHeader {
