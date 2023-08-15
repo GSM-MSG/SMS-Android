@@ -55,6 +55,9 @@ fun MyPageComponent(
     val wantWorkingArea = remember {
         mutableStateListOf(*listOf("광저우", "충칭", "하노이", "도쿄").toTypedArray())
     }
+    val foreignLanguages = remember {
+        mutableStateListOf(*listOf(Pair("한국어", "원어민"), Pair("토익", "990")).toTypedArray())
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -127,7 +130,18 @@ fun MyPageComponent(
                 TitleHeader(titleText = "외국어")
             }
             item {
-                ForeignLanguagesSection()
+                ForeignLanguagesSection(
+                    foreignLanguages = foreignLanguages,
+                    onValueChangeForeignName = { index, value ->
+                        foreignLanguages[index] = foreignLanguages[index].copy(first = value)
+                    },
+                    onValueChangeForeignValue = { index, value ->
+                        foreignLanguages[index] = foreignLanguages[index].copy(second = value)
+                    },
+                    onClickRemoveButton = { foreignLanguages.removeAt(it) }
+                ) {
+                    foreignLanguages.add(Pair("", ""))
+                }
                 SmsSpacer()
             }
             listOf("프로젝트 1", "프로젝트 2").forEachIndexed { index, it ->
