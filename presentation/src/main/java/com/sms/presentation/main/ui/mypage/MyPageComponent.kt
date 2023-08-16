@@ -24,7 +24,9 @@ import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.icon.BlackLogoutIcon
 import com.sms.presentation.main.ui.detail.data.AwardNameData
+import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.ProjectNameData
+import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.button.SaveButtonComponent
 import com.sms.presentation.main.ui.mypage.section.AwardSection
 import com.sms.presentation.main.ui.mypage.section.CertificationsSection
@@ -47,8 +49,49 @@ fun MyPageComponent(
     onClickTopRightButton: () -> Unit,
     onClickMajorButton: () -> Unit,
 ) {
+    val projects = remember {
+        mutableStateListOf(
+            ProjectData(
+                name = "SMS",
+                activityDuration = "2023 ~",
+                projectImage = listOf(
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
+                ),
+                icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                techStack = listOf("Github", "Git", "Kotlin", "Android Studio"),
+                keyTask = "모이자 ㅋㅋ",
+                relatedLinks = listOf(
+                    RelatedLinksData("Youtube", "https://dolmc.com"),
+                    RelatedLinksData("GitHujb", "https://youyu.com"),
+                    RelatedLinksData("X", "https://asdgasgw.com")
+                )
+            ),
+            ProjectData(
+                name = "MOIZA",
+                activityDuration = "2023 ~",
+                projectImage = listOf(
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
+                ),
+                icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                techStack = listOf("Github", "Git", "Kotlin", "Android Studio"),
+                keyTask = "모이자 ㅋㅋ",
+                relatedLinks = listOf(
+                    RelatedLinksData("Youtube", "https://dolmc.com"),
+                    RelatedLinksData("GitHujb", "https://youyu.com"),
+                    RelatedLinksData("X", "https://asdgasgw.com")
+                )
+            ),
+        )
+    }
     val expandProjects = remember {
-        mutableStateListOf(ProjectNameData("SMS", true), ProjectNameData("모이자", true))
+        mutableStateListOf(*projects.map { ProjectNameData(projectName = it.name, isExpand = true) }
+            .toTypedArray())
     }
     val awards = remember {
         mutableStateListOf(AwardNameData("수상 1", true), AwardNameData("수상 2", true))
@@ -138,7 +181,10 @@ fun MyPageComponent(
                         isExpandable = true,
                         isRemovable = true,
                         isExpand = it.isExpand,
-                        onClickToggleButton = { expandProjects[index] = expandProjects[index].copy(isExpand = !it.isExpand) },
+                        onClickToggleButton = {
+                            expandProjects[index] =
+                                expandProjects[index].copy(isExpand = !it.isExpand)
+                        },
                         onClickRemoveButton = {})
                 }
                 item {
@@ -148,7 +194,12 @@ fun MyPageComponent(
                         enter = expandVertically(),
                         exit = shrinkVertically(),
                     ) {
-                        ProjectsSection(data = it.projectName)
+                        ProjectsSection(
+                            data = projects[index],
+                            onNameValueChange = {
+                                expandProjects[index] = expandProjects[index].copy(projectName = it)
+                                projects[index] = projects[index].copy(name = it)
+                            })
                         SmsSpacer()
                     }
                 }

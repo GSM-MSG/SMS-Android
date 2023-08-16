@@ -18,9 +18,10 @@ import com.msg.sms.design.component.SmsChip
 import com.msg.sms.design.component.textfield.NoneIconTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.util.AddGrayBody1Title
+import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 
 @Composable
-fun ProjectRelatedLinksComponent(relatedLinks: List<Pair<String, String>>) {
+fun ProjectRelatedLinksComponent(relatedLinks: List<RelatedLinksData>) {
     AddGrayBody1Title(titleText = "관련 링크") {
         LazyColumn(
             modifier = Modifier
@@ -37,14 +38,14 @@ fun ProjectRelatedLinksComponent(relatedLinks: List<Pair<String, String>>) {
                     Box(modifier = Modifier.weight(1f)) {
                         NoneIconTextField(
                             singleLine = true,
-                            setChangeText = "Github",
+                            setChangeText = it.name,
                             placeHolder = ""
                         )
                     }
                     Box(modifier = Modifier.weight(2.5f)) {
                         NoneIconTextField(
                             singleLine = true,
-                            setChangeText = "",
+                            setChangeText = it.link,
                             placeHolder = "https://github.com"
                         )
                     }
@@ -68,8 +69,8 @@ private fun ProjectRelatedLinksComponentPre() {
     ProjectRelatedLinksComponent(
         relatedLinks =
         listOf(
-            Pair("Github", "https://github/leehyeonbin.com"),
-            Pair("Youtube", "https://youtube.com")
+            RelatedLinksData(name = "Github", link = "https://github/leehyeonbin.com"),
+            RelatedLinksData(name = "Youtube", link = "https://youtube.com")
         )
     )
 }
