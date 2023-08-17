@@ -6,7 +6,9 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -200,7 +202,7 @@ fun MyPageComponent(
                                 expandProjects[index] = expandProjects[index].copy(projectName = it)
                                 projects[index] = projects[index].copy(name = it)
                             })
-                        SmsSpacer()
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
             }
