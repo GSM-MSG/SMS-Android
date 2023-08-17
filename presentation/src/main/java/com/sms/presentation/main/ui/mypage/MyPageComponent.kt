@@ -37,8 +37,12 @@ import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
 @Composable
 fun MyPageComponent(
     setMajor: String,
-    clickTopLeftButton: () -> Unit,
-    clickTopRightButton: () -> Unit,
+    setWantWorkForm: String,
+    setMilitary: String,
+    onClickMilitaryOpenButton: () -> Unit,
+    onClickOpenWorkForm: () -> Unit,
+    onClickTopLeftButton: () -> Unit,
+    onClickTopRightButton: () -> Unit,
     onClickMajorButton: () -> Unit,
 ) {
 
@@ -47,6 +51,9 @@ fun MyPageComponent(
     }
     val awardExpandList = remember {
         mutableStateListOf(*listOf("수상 1", "수상 2").map { true }.toTypedArray())
+    }
+    val wantWorkingArea = remember {
+        mutableStateListOf(*listOf("광저우", "충칭", "하노이", "도쿄").toTypedArray())
     }
 
     Box(
@@ -63,8 +70,8 @@ fun MyPageComponent(
                     text = "마이페이지",
                     leftIcon = { BackButtonIcon() },
                     rightIcon = { BlackLogoutIcon() },
-                    onClickRightButton = clickTopRightButton,
-                    onClickLeftButton = clickTopLeftButton,
+                    onClickRightButton = onClickTopRightButton,
+                    onClickLeftButton = onClickTopLeftButton,
                 )
                 SmsSpacer()
             }
@@ -79,21 +86,34 @@ fun MyPageComponent(
                 TitleHeader(titleText = "학교생활 *")
             }
             item {
-                SchoolLifeSection()
+                SchoolLifeSection(score = 800)
                 SmsSpacer()
             }
             stickyHeader {
                 TitleHeader(titleText = "근무 조건 *")
             }
             item {
-                WorkConditionSection()
+                WorkConditionSection(
+                    wantWorkingAreas = wantWorkingArea,
+                    wantPay = "2000",
+                    wantWorkForm = setWantWorkForm,
+                    onClickOpenButton = onClickOpenWorkForm,
+                    onValueChange = { index, item ->
+                        wantWorkingArea[index] = item
+                    },
+                    onClickAddButton = { wantWorkingArea.add("") }) {
+                    wantWorkingArea.remove(it)
+                }
                 SmsSpacer()
             }
             stickyHeader {
                 TitleHeader(titleText = "병역 *")
             }
             item {
-                MilitaryServiceSection()
+                MilitaryServiceSection(
+                    setMilitary = setMilitary,
+                    onClickMilitaryOpenButton = onClickMilitaryOpenButton
+                )
                 SmsSpacer()
             }
             stickyHeader {
@@ -194,5 +214,14 @@ fun MyPageComponent(
 @Preview
 @Composable
 private fun MyPageComponentPre() {
-    MyPageComponent(setMajor = "Android", clickTopLeftButton = {}, clickTopRightButton = {}, onClickMajorButton = {})
+    MyPageComponent(
+        setMajor = "Android",
+        setWantWorkForm = "정규직",
+        setMilitary = "병특 희망",
+        onClickMilitaryOpenButton = {},
+        onClickTopLeftButton = {},
+        onClickTopRightButton = {},
+        onClickMajorButton = {},
+        onClickOpenWorkForm = {},
+    )
 }

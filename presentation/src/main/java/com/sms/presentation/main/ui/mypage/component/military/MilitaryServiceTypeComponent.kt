@@ -7,14 +7,23 @@ import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
-fun MilitaryServiceTypeComponent() {
+fun MilitaryServiceTypeComponent(
+    setMilitary: String,
+    onClickMilitaryOpenButton: () -> Unit,
+) {
     AddGrayBody1Title(titleText = "병특 희망 여부") {
-        SmsCustomTextField(endIcon = { OpenButtonIcon() }, clickAction = { }, setChangeText = "", placeHolder = "병특 희망")
+        SmsCustomTextField(
+            endIcon = { OpenButtonIcon() },
+            clickAction = onClickMilitaryOpenButton,
+            setChangeText = setMilitary,
+            readOnly = true,
+            placeHolder = "병특 희망"
+        )
     }
 }
 
 @Preview
 @Composable
 fun MilitaryServiceTypeComponentPre() {
-    MilitaryServiceTypeComponent()
+    MilitaryServiceTypeComponent("병특 희망") {}
 }

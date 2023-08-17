@@ -10,18 +10,18 @@ import androidx.compose.ui.unit.dp
 import com.sms.presentation.main.ui.mypage.component.life.SchoolScoreComponent
 
 @Composable
-fun SchoolLifeSection() {
+fun SchoolLifeSection(score: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 24.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
     ) {
-        SchoolScoreComponent()
+        SchoolScoreComponent(score = score)
     }
 }
 
 @Preview
 @Composable
 fun SchoolLIfeSectionPre() {
-    SchoolLifeSection()
+    SchoolLifeSection(score = 800)
 }
