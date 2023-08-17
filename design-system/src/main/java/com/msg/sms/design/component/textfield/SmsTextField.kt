@@ -42,6 +42,7 @@ fun SmsTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     maxLines: Int = Int.MAX_VALUE,
+    singleLine: Boolean = false,
     onValueChange: (String) -> Unit = {},
     onClickButton: () -> Unit,
 ) {
@@ -72,6 +73,7 @@ fun SmsTextField(
                         isFocused.value = it.isFocused
                     },
                 maxLines = maxLines,
+                singleLine = singleLine,
                 textStyle = typography.body1,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     backgroundColor = colors.N10,

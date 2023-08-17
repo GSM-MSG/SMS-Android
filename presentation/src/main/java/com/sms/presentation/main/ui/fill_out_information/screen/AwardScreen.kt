@@ -6,10 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.component.textfield.SmsCustomTextField
-import com.msg.sms.design.component.textfield.SmsTextField
-import com.msg.sms.design.icon.CalendarIcon
-import com.msg.sms.design.util.AddGrayBody1Title
+import com.sms.presentation.main.ui.fill_out_information.component.award.AwardDateBarComponent
+import com.sms.presentation.main.ui.fill_out_information.component.award.AwardNameInputComponent
 
 @Composable
 fun AwardScreen() {
@@ -28,36 +26,26 @@ fun AwardScreen() {
             .fillMaxWidth()
             .padding(20.dp)
     ) {
-        AddGrayBody1Title(titleText = "이름") {
-            SmsTextField(
-                modifier = Modifier.fillMaxWidth(),
-                setText = name.value,
-                placeHolder = "수상 내역 이름 입력",
-                onValueChange = { name.value = it }
-            ) {
-                name.value = ""
-            }
+        AwardNameInputComponent(
+            title = "이름",
+            placeHolder = "수상 내역 이름 입력",
+            text = name.value,
+            onButtonClick = { name.value = "" }
+        ) {
+            name.value = it
         }
         Spacer(modifier = Modifier.height(24.dp))
-        AddGrayBody1Title(titleText = "종류") {
-            SmsTextField(
-                modifier = Modifier.fillMaxWidth(),
-                setText = type.value,
-                placeHolder = "수상 종류입력",
-                onValueChange = { type.value = it }
-            ) {
-                type.value = ""
-            }
+        AwardNameInputComponent(
+            title = "종류",
+            placeHolder = "수상 종류입력",
+            text = type.value,
+            onButtonClick = { type.value = "" }
+        ) {
+            type.value = it
         }
         Spacer(modifier = Modifier.height(24.dp))
-        AddGrayBody1Title(titleText = "기간") {
-            SmsCustomTextField(
-                setChangeText = date.value,
-                placeHolder = "yyyy.mm",
-                readOnly = true,
-                endIcon = { CalendarIcon() },
-                clickAction = { /*TODO kimhyunseung: 바텀시트 띄우는 로직 */ }
-            )
+        AwardDateBarComponent(date = date.value) {
+            /*TODO kimhyunseung: 바텀시트 띄우는 로직 */
         }
     }
 }
