@@ -14,9 +14,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
@@ -46,6 +48,9 @@ class FillOutInformationActivity : BaseActivity() {
             val currentRoute = remember {
                 mutableStateOf("Profile")
             }
+            val detailStackList = remember {
+                mutableStateMapOf<String, List<String>>()
+            }
 
             ModalBottomSheetLayout(
                 sheetContent = bottomSheetContent.value,
@@ -68,18 +73,10 @@ class FillOutInformationActivity : BaseActivity() {
                             composable("Profile") {
                                 currentRoute.value = "Profile"
                                 setSoftInputMode("PAN")
-                                val data = remember {
-                                    mutableStateOf(
-                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
-                                            "detailStack"
-                                        )
-                                    )
-                                }
-
                                 ProfileScreen(
                                     navController = navController,
                                     viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                    detailStack = (if (data.value != null) data.value!!.split(",") else listOf()),
+                                    detailStack = detailStackList["Profile"] ?: emptyList(),
                                     bottomSheetState = bottomSheetState
                                 ) {
                                     bottomSheetContent.value = it
@@ -138,30 +135,31 @@ class FillOutInformationActivity : BaseActivity() {
                                 ProjectsScreen(
                                     navController = navController,
                                     viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                    detailStack = emptyList(),
                                     bottomSheetState = bottomSheetState,
-                                    onDetailStackSearchBarClick = { idx -> }
+                                    detailStackList = detailStackList
                                 ) {
                                     bottomSheetContent.value = it
                                 }
                             }
-                            composable("Search") {
+                            composable(
+                                "Search/{idx}",
+                                arguments = listOf(
+                                    navArgument("idx") { type = NavType.StringType }
+                                )
+                            ) { backStackEntry ->
                                 currentRoute.value = "Search"
                                 setSoftInputMode("RESIZE")
-                                val data = remember {
-                                    mutableStateOf(
-                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
-                                            "detailStack"
-                                        )
-                                    )
+                                val idx = remember {
+                                    mutableStateOf(backStackEntry.arguments?.getString("idx") ?: "")
                                 }
 
                                 DetailStackSearchScreen(
                                     navController = navController,
                                     viewModel = searchDetailStackViewModel,
-                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(""))
+                                    selectedStack = detailStackList[idx.value] ?: listOf(""),
                                 ) {
-                                    navController.navigate("Profile")
+                                    detailStackList[idx.value] = it
+                                    navController.popBackStack()
                                 }
                             }
                         }

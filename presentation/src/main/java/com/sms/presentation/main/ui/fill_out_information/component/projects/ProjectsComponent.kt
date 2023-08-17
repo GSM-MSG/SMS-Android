@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.fill_out_information.component
+package com.sms.presentation.main.ui.fill_out_information.component.projects
 
 import android.Manifest
 import android.net.Uri
@@ -32,7 +32,6 @@ import kotlinx.coroutines.launch
 fun ProjectsComponent(
     navController: NavController,
     bottomSheetState: ModalBottomSheetState,
-    detailStack: List<String>,
     data: ProjectInfo,
     savedData: (
         name: String,
@@ -71,6 +70,9 @@ fun ProjectsComponent(
     }
     val projectRelatedLinkList = remember {
         mutableStateListOf(*data.relatedLinkList.toTypedArray())
+    }
+    val projectUsedTechStack = remember {
+        mutableStateListOf(*data.technologyOfUse.toTypedArray())
     }
     val isImportingProjectIcons = remember {
         mutableStateOf(false)
@@ -132,7 +134,7 @@ fun ProjectsComponent(
         projectName.value,
         projectIconUri.value,
         projectPreviewUriList,
-        detailStack,
+        projectUsedTechStack,
         projectKeyTask.value,
         projectStartDate.value,
         if (!isProjectProgress.value) projectEndDate.value else "",
@@ -206,7 +208,10 @@ fun ProjectsComponent(
             permissionLauncher.launch(permission)
         }
         Spacer(modifier = Modifier.height(24.dp))
-        ProjectTechStackInputComponent(techStack = detailStack, onClick = onDetailStackSearchBarClick)
+        ProjectTechStackInputComponent(
+            techStack = projectUsedTechStack,
+            onClick = onDetailStackSearchBarClick
+        )
         Spacer(modifier = Modifier.height(24.dp))
         ProjectKeyTaskInputComponent(
             text = projectKeyTask.value,

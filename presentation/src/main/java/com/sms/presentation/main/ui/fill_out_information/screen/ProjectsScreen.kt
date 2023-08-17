@@ -1,9 +1,9 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.*
@@ -12,6 +12,7 @@ import com.msg.sms.design.component.SmsDialog
 import com.sms.presentation.main.ui.fill_out_information.component.*
 import com.sms.presentation.main.ui.fill_out_information.component.projects.AddProjectButton
 import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsBottomButtonComponent
+import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsComponent
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 
@@ -20,9 +21,8 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 fun ProjectsScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
-    detailStack: List<String>,
+    detailStackList: Map<String, List<String>>,
     bottomSheetState: ModalBottomSheetState,
-    onDetailStackSearchBarClick: (idx: Int) -> Unit,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit
 ) {
     val data = viewModel.getEnteredProjectsInformation()
@@ -46,11 +46,14 @@ fun ProjectsScreen(
     }
 
     LazyColumn {
-        itemsIndexed(projectList) { idx, item ->
+        items(projectList.size) { idx ->
+            projectList[idx] = projectList[idx].copy(
+                technologyOfUse = detailStackList["Project$idx"] ?: emptyList()
+            )
+
             ProjectsComponent(
                 navController = navController,
-                data = item,
-                detailStack = detailStack,
+                data = projectList[idx],
                 savedData = { name, icon, preview, techOfUse, keyTask, startDate, endDate, relatedLink ->
                     projectList[idx] = ProjectInfo(
                         name = name,
@@ -72,7 +75,7 @@ fun ProjectsScreen(
                     projectList.removeAt(idx)
                 },
                 onDetailStackSearchBarClick = {
-                    onDetailStackSearchBarClick(idx)
+                    navController.navigate("Search/Project$idx")
                 }
             )
         }
@@ -88,17 +91,17 @@ fun ProjectsScreen(
                     viewModel.setEnteredProjectsInformation(
                         projectList.filter { project ->
                             project.name.isNotEmpty() ||
-                            project.icon != Uri.EMPTY ||
-                            project.keyTask.isNotEmpty() ||
-                            project.preview.isNotEmpty() ||
-                            project.endDate.isNotEmpty() ||
-                            project.startDate.isNotEmpty() ||
-                            project.technologyOfUse.isNotEmpty() ||
-                            project.relatedLinkList.first() != Pair("", "")
+                                    project.icon != Uri.EMPTY ||
+                                    project.keyTask.isNotEmpty() ||
+                                    project.preview.isNotEmpty() ||
+                                    project.endDate.isNotEmpty() ||
+                                    project.startDate.isNotEmpty() ||
+                                    project.technologyOfUse.isNotEmpty() ||
+                                    project.relatedLinkList.first() != Pair("", "")
                         }
                     )
                 }
             )
         }
-    }
+    }.also { Log.d("ddddd", "Lazy Column Recomposition") }
 }

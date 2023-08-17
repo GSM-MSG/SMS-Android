@@ -217,10 +217,10 @@ fun ProfileScreen(
                         enteredMajor = enteredMajor.value
                     )
                     navController.currentBackStackEntry?.savedStateHandle?.set(
-                        key = "detailStack",
+                        key = "Profile",
                         value = detailStack.joinToString(",")
                     )
-                    navController.navigate("Search")
+                    navController.navigate("Search/Profile")
                 },
                 enteringMajor = { string ->
                     enteredMajor.value = string
