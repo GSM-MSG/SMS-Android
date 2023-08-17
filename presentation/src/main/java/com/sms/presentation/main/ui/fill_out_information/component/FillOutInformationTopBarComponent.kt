@@ -24,7 +24,8 @@ fun FillOutInformationTopBarComponent(currentRoute: String, onBackButtonClick: (
                 "MilitaryService",
                 "Certification",
                 "ForeignLanguage",
-                "Projects"
+                "Projects",
+                "Award"
             ),
             currentRoute = currentRoute
         )

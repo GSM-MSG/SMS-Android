@@ -63,7 +63,7 @@ class FillOutInformationActivity : BaseActivity() {
                         }
                         NavHost(
                             navController = navController,
-                            startDestination = "Projects"
+                            startDestination = "Award"
                         ) {
                             composable("Profile") {
                                 currentRoute.value = "Profile"
@@ -141,6 +141,11 @@ class FillOutInformationActivity : BaseActivity() {
                                 ) {
                                     bottomSheetContent.value = it
                                 }
+                            }
+                            composable("Award") {
+                                currentRoute.value = "Award"
+                                setSoftInputMode("PAN")
+                                AwardScreen()
                             }
                             composable("Search") {
                                 currentRoute.value = "Search"
