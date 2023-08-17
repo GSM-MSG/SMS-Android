@@ -3,6 +3,7 @@ package com.sms.presentation.main.viewmodel
 import android.net.Uri
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.fileupload.response.FileUploadResponseModel
@@ -57,6 +58,9 @@ class FillOutViewModel @Inject constructor(
     private val certificate = mutableStateListOf("")
     private val projects = mutableStateListOf(ProjectInfo())
     private lateinit var profileImageUrl: String
+
+    val projectList =
+        mutableStateListOf(*getEnteredProjectsInformation().projects.toTypedArray())
 
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(

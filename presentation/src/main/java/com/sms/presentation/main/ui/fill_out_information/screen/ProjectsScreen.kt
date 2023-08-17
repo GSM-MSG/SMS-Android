@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
@@ -25,10 +24,6 @@ fun ProjectsScreen(
     bottomSheetState: ModalBottomSheetState,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit
 ) {
-    val data = viewModel.getEnteredProjectsInformation()
-    val projectList = remember {
-        mutableStateListOf(*data.projects.toTypedArray())
-    }
     val isImageExtensionInCorrect = remember {
         mutableStateOf(false)
     }
@@ -46,16 +41,16 @@ fun ProjectsScreen(
     }
 
     LazyColumn {
-        items(projectList.size) { idx ->
-            projectList[idx] = projectList[idx].copy(
+        items(viewModel.projectList.size) { idx ->
+            viewModel.projectList[idx] = viewModel.projectList[idx].copy(
                 technologyOfUse = detailStackList["Project$idx"] ?: emptyList()
             )
 
             ProjectsComponent(
                 navController = navController,
-                data = projectList[idx],
+                data = viewModel.projectList[idx],
                 savedData = { name, icon, preview, techOfUse, keyTask, startDate, endDate, relatedLink ->
-                    projectList[idx] = ProjectInfo(
+                    viewModel.projectList[idx] = ProjectInfo(
                         name = name,
                         icon = icon,
                         preview = preview,
@@ -72,7 +67,7 @@ fun ProjectsScreen(
                     isImageExtensionInCorrect.value = it
                 },
                 onCancelButtonClick = {
-                    projectList.removeAt(idx)
+                    viewModel.projectList.removeAt(idx)
                 },
                 onDetailStackSearchBarClick = {
                     navController.navigate("Search/Project$idx")
@@ -81,7 +76,7 @@ fun ProjectsScreen(
         }
         item {
             AddProjectButton {
-                projectList.add(ProjectInfo())
+                viewModel.projectList.add(ProjectInfo())
             }
         }
         item {
@@ -89,7 +84,7 @@ fun ProjectsScreen(
                 onPreviousButtonClick = { navController.popBackStack() },
                 onNextButtonClick = {
                     viewModel.setEnteredProjectsInformation(
-                        projectList.filter { project ->
+                        viewModel.projectList.filter { project ->
                             project.name.isNotEmpty() ||
                                     project.icon != Uri.EMPTY ||
                                     project.keyTask.isNotEmpty() ||
@@ -103,5 +98,5 @@ fun ProjectsScreen(
                 }
             )
         }
-    }.also { Log.d("ddddd", "Lazy Column Recomposition") }
+    }
 }

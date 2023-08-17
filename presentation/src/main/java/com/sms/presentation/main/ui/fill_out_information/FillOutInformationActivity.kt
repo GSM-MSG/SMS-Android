@@ -68,7 +68,7 @@ class FillOutInformationActivity : BaseActivity() {
                         }
                         NavHost(
                             navController = navController,
-                            startDestination = "Profile"
+                            startDestination = "Projects"
                         ) {
                             composable("Profile") {
                                 currentRoute.value = "Profile"

@@ -216,10 +216,6 @@ fun ProfileScreen(
                         portfolioUrl = portfolioUrl.value,
                         enteredMajor = enteredMajor.value
                     )
-                    navController.currentBackStackEntry?.savedStateHandle?.set(
-                        key = "Profile",
-                        value = detailStack.joinToString(",")
-                    )
                     navController.navigate("Search/Profile")
                 },
                 enteringMajor = { string ->
