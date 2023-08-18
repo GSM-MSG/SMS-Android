@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.mypage.component.project
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +13,14 @@ import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 
 @Composable
-fun ProjectComponent(data: ProjectData, onNameValueChange: (value: String) -> Unit) {
+fun ProjectComponent(
+    data: ProjectData,
+    onNameValueChange: (value: String) -> Unit,
+    onRemoveProjectImageButton: (list: List<String>) -> Unit,
+    onRemoveBitmapButton: (index: Int) -> Unit,
+    enteredList: List<Bitmap>,
+    onOpenGallery: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -23,9 +31,13 @@ fun ProjectComponent(data: ProjectData, onNameValueChange: (value: String) -> Un
             name = data.name,
             onValueChange = onNameValueChange
         )
-        ProjectIconComponent()
+        ProjectIconComponent(projectIcon = data.icon)
         ProjectPreviewComponent(
-            list = data.projectImage
+            list = data.projectImage,
+            enteredList = enteredList,
+            onClickRemoveButton = onRemoveProjectImageButton,
+            onClickRemoveBitmapButton = onRemoveBitmapButton,
+            onOpenGallery = onOpenGallery
         )
         ProjectTechStackComponent(
             techStack = data.techStack
@@ -58,6 +70,11 @@ private fun ProjectComponentPre() {
             RelatedLinksData("Youtube", "https://dolmc.com"),
             RelatedLinksData("GitHujb", "https://youyu.com"),
             RelatedLinksData("X", "https://asdgasgw.com")
-        )
-    ), onNameValueChange = {})
+        )),
+        onNameValueChange = {},
+        enteredList = listOf(),
+        onRemoveProjectImageButton = {},
+        onRemoveBitmapButton = {},
+        onOpenGallery = {}
+    )
 }

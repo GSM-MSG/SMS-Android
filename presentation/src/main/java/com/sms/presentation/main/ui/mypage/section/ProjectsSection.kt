@@ -1,20 +1,65 @@
 package com.sms.presentation.main.ui.mypage.section
 
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.os.Build
+import android.provider.MediaStore
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.project.ProjectComponent
 
 @Composable
-fun ProjectsSection(data: ProjectData, onNameValueChange: (value: String) -> Unit) {
-    ProjectComponent(data = data, onNameValueChange = onNameValueChange)
+fun ProjectsSection(
+    data: ProjectData,
+    enteredPreviews: List<Bitmap>,
+    onNameValueChange: (value: String) -> Unit,
+    onRemoveProjectImage: (list: List<String>) -> Unit,
+    onAddBitmap: (list: List<Bitmap>) -> Unit,
+    onRemoveBitmapButton: (itemIndex: Int) -> Unit,
+) {
+    val context = LocalContext.current
+    val multiGalleyLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents()
+    ) {
+        Log.d(
+            "TAG",
+            "ProjectsSection: ${enteredPreviews.size}, ${data.projectImage.size}, ${it.size}"
+        )
+        if (enteredPreviews.size + data.projectImage.size + it.size <= 4) {
+            val enteredList = if (Build.VERSION.SDK_INT < 28) {
+                it.map { uri -> MediaStore.Images.Media.getBitmap(context.contentResolver, uri) }
+            } else {
+                it.map { uri ->
+                    val source = ImageDecoder.createSource(context.contentResolver, uri)
+                    ImageDecoder.decodeBitmap(source)
+                }
+            }
+            onAddBitmap(enteredList)
+        } else {
+            Toast.makeText(context, "최대 4개까지 가능합니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+    ProjectComponent(
+        data = data,
+        onNameValueChange = onNameValueChange,
+        onRemoveProjectImageButton = onRemoveProjectImage,
+        onRemoveBitmapButton = { onRemoveBitmapButton(it) },
+        enteredList = enteredPreviews,
+        onOpenGallery = { multiGalleyLauncher.launch("image/*") }
+    )
 }
 
 @Preview
 @Composable
 private fun ProjectSectionPre() {
-    ProjectsSection( ProjectData(
+    ProjectsSection(data = ProjectData(
         name = "SMS",
         activityDuration = "2023 ~",
         projectImage = listOf(
@@ -31,5 +76,11 @@ private fun ProjectSectionPre() {
             RelatedLinksData("GitHujb", "https://youyu.com"),
             RelatedLinksData("X", "https://asdgasgw.com")
         )
-    ), onNameValueChange = {})
+    ),
+        enteredPreviews = listOf(),
+        onNameValueChange = {},
+        onRemoveProjectImage = {},
+        onAddBitmap = {},
+        onRemoveBitmapButton = {}
+    )
 }

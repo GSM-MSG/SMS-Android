@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.mypage
 
+import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -101,6 +102,9 @@ fun MyPageComponent(
     val wantWorkingArea = remember {
         mutableStateListOf(*listOf("광저우", "충칭", "하노이", "도쿄").toTypedArray())
     }
+    val bitmapPreviews = remember {
+        mutableStateListOf(*projects.map { listOf<Bitmap>() }.toTypedArray())
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -201,7 +205,19 @@ fun MyPageComponent(
                             onNameValueChange = {
                                 expandProjects[index] = expandProjects[index].copy(projectName = it)
                                 projects[index] = projects[index].copy(name = it)
-                            })
+                            },
+                            onRemoveProjectImage = {
+                                projects[index] = projects[index].copy(projectImage = it)
+                            },
+//                            enteredList = enteredPreviews[index], enteredPreviews = listOf(),
+                            onAddBitmap = { bitmapPreviews[index] = bitmapPreviews[index] + it },
+                            onRemoveBitmapButton = {
+                                bitmapPreviews[index] =
+                                    bitmapPreviews[index].filterIndexed { index, _ -> it != index }
+                            },
+                            enteredPreviews = bitmapPreviews[index]
+
+                        )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
