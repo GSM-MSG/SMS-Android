@@ -8,7 +8,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.ChevronDownIcon
 import com.msg.sms.design.icon.CloseIcon
+import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
@@ -71,12 +71,20 @@ fun ToggleComponent(
                     modifier = Modifier.align(Alignment.CenterEnd),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = { contentVisible.value = !contentVisible.value }) {
-                        ChevronDownIcon(modifier = Modifier.rotate(rotation.value))
-                    }
-                    IconButton(onClick = onCancelButtonClick) {
-                        CloseIcon()
-                    }
+                    ChevronDownIcon(
+                        modifier = Modifier
+                            .rotate(rotation.value)
+                            .smsClickable(bounded = false) {
+                                contentVisible.value = !contentVisible.value
+                            }
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    CloseIcon(
+                        modifier = Modifier.smsClickable(
+                            bounded = false,
+                            onClick = onCancelButtonClick
+                        )
+                    )
                 }
             }
             AnimatedVisibility(visible = contentVisible.value) {

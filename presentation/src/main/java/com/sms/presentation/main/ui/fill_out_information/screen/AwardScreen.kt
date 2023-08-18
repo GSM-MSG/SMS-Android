@@ -1,51 +1,35 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.sms.presentation.main.ui.fill_out_information.component.award.AwardDateBarComponent
-import com.sms.presentation.main.ui.fill_out_information.component.award.AwardNameInputComponent
+import com.sms.presentation.main.ui.fill_out_information.component.award.AwardComponent
+import com.sms.presentation.main.ui.fill_out_information.data.AwardData
+
 
 @Composable
 fun AwardScreen() {
-    val name = remember {
-        mutableStateOf("")
-    }
-    val type = remember {
-        mutableStateOf("")
-    }
-    val date = remember {
-        mutableStateOf("")
+    val awardList = remember {
+        mutableStateListOf(
+            AwardData("코뿔소상", "코가 큰남자에게 주는상", "2023.09"),
+            AwardData("코뿔소상", "코가 큰남자에게 주는상", "2023.09"),
+            AwardData("코뿔소상", "코가 큰남자에게 주는상", "2023.09")
+        )
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp)
-    ) {
-        AwardNameInputComponent(
-            title = "이름",
-            placeHolder = "수상 내역 이름 입력",
-            text = name.value,
-            onButtonClick = { name.value = "" }
-        ) {
-            name.value = it
-        }
-        Spacer(modifier = Modifier.height(24.dp))
-        AwardNameInputComponent(
-            title = "종류",
-            placeHolder = "수상 종류입력",
-            text = type.value,
-            onButtonClick = { type.value = "" }
-        ) {
-            type.value = it
-        }
-        Spacer(modifier = Modifier.height(24.dp))
-        AwardDateBarComponent(date = date.value) {
-            /*TODO kimhyunseung: 바텀시트 띄우는 로직 */
+    LazyColumn {
+        itemsIndexed(awardList) { idx, item ->
+            AwardComponent(
+                data = item,
+                saveData = { name, type, date ->
+                    awardList[idx] = AwardData(name, type, date)
+                },
+                onCancelButtonClick = {
+                    awardList.removeAt(idx)
+                }
+            )
         }
     }
 }
