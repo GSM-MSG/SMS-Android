@@ -1,8 +1,7 @@
 package com.msg.sms.data.repository
 
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSource
-import com.msg.sms.data.remote.dto.student.request.CertificateData
-import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
+import com.msg.sms.data.remote.dto.student.request.*
 import com.msg.sms.data.remote.dto.student.response.toGetStudentForAnonymous
 import com.msg.sms.data.remote.dto.student.response.toGetStudentForStudent
 import com.msg.sms.data.remote.dto.student.response.toGetStudentForTeacher
@@ -41,7 +40,34 @@ class StudentRepositoryImpl @Inject constructor(
                     )
                 },
                 militaryService = body.militaryService,
-                certificate = body.certificate
+                certificate = body.certificate,
+                projects = body.projects.map { project ->
+                    ProjectData(
+                        name = project.name,
+                        icon = project.icon,
+                        previewImages = project.previewImages,
+                        description = project.description,
+                        links = project.links.map {
+                            ProjectRelatedLinkData(
+                                name = it.name,
+                                url = it.url
+                            )
+                        },
+                        techStacks = project.techStacks,
+                        myActivity = project.myActivity,
+                        inProgress = ProjectDateData(
+                            start = project.inProgress.start,
+                            end = project.inProgress.end
+                        )
+                    )
+                },
+                prize = body.prize.map {
+                    PrizeData(
+                        name = it.name,
+                        type = it.type,
+                        date = it.date
+                    )
+                }
             )
         )
     }
