@@ -1,7 +1,7 @@
 package com.msg.sms.data.repository
 
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSource
-import com.msg.sms.data.remote.dto.student.request.CertificateInformation
+import com.msg.sms.data.remote.dto.student.request.CertificateData
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
 import com.msg.sms.data.remote.dto.student.response.toGetStudentForAnonymous
 import com.msg.sms.data.remote.dto.student.response.toGetStudentForStudent
@@ -35,7 +35,7 @@ class StudentRepositoryImpl @Inject constructor(
                 salary = body.salary,
                 region = body.region,
                 languageCertificate = body.languageCertificate.map {
-                    CertificateInformation(
+                    CertificateData(
                         languageCertificateName = it.languageCertificateName,
                         score = it.score
                     )

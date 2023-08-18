@@ -11,7 +11,7 @@ data class EnterStudentInformationRequest(
     val gsmAuthenticationScore: Int,
     val salary: Int,
     val region: List<String>,
-    val languageCertificate: List<CertificateInformation>,
+    val languageCertificate: List<CertificateData>,
     val militaryService: String,
     val certificate: List<String>
 )
