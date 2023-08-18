@@ -16,6 +16,7 @@ import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 fun ProjectComponent(
     data: ProjectData,
     onNameValueChange: (value: String) -> Unit,
+    onKeyTaskValueChange: (value: String) -> Unit,
     onRemoveProjectImageButton: (list: List<String>) -> Unit,
     onRemoveBitmapButton: (index: Int) -> Unit,
     onRemoveTechStack: (value: String) -> Unit,
@@ -44,7 +45,7 @@ fun ProjectComponent(
             techStack = data.techStack,
             onRemoveButton =  onRemoveTechStack
         )
-        ProjectKeyTaskComponent()
+        ProjectKeyTaskComponent(data.keyTask, onValueChange = onKeyTaskValueChange)
         ProjectScheduleComponent()
         ProjectRelatedLinksComponent(
             relatedLinks = data.relatedLinks
@@ -74,6 +75,7 @@ private fun ProjectComponentPre() {
             RelatedLinksData("X", "https://asdgasgw.com")
         )),
         onNameValueChange = {},
+        onKeyTaskValueChange = {},
         enteredList = listOf(),
         onRemoveProjectImageButton = {},
         onRemoveBitmapButton = {},

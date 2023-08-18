@@ -20,6 +20,7 @@ fun ProjectsSection(
     data: ProjectData,
     enteredPreviews: List<Bitmap>,
     onNameValueChange: (value: String) -> Unit,
+    onKeyTaskValueChange: (value: String) -> Unit,
     onRemoveProjectImage: (list: List<String>) -> Unit,
     onAddBitmap: (list: List<Bitmap>) -> Unit,
     onRemoveBitmapButton: (itemIndex: Int) -> Unit,
@@ -50,6 +51,7 @@ fun ProjectsSection(
     ProjectComponent(
         data = data,
         onNameValueChange = onNameValueChange,
+        onKeyTaskValueChange = onKeyTaskValueChange,
         onRemoveProjectImageButton = onRemoveProjectImage,
         onRemoveBitmapButton = { onRemoveBitmapButton(it) },
         enteredList = enteredPreviews,
@@ -81,6 +83,7 @@ private fun ProjectSectionPre() {
     ),
         enteredPreviews = listOf(),
         onNameValueChange = {},
+        onKeyTaskValueChange = {},
         onRemoveProjectImage = {},
         onAddBitmap = {},
         onRemoveBitmapButton = {},

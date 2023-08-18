@@ -207,6 +207,9 @@ fun MyPageComponent(
                                 expandProjects[index] = expandProjects[index].copy(projectName = it)
                                 projects[index] = itemData.copy(name = it)
                             },
+                            onKeyTaskValueChange = {
+                                projects[index] = itemData.copy(keyTask = it)
+                            },
                             onRemoveProjectImage = {
                                 projects[index] = itemData.copy(projectImage = it)
                             },
