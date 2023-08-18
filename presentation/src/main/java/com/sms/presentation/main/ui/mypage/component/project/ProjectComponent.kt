@@ -18,6 +18,7 @@ fun ProjectComponent(
     onNameValueChange: (value: String) -> Unit,
     onRemoveProjectImageButton: (list: List<String>) -> Unit,
     onRemoveBitmapButton: (index: Int) -> Unit,
+    onRemoveTechStack: (value: String) -> Unit,
     enteredList: List<Bitmap>,
     onOpenGallery: () -> Unit,
 ) {
@@ -40,7 +41,8 @@ fun ProjectComponent(
             onOpenGallery = onOpenGallery
         )
         ProjectTechStackComponent(
-            techStack = data.techStack
+            techStack = data.techStack,
+            onRemoveButton =  onRemoveTechStack
         )
         ProjectKeyTaskComponent()
         ProjectScheduleComponent()
@@ -75,6 +77,7 @@ private fun ProjectComponentPre() {
         enteredList = listOf(),
         onRemoveProjectImageButton = {},
         onRemoveBitmapButton = {},
-        onOpenGallery = {}
+        onOpenGallery = {},
+        onRemoveTechStack = {}
     )
 }

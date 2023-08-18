@@ -23,6 +23,7 @@ fun ProjectsSection(
     onRemoveProjectImage: (list: List<String>) -> Unit,
     onAddBitmap: (list: List<Bitmap>) -> Unit,
     onRemoveBitmapButton: (itemIndex: Int) -> Unit,
+    onRemoveTechStack: (value: String) -> Unit,
 ) {
     val context = LocalContext.current
     val multiGalleyLauncher = rememberLauncherForActivityResult(
@@ -52,7 +53,8 @@ fun ProjectsSection(
         onRemoveProjectImageButton = onRemoveProjectImage,
         onRemoveBitmapButton = { onRemoveBitmapButton(it) },
         enteredList = enteredPreviews,
-        onOpenGallery = { multiGalleyLauncher.launch("image/*") }
+        onOpenGallery = { multiGalleyLauncher.launch("image/*") },
+        onRemoveTechStack = onRemoveTechStack
     )
 }
 
@@ -81,6 +83,7 @@ private fun ProjectSectionPre() {
         onNameValueChange = {},
         onRemoveProjectImage = {},
         onAddBitmap = {},
-        onRemoveBitmapButton = {}
+        onRemoveBitmapButton = {},
+        onRemoveTechStack = {}
     )
 }

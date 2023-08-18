@@ -200,23 +200,26 @@ fun MyPageComponent(
                         enter = expandVertically(),
                         exit = shrinkVertically(),
                     ) {
+                        val itemData = projects[index]
                         ProjectsSection(
-                            data = projects[index],
+                            data = itemData,
                             onNameValueChange = {
                                 expandProjects[index] = expandProjects[index].copy(projectName = it)
-                                projects[index] = projects[index].copy(name = it)
+                                projects[index] = itemData.copy(name = it)
                             },
                             onRemoveProjectImage = {
-                                projects[index] = projects[index].copy(projectImage = it)
+                                projects[index] = itemData.copy(projectImage = it)
                             },
-//                            enteredList = enteredPreviews[index], enteredPreviews = listOf(),
                             onAddBitmap = { bitmapPreviews[index] = bitmapPreviews[index] + it },
                             onRemoveBitmapButton = {
                                 bitmapPreviews[index] =
                                     bitmapPreviews[index].filterIndexed { index, _ -> it != index }
                             },
-                            enteredPreviews = bitmapPreviews[index]
-
+                            enteredPreviews = bitmapPreviews[index],
+                            onRemoveTechStack = {
+                                projects[index] =
+                                    itemData.copy(techStack = itemData.techStack.minus(it))
+                            }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
