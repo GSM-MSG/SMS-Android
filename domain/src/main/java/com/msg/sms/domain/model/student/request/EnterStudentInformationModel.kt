@@ -13,5 +13,7 @@ data class EnterStudentInformationModel(
     val region: List<String>,
     val languageCertificate: List<CertificateInformationModel>,
     val militaryService: String,
-    val certificate: List<String>
+    val certificate: List<String>,
+    val projects: List<ProjectModel>,
+    val prize: List<PrizeModel>
 )
