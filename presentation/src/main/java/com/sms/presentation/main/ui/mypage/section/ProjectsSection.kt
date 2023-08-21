@@ -11,13 +11,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.sms.presentation.main.ui.detail.data.ProjectData
+import com.sms.presentation.main.ui.detail.data.ExpandableProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.project.ProjectComponent
 
 @Composable
 fun ProjectsSection(
-    data: ProjectData,
+    data: ExpandableProjectData,
     enteredPreviews: List<Bitmap>,
     onNameValueChange: (value: String) -> Unit,
     onKeyTaskValueChange: (value: String) -> Unit,
@@ -71,7 +71,7 @@ fun ProjectsSection(
 @Preview
 @Composable
 private fun ProjectSectionPre() {
-    ProjectsSection(data = ProjectData(
+    ProjectsSection(data = ExpandableProjectData(
         name = "SMS",
         activityDuration = "2023 ~",
         projectImage = listOf(
@@ -87,7 +87,7 @@ private fun ProjectSectionPre() {
             RelatedLinksData("Youtube", "https://dolmc.com"),
             RelatedLinksData("GitHujb", "https://youyu.com"),
             RelatedLinksData("X", "https://asdgasgw.com")
-        )
+        ), isExpand = true
     ),
         enteredPreviews = listOf(),
         onNameValueChange = {},

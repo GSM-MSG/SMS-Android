@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sms.presentation.main.ui.detail.data.ProjectData
+import com.sms.presentation.main.ui.detail.data.ExpandableProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 
 @Composable
 fun ProjectComponent(
-    data: ProjectData,
+    data: ExpandableProjectData,
     onNameValueChange: (value: String) -> Unit,
     onKeyTaskValueChange: (value: String) -> Unit,
     onLinkNameChanged: (index: Int, value: String) -> Unit,
@@ -65,7 +65,7 @@ fun ProjectComponent(
 @Preview
 @Composable
 private fun ProjectComponentPre() {
-    ProjectComponent(data = ProjectData(
+    ProjectComponent(data = ExpandableProjectData(
         name = "SMS",
         activityDuration = "2023 ~",
         projectImage = listOf(
@@ -81,7 +81,8 @@ private fun ProjectComponentPre() {
             RelatedLinksData("Youtube", "https://dolmc.com"),
             RelatedLinksData("GitHujb", "https://youyu.com"),
             RelatedLinksData("X", "https://asdgasgw.com")
-        )
+        ),
+        isExpand = true
     ),
         onNameValueChange = {},
         onKeyTaskValueChange = {},

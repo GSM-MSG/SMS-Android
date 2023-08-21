@@ -27,8 +27,7 @@ import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.icon.BlackLogoutIcon
 import com.sms.presentation.main.ui.detail.data.AwardNameData
-import com.sms.presentation.main.ui.detail.data.ProjectData
-import com.sms.presentation.main.ui.detail.data.ProjectNameData
+import com.sms.presentation.main.ui.detail.data.ExpandableProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.button.SaveButtonComponent
 import com.sms.presentation.main.ui.mypage.section.AwardSection
@@ -54,7 +53,7 @@ fun MyPageComponent(
 ) {
     val projects = remember {
         mutableStateListOf(
-            ProjectData(
+            ExpandableProjectData(
                 name = "SMS",
                 activityDuration = "2023 ~",
                 projectImage = listOf(
@@ -70,9 +69,10 @@ fun MyPageComponent(
                     RelatedLinksData("Youtube", "https://dolmc.com"),
                     RelatedLinksData("GitHujb", "https://youyu.com"),
                     RelatedLinksData("X", "https://asdgasgw.com")
-                )
+                ),
+                isExpand = true
             ),
-            ProjectData(
+            ExpandableProjectData(
                 name = "MOIZA",
                 activityDuration = "2023 ~",
                 projectImage = listOf(
@@ -88,14 +88,12 @@ fun MyPageComponent(
                     RelatedLinksData("Youtube", "https://dolmc.com"),
                     RelatedLinksData("GitHujb", "https://youyu.com"),
                     RelatedLinksData("X", "https://asdgasgw.com")
-                )
+                ),
+                isExpand = true
             ),
         )
     }
-    val expandProjects = remember {
-        mutableStateListOf(*projects.map { ProjectNameData(projectName = it.name, isExpand = true) }
-            .toTypedArray())
-    }
+
     val awards = remember {
         mutableStateListOf(AwardNameData("수상 1", true), AwardNameData("수상 2", true))
     }
@@ -180,23 +178,23 @@ fun MyPageComponent(
                 ForeignLanguagesSection()
                 SmsSpacer()
             }
-            expandProjects.forEachIndexed { index, it ->
+            projects.forEachIndexed { index, it ->
                 stickyHeader {
                     TitleHeader(
-                        titleText = it.projectName,
+                        titleText = it.name,
                         isExpandable = true,
                         isRemovable = true,
                         isExpand = it.isExpand,
                         onClickToggleButton = {
-                            expandProjects[index] =
-                                expandProjects[index].copy(isExpand = !it.isExpand)
+                            projects[index] =
+                                projects[index].copy(isExpand = !it.isExpand)
                         },
                         onClickRemoveButton = {})
                 }
                 item {
                     AnimatedVisibility(
                         modifier = Modifier.fillMaxWidth(),
-                        visible = expandProjects[index].isExpand,
+                        visible = projects[index].isExpand,
                         enter = expandVertically(),
                         exit = shrinkVertically(),
                     ) {
@@ -204,7 +202,6 @@ fun MyPageComponent(
                         ProjectsSection(
                             data = itemData,
                             onNameValueChange = {
-                                expandProjects[index] = expandProjects[index].copy(projectName = it)
                                 projects[index] = itemData.copy(name = it)
                             },
                             onKeyTaskValueChange = {
@@ -260,7 +257,19 @@ fun MyPageComponent(
                         .padding(top = 20.dp, end = 20.dp, bottom = 20.dp)
                 ) {
                     BlackAddItemButton(modifier = Modifier.align(Alignment.TopEnd)) {
-
+                        bitmapPreviews.add(listOf())
+                        projects.add(
+                            ExpandableProjectData(
+                                name = "프로젝트 ${projects.size + 1}",
+                                activityDuration = "",
+                                projectImage = listOf(),
+                                icon = "",
+                                techStack = listOf(),
+                                keyTask = "",
+                                relatedLinks = listOf(),
+                                isExpand = true
+                            )
+                        )
                     }
                 }
             }
