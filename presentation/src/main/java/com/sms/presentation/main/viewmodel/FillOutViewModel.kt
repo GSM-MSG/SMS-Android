@@ -9,6 +9,8 @@ import com.msg.sms.domain.model.fileupload.response.FileUploadResponseModel
 import com.msg.sms.domain.model.major.MajorListModel
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
+import com.msg.sms.domain.model.student.request.PrizeModel
+import com.msg.sms.domain.model.student.request.ProjectModel
 import com.msg.sms.domain.usecase.fileupload.ImageUploadUseCase
 import com.msg.sms.domain.usecase.major.GetMajorListUseCase
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
@@ -52,9 +54,9 @@ class FillOutViewModel @Inject constructor(
     private val formOfEmployment = mutableStateOf("")
     private val gsmAuthenticationScore = mutableStateOf("")
     private val salary = mutableStateOf(0)
-    private val region = mutableStateListOf("")
+    private val regions = mutableStateListOf("")
     private val militaryService = mutableStateOf("")
-    private val certificate = mutableStateListOf("")
+    private val certificates = mutableStateListOf("")
     private lateinit var profileImageUrl: String
 
     fun getEnteredProfileInformation(): ProfileData {
@@ -91,19 +93,19 @@ class FillOutViewModel @Inject constructor(
         return WorkConditionData(
             formOfEmployment = formOfEmployment.value,
             salary = salary.value.toString(),
-            region = region
+            regions = regions
         )
     }
 
     fun setEnteredWorkConditionInformation(
         formOfEmployment: String,
         salary: String,
-        region: List<String>,
+        regions: List<String>,
     ) {
         this.formOfEmployment.value = formOfEmployment
         this.salary.value = salary.toInt()
-        this.region.removeAll { !region.contains(it) }
-        this.region.addAll(region.filter { !this.region.contains(it) })
+        this.regions.removeAll { !regions.contains(it) }
+        this.regions.addAll(regions.filter { !this.regions.contains(it) })
     }
 
     fun getEnteredMilitaryServiceInformation(): MilitaryServiceData {
@@ -115,12 +117,12 @@ class FillOutViewModel @Inject constructor(
     }
 
     fun getEnteredCertification(): CertificationData {
-        return CertificationData(certification = certificate)
+        return CertificationData(certifications = certificates)
     }
 
-    fun setEnteredCertification(certificate: List<String>) {
-        this.certificate.removeAll { !certificate.contains(it) }
-        this.certificate.addAll(certificate.filter { !this.certificate.contains(it) })
+    fun setEnteredCertification(certificates: List<String>) {
+        this.certificates.removeAll { !certificates.contains(it) }
+        this.certificates.addAll(certificates.filter { !this.certificates.contains(it) })
     }
 
     fun getEnteredSchoolLifeInformation(): SchoolLifeData {
@@ -159,7 +161,7 @@ class FillOutViewModel @Inject constructor(
 
     fun enterStudentInformation(
         major: String,
-        techStack: List<String>,
+        techStacks: List<String>,
         profileImgUrl: String,
         introduce: String,
         portfolioUrl: String,
@@ -167,15 +169,17 @@ class FillOutViewModel @Inject constructor(
         formOfEmployment: String,
         gsmAuthenticationScore: Int,
         salary: Int,
-        region: List<String>,
-        languageCertificate: List<CertificateInformationModel>,
+        regions: List<String>,
+        languageCertificates: List<CertificateInformationModel>,
         militaryService: String,
-        certificate: List<String>,
+        certificates: List<String>,
+        projects: List<ProjectModel>,
+        prizes: List<PrizeModel>
     ) = viewModelScope.launch {
         enterStudentInformationUseCase(
             EnterStudentInformationModel(
                 major = major,
-                techStack = techStack,
+                techStacks = techStacks,
                 profileImgUrl = profileImgUrl,
                 introduce = introduce,
                 portfolioUrl = portfolioUrl,
@@ -183,10 +187,12 @@ class FillOutViewModel @Inject constructor(
                 formOfEmployment = formOfEmployment,
                 gsmAuthenticationScore = gsmAuthenticationScore,
                 salary = salary,
-                region = region,
-                languageCertificate = languageCertificate,
+                regions = regions,
+                languageCertificates = languageCertificates,
                 militaryService = militaryService,
-                certificate = certificate
+                certificates = certificates,
+                projects = projects,
+                prizes = prizes
             )
         ).onSuccess {
             it.catch { remoteError ->

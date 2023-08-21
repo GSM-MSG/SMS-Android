@@ -40,7 +40,7 @@ fun WorkConditionComponent(
 ) {
     SMSTheme { colors, typography ->
         val wantWorkingArea = remember {
-            mutableStateListOf(*data.region.toTypedArray())
+            mutableStateListOf(*data.regions.toTypedArray())
         }
 
         val wantPayroll = remember {
@@ -176,7 +176,7 @@ fun WorkConditionComponent(
                         viewModel.setEnteredWorkConditionInformation(
                             formOfEmployment = wantWorkingCondition,
                             salary = wantPayroll.value,
-                            region = wantWorkingArea.map { it })
+                            regions = wantWorkingArea.map { it })
                         navController.navigate("MilitaryService")
                     }
                 }

@@ -128,7 +128,7 @@ fun StudentInfoComponent(
                     style = titleTypography
                 )
                 Text(
-                    text = workConditionData.region.joinToString(", "),
+                    text = workConditionData.regions.joinToString(", "),
                     modifier = contentTextModifier, color = contentColor, style = contentTypography
                 )
             }
@@ -153,7 +153,7 @@ fun StudentInfoComponent(
                     }
                 }
             }
-            if (certificationData.certification.isNotEmpty()) {
+            if (certificationData.certifications.isNotEmpty()) {
                 SmsDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Row(Modifier.fillMaxWidth()) {
                     Text(
@@ -163,7 +163,7 @@ fun StudentInfoComponent(
                         style = titleTypography
                     )
                     Column {
-                        certificationData.certification.forEach {
+                        certificationData.certifications.forEach {
                             Text(
                                 text = it,
                                 modifier = contentTextModifier,
