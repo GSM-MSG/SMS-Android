@@ -48,24 +48,16 @@ fun ProjectsScreen(
 
             ProjectsComponent(
                 navController = navController,
-                data = viewModel.projectList[idx],
-                savedData = { name, icon, preview, techOfUse, keyTask, startDate, endDate, relatedLink ->
-                    viewModel.projectList[idx] = ProjectInfo(
-                        name = name,
-                        icon = icon,
-                        preview = preview,
-                        technologyOfUse = techOfUse,
-                        keyTask = keyTask,
-                        startDate = startDate,
-                        endDate = endDate,
-                        relatedLinkList = relatedLink
-                    )
-                },
                 bottomSheetState = bottomSheetState,
                 bottomSheetContent = bottomSheetContent,
-                isImageExtensionInCorrect = {
-                    isImageExtensionInCorrect.value = it
-                },
+                data = viewModel.projectList[idx],
+                onStartDateValueChanged = {},
+                onEndDateValueChanged = {},
+                onProjectNameValueChanged = {},
+                onProjectIconValueChanged = {},
+                onProjectPreviewsValueChanged = {},
+                onProjectKeyTaskValueChanged = {},
+                onProjectRelatedLinksValueChanged = {},
                 onCancelButtonClick = {
                     viewModel.projectList.removeAt(idx)
                 },

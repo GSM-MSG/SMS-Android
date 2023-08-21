@@ -18,13 +18,13 @@ import com.msg.sms.design.util.AddGrayBody1Title
 @Composable
 fun ProjectRelatedLinksInputComponent(
     relatedLinks: List<Pair<String, String>>,
-    onRelatedLinksChanged: (List<Pair<String, String>>) -> Unit
+    onValueChanged: (List<Pair<String, String>>) -> Unit
 ) {
     val list = remember {
         mutableStateListOf(*relatedLinks.toTypedArray())
     }
 
-    onRelatedLinksChanged(list)
+    onValueChanged(list)
 
     AddGrayBody1Title(titleText = "관련 링크") {
         LazyColumn(

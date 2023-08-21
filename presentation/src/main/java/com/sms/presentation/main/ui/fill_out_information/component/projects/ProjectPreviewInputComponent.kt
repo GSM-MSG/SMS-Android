@@ -32,12 +32,12 @@ import com.msg.sms.design.util.AddGrayBody1Title
 @Composable
 fun ProjectPreviewInputComponent(
     previewUriList: List<Uri>,
-    onPreViewUrisChanged: (value: List<Uri>) -> Unit
+    onValueChanged: (value: List<Uri>) -> Unit
 ) {
     val multipleSelectGalleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItems = 4)) { uris ->
             if (uris.isNotEmpty()) {
-                onPreViewUrisChanged(uris)
+                onValueChanged(uris)
             }
         }
 
@@ -60,7 +60,7 @@ fun ProjectPreviewInputComponent(
         mutableStateListOf(*previewUriList.toTypedArray())
     }
 
-    onPreViewUrisChanged(list)
+    onValueChanged(list)
 
     SMSTheme { colors, typography ->
         AddGrayBody1Title(titleText = "미리보기 사진") {

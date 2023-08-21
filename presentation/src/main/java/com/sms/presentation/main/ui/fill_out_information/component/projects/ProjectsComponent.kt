@@ -1,6 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.component.projects
 
-import android.util.Log
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
@@ -25,9 +25,15 @@ import kotlinx.coroutines.launch
 fun ProjectsComponent(
     navController: NavController,
     bottomSheetState: ModalBottomSheetState,
-    data: ProjectInfo,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit,
-    isImageExtensionInCorrect: (Boolean) -> Unit,
+    data: ProjectInfo,
+    onStartDateValueChanged: (value: String) -> Unit,
+    onEndDateValueChanged: (value: String) -> Unit,
+    onProjectNameValueChanged: (value: String) -> Unit,
+    onProjectIconValueChanged: (value: Uri) -> Unit,
+    onProjectPreviewsValueChanged: (value: List<Uri>) -> Unit,
+    onProjectKeyTaskValueChanged: (value: String) -> Unit,
+    onProjectRelatedLinksValueChanged: (value: List<Pair<String, String>>) -> Unit,
     onCancelButtonClick: () -> Unit,
     onDetailStackSearchBarClick: () -> Unit,
 ) {
@@ -69,10 +75,10 @@ fun ProjectsComponent(
                         .align(Alignment.CenterEnd)
                         .smsClickable {
                             coroutineScope.launch { bottomSheetState.hide() }
-//                            if (isProjectStartDate.value)
-//                                projectStartDate.value = "${year.value}.${month.value}"
-//                            else projectEndDate.value = "${year.value}.${month.value}"
-                                //TODO copy로 데이터 넘기기
+                            if (isProjectStartDate.value)
+                                onStartDateValueChanged("${year.value}.${month.value}")
+                            else
+                                onEndDateValueChanged("${year.value}.${month.value}")
                         }
                 )
             }
@@ -89,31 +95,29 @@ fun ProjectsComponent(
     ToggleComponent(name = "프로젝트", onCancelButtonClick = onCancelButtonClick) {
         Spacer(modifier = Modifier.height(32.dp))
         ProjectNameInputComponent(
-            projectName = data.name
-        ) {
-            // TODO copy로 데이터 저장
-            Log.d("Projects", "Name: $it")
-        }
+            projectName = data.name,
+            onValueChange = onProjectNameValueChanged
+        )
         Spacer(modifier = Modifier.height(24.dp))
-        ProjectIconInputComponent(iconImageUri = data.icon) {
-            // TODO copy로 데이터 저장, 이미지 extentsion검사
-            Log.d("Projects", "Icon: $it")
-        }
+        ProjectIconInputComponent(
+            iconImageUri = data.icon,
+            onValueChanged = onProjectIconValueChanged
+        )
         Spacer(modifier = Modifier.height(24.dp))
-        ProjectPreviewInputComponent(previewUriList = data.preview) {
-            // TODO copy로 데이터 저장, 이미지 extentsion검사
-            Log.d("Projects", "Preview: ${it.joinToString()}")
-        }
+        ProjectPreviewInputComponent(
+            previewUriList = data.preview,
+            onValueChanged = onProjectPreviewsValueChanged
+        )
         Spacer(modifier = Modifier.height(24.dp))
         ProjectTechStackInputComponent(
             techStack = data.technologyOfUse,
             onClick = onDetailStackSearchBarClick
         )
         Spacer(modifier = Modifier.height(24.dp))
-        ProjectKeyTaskInputComponent(projectKeyTask = data.keyTask) {
-            // TODO copy로 데이터 저장
-            Log.d("Projects", "KeyTask: $it")
-        }
+        ProjectKeyTaskInputComponent(
+            projectKeyTask = data.keyTask,
+            onValueChange = onProjectKeyTaskValueChanged
+        )
         Spacer(modifier = Modifier.height(24.dp))
         ProjectScheduleInputComponent(
             startDateText = data.startDate,
@@ -132,10 +136,10 @@ fun ProjectsComponent(
             }
         )
         Spacer(modifier = Modifier.height(24.dp))
-        ProjectRelatedLinksInputComponent(relatedLinks = data.relatedLinkList) {
-            //TODO copy로 데이터 저장
-            Log.d("Projects", "RelatedLinks: ${it.joinToString()}")
-        }
+        ProjectRelatedLinksInputComponent(
+            relatedLinks = data.relatedLinkList,
+            onValueChanged = onProjectRelatedLinksValueChanged
+        )
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
