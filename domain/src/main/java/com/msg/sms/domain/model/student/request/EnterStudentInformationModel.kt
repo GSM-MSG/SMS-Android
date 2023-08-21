@@ -2,7 +2,7 @@ package com.msg.sms.domain.model.student.request
 
 data class EnterStudentInformationModel(
     val major: String,
-    val techStack: List<String>,
+    val techStacks: List<String>,
     val profileImgUrl: String,
     val introduce: String,
     val portfolioUrl: String,
@@ -10,10 +10,10 @@ data class EnterStudentInformationModel(
     val formOfEmployment: String,
     val gsmAuthenticationScore: Int,
     val salary: Int,
-    val region: List<String>,
-    val languageCertificate: List<CertificateInformationModel>,
+    val regions: List<String>,
+    val languageCertificates: List<CertificateInformationModel>,
     val militaryService: String,
-    val certificate: List<String>,
+    val certificates: List<String>,
     val projects: List<ProjectModel>,
-    val prize: List<PrizeModel>
+    val prizes: List<PrizeModel>
 )

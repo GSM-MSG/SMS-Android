@@ -24,7 +24,7 @@ class StudentRepositoryImpl @Inject constructor(
         return dataSource.enterStudentInformation(
             body = EnterStudentInformationRequest(
                 major = body.major,
-                techStack = body.techStack,
+                techStacks = body.techStacks,
                 profileImgUrl = body.profileImgUrl,
                 introduce = body.introduce,
                 portfolioUrl = body.portfolioUrl,
@@ -32,15 +32,15 @@ class StudentRepositoryImpl @Inject constructor(
                 formOfEmployment = body.formOfEmployment,
                 gsmAuthenticationScore = body.gsmAuthenticationScore,
                 salary = body.salary,
-                region = body.region,
-                languageCertificate = body.languageCertificate.map {
+                regions = body.regions,
+                languageCertificates = body.languageCertificates.map {
                     CertificateData(
                         languageCertificateName = it.languageCertificateName,
                         score = it.score
                     )
                 },
                 militaryService = body.militaryService,
-                certificate = body.certificate,
+                certificates = body.certificates,
                 projects = body.projects.map { project ->
                     ProjectData(
                         name = project.name,
@@ -61,7 +61,7 @@ class StudentRepositoryImpl @Inject constructor(
                         )
                     )
                 },
-                prize = body.prize.map {
+                prizes = body.prizes.map {
                     PrizeData(
                         name = it.name,
                         type = it.type,

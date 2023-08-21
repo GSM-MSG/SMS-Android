@@ -154,7 +154,7 @@ fun StudentDetailComponent(
                         workConditionData = WorkConditionData(
                             formOfEmployment = formOfEmployment,
                             salary = salary,
-                            region = region
+                            regions = region
                         ),
                         certificationData = CertificationData(certificationData),
                         foreignLanguage = foreignLanguage

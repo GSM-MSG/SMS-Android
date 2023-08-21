@@ -6,7 +6,7 @@ data class EnterStudentInformationRequest(
     @SerializedName("major")
     val major: String,
     @SerializedName("techStack")
-    val techStack: List<String>,
+    val techStacks: List<String>,
     @SerializedName("profileImgUrl")
     val profileImgUrl: String,
     @SerializedName("introduce")
@@ -22,15 +22,15 @@ data class EnterStudentInformationRequest(
     @SerializedName("salary")
     val salary: Int,
     @SerializedName("region")
-    val region: List<String>,
+    val regions: List<String>,
     @SerializedName("languageCertificate")
-    val languageCertificate: List<CertificateData>,
+    val languageCertificates: List<CertificateData>,
     @SerializedName("militaryService")
     val militaryService: String,
     @SerializedName("certificate")
-    val certificate: List<String>,
+    val certificates: List<String>,
     @SerializedName("projects")
     val projects: List<ProjectData>,
     @SerializedName("prize")
-    val prize: List<PrizeData>
+    val prizes: List<PrizeData>
 )
