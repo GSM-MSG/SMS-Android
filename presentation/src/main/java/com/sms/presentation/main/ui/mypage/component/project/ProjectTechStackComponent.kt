@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,7 +18,7 @@ import com.sms.presentation.main.ui.mypage.component.profile.DisplaySearchBar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ProjectTechStackComponent(techStack: List<String>) {
+fun ProjectTechStackComponent(techStack: List<String>, onRemoveButton: (value: String) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -48,8 +48,8 @@ fun ProjectTechStackComponent(techStack: List<String>) {
                 else 5
             )
         ) {
-            itemsIndexed(techStack) { _: Int, item: String ->
-                DetailTechStackItem(stack = item, onClick = {})
+            items(techStack) { item: String ->
+                DetailTechStackItem(stack = item, onClick = { onRemoveButton(item) })
             }
         }
     }
@@ -66,5 +66,5 @@ private fun ProjectTechStackComponentPre() {
             "Github",
             "Jetpack Compose"
         )
-    )
+    ) {}
 }

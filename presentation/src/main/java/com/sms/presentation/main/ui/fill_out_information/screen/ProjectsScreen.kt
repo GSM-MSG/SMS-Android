@@ -56,19 +56,17 @@ fun ProjectsScreen(
                 bottomSheetState = bottomSheetState,
                 bottomSheetContent = bottomSheetContent,
                 data = item,
-                onStartDateValueChanged = { projectList[idx] = projectList[idx].copy(startDate = it) },
+                onStartDateValueChanged = {
+                    projectList[idx] = projectList[idx].copy(startDate = it)
+                },
                 onEndDateValueChanged = { projectList[idx] = projectList[idx].copy(endDate = it) },
                 onProjectNameValueChanged = { projectList[idx] = projectList[idx].copy(name = it) },
                 onProjectIconValueChanged = { projectList[idx] = projectList[idx].copy(icon = it) },
                 onProjectPreviewsValueChanged = { projectList[idx] = projectList[idx].copy(preview = it) },
                 onProjectKeyTaskValueChanged = { projectList[idx] = projectList[idx].copy(keyTask = it) },
                 onProjectRelatedLinksValueChanged = { projectList[idx] = projectList[idx].copy(relatedLinkList = it) },
-                onCancelButtonClick = {
-                    projectList.removeAt(idx)
-                },
-                onDetailStackSearchBarClick = {
-                    navController.navigate("Search/Project$idx")
-                }
+                onCancelButtonClick = { projectList.removeAt(idx) },
+                onDetailStackSearchBarClick = { navController.navigate("Search/Project$idx") }
             )
         }
         item {
