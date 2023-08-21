@@ -103,6 +103,12 @@ fun MyPageComponent(
     val bitmapPreviews = remember {
         mutableStateListOf(*projects.map { listOf<Bitmap>() }.toTypedArray())
     }
+    val foreignLanguages = remember {
+        mutableStateListOf(*listOf(Pair("한국어", "원어민"), Pair("토익", "990")).toTypedArray())
+    }
+    val certifications = remember {
+        mutableStateListOf(*listOf("정보처리 산업기사").toTypedArray())
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -168,14 +174,30 @@ fun MyPageComponent(
                 TitleHeader(titleText = "자격증")
             }
             item {
-                CertificationsSection()
+                CertificationsSection(
+                    certifications = certifications,
+                    onValueChange = { index, value -> certifications[index] = value },
+                    onClickRemoveButton = { certifications.removeAt(index = it)},
+                    onClickAddButton = { certifications.add("") }
+                )
                 SmsSpacer()
             }
             stickyHeader {
                 TitleHeader(titleText = "외국어")
             }
             item {
-                ForeignLanguagesSection()
+                ForeignLanguagesSection(
+                    foreignLanguages = foreignLanguages,
+                    onValueChangeForeignName = { index, value ->
+                        foreignLanguages[index] = foreignLanguages[index].copy(first = value)
+                    },
+                    onValueChangeForeignValue = { index, value ->
+                        foreignLanguages[index] = foreignLanguages[index].copy(second = value)
+                    },
+                    onClickRemoveButton = { foreignLanguages.removeAt(it) }
+                ) {
+                    foreignLanguages.add(Pair("", ""))
+                }
                 SmsSpacer()
             }
             projects.forEachIndexed { index, it ->
