@@ -189,7 +189,10 @@ fun MyPageComponent(
                             projects[index] =
                                 projects[index].copy(isExpand = !it.isExpand)
                         },
-                        onClickRemoveButton = {})
+                        onClickRemoveButton = {
+                            bitmapPreviews.removeAt(index)
+                            projects.removeAt(index)
+                        })
                 }
                 item {
                     AnimatedVisibility(
