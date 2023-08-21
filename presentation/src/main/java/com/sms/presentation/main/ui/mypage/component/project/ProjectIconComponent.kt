@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -41,17 +42,31 @@ fun ProjectIconComponent(projectIcon: String) {
         }
     AddGrayBody1Title(titleText = "아이콘") {
         if (imageUri.value == Uri.EMPTY) {
-            Image(
-                modifier = Modifier
-                    .size(108.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .smsClickable {
-                        launcher.launch("image/*")
-                    },
-                painter = rememberAsyncImagePainter(model = projectIcon),
-                contentScale = ContentScale.Crop,
-                contentDescription = "프로젝트 아이콘"
-            )
+            if (projectIcon == "") {
+                Image(
+                    modifier = Modifier
+                        .size(108.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .smsClickable {
+                            launcher.launch("image/*")
+                        },
+                    painter = painterResource(id = com.sms.design_system.R.drawable.ic_gallery_btn),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "프로젝트 아이콘"
+                )
+            } else {
+                Image(
+                    modifier = Modifier
+                        .size(108.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .smsClickable {
+                            launcher.launch("image/*")
+                        },
+                    painter = rememberAsyncImagePainter(model = projectIcon),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "프로젝트 아이콘"
+                )
+            }
         } else {
             if (Build.VERSION.SDK_INT < 28) {
                 bitmap.value =
