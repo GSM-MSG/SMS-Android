@@ -1,7 +1,15 @@
 package com.msg.sms.design.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -24,13 +32,14 @@ fun SmsDialog(
     heightDp: Dp? = null,
     betweenTextAndButtonHeight: Dp? = null,
     cancelButtonEnabled: Boolean = true,
+    isError: Boolean = false,
     title: String,
     msg: String,
     outLineButtonText: String,
-    normalButtonText: String,
+    importantButtonText: String,
     outlineButtonOnClick: () -> Unit,
-    normalButtonOnClick: () -> Unit,
-    onDissMissRequest: () -> Unit = {}
+    importantButtonOnClick: () -> Unit,
+    onDisMissRequest: () -> Unit = {},
 ) {
     val modifier = when {
         widthPercent != null && heightPercent != null -> {
@@ -54,7 +63,7 @@ fun SmsDialog(
 
     SMSTheme { colors, typography ->
         Dialog(
-            onDismissRequest = { onDissMissRequest() }
+            onDismissRequest = { onDisMissRequest() }
         ) {
             Box(
                 modifier = modifier
@@ -92,19 +101,18 @@ fun SmsDialog(
                             state = ButtonState.OutLine,
                             modifier = Modifier
                                 .fillMaxWidth(0.485f)
-                                .align(Alignment.CenterStart)
-                        ) {
-                            outlineButtonOnClick()
-                        }
+                                .align(Alignment.CenterStart),
+                            onClick = outlineButtonOnClick
+                        )
                     }
                     SmsRoundedButton(
-                        text = normalButtonText,
+                        text = importantButtonText,
+                        state = if (isError) ButtonState.Error else ButtonState.Normal,
                         modifier = Modifier
                             .fillMaxWidth(if (cancelButtonEnabled) 0.485f else 1f)
-                            .align(Alignment.CenterEnd)
-                    ) {
-                        normalButtonOnClick()
-                    }
+                            .align(Alignment.CenterEnd),
+                        onClick = importantButtonOnClick
+                    )
                 }
             }
         }

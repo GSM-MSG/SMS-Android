@@ -113,9 +113,9 @@ class MainActivity : BaseActivity() {
                             title = "에러",
                             msg = "알 수 없는 오류 발생",
                             outLineButtonText = "취소",
-                            normalButtonText = "확인",
+                            importantButtonText = "확인",
                             outlineButtonOnClick = { finish() },
-                            normalButtonOnClick = { finish() }
+                            importantButtonOnClick = { finish() }
                         )
                     }
                 }

@@ -143,12 +143,12 @@ fun MainScreen(
             title = dialogTitle.value,
             msg = dialogMsg.value,
             outLineButtonText = "확인",
-            normalButtonText = "취소",
+            importantButtonText = "취소",
             outlineButtonOnClick = {
                 dialogOnClick.value()
                 dialogState.value = false
             },
-            normalButtonOnClick = {
+            importantButtonOnClick = {
                 dialogState.value = false
             }
         )
