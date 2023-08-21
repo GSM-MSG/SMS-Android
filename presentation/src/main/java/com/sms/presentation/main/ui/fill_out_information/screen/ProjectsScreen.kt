@@ -3,6 +3,7 @@ package com.sms.presentation.main.ui.fill_out_information.screen
 import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.*
@@ -24,6 +25,10 @@ fun ProjectsScreen(
     bottomSheetState: ModalBottomSheetState,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit
 ) {
+    val data = viewModel.getEnteredProjectsInformation()
+    val projectList = remember {
+        mutableStateListOf(*data.projects.toTypedArray())
+    }
     val isImageExtensionInCorrect = remember {
         mutableStateOf(false)
     }
@@ -41,8 +46,8 @@ fun ProjectsScreen(
     }
 
     LazyColumn {
-        items(viewModel.projectList.size) { idx ->
-            viewModel.projectList[idx] = viewModel.projectList[idx].copy(
+        itemsIndexed(projectList) { idx, item ->
+            projectList[idx] = projectList[idx].copy(
                 technologyOfUse = detailStackList["Project$idx"] ?: emptyList()
             )
 
@@ -50,16 +55,16 @@ fun ProjectsScreen(
                 navController = navController,
                 bottomSheetState = bottomSheetState,
                 bottomSheetContent = bottomSheetContent,
-                data = viewModel.projectList[idx],
-                onStartDateValueChanged = {},
-                onEndDateValueChanged = {},
-                onProjectNameValueChanged = {},
-                onProjectIconValueChanged = {},
-                onProjectPreviewsValueChanged = {},
-                onProjectKeyTaskValueChanged = {},
-                onProjectRelatedLinksValueChanged = {},
+                data = item,
+                onStartDateValueChanged = { projectList[idx] = projectList[idx].copy(startDate = it) },
+                onEndDateValueChanged = { projectList[idx] = projectList[idx].copy(endDate = it) },
+                onProjectNameValueChanged = { projectList[idx] = projectList[idx].copy(name = it) },
+                onProjectIconValueChanged = { projectList[idx] = projectList[idx].copy(icon = it) },
+                onProjectPreviewsValueChanged = { projectList[idx] = projectList[idx].copy(preview = it) },
+                onProjectKeyTaskValueChanged = { projectList[idx] = projectList[idx].copy(keyTask = it) },
+                onProjectRelatedLinksValueChanged = { projectList[idx] = projectList[idx].copy(relatedLinkList = it) },
                 onCancelButtonClick = {
-                    viewModel.projectList.removeAt(idx)
+                    projectList.removeAt(idx)
                 },
                 onDetailStackSearchBarClick = {
                     navController.navigate("Search/Project$idx")
@@ -68,7 +73,7 @@ fun ProjectsScreen(
         }
         item {
             AddProjectButton {
-                viewModel.projectList.add(ProjectInfo())
+                projectList.add(ProjectInfo())
             }
         }
         item {
@@ -76,15 +81,15 @@ fun ProjectsScreen(
                 onPreviousButtonClick = { navController.popBackStack() },
                 onNextButtonClick = {
                     viewModel.setEnteredProjectsInformation(
-                        viewModel.projectList.filter { project ->
+                        projectList.filter { project ->
                             project.name.isNotEmpty() ||
-                                    project.icon != Uri.EMPTY ||
-                                    project.keyTask.isNotEmpty() ||
-                                    project.preview.isNotEmpty() ||
-                                    project.endDate.isNotEmpty() ||
-                                    project.startDate.isNotEmpty() ||
-                                    project.technologyOfUse.isNotEmpty() ||
-                                    project.relatedLinkList.first() != Pair("", "")
+                            project.icon != Uri.EMPTY ||
+                            project.keyTask.isNotEmpty() ||
+                            project.preview.isNotEmpty() ||
+                            project.endDate.isNotEmpty() ||
+                            project.startDate.isNotEmpty() ||
+                            project.technologyOfUse.isNotEmpty() ||
+                            project.relatedLinkList.first() != Pair("", "")
                         }
                     )
                 }
