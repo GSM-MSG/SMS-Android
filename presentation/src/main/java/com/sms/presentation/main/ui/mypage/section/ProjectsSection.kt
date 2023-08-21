@@ -21,10 +21,14 @@ fun ProjectsSection(
     enteredPreviews: List<Bitmap>,
     onNameValueChange: (value: String) -> Unit,
     onKeyTaskValueChange: (value: String) -> Unit,
+    onLinkNameChanged: (index: Int, value: String) -> Unit,
+    onLinkChanged: (index: Int, value: String) -> Unit,
     onRemoveProjectImage: (list: List<String>) -> Unit,
     onAddBitmap: (list: List<Bitmap>) -> Unit,
+    onAddLink: () -> Unit,
     onRemoveBitmapButton: (itemIndex: Int) -> Unit,
     onRemoveTechStack: (value: String) -> Unit,
+    onRemoveRelatedLink: (index: Int) -> Unit,
 ) {
     val context = LocalContext.current
     val multiGalleyLauncher = rememberLauncherForActivityResult(
@@ -52,11 +56,15 @@ fun ProjectsSection(
         data = data,
         onNameValueChange = onNameValueChange,
         onKeyTaskValueChange = onKeyTaskValueChange,
+        onLinkNameChanged = onLinkNameChanged,
+        onLinkChanged = onLinkChanged,
         onRemoveProjectImageButton = onRemoveProjectImage,
         onRemoveBitmapButton = { onRemoveBitmapButton(it) },
         enteredList = enteredPreviews,
         onOpenGallery = { multiGalleyLauncher.launch("image/*") },
-        onRemoveTechStack = onRemoveTechStack
+        onAddLinkButton = onAddLink,
+        onRemoveTechStack = onRemoveTechStack,
+        onRemoveRelatedLInk = onRemoveRelatedLink,
     )
 }
 
@@ -84,9 +92,13 @@ private fun ProjectSectionPre() {
         enteredPreviews = listOf(),
         onNameValueChange = {},
         onKeyTaskValueChange = {},
+        onLinkNameChanged = { _, _ -> },
+        onLinkChanged = { _, _ -> },
         onRemoveProjectImage = {},
         onAddBitmap = {},
+        onAddLink = {},
         onRemoveBitmapButton = {},
-        onRemoveTechStack = {}
+        onRemoveTechStack = {},
+        onRemoveRelatedLink = {}
     )
 }

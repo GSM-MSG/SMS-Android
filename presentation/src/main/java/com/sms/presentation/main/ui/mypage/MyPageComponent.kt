@@ -210,10 +210,31 @@ fun MyPageComponent(
                             onKeyTaskValueChange = {
                                 projects[index] = itemData.copy(keyTask = it)
                             },
+                            onLinkNameChanged = { itemIndex, value ->
+                                val relatedLink = itemData.relatedLinks.toMutableList()
+                                relatedLink.set(
+                                    index = itemIndex,
+                                    element = itemData.relatedLinks[itemIndex].copy(name = value)
+                                )
+                                projects[index] = itemData.copy(relatedLinks = relatedLink)
+                            },
+                            onLinkChanged = { itemIndex, value ->
+                                val relatedLink = itemData.relatedLinks.toMutableList()
+                                relatedLink.set(
+                                    index = itemIndex,
+                                    element = itemData.relatedLinks[itemIndex].copy(link = value)
+                                )
+                                projects[index] = itemData.copy(relatedLinks = relatedLink)
+                            },
                             onRemoveProjectImage = {
                                 projects[index] = itemData.copy(projectImage = it)
                             },
                             onAddBitmap = { bitmapPreviews[index] = bitmapPreviews[index] + it },
+                            onAddLink = {
+                                val relatedLink = itemData.relatedLinks.toMutableList()
+                                relatedLink.add(RelatedLinksData(name = "", link = ""))
+                                projects[index] = itemData.copy(relatedLinks = relatedLink)
+                            },
                             onRemoveBitmapButton = {
                                 bitmapPreviews[index] =
                                     bitmapPreviews[index].filterIndexed { index, _ -> it != index }
@@ -222,6 +243,10 @@ fun MyPageComponent(
                             onRemoveTechStack = {
                                 projects[index] =
                                     itemData.copy(techStack = itemData.techStack.minus(it))
+                            },
+                            onRemoveRelatedLink = {
+                                projects[index] =
+                                    itemData.copy(relatedLinks = itemData.relatedLinks.filterIndexed { index, _ -> index != it })
                             }
                         )
                         Spacer(modifier = Modifier.height(16.dp))

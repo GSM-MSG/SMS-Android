@@ -17,9 +17,13 @@ fun ProjectComponent(
     data: ProjectData,
     onNameValueChange: (value: String) -> Unit,
     onKeyTaskValueChange: (value: String) -> Unit,
+    onLinkNameChanged: (index: Int, value: String) -> Unit,
+    onLinkChanged: (index: Int, value: String) -> Unit,
+    onAddLinkButton: () -> Unit,
     onRemoveProjectImageButton: (list: List<String>) -> Unit,
     onRemoveBitmapButton: (index: Int) -> Unit,
     onRemoveTechStack: (value: String) -> Unit,
+    onRemoveRelatedLInk: (index: Int) -> Unit,
     enteredList: List<Bitmap>,
     onOpenGallery: () -> Unit,
 ) {
@@ -43,12 +47,16 @@ fun ProjectComponent(
         )
         ProjectTechStackComponent(
             techStack = data.techStack,
-            onRemoveButton =  onRemoveTechStack
+            onRemoveButton = onRemoveTechStack
         )
         ProjectKeyTaskComponent(data.keyTask, onValueChange = onKeyTaskValueChange)
         ProjectScheduleComponent()
         ProjectRelatedLinksComponent(
-            relatedLinks = data.relatedLinks
+            relatedLinks = data.relatedLinks,
+            onClick = onRemoveRelatedLInk,
+            onLinkNameChanged = onLinkNameChanged,
+            onLinkChanged = onLinkChanged,
+            onAddButton = onAddLinkButton
         )
         ProjectDivider()
     }
@@ -73,13 +81,18 @@ private fun ProjectComponentPre() {
             RelatedLinksData("Youtube", "https://dolmc.com"),
             RelatedLinksData("GitHujb", "https://youyu.com"),
             RelatedLinksData("X", "https://asdgasgw.com")
-        )),
+        )
+    ),
         onNameValueChange = {},
         onKeyTaskValueChange = {},
         enteredList = listOf(),
         onRemoveProjectImageButton = {},
         onRemoveBitmapButton = {},
         onOpenGallery = {},
-        onRemoveTechStack = {}
+        onAddLinkButton = {},
+        onRemoveTechStack = {},
+        onRemoveRelatedLInk = {},
+        onLinkChanged = { _, _ -> },
+        onLinkNameChanged = { _, _ -> }
     )
 }
