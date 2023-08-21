@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,7 +19,12 @@ import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
-fun CertificationsComponent(certificationList: List<String>) {
+fun CertificationsComponent(
+    certifications: List<String>,
+    onValueChange: (index: Int, value: String) -> Unit,
+    onClickRemoveButton: (index: Int) -> Unit,
+    onClickAddButton: () -> Unit,
+) {
     AddGrayBody1Title(titleText = "자격증") {
         LazyColumn(
             modifier = Modifier
@@ -27,7 +32,7 @@ fun CertificationsComponent(certificationList: List<String>) {
                 .heightIn(max = 900.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(certificationList) {
+            itemsIndexed(certifications) { index, certification ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -35,21 +40,21 @@ fun CertificationsComponent(certificationList: List<String>) {
                 ) {
                     Box(modifier = Modifier.weight(1f)) {
                         SmsTextField(
-                            setText = it,
-                            modifier = Modifier.fillMaxWidth()
+                            setText = certification,
+                            modifier = Modifier.fillMaxWidth(),
+                            onValueChange = { onValueChange(index, it) },
+                            placeHolder = "정보처리 산업기사"
                         ) {
-
+                            onValueChange(index, "")
                         }
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { onClickRemoveButton(index) }) {
                         TrashCanIcon()
                     }
                 }
             }
             item {
-                SmsChip(text = "추가") {
-
-                }
+                SmsChip(text = "추가", onClick = onClickAddButton)
             }
         }
     }
@@ -58,5 +63,9 @@ fun CertificationsComponent(certificationList: List<String>) {
 @Preview
 @Composable
 private fun CertificationsComponentPre() {
-    CertificationsComponent(listOf("정보처리 산업기사"))
+    CertificationsComponent(
+        listOf("정보처리 산업기사"),
+        onValueChange = { _, _ -> },
+        onClickRemoveButton = {},
+        onClickAddButton = {})
 }
