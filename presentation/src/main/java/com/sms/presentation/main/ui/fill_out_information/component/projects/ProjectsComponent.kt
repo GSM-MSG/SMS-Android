@@ -1,11 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.component.projects
 
-import android.Manifest
 import android.net.Uri
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
@@ -23,8 +19,6 @@ import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.projects.*
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
-import com.sms.presentation.main.ui.util.getFileNameFromUri
-import com.sms.presentation.main.ui.util.isImageExtensionCorrect
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -83,52 +77,6 @@ fun ProjectsComponent(
     val isProjectStartDate = remember {
         mutableStateOf(true)
     }
-    val singleSelectGalleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
-                if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
-                    isImageExtensionInCorrect(false)
-                    projectIconUri.value = uri
-                } else {
-                    isImageExtensionInCorrect(true)
-                }
-            }
-        }
-    val multipleSelectGalleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItems = 4)) { uris ->
-            if (uris.isNotEmpty()) {
-                if (uris.all { uri ->
-                        getFileNameFromUri(
-                            context,
-                            uri
-                        )?.isImageExtensionCorrect() == true
-                    }) {
-                    isImageExtensionInCorrect(false)
-                    projectPreviewUriList.clear()
-                    projectPreviewUriList.addAll(uris)
-                } else {
-                    isImageExtensionInCorrect(true)
-                }
-            }
-        }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            if (isImportingProjectIcons.value)
-                singleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            else
-                multipleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
-    }
-
-    val permission =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
 
     savedData(
         projectName.value,
@@ -189,23 +137,23 @@ fun ProjectsComponent(
     ToggleComponent(name = "프로젝트", onCancelButtonClick = onCancelButtonClick) {
         Spacer(modifier = Modifier.height(32.dp))
         ProjectNameInputComponent(
-            text = projectName.value,
-            onButtonClick = { projectName.value = "" }
+            projectName = projectName.value
         ) {
-            projectName.value = it
+            // TODO copy로 데이터 저장
+            Log.d("Projects", "Name: $it")
         }
         Spacer(modifier = Modifier.height(24.dp))
         ProjectIconInputComponent(iconImageUri = projectIconUri.value) {
-            isImportingProjectIcons.value = true
-            permissionLauncher.launch(permission)
+            // TODO copy로 데이터 저장, 이미지 extentsion검사
+            Log.d("Projects", "Icon: $it")
         }
         Spacer(modifier = Modifier.height(24.dp))
         ProjectPreviewInputComponent(
             previewUriList = projectPreviewUriList,
             deletedIndex = { projectPreviewUriList.removeAt(it) }
         ) {
-            isImportingProjectIcons.value = false
-            permissionLauncher.launch(permission)
+            // TODO copy로 데이터 저장, 이미지 extentsion검사
+            Log.d("Projects", "Preview: ${it.joinToString()}")
         }
         Spacer(modifier = Modifier.height(24.dp))
         ProjectTechStackInputComponent(
@@ -214,10 +162,10 @@ fun ProjectsComponent(
         )
         Spacer(modifier = Modifier.height(24.dp))
         ProjectKeyTaskInputComponent(
-            text = projectKeyTask.value,
-            onButtonClick = { projectKeyTask.value = "" }
+            projectKeyTask = projectKeyTask.value
         ) {
-            projectKeyTask.value = it
+            // TODO copy로 데이터 저장
+            Log.d("Projects", "KeyTask: $it")
         }
         Spacer(modifier = Modifier.height(24.dp))
         ProjectScheduleInputComponent(
@@ -238,13 +186,11 @@ fun ProjectsComponent(
         )
         Spacer(modifier = Modifier.height(24.dp))
         ProjectRelatedLinksInputComponent(
-            relatedLinks = projectRelatedLinkList,
-            onAddButtonClick = { projectRelatedLinkList.add(Pair("", "")) },
-            onDeleteButtonClick = { projectRelatedLinkList.removeAt(it) },
-            onValueChange = { idx, name, link ->
-                projectRelatedLinkList[idx] = Pair(name, link)
-            }
-        )
+            relatedLinks = projectRelatedLinkList
+        ) {
+            //TODO copy로 데이터 저장
+            Log.d("Projects", "RelatedLinks: ${it.joinToString()}")
+        }
         Spacer(modifier = Modifier.height(16.dp))
     }
 }

@@ -1,6 +1,11 @@
 package com.sms.presentation.main.ui.fill_out_information.component.projects
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,8 +31,30 @@ import com.msg.sms.design.util.AddGrayBody1Title
 fun ProjectPreviewInputComponent(
     previewUriList: List<Uri>,
     deletedIndex: (Int) -> Unit,
-    onClick: () -> Unit
+    onPreViewUrisChanged: (value: List<Uri>) -> Unit
 ) {
+    val multipleSelectGalleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItems = 4)) { uris ->
+            if (uris.isNotEmpty()) {
+                onPreViewUrisChanged(uris)
+            }
+        }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            multipleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+    }
+
+    val permission =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+
     SMSTheme { colors, typography ->
         AddGrayBody1Title(titleText = "미리보기 사진") {
             LazyRow(modifier = Modifier.fillMaxWidth()) {
@@ -37,7 +64,7 @@ fun ProjectPreviewInputComponent(
                             .size(132.dp)
                             .clip(RoundedCornerShape(8.dp))
                             .background(colors.N10)
-                            .smsClickable(onClick = onClick)
+                            .smsClickable { permissionLauncher.launch(permission) }
                     ) {
                         Column(modifier = Modifier.align(Alignment.Center)) {
                             GalleryIcon()

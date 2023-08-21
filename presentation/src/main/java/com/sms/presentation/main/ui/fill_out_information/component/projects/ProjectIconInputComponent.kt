@@ -1,6 +1,11 @@
 package com.sms.presentation.main.ui.fill_out_information.component.projects
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,7 +24,29 @@ import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
-fun ProjectIconInputComponent(iconImageUri: Uri, onClick: () -> Unit) {
+fun ProjectIconInputComponent(iconImageUri: Uri, onUriChanged: (value: Uri) -> Unit) {
+    val permission =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+
+    val singleSelectGalleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                onUriChanged(uri)
+            }
+        }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            singleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+    }
+
     SMSTheme { colors, _ ->
         AddGrayBody1Title(titleText = "아이콘") {
             if (iconImageUri == Uri.EMPTY) {
@@ -28,7 +55,7 @@ fun ProjectIconInputComponent(iconImageUri: Uri, onClick: () -> Unit) {
                         .size(108.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .background(colors.N10)
-                        .smsClickable(onClick = onClick)
+                        .smsClickable { permissionLauncher.launch(permission) }
                 ) {
                     GalleryIcon(modifier = Modifier.align(Alignment.Center))
                 }
@@ -40,7 +67,7 @@ fun ProjectIconInputComponent(iconImageUri: Uri, onClick: () -> Unit) {
                         .size(108.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .background(colors.N10)
-                        .smsClickable(onClick = onClick),
+                        .smsClickable { permissionLauncher.launch(permission) },
                     contentScale = ContentScale.FillBounds
                 )
             }
