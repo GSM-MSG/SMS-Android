@@ -16,16 +16,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.GalleryIcon
+import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun PreviewImageIndicator(currentSize: Int, max: Int = 4) {
+fun PreviewImageIndicator(
+    currentSize: Int, max: Int = 4,
+    onOpenGallery: () -> Unit,
+) {
     SMSTheme { colors, typography ->
         Box(
             modifier = Modifier
                 .size(132.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .background(color = colors.N10)
+                .smsClickable(onClick = onOpenGallery)
         ) {
             Column(
                 modifier = Modifier
@@ -49,5 +54,5 @@ fun PreviewImageIndicator(currentSize: Int, max: Int = 4) {
 @Preview
 @Composable
 private fun PreviewImageIndicatorPre() {
-    PreviewImageIndicator(currentSize = 2, max = 4)
+    PreviewImageIndicator(currentSize = 2, max = 4) {}
 }

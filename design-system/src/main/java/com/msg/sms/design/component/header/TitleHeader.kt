@@ -1,6 +1,5 @@
 package com.msg.sms.design.component.header
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,8 +11,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.SpanStyle
@@ -32,14 +29,12 @@ fun TitleHeader(
     titleText: String,
     isExpandable: Boolean = false,
     isRemovable: Boolean = false,
+    isExpand: Boolean = false,
     onClickRemoveButton: () -> Unit = {},
-    onClickToggleButton: (rotateState: Boolean) -> Unit = {},
+    onClickToggleButton: () -> Unit = {},
 ) {
-    val expandState = remember {
-        mutableStateOf(true)
-    }
     val rotateState by animateFloatAsState(
-        targetValue = if (expandState.value)  0f else 90f
+        targetValue = if (isExpand)  0f else 90f
     )
     SMSTheme { colors, typography ->
         Box(
@@ -71,11 +66,7 @@ fun TitleHeader(
                     modifier = Modifier.padding(top = 8.dp),
                 ) {
                     if (isExpandable) {
-                        IconButton(onClick = {
-                            expandState.value = !expandState.value
-                            Log.d("TAGAT", "${expandState.value}")
-                            onClickToggleButton(expandState.value)
-                        }
+                        IconButton(onClick = onClickToggleButton
                         ) {
                             ChevronDownIcon(modifier = Modifier.rotate(rotateState))
                         }
@@ -94,5 +85,5 @@ fun TitleHeader(
 @Preview
 @Composable
 private fun TitleHeaderPre() {
-    TitleHeader("Test *", isExpandable = true, isRemovable = true)
+    TitleHeader("Test *", isExpandable = true, isRemovable = true,isExpand = true)
 }
