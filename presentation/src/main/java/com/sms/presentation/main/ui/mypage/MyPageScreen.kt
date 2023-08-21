@@ -13,16 +13,22 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.selector.MajorSelector
 import com.sms.presentation.main.ui.mypage.modal.MyPageBottomSheet
 import kotlinx.coroutines.launch
 
-enum class BottomSheetValues {
+private enum class BottomSheetValues {
     Major,
     MyPage,
     WorkingForm,
     Military
+}
+
+private enum class ModalValue {
+    Withdrawal,
+    Logout
 }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
@@ -49,6 +55,32 @@ fun MyPageScreen() {
     }
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val dialogState = remember {
+        mutableStateOf(ModalValue.Logout)
+    }
+
+    val dialogVisibility = remember {
+        mutableStateOf(false)
+    }
+
+    if (dialogVisibility.value) {
+        SmsDialog(
+            isError = true,
+            title = if (dialogState.value == ModalValue.Logout) "로그아웃" else "회원탈퇴",
+            msg = "정말로 ${if (dialogState.value == ModalValue.Logout) "로그아웃" else "회원탈퇴"} 하시겠습니까?",
+            outLineButtonText = "취소",
+            importantButtonText = "확인",
+            outlineButtonOnClick = {
+                dialogVisibility.value = false
+            },
+            importantButtonOnClick = {
+                if (dialogState.value == ModalValue.Logout) {
+
+                } else {
+
+                }
+            })
+    }
     ModalBottomSheetLayout(
         sheetContent = {
             when (bottomSheetValues.value) {
@@ -87,12 +119,16 @@ fun MyPageScreen() {
                     MyPageBottomSheet(
                         onClickLogout = {
                             coroutineScope.launch {
+                                dialogState.value = ModalValue.Logout
                                 bottomSheetState.hide()
+                                dialogVisibility.value = true
                             }
                         },
                         onClickWithdrawal = {
                             coroutineScope.launch {
+                                dialogState.value = ModalValue.Withdrawal
                                 bottomSheetState.hide()
+                                dialogVisibility.value = true
                             }
                         })
                 }
