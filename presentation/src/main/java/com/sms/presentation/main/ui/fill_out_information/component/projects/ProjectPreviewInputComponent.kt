@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,7 +32,6 @@ import com.msg.sms.design.util.AddGrayBody1Title
 @Composable
 fun ProjectPreviewInputComponent(
     previewUriList: List<Uri>,
-    deletedIndex: (Int) -> Unit,
     onPreViewUrisChanged: (value: List<Uri>) -> Unit
 ) {
     val multipleSelectGalleryLauncher =
@@ -55,6 +56,12 @@ fun ProjectPreviewInputComponent(
             Manifest.permission.READ_EXTERNAL_STORAGE
         }
 
+    val list = remember {
+        mutableStateListOf(*previewUriList.toTypedArray())
+    }
+
+    onPreViewUrisChanged(list)
+
     SMSTheme { colors, typography ->
         AddGrayBody1Title(titleText = "미리보기 사진") {
             LazyRow(modifier = Modifier.fillMaxWidth()) {
@@ -70,14 +77,14 @@ fun ProjectPreviewInputComponent(
                             GalleryIcon()
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "${previewUriList.size}/4",
+                                text = "${list.size}/4",
                                 style = typography.body2,
                                 fontWeight = FontWeight.Normal
                             )
                         }
                     }
                 }
-                itemsIndexed(previewUriList) { idx, uri ->
+                itemsIndexed(list) { idx, uri ->
                     Spacer(modifier = Modifier.width(8.dp))
                     Box(
                         modifier = Modifier
@@ -100,7 +107,7 @@ fun ProjectPreviewInputComponent(
                                 .padding(6.dp)
                                 .smsClickable(
                                     bounded = false
-                                ) { deletedIndex(idx) }
+                                ) { list.removeAt(idx) }
                         )
                     }
                 }

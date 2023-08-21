@@ -1,6 +1,5 @@
 package com.sms.presentation.main.ui.fill_out_information.component.projects
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
@@ -27,16 +26,6 @@ fun ProjectsComponent(
     navController: NavController,
     bottomSheetState: ModalBottomSheetState,
     data: ProjectInfo,
-    savedData: (
-        name: String,
-        icon: Uri,
-        preview: List<Uri>,
-        techOfUse: List<String>,
-        keyTask: String,
-        startDate: String,
-        endDate: String,
-        relatedLink: List<Pair<String, String>>
-    ) -> Unit,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit,
     isImageExtensionInCorrect: (Boolean) -> Unit,
     onCancelButtonClick: () -> Unit,
@@ -44,50 +33,12 @@ fun ProjectsComponent(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val projectName = remember {
-        mutableStateOf(data.name)
-    }
-    val projectIconUri = remember {
-        mutableStateOf(data.icon)
-    }
-    val projectPreviewUriList = remember {
-        mutableStateListOf(*data.preview.toTypedArray())
-    }
-    val projectKeyTask = remember {
-        mutableStateOf(data.keyTask)
-    }
-    val projectStartDate = remember {
-        mutableStateOf(data.startDate)
-    }
-    val projectEndDate = remember {
-        mutableStateOf(data.endDate)
-    }
-    val projectRelatedLinkList = remember {
-        mutableStateListOf(*data.relatedLinkList.toTypedArray())
-    }
-    val projectUsedTechStack = remember {
-        mutableStateListOf(*data.technologyOfUse.toTypedArray())
-    }
-    val isImportingProjectIcons = remember {
-        mutableStateOf(false)
-    }
     val isProjectProgress = remember {
         mutableStateOf(false)
     }
     val isProjectStartDate = remember {
         mutableStateOf(true)
     }
-
-    savedData(
-        projectName.value,
-        projectIconUri.value,
-        projectPreviewUriList,
-        projectUsedTechStack,
-        projectKeyTask.value,
-        projectStartDate.value,
-        if (!isProjectProgress.value) projectEndDate.value else "",
-        projectRelatedLinkList
-    )
 
     bottomSheetContent(content = {
         val year = remember {
@@ -118,9 +69,10 @@ fun ProjectsComponent(
                         .align(Alignment.CenterEnd)
                         .smsClickable {
                             coroutineScope.launch { bottomSheetState.hide() }
-                            if (isProjectStartDate.value)
-                                projectStartDate.value = "${year.value}.${month.value}"
-                            else projectEndDate.value = "${year.value}.${month.value}"
+//                            if (isProjectStartDate.value)
+//                                projectStartDate.value = "${year.value}.${month.value}"
+//                            else projectEndDate.value = "${year.value}.${month.value}"
+                                //TODO copy로 데이터 넘기기
                         }
                 )
             }
@@ -137,40 +89,35 @@ fun ProjectsComponent(
     ToggleComponent(name = "프로젝트", onCancelButtonClick = onCancelButtonClick) {
         Spacer(modifier = Modifier.height(32.dp))
         ProjectNameInputComponent(
-            projectName = projectName.value
+            projectName = data.name
         ) {
             // TODO copy로 데이터 저장
             Log.d("Projects", "Name: $it")
         }
         Spacer(modifier = Modifier.height(24.dp))
-        ProjectIconInputComponent(iconImageUri = projectIconUri.value) {
+        ProjectIconInputComponent(iconImageUri = data.icon) {
             // TODO copy로 데이터 저장, 이미지 extentsion검사
             Log.d("Projects", "Icon: $it")
         }
         Spacer(modifier = Modifier.height(24.dp))
-        ProjectPreviewInputComponent(
-            previewUriList = projectPreviewUriList,
-            deletedIndex = { projectPreviewUriList.removeAt(it) }
-        ) {
+        ProjectPreviewInputComponent(previewUriList = data.preview) {
             // TODO copy로 데이터 저장, 이미지 extentsion검사
             Log.d("Projects", "Preview: ${it.joinToString()}")
         }
         Spacer(modifier = Modifier.height(24.dp))
         ProjectTechStackInputComponent(
-            techStack = projectUsedTechStack,
+            techStack = data.technologyOfUse,
             onClick = onDetailStackSearchBarClick
         )
         Spacer(modifier = Modifier.height(24.dp))
-        ProjectKeyTaskInputComponent(
-            projectKeyTask = projectKeyTask.value
-        ) {
+        ProjectKeyTaskInputComponent(projectKeyTask = data.keyTask) {
             // TODO copy로 데이터 저장
             Log.d("Projects", "KeyTask: $it")
         }
         Spacer(modifier = Modifier.height(24.dp))
         ProjectScheduleInputComponent(
-            startDateText = projectStartDate.value,
-            endDateText = projectEndDate.value,
+            startDateText = data.startDate,
+            endDateText = data.endDate,
             isProjectProgress = isProjectProgress.value,
             onStartDateCalendarClick = {
                 isProjectStartDate.value = true
@@ -185,9 +132,7 @@ fun ProjectsComponent(
             }
         )
         Spacer(modifier = Modifier.height(24.dp))
-        ProjectRelatedLinksInputComponent(
-            relatedLinks = projectRelatedLinkList
-        ) {
+        ProjectRelatedLinksInputComponent(relatedLinks = data.relatedLinkList) {
             //TODO copy로 데이터 저장
             Log.d("Projects", "RelatedLinks: ${it.joinToString()}")
         }
