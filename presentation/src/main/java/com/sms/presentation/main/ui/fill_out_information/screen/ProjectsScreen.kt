@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.sms.presentation.main.ui.fill_out_information.component.*
@@ -14,6 +15,8 @@ import com.sms.presentation.main.ui.fill_out_information.component.projects.AddP
 import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsBottomButtonComponent
 import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsComponent
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
+import com.sms.presentation.main.ui.util.getFileNameFromUri
+import com.sms.presentation.main.ui.util.isImageExtensionCorrect
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -25,6 +28,7 @@ fun ProjectsScreen(
     bottomSheetState: ModalBottomSheetState,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit
 ) {
+    val context = LocalContext.current
     val data = viewModel.getEnteredProjectsInformation()
     val projectList = remember {
         mutableStateListOf(*data.projects.toTypedArray())
@@ -61,8 +65,22 @@ fun ProjectsScreen(
                 },
                 onEndDateValueChanged = { projectList[idx] = projectList[idx].copy(endDate = it) },
                 onProjectNameValueChanged = { projectList[idx] = projectList[idx].copy(name = it) },
-                onProjectIconValueChanged = { projectList[idx] = projectList[idx].copy(icon = it) },
-                onProjectPreviewsValueChanged = { projectList[idx] = projectList[idx].copy(preview = it) },
+                onProjectIconValueChanged = { uri ->
+                    if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
+                        isImageExtensionInCorrect.value = false
+                        projectList[idx] = projectList[idx].copy(icon = uri)
+                    } else {
+                        isImageExtensionInCorrect.value = true
+                    }
+                },
+                onProjectPreviewsValueChanged = { uris ->
+                    if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
+                        isImageExtensionInCorrect.value = false
+                        projectList[idx] = projectList[idx].copy(preview = uris)
+                    } else {
+                        isImageExtensionInCorrect.value = true
+                    }
+                },
                 onProjectKeyTaskValueChanged = { projectList[idx] = projectList[idx].copy(keyTask = it) },
                 onProjectRelatedLinksValueChanged = { projectList[idx] = projectList[idx].copy(relatedLinkList = it) },
                 onCancelButtonClick = { projectList.removeAt(idx) },
@@ -81,13 +99,13 @@ fun ProjectsScreen(
                     viewModel.setEnteredProjectsInformation(
                         projectList.filter { project ->
                             project.name.isNotEmpty() ||
-                            project.icon != Uri.EMPTY ||
-                            project.keyTask.isNotEmpty() ||
-                            project.preview.isNotEmpty() ||
-                            project.endDate.isNotEmpty() ||
-                            project.startDate.isNotEmpty() ||
-                            project.technologyOfUse.isNotEmpty() ||
-                            project.relatedLinkList.first() != Pair("", "")
+                                    project.icon != Uri.EMPTY ||
+                                    project.keyTask.isNotEmpty() ||
+                                    project.preview.isNotEmpty() ||
+                                    project.endDate.isNotEmpty() ||
+                                    project.startDate.isNotEmpty() ||
+                                    project.technologyOfUse.isNotEmpty() ||
+                                    project.relatedLinkList.first() != Pair("", "")
                         }
                     )
                 }
