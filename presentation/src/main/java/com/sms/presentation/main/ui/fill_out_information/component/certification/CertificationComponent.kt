@@ -29,7 +29,7 @@ fun CertificationComponent(
     val data = viewModel.getEnteredCertification()
     SMSTheme { colors, typography ->
         val certificationList = remember {
-            mutableStateListOf(*data.certification.toTypedArray())
+            mutableStateListOf(*data.certifications.toTypedArray())
         }
         Column(
             modifier = Modifier

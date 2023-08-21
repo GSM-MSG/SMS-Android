@@ -96,7 +96,7 @@ class FillOutViewModel @Inject constructor(
         return WorkConditionData(
             formOfEmployment = formOfEmployment.value,
             salary = salary.value.toString(),
-            region = region
+            regions = region
         )
     }
 
@@ -120,7 +120,7 @@ class FillOutViewModel @Inject constructor(
     }
 
     fun getEnteredCertification(): CertificationData {
-        return CertificationData(certification = certificate)
+        return CertificationData(certifications = certificate)
     }
 
     fun setEnteredCertification(certificate: List<String>) {
@@ -191,7 +191,7 @@ class FillOutViewModel @Inject constructor(
         enterStudentInformationUseCase(
             EnterStudentInformationModel(
                 major = major,
-                techStack = techStack,
+                techStacks = techStack,
                 profileImgUrl = profileImgUrl,
                 introduce = introduce,
                 portfolioUrl = portfolioUrl,
@@ -199,10 +199,12 @@ class FillOutViewModel @Inject constructor(
                 formOfEmployment = formOfEmployment,
                 gsmAuthenticationScore = gsmAuthenticationScore,
                 salary = salary,
-                region = region,
-                languageCertificate = languageCertificate,
+                regions = region,
+                languageCertificates = languageCertificate,
                 militaryService = militaryService,
-                certificate = certificate
+                certificates = certificate,
+                projects = emptyList(),
+                prizes = emptyList()
             )
         ).onSuccess {
             it.catch { remoteError ->
