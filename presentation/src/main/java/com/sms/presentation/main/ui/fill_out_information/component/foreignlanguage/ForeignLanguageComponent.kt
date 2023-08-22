@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.fill_out_information.component
+package com.sms.presentation.main.ui.fill_out_information.component.foreignlanguage
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -79,11 +79,11 @@ fun ForeignLanguageComponent(
                 title = errorTitle.value,
                 msg = errorMsg.value,
                 outLineButtonText = "취소",
-                normalButtonText = "확인",
+                importantButtonText = "확인",
                 outlineButtonOnClick = {
                     dialogState.value = false
                 },
-                normalButtonOnClick = {
+                importantButtonOnClick = {
                     onClick.value()
                     dialogState.value = false
                 }

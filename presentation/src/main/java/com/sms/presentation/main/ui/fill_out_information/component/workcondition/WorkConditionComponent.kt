@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.fill_out_information.component
+package com.sms.presentation.main.ui.fill_out_information.component.workcondition
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -40,7 +40,7 @@ fun WorkConditionComponent(
 ) {
     SMSTheme { colors, typography ->
         val wantWorkingArea = remember {
-            mutableStateListOf(*data.region.toTypedArray())
+            mutableStateListOf(*data.regions.toTypedArray())
         }
 
         val wantPayroll = remember {
