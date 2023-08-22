@@ -4,13 +4,14 @@ import androidx.compose.runtime.Composable
 import com.msg.sms.design.component.progressbar.FilloutStatusProgressBar
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
+import com.sms.presentation.main.ui.fill_out_information.Screen
 
 @Composable
 fun FillOutInformationTopBarComponent(currentRoute: String, onBackButtonClick: () -> Unit) {
-    if (currentRoute != "Search") {
+    if (currentRoute != Screen.Search.value) {
         TopBarComponent(
             text = "정보 입력",
-            leftIcon = if (currentRoute != "Profile") {
+            leftIcon = if (currentRoute != Screen.Profile.value) {
                 { BackButtonIcon() }
             } else null,
             rightIcon = null,
@@ -18,13 +19,13 @@ fun FillOutInformationTopBarComponent(currentRoute: String, onBackButtonClick: (
         )
         FilloutStatusProgressBar(
             routeList = listOf(
-                "Profile",
-                "SchoolLife",
-                "WorkCondition",
-                "MilitaryService",
-                "Certification",
-                "ForeignLanguage",
-                "Projects"
+                Screen.Profile.value,
+                Screen.SchoolLife.value,
+                Screen.WorkCondition.value,
+                Screen.MilitaryService.value,
+                Screen.Certification.value,
+                Screen.ForeignLanguage.value,
+                Screen.Projects.value
             ),
             currentRoute = currentRoute
         )
