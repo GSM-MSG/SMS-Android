@@ -39,7 +39,7 @@ fun SmsDialog(
     importantButtonText: String,
     outlineButtonOnClick: () -> Unit,
     importantButtonOnClick: () -> Unit,
-    onDisMissRequest: () -> Unit = {},
+    onDismissRequest: () -> Unit = {},
 ) {
     val modifier = when {
         widthPercent != null && heightPercent != null -> {
@@ -63,7 +63,7 @@ fun SmsDialog(
 
     SMSTheme { colors, typography ->
         Dialog(
-            onDismissRequest = { onDisMissRequest() }
+            onDismissRequest = { onDismissRequest() }
         ) {
             Box(
                 modifier = modifier
