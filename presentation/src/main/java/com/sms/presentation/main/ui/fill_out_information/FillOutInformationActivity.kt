@@ -29,7 +29,7 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-enum class Screen(val value: String) {
+enum class FillOutPage(val value: String) {
     Profile("Profile"),
     SchoolLife("SchoolLife"),
     WorkCondition("WorkCondition"),
@@ -84,31 +84,31 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = Screen.Profile.value
+                                startDestination = FillOutPage.Profile.value
                             ) {
-                                composable(Screen.Profile.value) {
-                                    currentRoute.value = Screen.Profile.value
+                                composable(FillOutPage.Profile.value) {
+                                    currentRoute.value = FillOutPage.Profile.value
                                     setSoftInputMode("PAN")
                                     ProfileScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        detailStack = detailStackList[Screen.Profile.value]
+                                        detailStack = detailStackList[FillOutPage.Profile.value]
                                             ?: emptyList(),
                                         bottomSheetState = bottomSheetState
                                     ) {
                                         bottomSheetContent.value = it
                                     }
                                 }
-                                composable(Screen.SchoolLife.value) {
-                                    currentRoute.value = Screen.SchoolLife.value
+                                composable(FillOutPage.SchoolLife.value) {
+                                    currentRoute.value = FillOutPage.SchoolLife.value
                                     setSoftInputMode()
                                     SchoolLifeScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                                     )
                                 }
-                                composable(Screen.WorkCondition.value) {
-                                    currentRoute.value = Screen.WorkCondition.value
+                                composable(FillOutPage.WorkCondition.value) {
+                                    currentRoute.value = FillOutPage.WorkCondition.value
                                     setSoftInputMode("PAN")
                                     WorkConditionScreen(
                                         navController = navController,
@@ -118,8 +118,8 @@ class FillOutInformationActivity : BaseActivity() {
                                         bottomSheetContent.value = it
                                     }
                                 }
-                                composable(Screen.MilitaryService.value) {
-                                    currentRoute.value = Screen.MilitaryService.value
+                                composable(FillOutPage.MilitaryService.value) {
+                                    currentRoute.value = FillOutPage.MilitaryService.value
                                     setSoftInputMode()
                                     MilitaryServiceScreen(
                                         navController = navController,
@@ -129,16 +129,16 @@ class FillOutInformationActivity : BaseActivity() {
                                         bottomSheetContent.value = it
                                     }
                                 }
-                                composable(Screen.Certification.value) {
-                                    currentRoute.value = Screen.Certification.value
+                                composable(FillOutPage.Certification.value) {
+                                    currentRoute.value = FillOutPage.Certification.value
                                     setSoftInputMode("PAN")
                                     CertificationScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
                                     )
                                 }
-                                composable(Screen.ForeignLanguage.value) {
-                                    currentRoute.value = Screen.ForeignLanguage.value
+                                composable(FillOutPage.ForeignLanguage.value) {
+                                    currentRoute.value = FillOutPage.ForeignLanguage.value
                                     setSoftInputMode("PAN")
                                     ForeignLanguageScreen(
                                         navController = navController,
@@ -146,8 +146,8 @@ class FillOutInformationActivity : BaseActivity() {
                                         lifecycleScope = lifecycleScope
                                     )
                                 }
-                                composable(Screen.Projects.value) {
-                                    currentRoute.value = Screen.Projects.value
+                                composable(FillOutPage.Projects.value) {
+                                    currentRoute.value = FillOutPage.Projects.value
                                     setSoftInputMode("PAN")
                                     ProjectsScreen(
                                         navController = navController,
@@ -160,12 +160,12 @@ class FillOutInformationActivity : BaseActivity() {
                                     }
                                 }
                                 composable(
-                                    "${Screen.Search.value}/{idx}",
+                                    "${FillOutPage.Search.value}/{idx}",
                                     arguments = listOf(
                                         navArgument("idx") { type = NavType.StringType }
                                     )
                                 ) { backStackEntry ->
-                                    currentRoute.value = Screen.Search.value
+                                    currentRoute.value = FillOutPage.Search.value
                                     setSoftInputMode("RESIZE")
                                     val idx = remember {
                                         mutableStateOf(
