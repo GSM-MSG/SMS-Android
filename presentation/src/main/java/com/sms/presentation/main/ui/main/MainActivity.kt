@@ -36,7 +36,6 @@ private enum class MainPage(val value: String) {
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
-
     private val studentListViewModel by viewModels<StudentListViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
     private val fillOutViewModel by viewModels<FillOutViewModel>()
@@ -119,8 +118,10 @@ class MainActivity : BaseActivity() {
                                 MyPageScreen(
                                     onWithdrawal = {
                                         studentListViewModel.withdrawal()
+                                        authViewModel.deleteToken()
                                     }, onLogout = {
                                         studentListViewModel.logout()
+                                        authViewModel.deleteToken()
                                     })
                             }
                         }

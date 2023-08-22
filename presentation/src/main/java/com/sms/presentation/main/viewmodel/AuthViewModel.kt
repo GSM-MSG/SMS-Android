@@ -25,7 +25,8 @@ class AuthViewModel @Inject constructor(
     private val saveTheLoginDataUseCase: SaveTheLoginDataUseCase,
     private val getMajorListUseCase: GetMajorListUseCase,
     private val accessValidationUseCase: AccessValidationUseCase,
-    private val getRoleInfoUseCase: GetRoleInfoUseCase
+    private val getRoleInfoUseCase: GetRoleInfoUseCase,
+    private val deleteTokenUseCase: DeleteTokenUseCase
 ) : ViewModel() {
     private val _gAuthLoginRequest = MutableLiveData<Event<GAuthLoginResponseModel>>()
     val gAuthLoginRequest: LiveData<Event<GAuthLoginResponseModel>> get() = _gAuthLoginRequest
@@ -107,5 +108,9 @@ class AuthViewModel @Inject constructor(
             }.onFailure { error ->
                 _getRoleResponse.value = error.errorHandling()
             }
+    }
+
+    fun deleteToken() = viewModelScope.launch {
+        deleteTokenUseCase()
     }
 }
