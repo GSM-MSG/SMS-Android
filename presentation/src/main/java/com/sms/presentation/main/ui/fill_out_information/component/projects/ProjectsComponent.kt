@@ -92,8 +92,10 @@ fun ProjectsComponent(
     })
 
     ToggleComponent(name = "프로젝트", onCancelButtonClick = onCancelButtonClick) {
-        Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
-            Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+        ) {
             ProjectNameInputComponent(
                 projectName = data.name,
                 onValueChange = onProjectNameValueChanged
@@ -135,7 +137,6 @@ fun ProjectsComponent(
                 relatedLinks = data.relatedLinkList,
                 onValueChanged = onProjectRelatedLinksValueChanged
             )
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
