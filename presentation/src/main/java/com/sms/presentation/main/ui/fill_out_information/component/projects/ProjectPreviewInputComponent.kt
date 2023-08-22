@@ -4,7 +4,6 @@ import android.Manifest
 import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,14 +38,12 @@ fun ProjectPreviewInputComponent(
         mutableStateListOf(*previewUriList.toTypedArray())
     }
 
-    val maxItems = remember {
-        mutableStateOf(4 - previews.size)
-    }
-
     val multipleSelectGalleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItems = if (maxItems.value == 0) 1 else maxItems.value)) { uris ->
+        rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
             if (uris.isNotEmpty()) {
-                previews.addAll(uris)
+                if ((previews.size + uris.size) <= 4) {
+                    previews.addAll(uris)
+                } else onSnackBarVisibleChanged()
             }
         }
 
@@ -58,7 +54,7 @@ fun ProjectPreviewInputComponent(
             if (previews.size == 4) {
                 onSnackBarVisibleChanged()
             } else {
-                multipleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                multipleSelectGalleryLauncher.launch("image/*")
             }
         }
     }
