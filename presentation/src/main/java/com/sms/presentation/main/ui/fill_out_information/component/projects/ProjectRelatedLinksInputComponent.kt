@@ -20,11 +20,11 @@ fun ProjectRelatedLinksInputComponent(
     relatedLinks: List<Pair<String, String>>,
     onValueChanged: (List<Pair<String, String>>) -> Unit
 ) {
-    val list = remember {
+    val links = remember {
         mutableStateListOf(*relatedLinks.toTypedArray())
     }
 
-    onValueChanged(list)
+    onValueChanged(links)
 
     AddGrayBody1Title(titleText = "관련 링크") {
         LazyColumn(
@@ -32,7 +32,7 @@ fun ProjectRelatedLinksInputComponent(
                 .heightIn(max = 640.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            itemsIndexed(list) { idx, item ->
+            itemsIndexed(links) { idx, item ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -44,7 +44,7 @@ fun ProjectRelatedLinksInputComponent(
                             setChangeText = item.first,
                             placeHolder = "Link"
                         ) {
-                            list[idx] = Pair(it, list[idx].second)
+                            links[idx] = Pair(it, links[idx].second)
                         }
                     }
                     Box(modifier = Modifier.weight(2.5f)) {
@@ -53,16 +53,16 @@ fun ProjectRelatedLinksInputComponent(
                             setChangeText = item.second,
                             placeHolder = "https://github.com"
                         ) {
-                            list[idx] = Pair(list[idx].first, it)
+                            links[idx] = Pair(links[idx].first, it)
                         }
                     }
-                    IconButton(onClick = { list.removeAt(idx) }) {
+                    IconButton(onClick = { links.removeAt(idx) }) {
                         TrashCanIcon()
                     }
                 }
             }
             item {
-                SmsChip(text = "추가", onClick = { list.add(Pair("", "")) })
+                SmsChip(text = "추가", onClick = { links.add(Pair("", "")) })
             }
         }
     }

@@ -13,20 +13,20 @@ fun ProjectKeyTaskInputComponent(
     projectKeyTask: String,
     onValueChange: (String) -> Unit,
 ) {
-    val text = remember {
+    val keyTask = remember {
         mutableStateOf(projectKeyTask)
     }
 
     AddGrayBody1Title(titleText = "주요 작업") {
         SmsTextField(
-            setText = text.value,
+            setText = keyTask.value,
             placeHolder = "주요 작업 내용서술",
             modifier = Modifier.fillMaxWidth(),
             onValueChange = {
-                text.value = it
+                keyTask.value = it
                 onValueChange(it)
             },
-            onClickButton = { text.value = "" }
+            onClickButton = { keyTask.value = "" }
         )
     }
 }

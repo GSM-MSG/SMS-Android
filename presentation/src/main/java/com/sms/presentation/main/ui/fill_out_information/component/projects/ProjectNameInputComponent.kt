@@ -13,20 +13,20 @@ fun ProjectNameInputComponent(
     projectName: String,
     onValueChange: (String) -> Unit,
 ) {
-    val text = remember {
+    val name = remember {
         mutableStateOf(projectName)
     }
 
     AddGrayBody1Title(titleText = "이름") {
         SmsTextField(
-            setText = text.value,
+            setText = name.value,
             placeHolder = "프로젝트 이름입력",
             modifier = Modifier.fillMaxWidth(),
             onValueChange = {
-                text.value = it
+                name.value = it
                 onValueChange(it)
             },
-            onClickButton = { text.value = "" }
+            onClickButton = { name.value = "" }
         )
     }
 }

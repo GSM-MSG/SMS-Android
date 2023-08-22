@@ -36,18 +36,18 @@ fun ProjectPreviewInputComponent(
     onSnackBarVisibleChanged: () -> Unit,
     onValueChanged: (value: List<Uri>) -> Unit
 ) {
-    val list = remember {
+    val previews = remember {
         mutableStateListOf(*previewUriList.toTypedArray())
     }
 
     val maxItems = remember {
-        mutableStateOf(4 - list.size)
+        mutableStateOf(4 - previews.size)
     }
 
     val multipleSelectGalleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItems = if (maxItems.value == 0) 1 else maxItems.value)) { uris ->
             if (uris.isNotEmpty()) {
-                list.addAll(uris)
+                previews.addAll(uris)
             }
         }
 
@@ -55,7 +55,7 @@ fun ProjectPreviewInputComponent(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            if (list.size == 4) {
+            if (previews.size == 4) {
                 onSnackBarVisibleChanged()
             } else {
                 multipleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -69,8 +69,8 @@ fun ProjectPreviewInputComponent(
         Manifest.permission.READ_EXTERNAL_STORAGE
     }
 
-    if (list.isNotEmpty()) {
-        onValueChanged(list)
+    if (previews.isNotEmpty()) {
+        onValueChanged(previews)
     }
 
     SMSTheme { colors, typography ->
@@ -86,14 +86,14 @@ fun ProjectPreviewInputComponent(
                             GalleryIcon()
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "${list.size}/4",
+                                text = "${previews.size}/4",
                                 style = typography.body2,
                                 fontWeight = FontWeight.Normal
                             )
                         }
                     }
                 }
-                itemsIndexed(list) { idx, uri ->
+                itemsIndexed(previews) { idx, uri ->
                     Spacer(modifier = Modifier.width(8.dp))
                     Box(
                         modifier = Modifier
@@ -117,7 +117,7 @@ fun ProjectPreviewInputComponent(
                                 .smsClickable(
                                     bounded = false
                                 ) {
-                                    list.removeAt(idx)
+                                    previews.removeAt(idx)
                                 }
                         )
                     }
