@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -41,8 +42,13 @@ class MainActivity : BaseActivity() {
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
 
+    private val searchDetailStack = mutableStateOf(listOf<String>())
+
     override fun init() {
         observeEvent()
+        lifecycleScope.launch {
+            searchDetailStack()
+        }
         authViewModel.getRoleInfo()
         fillOutViewModel.getMajorList()
     }
@@ -69,6 +75,9 @@ class MainActivity : BaseActivity() {
                 if (response is Event.Success) {
                     setContent {
                         val navController = rememberNavController()
+                        val detailStackList = remember {
+                            mutableStateMapOf<String, List<String>>()
+                        }
                         NavHost(
                             navController = navController,
                             startDestination = "Main"
@@ -102,10 +111,9 @@ class MainActivity : BaseActivity() {
                                 }
                                 DetailStackSearchScreen(
                                     navController = navController,
-                                    viewModel = searchDetailStackViewModel,
-                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(
-                                        ""
-                                    ))
+                                    onSearchStack = { searchDetailStackViewModel.searchDetailStack(it) },
+                                    selectedStack = detailStackList[data.value] ?: listOf(""),
+                                    detailStack = searchDetailStack.value
                                 ) {
                                     navController.navigate(MainPage.Filter.name)
                                     studentListViewModel.detailStackList.value =
@@ -148,6 +156,17 @@ class MainActivity : BaseActivity() {
                     } else {
                         mutableStateListOf()
                     }
+            }
+        }
+    }
+
+    private suspend fun searchDetailStack() {
+        searchDetailStackViewModel.searchResultEvent.collect {
+            when (it) {
+                Event.Success<List<String>>() -> {
+                    searchDetailStack.value = it.data!!.techStack
+                }
+                else -> {}
             }
         }
     }
