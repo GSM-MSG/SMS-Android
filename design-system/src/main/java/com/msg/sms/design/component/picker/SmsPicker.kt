@@ -35,7 +35,6 @@ fun SmsPicker(itemList: List<String>, selectedItem: (value: String) -> Unit) {
                     .height(32.dp)
                     .align(Alignment.Center)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(colors.N10)
                     .onGloballyPositioned {
                         boxPosition.value = it.positionInWindow().y
                     }
