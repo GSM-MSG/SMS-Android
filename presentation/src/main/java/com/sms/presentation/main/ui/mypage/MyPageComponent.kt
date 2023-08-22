@@ -26,8 +26,6 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.icon.BlackLogoutIcon
-import com.sms.presentation.main.ui.detail.data.AwardNameData
-import com.sms.presentation.main.ui.detail.data.ExpandableProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.button.SaveButtonComponent
 import com.sms.presentation.main.ui.mypage.section.AwardSection
@@ -38,6 +36,8 @@ import com.sms.presentation.main.ui.mypage.section.ProfileSection
 import com.sms.presentation.main.ui.mypage.section.ProjectsSection
 import com.sms.presentation.main.ui.mypage.section.SchoolLifeSection
 import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
+import com.sms.presentation.main.ui.mypage.state.ExpandableAwardDate
+import com.sms.presentation.main.ui.mypage.state.ExpandableProjectData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -95,7 +95,10 @@ fun MyPageComponent(
     }
 
     val awards = remember {
-        mutableStateListOf(AwardNameData("수상 1", true), AwardNameData("수상 2", true))
+        mutableStateListOf(
+            ExpandableAwardDate(title = "수상 1", organization = "", date = "", isExpand = true),
+            ExpandableAwardDate(title = "수상 2", organization = "", date = "", isExpand = true)
+        )
     }
     val wantWorkingArea = remember {
         mutableStateListOf(*listOf("광저우", "충칭", "하노이", "도쿄").toTypedArray())
@@ -177,7 +180,7 @@ fun MyPageComponent(
                 CertificationsSection(
                     certifications = certifications,
                     onValueChange = { index, value -> certifications[index] = value },
-                    onClickRemoveButton = { certifications.removeAt(index = it)},
+                    onClickRemoveButton = { certifications.removeAt(index = it) },
                     onClickAddButton = { certifications.add("") }
                 )
                 SmsSpacer()
@@ -301,7 +304,7 @@ fun MyPageComponent(
             awards.forEachIndexed { index, it ->
                 stickyHeader {
                     TitleHeader(
-                        titleText = it.awardName,
+                        titleText = it.title,
                         isExpandable = true,
                         isRemovable = true,
                         isExpand = it.isExpand,
@@ -317,7 +320,19 @@ fun MyPageComponent(
                         enter = expandVertically(),
                         exit = shrinkVertically(),
                     ) {
-                        AwardSection(awardData = it.awardName)
+                        AwardSection(
+                            awardData = it,
+                            onNameValueChange = {
+                                awards[index] = awards[index].copy(title = it)
+                            },
+                            onTypeValueChange = {
+                                awards[index] = awards[index].copy(organization = it)
+                            },
+                            onDateValueChange = {
+                                awards[index] = awards[index].copy(date = it)
+                            },
+                            onClickCalendar = { /*(Todo): kimhs - 넘버핔커 열어줘요*/ }
+                        )
                         SmsSpacer()
                     }
                 }
@@ -329,7 +344,14 @@ fun MyPageComponent(
                         .padding(top = 20.dp, end = 20.dp, bottom = 20.dp)
                 ) {
                     BlackAddItemButton(modifier = Modifier.align(Alignment.TopEnd)) {
-
+                        awards.add(
+                            ExpandableAwardDate(
+                                title = "수상 ${awards.size + 1}",
+                                organization = "",
+                                date = "",
+                                isExpand = true
+                            )
+                        )
                     }
                 }
             }
