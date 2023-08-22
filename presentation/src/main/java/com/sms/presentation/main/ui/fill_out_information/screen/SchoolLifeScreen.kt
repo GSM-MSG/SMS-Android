@@ -18,7 +18,7 @@ import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.fill_out_information.component.SchoolLifeComponent
+import com.sms.presentation.main.ui.fill_out_information.component.schoollife.SchoolLifeComponent
 import com.sms.presentation.main.ui.util.textFieldChecker
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 

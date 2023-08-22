@@ -14,7 +14,7 @@ import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.spacer.SmsSpacer
-import com.sms.presentation.main.ui.fill_out_information.component.MilitaryServiceComponent
+import com.sms.presentation.main.ui.fill_out_information.component.militaryservice.MilitaryServiceComponent
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @OptIn(ExperimentalMaterialApi::class)

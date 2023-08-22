@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.fill_out_information.component
+package com.sms.presentation.main.ui.fill_out_information.component.workcondition
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -176,7 +176,7 @@ fun WorkConditionComponent(
                         viewModel.setEnteredWorkConditionInformation(
                             formOfEmployment = wantWorkingCondition,
                             salary = wantPayroll.value,
-                            regions = wantWorkingArea.map { it })
+                            region = wantWorkingArea.map { it })
                         navController.navigate("MilitaryService")
                     }
                 }

@@ -9,8 +9,6 @@ import com.msg.sms.domain.model.fileupload.response.FileUploadResponseModel
 import com.msg.sms.domain.model.major.MajorListModel
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
-import com.msg.sms.domain.model.student.request.PrizeModel
-import com.msg.sms.domain.model.student.request.ProjectModel
 import com.msg.sms.domain.usecase.fileupload.ImageUploadUseCase
 import com.msg.sms.domain.usecase.major.GetMajorListUseCase
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
@@ -46,7 +44,7 @@ class FillOutViewModel @Inject constructor(
 
     private val major = mutableStateOf("")
     private val enteredMajor = mutableStateOf("")
-    private val techStack = mutableStateOf("")
+    private val techStacks = mutableStateOf("")
     private val profileImageUri = mutableStateOf(Uri.EMPTY)
     private val introduce = mutableStateOf("")
     private val portfolioUrl = mutableStateOf("")
@@ -57,7 +55,11 @@ class FillOutViewModel @Inject constructor(
     private val regions = mutableStateListOf("")
     private val militaryService = mutableStateOf("")
     private val certificates = mutableStateListOf("")
+    private val projects = mutableStateListOf(ProjectInfo())
     private lateinit var profileImageUrl: String
+
+    val projectList =
+        mutableStateListOf(*getEnteredProjectsInformation().projects.toTypedArray())
 
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(
@@ -67,7 +69,7 @@ class FillOutViewModel @Inject constructor(
             enteredMajor = enteredMajor.value,
             major = major.value,
             portfolioUrl = portfolioUrl.value,
-            techStack = techStack.value
+            techStack = techStacks.value
         )
     }
 
@@ -82,7 +84,7 @@ class FillOutViewModel @Inject constructor(
     ) {
         this.enteredMajor.value = enteredMajor
         this.major.value = major
-        this.techStack.value = techStack
+        this.techStacks.value = techStack
         this.profileImageUri.value = profileImgUri
         this.introduce.value = introduce
         this.contactEmail.value = contactEmail
@@ -100,12 +102,12 @@ class FillOutViewModel @Inject constructor(
     fun setEnteredWorkConditionInformation(
         formOfEmployment: String,
         salary: String,
-        regions: List<String>,
+        region: List<String>,
     ) {
         this.formOfEmployment.value = formOfEmployment
         this.salary.value = salary.toInt()
-        this.regions.removeAll { !regions.contains(it) }
-        this.regions.addAll(regions.filter { !this.regions.contains(it) })
+        this.regions.removeAll { !region.contains(it) }
+        this.regions.addAll(region.filter { !this.regions.contains(it) })
     }
 
     fun getEnteredMilitaryServiceInformation(): MilitaryServiceData {
@@ -120,9 +122,9 @@ class FillOutViewModel @Inject constructor(
         return CertificationData(certifications = certificates)
     }
 
-    fun setEnteredCertification(certificates: List<String>) {
-        this.certificates.removeAll { !certificates.contains(it) }
-        this.certificates.addAll(certificates.filter { !this.certificates.contains(it) })
+    fun setEnteredCertification(certificate: List<String>) {
+        this.certificates.removeAll { !certificate.contains(it) }
+        this.certificates.addAll(certificate.filter { !this.certificates.contains(it) })
     }
 
     fun getEnteredSchoolLifeInformation(): SchoolLifeData {
@@ -135,6 +137,17 @@ class FillOutViewModel @Inject constructor(
         gsmAuthenticationScore: String,
     ) {
         this.gsmAuthenticationScore.value = gsmAuthenticationScore
+    }
+
+    fun getEnteredProjectsInformation(): ProjectsData {
+        return ProjectsData(projects = projects)
+    }
+
+    fun setEnteredProjectsInformation(
+        projects: List<ProjectInfo>
+    ) {
+        this.projects.removeAll { !projects.contains(it) }
+        this.projects.addAll(projects.filter { !this.projects.contains(it) })
     }
 
     fun getProfileImageUrl(): String {
@@ -161,7 +174,7 @@ class FillOutViewModel @Inject constructor(
 
     fun enterStudentInformation(
         major: String,
-        techStacks: List<String>,
+        techStack: List<String>,
         profileImgUrl: String,
         introduce: String,
         portfolioUrl: String,
@@ -169,17 +182,15 @@ class FillOutViewModel @Inject constructor(
         formOfEmployment: String,
         gsmAuthenticationScore: Int,
         salary: Int,
-        regions: List<String>,
-        languageCertificates: List<CertificateInformationModel>,
+        region: List<String>,
+        languageCertificate: List<CertificateInformationModel>,
         militaryService: String,
-        certificates: List<String>,
-        projects: List<ProjectModel>,
-        prizes: List<PrizeModel>
+        certificate: List<String>,
     ) = viewModelScope.launch {
         enterStudentInformationUseCase(
             EnterStudentInformationModel(
                 major = major,
-                techStacks = techStacks,
+                techStacks = techStack,
                 profileImgUrl = profileImgUrl,
                 introduce = introduce,
                 portfolioUrl = portfolioUrl,
@@ -187,12 +198,12 @@ class FillOutViewModel @Inject constructor(
                 formOfEmployment = formOfEmployment,
                 gsmAuthenticationScore = gsmAuthenticationScore,
                 salary = salary,
-                regions = regions,
-                languageCertificates = languageCertificates,
+                regions = region,
+                languageCertificates = languageCertificate,
                 militaryService = militaryService,
-                certificates = certificates,
-                projects = projects,
-                prizes = prizes
+                certificates = certificate,
+                projects = emptyList(),
+                prizes = emptyList()
             )
         ).onSuccess {
             it.catch { remoteError ->

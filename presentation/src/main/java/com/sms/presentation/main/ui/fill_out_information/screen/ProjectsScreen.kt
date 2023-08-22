@@ -1,120 +1,45 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
-import android.Manifest
 import android.net.Uri
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
-import com.msg.sms.design.component.button.ButtonState
-import com.msg.sms.design.component.button.SmsRoundedButton
-import com.msg.sms.design.component.picker.SmsDatePicker
-import com.msg.sms.design.component.toggle.ToggleComponent
-import com.msg.sms.design.modifier.smsClickable
-import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.*
+import com.sms.presentation.main.ui.fill_out_information.component.projects.AddProjectButton
+import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsBottomButtonComponent
+import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsComponent
+import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isImageExtensionCorrect
 import com.sms.presentation.main.viewmodel.FillOutViewModel
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProjectsScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
+    detailStackList: Map<String, List<String>>,
     bottomSheetState: ModalBottomSheetState,
+    onSnackBarVisibleChanged: () -> Unit,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit
 ) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-    val projectName = remember {
-        mutableStateOf("")
-    }
-    val projectIconUri = remember {
-        mutableStateOf(Uri.EMPTY)
-    }
-    val projectPreviewUriList = remember {
-        mutableStateListOf<Uri>()
-    }
-    val projectKeyTask = remember {
-        mutableStateOf("")
-    }
-    val projectStartDate = remember {
-        mutableStateOf("")
-    }
-    val projectEndDate = remember {
-        mutableStateOf("")
-    }
-    val projectRelatedLinkList = remember {
-        mutableStateListOf(Pair("", ""))
-    }
-    val isProjectProgress = remember {
-        mutableStateOf(false)
+    val data = viewModel.getEnteredProjectsInformation()
+    val projectList = remember {
+        mutableStateListOf(*data.projects.toTypedArray())
     }
     val isImageExtensionInCorrect = remember {
         mutableStateOf(false)
     }
-    val isImportingProjectIcons = remember {
-        mutableStateOf(true)
-    }
-    val isProjectStartDate = remember {
-        mutableStateOf(true)
-    }
-    val singleSelectGalleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
-                if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
-                    isImageExtensionInCorrect.value = false
-                    projectIconUri.value = uri
-                } else {
-                    isImageExtensionInCorrect.value = true
-                }
-            }
-        }
-    val multipleSelectGalleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItems = 4)) { uris ->
-            if (uris.isNotEmpty()) {
-                if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
-                    isImageExtensionInCorrect.value = false
-                    projectPreviewUriList.clear()
-                    projectPreviewUriList.addAll(uris)
-                } else {
-                    isImageExtensionInCorrect.value = true
-                }
-            }
-        }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            if (isImportingProjectIcons.value)
-                singleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            else
-                multipleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
-    }
-
-    val permission =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
 
     if (isImageExtensionInCorrect.value) {
         SmsDialog(
@@ -122,174 +47,85 @@ fun ProjectsScreen(
             title = "에러",
             msg = "이미지의 확장자가 jpg, jpeg, png, heic가 아닙니다.",
             outLineButtonText = "취소",
-            normalButtonText = "확인",
+            importantButtonText = "확인",
             outlineButtonOnClick = { isImageExtensionInCorrect.value = false },
-            normalButtonOnClick = { isImageExtensionInCorrect.value = false }
+            importantButtonOnClick = { isImageExtensionInCorrect.value = false }
         )
     }
 
-    bottomSheetContent(
-        content = {
-            val year = remember {
-                mutableStateOf(0)
-            }
-            val month = remember {
-                mutableStateOf(0)
-            }
-            val yearRange = remember {
-                mutableStateOf(2000..2030)
-            }
-            val monthRange = remember {
-                mutableStateOf(1..12)
-            }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+    ) {
+        itemsIndexed(projectList) { idx, item ->
+            projectList[idx] = projectList[idx].copy(
+                technologyOfUse = detailStackList["Project$idx"] ?: emptyList()
+            )
 
-            SMSTheme { colors, typography ->
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp)
-                ) {
-                    Text(
-                        text = "날짜 선택",
-                        style = typography.title2,
-                        color = colors.BLACK,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "완료",
-                        style = typography.body2,
-                        color = colors.P2,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .smsClickable {
-                                if (isProjectStartDate.value) projectStartDate.value =
-                                    "${year.value}.${month.value}"
-                                else projectEndDate.value =
-                                    "${year.value}.${month.value}"
-                                coroutineScope.launch { bottomSheetState.hide() }
-                            }
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                SmsDatePicker(
-                    yearValue = year.value,
-                    monthValue = month.value,
-                    yearRange = yearRange.value,
-                    monthRange = monthRange.value,
-                    onYearValueChange = { year.value = it },
-                    onMonthValueChange = { month.value = it }
-                )
-            }
+            ProjectsComponent(
+                navController = navController,
+                bottomSheetState = bottomSheetState,
+                bottomSheetContent = bottomSheetContent,
+                data = item,
+                onStartDateValueChanged = {
+                    projectList[idx] = projectList[idx].copy(startDate = it)
+                },
+                onEndDateValueChanged = { projectList[idx] = projectList[idx].copy(endDate = it) },
+                onProjectNameValueChanged = { projectList[idx] = projectList[idx].copy(name = it) },
+                onProjectIconValueChanged = { uri ->
+                    if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
+                        isImageExtensionInCorrect.value = false
+                        projectList[idx] = projectList[idx].copy(icon = uri)
+                    } else {
+                        isImageExtensionInCorrect.value = true
+                    }
+                },
+                onProjectPreviewsValueChanged = { uris ->
+                    if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
+                        isImageExtensionInCorrect.value = false
+                        projectList[idx] = projectList[idx].copy(preview = uris)
+                    } else {
+                        isImageExtensionInCorrect.value = true
+                    }
+                },
+                onProjectKeyTaskValueChanged = {
+                    projectList[idx] = projectList[idx].copy(keyTask = it)
+                },
+                onProjectRelatedLinksValueChanged = {
+                    projectList[idx] = projectList[idx].copy(relatedLinkList = it)
+                },
+                onSnackBarVisibleChanged = onSnackBarVisibleChanged,
+                onCancelButtonClick = { projectList.removeAt(idx) },
+                onDetailStackSearchBarClick = { navController.navigate("Search/Project$idx") }
+            )
         }
-    )
-    LazyColumn {
         item {
-            ToggleComponent(name = "프로젝트", onCancelButtonClick = {}) {
-                Spacer(modifier = Modifier.height(32.dp))
-                ProjectNameInputComponent(
-                    text = projectName.value,
-                    onButtonClick = { projectName.value = "" }
-                ) {
-                    projectName.value = it
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-                ProjectIconInputComponent(iconImageUri = projectIconUri.value) {
-                    isImportingProjectIcons.value = true
-                    permissionLauncher.launch(permission)
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-                ProjectPreviewInputComponent(
-                    previewUriList = projectPreviewUriList,
-                    deletedIndex = { projectPreviewUriList.removeAt(it) }
-                ) {
-                    isImportingProjectIcons.value = false
-                    permissionLauncher.launch(permission)
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-                ProjectTechStackInputComponent(techStack = listOf()) {
-
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-                ProjectKeyTaskInputComponent(
-                    text = projectKeyTask.value,
-                    onButtonClick = { projectKeyTask.value = "" }
-                ) {
-                    projectKeyTask.value = it
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-                ProjectScheduleInputComponent(
-                    startDateText = projectStartDate.value,
-                    endDateText = projectEndDate.value,
-                    isProjectProgress = isProjectProgress.value,
-                    onStartDateCalendarClick = {
-                        isProjectStartDate.value = true
-                        coroutineScope.launch { bottomSheetState.show() }
-                    },
-                    onEndDateCalendarClick = {
-                        isProjectStartDate.value = false
-                        coroutineScope.launch { bottomSheetState.show() }
-                    },
-                    onProgressButtonClick = {
-                        isProjectProgress.value = !isProjectProgress.value
-                    }
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                ProjectRelatedLinksInputComponent(
-                    relatedLinks = projectRelatedLinkList,
-                    onAddButtonClick = { projectRelatedLinkList.add(Pair("", "")) },
-                    onDeleteButtonClick = { projectRelatedLinkList.removeAt(it) },
-                    onValueChange = { idx, name, link ->
-                        projectRelatedLinkList[idx] = Pair(name, link)
-                    }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
+            AddProjectButton {
+                projectList.add(ProjectInfo())
             }
         }
         item {
-            SMSTheme { colors, typography ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    horizontalAlignment = Alignment.End
-                ) {
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "+  추가",
-                        style = typography.title2,
-                        fontWeight = FontWeight.Bold,
-                        color = colors.BLACK,
-                        modifier = Modifier.smsClickable {
-                            //TODO (Kimhyunseung) - 데이터 저장 구현하면서 같이 구현 예정 (프로젝트 추가)
+            Spacer(modifier = Modifier.height(52.dp))
+            ProjectsBottomButtonComponent(
+                onPreviousButtonClick = { navController.popBackStack() },
+                onNextButtonClick = {
+                    viewModel.setEnteredProjectsInformation(
+                        projectList.filter { project ->
+                            project.name.isNotEmpty() ||
+                            project.icon != Uri.EMPTY ||
+                            project.keyTask.isNotEmpty() ||
+                            project.preview.isNotEmpty() ||
+                            project.endDate.isNotEmpty() ||
+                            project.startDate.isNotEmpty() ||
+                            project.technologyOfUse.isNotEmpty() ||
+                            project.relatedLinkList.first() != Pair("", "")
                         }
                     )
                 }
-            }
-        }
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-            ) {
-                Spacer(modifier = Modifier.height(52.dp))
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    SmsRoundedButton(
-                        text = "이전",
-                        modifier = Modifier.weight(1f),
-                        state = ButtonState.OutLine
-                    ) {
-                        navController.popBackStack()
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    SmsRoundedButton(text = "다음", modifier = Modifier.weight(2.25f)) {
-                        //TODO (Kimhyunseung) - 데이터 저장
-                        //TODO (Kimhyunseung) - 수상경력 완성 후 navigate 로직 작성
-                    }
-                }
-                Spacer(modifier = Modifier.height(48.dp))
-            }
+            )
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }
