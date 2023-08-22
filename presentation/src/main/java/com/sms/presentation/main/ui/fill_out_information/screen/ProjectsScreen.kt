@@ -45,9 +45,9 @@ fun ProjectsScreen(
             title = "에러",
             msg = "이미지의 확장자가 jpg, jpeg, png, heic가 아닙니다.",
             outLineButtonText = "취소",
-            normalButtonText = "확인",
+            importantButtonText = "확인",
             outlineButtonOnClick = { isImageExtensionInCorrect.value = false },
-            normalButtonOnClick = { isImageExtensionInCorrect.value = false }
+            importantButtonOnClick = { isImageExtensionInCorrect.value = false }
         )
     }
 
