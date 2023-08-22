@@ -12,13 +12,15 @@ fun ProjectsBottomButtonComponent(
     onPreviousButtonClick: () -> Unit,
     onNextButtonClick: () -> Unit
 ) {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         SmsRoundedButton(
             text = "이전", modifier = Modifier.weight(1f),
             state = ButtonState.OutLine,
             onClick = onPreviousButtonClick
         )
-        Spacer(modifier = Modifier.width(8.dp))
         SmsRoundedButton(
             text = "다음", modifier = Modifier.weight(2.25f),
             onClick = onNextButtonClick
