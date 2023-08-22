@@ -15,8 +15,7 @@ fun AddProjectButton(onClick: () -> Unit) {
     SMSTheme { colors, typography ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.End
         ) {
             Spacer(modifier = Modifier.height(12.dp))

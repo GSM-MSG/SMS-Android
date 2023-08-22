@@ -58,7 +58,7 @@ fun ToggleComponent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 20.dp, start = 20.dp, end = 20.dp)
+                    .padding(top = 20.dp)
             ) {
                 Text(
                     text = name,
@@ -92,7 +92,7 @@ fun ToggleComponent(
             Divider(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp, end = 20.dp, top = 24.dp, bottom = 4.dp),
+                    .padding(top = 24.dp, bottom = 4.dp),
                 color = colors.N20,
                 thickness = 1.dp
             )

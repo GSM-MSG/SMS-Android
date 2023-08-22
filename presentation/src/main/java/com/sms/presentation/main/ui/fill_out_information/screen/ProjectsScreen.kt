@@ -8,7 +8,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.sms.presentation.main.ui.fill_out_information.component.*
@@ -51,7 +53,11 @@ fun ProjectsScreen(
         )
     }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+    ) {
         itemsIndexed(projectList) { idx, item ->
             projectList[idx] = projectList[idx].copy(
                 technologyOfUse = detailStackList["Project$idx"] ?: emptyList()
@@ -76,13 +82,7 @@ fun ProjectsScreen(
                     }
                 },
                 onProjectPreviewsValueChanged = { uris ->
-                    Log.d("dddd", uris.joinToString())
-                    if (uris.all { uri ->
-                            getFileNameFromUri(
-                                context,
-                                uri
-                            )?.isImageExtensionCorrect() == true
-                        }) {
+                    if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
                         isImageExtensionInCorrect.value = false
                         projectList[idx] = projectList[idx].copy(preview = uris)
                     } else {
@@ -112,13 +112,13 @@ fun ProjectsScreen(
                     viewModel.setEnteredProjectsInformation(
                         projectList.filter { project ->
                             project.name.isNotEmpty() ||
-                                    project.icon != Uri.EMPTY ||
-                                    project.keyTask.isNotEmpty() ||
-                                    project.preview.isNotEmpty() ||
-                                    project.endDate.isNotEmpty() ||
-                                    project.startDate.isNotEmpty() ||
-                                    project.technologyOfUse.isNotEmpty() ||
-                                    project.relatedLinkList.first() != Pair("", "")
+                            project.icon != Uri.EMPTY ||
+                            project.keyTask.isNotEmpty() ||
+                            project.preview.isNotEmpty() ||
+                            project.endDate.isNotEmpty() ||
+                            project.startDate.isNotEmpty() ||
+                            project.technologyOfUse.isNotEmpty() ||
+                            project.relatedLinkList.first() != Pair("", "")
                         }
                     )
                 }
