@@ -1,6 +1,6 @@
 package com.msg.sms.data.remote.dto.student.request
 
-data class CertificateInformation(
+data class CertificateData(
     val languageCertificateName: String,
     val score: String
 )
