@@ -92,54 +92,50 @@ fun ProjectsComponent(
     })
 
     ToggleComponent(name = "프로젝트", onCancelButtonClick = onCancelButtonClick) {
-        Spacer(modifier = Modifier.height(32.dp))
-        ProjectNameInputComponent(
-            projectName = data.name,
-            onValueChange = onProjectNameValueChanged
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        ProjectIconInputComponent(
-            iconImageUri = data.icon,
-            onValueChanged = onProjectIconValueChanged
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        ProjectPreviewInputComponent(
-            previewUriList = data.preview,
-            onSnackBarVisibleChanged = onSnackBarVisibleChanged,
-            onValueChanged = onProjectPreviewsValueChanged
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        ProjectTechStackInputComponent(
-            techStack = data.technologyOfUse,
-            onClick = onDetailStackSearchBarClick
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        ProjectKeyTaskInputComponent(
-            projectKeyTask = data.keyTask,
-            onValueChange = onProjectKeyTaskValueChanged
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        ProjectScheduleInputComponent(
-            startDateText = data.startDate,
-            endDateText = data.endDate,
-            isProjectProgress = isProjectProgress.value,
-            onStartDateCalendarClick = {
-                isProjectStartDate.value = true
-                coroutineScope.launch { bottomSheetState.show() }
-            },
-            onEndDateCalendarClick = {
-                isProjectStartDate.value = false
-                coroutineScope.launch { bottomSheetState.show() }
-            },
-            onProgressButtonClick = {
-                isProjectProgress.value = !isProjectProgress.value
-            }
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        ProjectRelatedLinksInputComponent(
-            relatedLinks = data.relatedLinkList,
-            onValueChanged = onProjectRelatedLinksValueChanged
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+        Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+            Spacer(modifier = Modifier.height(8.dp))
+            ProjectNameInputComponent(
+                projectName = data.name,
+                onValueChange = onProjectNameValueChanged
+            )
+            ProjectIconInputComponent(
+                iconImageUri = data.icon,
+                onValueChanged = onProjectIconValueChanged
+            )
+            ProjectPreviewInputComponent(
+                previewUriList = data.preview,
+                onSnackBarVisibleChanged = onSnackBarVisibleChanged,
+                onValueChanged = onProjectPreviewsValueChanged
+            )
+            ProjectTechStackInputComponent(
+                techStack = data.technologyOfUse,
+                onClick = onDetailStackSearchBarClick
+            )
+            ProjectKeyTaskInputComponent(
+                projectKeyTask = data.keyTask,
+                onValueChange = onProjectKeyTaskValueChanged
+            )
+            ProjectScheduleInputComponent(
+                startDateText = data.startDate,
+                endDateText = data.endDate,
+                isProjectProgress = isProjectProgress.value,
+                onStartDateCalendarClick = {
+                    isProjectStartDate.value = true
+                    coroutineScope.launch { bottomSheetState.show() }
+                },
+                onEndDateCalendarClick = {
+                    isProjectStartDate.value = false
+                    coroutineScope.launch { bottomSheetState.show() }
+                },
+                onProgressButtonClick = {
+                    isProjectProgress.value = !isProjectProgress.value
+                }
+            )
+            ProjectRelatedLinksInputComponent(
+                relatedLinks = data.relatedLinkList,
+                onValueChanged = onProjectRelatedLinksValueChanged
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 }
