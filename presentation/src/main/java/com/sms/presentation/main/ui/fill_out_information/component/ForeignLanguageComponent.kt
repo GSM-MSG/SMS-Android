@@ -79,11 +79,11 @@ fun ForeignLanguageComponent(
                 title = errorTitle.value,
                 msg = errorMsg.value,
                 outLineButtonText = "취소",
-                normalButtonText = "확인",
+                importantButtonText = "확인",
                 outlineButtonOnClick = {
                     dialogState.value = false
                 },
-                normalButtonOnClick = {
+                importantButtonOnClick = {
                     onClick.value()
                     dialogState.value = false
                 }
