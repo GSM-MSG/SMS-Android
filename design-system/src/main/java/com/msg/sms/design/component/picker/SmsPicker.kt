@@ -1,6 +1,5 @@
 package com.msg.sms.design.component.picker
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,10 +8,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.text.font.FontWeight
@@ -21,8 +21,11 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun SmsNumberPicker(itemList: List<String>) {
+fun SmsPicker(itemList: List<String>, selectedItem: (value: String) -> Unit) {
     val listState = rememberLazyListState()
+    val boxPosition = remember {
+        mutableStateOf(0f)
+    }
 
     SMSTheme { colors, typography ->
         Box {
@@ -34,7 +37,7 @@ fun SmsNumberPicker(itemList: List<String>) {
                     .clip(RoundedCornerShape(8.dp))
                     .background(colors.N10)
                     .onGloballyPositioned {
-
+                        boxPosition.value = it.positionInWindow().y
                     }
             )
             LazyColumn(
@@ -48,13 +51,24 @@ fun SmsNumberPicker(itemList: List<String>) {
                 item {
                     Spacer(modifier = Modifier.height(64.dp))
                 }
-                itemsIndexed(itemList) { idx, item ->
+                itemsIndexed(itemList) { _, item ->
+                    val isSelected = remember {
+                        mutableStateOf(false)
+                    }
+
+                    if (isSelected.value) selectedItem(item)
+
                     Text(
                         text = item,
-                        style = typography.title1,
-                        color = colors.BLACK,
+                        style = if (isSelected.value) typography.title1 else typography.title2,
+                        color = if (isSelected.value) colors.BLACK else colors.N30,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(vertical = 3.dp)
+                        modifier = Modifier
+                            .padding(vertical = 3.dp)
+                            .onGloballyPositioned {
+                                isSelected.value =
+                                    it.positionInWindow().y in boxPosition.value..boxPosition.value + 70
+                            }
                     )
                 }
                 item {
@@ -67,10 +81,10 @@ fun SmsNumberPicker(itemList: List<String>) {
 
 @Preview
 @Composable
-fun SmsNumberPickerPre() {
+fun SmsPickerPre() {
     Column {
         Spacer(modifier = Modifier.height(30.dp))
-        SmsNumberPicker(
+        SmsPicker(
             itemList = listOf(
                 "2012",
                 "2013",
@@ -78,19 +92,8 @@ fun SmsNumberPickerPre() {
                 "2015",
                 "2016",
                 "2017",
-                "2018",
-                "2019",
-                "2020",
-                "2021",
-                "2022",
-                "2023",
-                "2024",
-                "2025",
-                "2026",
-                "2027",
-                "2028",
-                "2029"
+                "2018"
             )
-        )
+        ) {}
     }
 }
