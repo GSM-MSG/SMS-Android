@@ -10,7 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.sms.presentation.main.ui.detail.data.ExpandableProjectData
+import com.sms.presentation.main.ui.mypage.state.ExpandableProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.project.ProjectComponent
 

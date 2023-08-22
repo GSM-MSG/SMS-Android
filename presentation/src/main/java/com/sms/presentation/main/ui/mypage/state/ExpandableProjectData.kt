@@ -1,4 +1,6 @@
-package com.sms.presentation.main.ui.detail.data
+package com.sms.presentation.main.ui.mypage.state
+
+import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 
 data class ExpandableProjectData(
     val name: String,

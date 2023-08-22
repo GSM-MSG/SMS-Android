@@ -7,13 +7,19 @@ import com.msg.sms.design.icon.CalendarIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
-fun AwardDateComponent() {
+fun AwardDateComponent(
+    date: String,
+    onValueChange: (value: String) -> Unit,
+    onClickIcon: () -> Unit,
+) {
     AddGrayBody1Title(titleText = "기간") {
         SmsCustomTextField(
             endIcon = { CalendarIcon() },
-            clickAction = { },
-            setChangeText = "",
-            placeHolder = "2023.09"
+            setChangeText = date,
+            placeHolder = "2023.09",
+            readOnly = true,
+            onValueChange = { onValueChange(it) },
+            clickAction = onClickIcon,
         )
     }
 }
@@ -21,5 +27,5 @@ fun AwardDateComponent() {
 @Preview
 @Composable
 private fun AwardDateComponentPre() {
-    AwardDateComponent()
+    AwardDateComponent(date = "2023. 03. 02", onValueChange = {}, onClickIcon = {})
 }
