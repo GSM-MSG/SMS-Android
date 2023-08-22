@@ -66,7 +66,7 @@ fun SmsDatePicker(
 
 @Preview
 @Composable
-fun DatePickerPre() {
+fun SmsDatePickerPre() {
     Column(
         modifier = Modifier
             .fillMaxSize()
