@@ -14,7 +14,8 @@ fun AwardNameComponent(name: String, onValueChange: (value: String) -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             setText = name,
             placeHolder = "제 19회 스마틴 앱 챌린지 대상",
-            onValueChange = { onValueChange(it) }) {
+            onValueChange = { onValueChange(it) }
+        ) {
             onValueChange("")
         }
     }
