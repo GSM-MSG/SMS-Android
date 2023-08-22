@@ -33,7 +33,10 @@ private enum class ModalValue {
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun MyPageScreen() {
+fun MyPageScreen(
+    onWithdrawal: () -> Unit,
+    onLogout: () -> Unit,
+) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
@@ -74,10 +77,11 @@ fun MyPageScreen() {
                 dialogVisibility.value = false
             },
             importantButtonOnClick = {
+                dialogVisibility.value = true
                 if (dialogState.value == ModalValue.Logout) {
-
+                    onLogout()
                 } else {
-
+                    onWithdrawal()
                 }
             })
     }
@@ -184,5 +188,8 @@ fun MyPageScreen() {
 @Preview
 @Composable
 private fun MyPageScreenPre() {
-    MyPageScreen()
+    MyPageScreen(
+        onLogout = {},
+        onWithdrawal = {}
+    )
 }
