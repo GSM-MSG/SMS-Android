@@ -101,11 +101,13 @@ fun ProjectsScreen(
             )
         }
         item {
+            Spacer(modifier = Modifier.height(12.dp))
             AddProjectButton {
                 projectList.add(ProjectInfo())
             }
         }
         item {
+            Spacer(modifier = Modifier.height(52.dp))
             ProjectsBottomButtonComponent(
                 onPreviousButtonClick = { navController.popBackStack() },
                 onNextButtonClick = {
@@ -123,6 +125,7 @@ fun ProjectsScreen(
                     )
                 }
             )
+            Spacer(modifier = Modifier.height(48.dp))
         }
     }
 }

@@ -110,12 +110,16 @@ fun ProjectPreviewInputComponent(
                                 .background(colors.N10),
                             contentScale = ContentScale.FillBounds
                         )
-                        DeleteButtonIcon(modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(6.dp)
-                            .smsClickable(
-                                bounded = false
-                            ) { list.removeAt(idx) })
+                        DeleteButtonIcon(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(6.dp)
+                                .smsClickable(
+                                    bounded = false
+                                ) {
+                                    list.removeAt(idx)
+                                }
+                        )
                     }
                 }
             }

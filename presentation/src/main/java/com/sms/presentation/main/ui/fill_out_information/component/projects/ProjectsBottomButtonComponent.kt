@@ -12,7 +12,6 @@ fun ProjectsBottomButtonComponent(
     onPreviousButtonClick: () -> Unit,
     onNextButtonClick: () -> Unit
 ) {
-    Spacer(modifier = Modifier.height(52.dp))
     Row(modifier = Modifier.fillMaxWidth()) {
         SmsRoundedButton(
             text = "이전", modifier = Modifier.weight(1f),
@@ -25,5 +24,4 @@ fun ProjectsBottomButtonComponent(
             onClick = onNextButtonClick
         )
     }
-    Spacer(modifier = Modifier.height(48.dp))
 }
