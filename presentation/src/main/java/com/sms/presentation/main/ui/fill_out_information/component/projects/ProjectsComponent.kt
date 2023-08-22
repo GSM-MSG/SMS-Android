@@ -8,7 +8,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -34,10 +33,10 @@ fun ProjectsComponent(
     onProjectPreviewsValueChanged: (value: List<Uri>) -> Unit,
     onProjectKeyTaskValueChanged: (value: String) -> Unit,
     onProjectRelatedLinksValueChanged: (value: List<Pair<String, String>>) -> Unit,
+    onSnackBarVisibleChanged: () -> Unit,
     onCancelButtonClick: () -> Unit,
     onDetailStackSearchBarClick: () -> Unit,
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val isProjectProgress = remember {
         mutableStateOf(false)
@@ -106,6 +105,7 @@ fun ProjectsComponent(
         Spacer(modifier = Modifier.height(24.dp))
         ProjectPreviewInputComponent(
             previewUriList = data.preview,
+            onSnackBarVisibleChanged = onSnackBarVisibleChanged,
             onValueChanged = onProjectPreviewsValueChanged
         )
         Spacer(modifier = Modifier.height(24.dp))

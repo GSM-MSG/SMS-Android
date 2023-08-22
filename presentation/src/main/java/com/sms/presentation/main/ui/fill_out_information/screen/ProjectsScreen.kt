@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -26,6 +27,7 @@ fun ProjectsScreen(
     viewModel: FillOutViewModel,
     detailStackList: Map<String, List<String>>,
     bottomSheetState: ModalBottomSheetState,
+    onSnackBarVisibleChanged: () -> Unit,
     bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit
 ) {
     val context = LocalContext.current
@@ -74,15 +76,26 @@ fun ProjectsScreen(
                     }
                 },
                 onProjectPreviewsValueChanged = { uris ->
-                    if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
+                    Log.d("dddd", uris.joinToString())
+                    if (uris.all { uri ->
+                            getFileNameFromUri(
+                                context,
+                                uri
+                            )?.isImageExtensionCorrect() == true
+                        }) {
                         isImageExtensionInCorrect.value = false
                         projectList[idx] = projectList[idx].copy(preview = uris)
                     } else {
                         isImageExtensionInCorrect.value = true
                     }
                 },
-                onProjectKeyTaskValueChanged = { projectList[idx] = projectList[idx].copy(keyTask = it) },
-                onProjectRelatedLinksValueChanged = { projectList[idx] = projectList[idx].copy(relatedLinkList = it) },
+                onProjectKeyTaskValueChanged = {
+                    projectList[idx] = projectList[idx].copy(keyTask = it)
+                },
+                onProjectRelatedLinksValueChanged = {
+                    projectList[idx] = projectList[idx].copy(relatedLinkList = it)
+                },
+                onSnackBarVisibleChanged = onSnackBarVisibleChanged,
                 onCancelButtonClick = { projectList.removeAt(idx) },
                 onDetailStackSearchBarClick = { navController.navigate("Search/Project$idx") }
             )

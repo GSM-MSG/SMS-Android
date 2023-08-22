@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,12 +33,21 @@ import com.msg.sms.design.util.AddGrayBody1Title
 @Composable
 fun ProjectPreviewInputComponent(
     previewUriList: List<Uri>,
+    onSnackBarVisibleChanged: () -> Unit,
     onValueChanged: (value: List<Uri>) -> Unit
 ) {
+    val list = remember {
+        mutableStateListOf(*previewUriList.toTypedArray())
+    }
+
+    val maxItems = remember {
+        mutableStateOf(4 - list.size)
+    }
+
     val multipleSelectGalleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItems = 4)) { uris ->
+        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItems = if (maxItems.value == 0) 1 else maxItems.value)) { uris ->
             if (uris.isNotEmpty()) {
-                onValueChanged(uris)
+                list.addAll(uris)
             }
         }
 
@@ -45,34 +55,33 @@ fun ProjectPreviewInputComponent(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            multipleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            if (list.size == 4) {
+                onSnackBarVisibleChanged()
+            } else {
+                multipleSelectGalleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
         }
     }
 
-    val permission =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
-
-    val list = remember {
-        mutableStateListOf(*previewUriList.toTypedArray())
+    val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.READ_MEDIA_IMAGES
+    } else {
+        Manifest.permission.READ_EXTERNAL_STORAGE
     }
 
-    onValueChanged(list)
+    if (list.isNotEmpty()) {
+        onValueChanged(list)
+    }
 
     SMSTheme { colors, typography ->
         AddGrayBody1Title(titleText = "미리보기 사진") {
             LazyRow(modifier = Modifier.fillMaxWidth()) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .size(132.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(colors.N10)
-                            .smsClickable { permissionLauncher.launch(permission) }
-                    ) {
+                    Box(modifier = Modifier
+                        .size(132.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(colors.N10)
+                        .smsClickable { permissionLauncher.launch(permission) }) {
                         Column(modifier = Modifier.align(Alignment.Center)) {
                             GalleryIcon()
                             Spacer(modifier = Modifier.height(4.dp))
@@ -101,14 +110,12 @@ fun ProjectPreviewInputComponent(
                                 .background(colors.N10),
                             contentScale = ContentScale.FillBounds
                         )
-                        DeleteButtonIcon(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(6.dp)
-                                .smsClickable(
-                                    bounded = false
-                                ) { list.removeAt(idx) }
-                        )
+                        DeleteButtonIcon(modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(6.dp)
+                            .smsClickable(
+                                bounded = false
+                            ) { list.removeAt(idx) })
                     }
                 }
             }
