@@ -24,6 +24,9 @@ fun ProfileScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
     detailStack: List<String>,
+    profileImageUri: Uri,
+    isImageExtensionInCorrect: Boolean,
+    onDialogDissmissButtonClick: () -> Unit,
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
     onMajorBottomSheetOpenButtonClick: () -> Unit
 ) {
@@ -41,17 +44,11 @@ fun ProfileScreen(
     val contactEmail = remember {
         mutableStateOf("")
     }
-    val profileImageUri = remember {
-        mutableStateOf(Uri.EMPTY)
-    }
     val isRequired = remember {
         mutableStateOf(false)
     }
     val enteredMajor = remember {
         mutableStateOf(if (data.enteredMajor != "") data.enteredMajor else "")
-    }
-    val isImageExtensionInCorrect = remember {
-        mutableStateOf(false)
     }
     val dialogState = remember {
         mutableStateOf(false)
@@ -60,15 +57,15 @@ fun ProfileScreen(
 
     val list = viewModel.getMajorListResponse.collectAsState()
 
-    if (isImageExtensionInCorrect.value) {
+    if (isImageExtensionInCorrect) {
         SmsDialog(
             widthPercent = 1f,
             title = "에러",
             msg = "이미지의 확장자가 jpg, jpeg, png, heic가 아닙니다.",
             outLineButtonText = "취소",
             importantButtonText = "확인",
-            outlineButtonOnClick = { isImageExtensionInCorrect.value = false },
-            importantButtonOnClick = { isImageExtensionInCorrect.value = false }
+            outlineButtonOnClick = onDialogDissmissButtonClick,
+            importantButtonOnClick = onDialogDissmissButtonClick
         )
     }
 
@@ -130,18 +127,17 @@ fun ProfileScreen(
                     introduce.value = getIntroduce
                     portfolioUrl.value = getPortfolio
                     contactEmail.value = getContactEmail
-                    profileImageUri.value = getProfileImageUri
                 },
                 enteredMajor = enteredMajor.value,
                 data = data,
                 isRequired = { result -> isRequired.value = result },
                 //isEnable = list.value.data != null,
-                profileImageUri = profileImageUri.value,
+                profileImageUri = profileImageUri,
                 changeView = {
                     viewModel.setEnteredProfileInformation(
                         major = selectedMajor.value,
                         techStack = detailStack.joinToString(", "),
-                        profileImgUri = profileImageUri.value,
+                        profileImgUri = profileImageUri,
                         introduce = introduce.value,
                         contactEmail = contactEmail.value,
                         portfolioUrl = portfolioUrl.value,
@@ -170,7 +166,7 @@ fun ProfileScreen(
                         viewModel.setEnteredProfileInformation(
                             major = selectedMajor.value,
                             techStack = detailStack.joinToString(", "),
-                            profileImgUri = profileImageUri.value,
+                            profileImgUri = profileImageUri,
                             introduce = introduce.value,
                             contactEmail = contactEmail.value,
                             portfolioUrl = portfolioUrl.value,

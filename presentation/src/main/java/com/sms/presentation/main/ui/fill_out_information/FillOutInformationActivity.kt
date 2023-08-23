@@ -1,6 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information
 
-import android.util.Log
+import android.net.Uri
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -86,6 +86,12 @@ class FillOutInformationActivity : BaseActivity() {
             val snackBarVisible = remember {
                 mutableStateOf(false)
             }
+            val profileImageUri = remember {
+                mutableStateOf(Uri.EMPTY)
+            }
+            val isImageExtensionInCorrect = remember {
+                mutableStateOf(false)
+            }
 
             ModalBottomSheetLayout(
                 sheetContent = {
@@ -93,11 +99,9 @@ class FillOutInformationActivity : BaseActivity() {
                         BottomSheetValues.PhotoPicker -> {
                             PhotoPickBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                onPhotoFormCameraChanged = { uri, extension ->
-                                    Log.d("dddd", "$uri, $extension")
-                                },
-                                onPictureFormGalleryChanged = { uri, extension ->
-                                    Log.d("dddd", "$uri, $extension")
+                                onProfileImageUriChanged = { uri, extension ->
+                                    profileImageUri.value = uri
+                                    isImageExtensionInCorrect.value = extension
                                 }
                             )
                         }
@@ -140,6 +144,8 @@ class FillOutInformationActivity : BaseActivity() {
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
                                         detailStack = detailStackList[FillOutPage.Profile.value]
                                             ?: emptyList(),
+                                        profileImageUri = profileImageUri.value,
+                                        isImageExtensionInCorrect = isImageExtensionInCorrect.value,
                                         onPhotoPickBottomSheetOpenButtonClick = {
                                             scope.launch { bottomSheetState.show() }
                                             bottomSheetValues.value = BottomSheetValues.PhotoPicker
@@ -147,6 +153,9 @@ class FillOutInformationActivity : BaseActivity() {
                                         onMajorBottomSheetOpenButtonClick = {
                                             scope.launch { bottomSheetState.show() }
                                             bottomSheetValues.value = BottomSheetValues.Major
+                                        },
+                                        onDialogDissmissButtonClick = {
+                                            isImageExtensionInCorrect.value = false
                                         }
                                     )
                                 }

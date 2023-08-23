@@ -20,8 +20,7 @@ import com.sms.presentation.main.ui.util.toUri
 @Composable
 fun PhotoPickBottomSheet(
     bottomSheetState: ModalBottomSheetState,
-    onPhotoFormCameraChanged: (uri: Uri, extention: Boolean) -> Unit,
-    onPictureFormGalleryChanged: (uri: Uri, extention: Boolean) -> Unit
+    onProfileImageUriChanged: (uri: Uri, extention: Boolean) -> Unit
 ) {
     val context = LocalContext.current
     val isCamera = remember {
@@ -30,7 +29,7 @@ fun PhotoPickBottomSheet(
     val galleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
-                onPhotoFormCameraChanged(
+                onProfileImageUriChanged(
                     uri,
                     getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()
                 )
@@ -40,7 +39,7 @@ fun PhotoPickBottomSheet(
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
             val uri = bitmap.toUri(context)
             if (uri != null) {
-                onPictureFormGalleryChanged(
+                onProfileImageUriChanged(
                     uri,
                     getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()
                 )
