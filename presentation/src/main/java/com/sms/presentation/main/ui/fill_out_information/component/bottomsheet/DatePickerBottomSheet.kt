@@ -20,8 +20,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun DatePickerBottomSheet(
     bottomSheetState: ModalBottomSheetState,
-    onStartDateValueChanged: (date: String) -> Unit,
-    onEndDateValueChanged: (date: String) -> Unit
+    onDateValueChanged: (date: String) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val year = remember {
@@ -29,9 +28,6 @@ fun DatePickerBottomSheet(
     }
     val month = remember {
         mutableStateOf("")
-    }
-    val isProjectProgress = remember {
-        mutableStateOf(false)
     }
 
     SMSTheme { colors, typography ->
@@ -55,14 +51,11 @@ fun DatePickerBottomSheet(
                     .align(Alignment.CenterEnd)
                     .smsClickable {
                         scope.launch { bottomSheetState.hide() }
-                        if (isProjectProgress.value)
-                            onStartDateValueChanged("${year.value}.${month.value}")
-                        else
-                            onEndDateValueChanged("${year.value}.${month.value}")
+                        onDateValueChanged("${year.value}.${month.value}")
                     }
             )
         }
-//        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 //        SmsDatePicker(
 //            yearValue = year.value,
 //            monthValue = month.value,
