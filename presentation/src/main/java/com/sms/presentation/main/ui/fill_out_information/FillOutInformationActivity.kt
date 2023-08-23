@@ -52,6 +52,7 @@ enum class FillOutPage(val value: String) {
     Certification("Certification"),
     ForeignLanguage("ForeignLanguage"),
     Projects("Projects"),
+    Award("Award"),
     Search("Search")
 }
 
@@ -302,6 +303,9 @@ class FillOutInformationActivity : BaseActivity() {
                                             scope.launch { bottomSheetState.show() }
                                         }
                                     )
+                                }
+                                composable(FillOutPage.Award.value) {
+                                    currentRoute.value = FillOutPage.Award.value
                                 }
                                 composable(
                                     "${FillOutPage.Search.value}/{idx}",
