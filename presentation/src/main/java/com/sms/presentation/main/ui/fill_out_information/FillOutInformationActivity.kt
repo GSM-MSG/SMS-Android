@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information
 
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.fill_out_information.component.FillOutInformationTopBarComponent
+import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.PhotoPickBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
@@ -39,7 +41,7 @@ private enum class BottomSheetValues {
     Date
 }
 
-private enum class FillOutPage(val value: String) {
+enum class FillOutPage(val value: String) {
     Profile("Profile"),
     SchoolLife("SchoolLife"),
     WorkCondition("WorkCondition"),
@@ -65,6 +67,7 @@ class FillOutInformationActivity : BaseActivity() {
         }
 
         setContent {
+            val scope = rememberCoroutineScope()
             val bottomSheetValues = remember {
                 mutableStateOf(BottomSheetValues.Major)
             }
@@ -88,7 +91,15 @@ class FillOutInformationActivity : BaseActivity() {
                 sheetContent = {
                     when (bottomSheetValues.value) {
                         BottomSheetValues.PhotoPicker -> {
-
+                            PhotoPickBottomSheet(
+                                bottomSheetState = bottomSheetState,
+                                onPhotoFormCameraChanged = { uri, extension ->
+                                    Log.d("dddd", "$uri, $extension")
+                                },
+                                onPictureFormGalleryChanged = { uri, extension ->
+                                    Log.d("dddd", "$uri, $extension")
+                                }
+                            )
                         }
                         BottomSheetValues.Major -> {
 
@@ -129,10 +140,15 @@ class FillOutInformationActivity : BaseActivity() {
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
                                         detailStack = detailStackList[FillOutPage.Profile.value]
                                             ?: emptyList(),
-                                        bottomSheetState = bottomSheetState
-                                    ) {
-                                        bottomSheetContent.value = it
-                                    }
+                                        onPhotoPickBottomSheetOpenButtonClick = {
+                                            scope.launch { bottomSheetState.show() }
+                                            bottomSheetValues.value = BottomSheetValues.PhotoPicker
+                                        },
+                                        onMajorBottomSheetOpenButtonClick = {
+                                            scope.launch { bottomSheetState.show() }
+                                            bottomSheetValues.value = BottomSheetValues.Major
+                                        }
+                                    )
                                 }
                                 composable(FillOutPage.SchoolLife.value) {
                                     currentRoute.value = FillOutPage.SchoolLife.value

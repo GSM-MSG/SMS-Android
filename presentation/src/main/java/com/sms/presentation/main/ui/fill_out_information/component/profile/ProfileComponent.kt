@@ -29,12 +29,9 @@ import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActiv
 import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
 import com.sms.presentation.main.ui.util.hideKeyboard
 import com.sms.presentation.main.ui.util.textFieldChecker
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProfileComponent(
-    bottomSheetScaffoldState: ModalBottomSheetState,
     selectedMajor: String,
     detailStack: String,
     savedData: (introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit,
@@ -44,13 +41,11 @@ fun ProfileComponent(
     isReadOnly: Boolean,
     changeView: () -> Unit,
     isRequired: (Boolean) -> Unit,
-    isEnable: Boolean,
     profileImageUri: Uri,
-    isProfilePictureBottomSheet: (Boolean) -> Unit,
+    onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
+    onMajorBottomSheetOpenButtonClick: () -> Unit
 ) {
     SMSTheme { _, typography ->
-        val coroutineScope = rememberCoroutineScope()
-
         val context = LocalContext.current as FillOutInformationActivity
 
         val introduce = remember {
@@ -92,11 +87,8 @@ fun ProfileComponent(
             Spacer(modifier = Modifier.height(8.dp))
             if (profileImageUri == Uri.EMPTY) {
                 ProfileIcon(modifier = Modifier.clickable {
-                    isProfilePictureBottomSheet(true)
-                    coroutineScope.launch {
-                        context.hideKeyboard()
-                        bottomSheetScaffoldState.show()
-                    }
+                    context.hideKeyboard()
+                    onPhotoPickBottomSheetOpenButtonClick()
                 })
             } else {
                 Image(
@@ -108,11 +100,8 @@ fun ProfileComponent(
                         .height(106.dp)
                         .clip(RoundedCornerShape(5.dp))
                         .clickable {
-                            isProfilePictureBottomSheet(true)
-                            coroutineScope.launch {
-                                context.hideKeyboard()
-                                bottomSheetScaffoldState.show()
-                            }
+                            context.hideKeyboard()
+                            onPhotoPickBottomSheetOpenButtonClick()
                         }
                 )
             }
@@ -147,13 +136,8 @@ fun ProfileComponent(
                 endIcon = { OpenButtonIcon() },
                 readOnly = isReadOnly,
                 clickAction = {
-                    isProfilePictureBottomSheet(false)
-                    if (isEnable) {
-                        coroutineScope.launch {
-                            context.hideKeyboard()
-                            bottomSheetScaffoldState.show()
-                        }
-                    }
+                    onMajorBottomSheetOpenButtonClick()
+                    context.hideKeyboard()
                 },
                 setChangeText = if (selectedMajor == "직접입력") enteredMajor else selectedMajor
             ) {
@@ -197,18 +181,17 @@ fun ProfileComponent(
 @Composable
 fun ProfileComponentPre() {
     ProfileComponent(
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
         selectedMajor = "FrontEnd",
         savedData = { _: String, _: String, _: String, _: Uri -> },
         data = ProfileData(Uri.EMPTY, "", "", "", "", "", ""),
         isRequired = {},
-        isEnable = false,
         detailStack = "",
         profileImageUri = Uri.EMPTY,
-        isProfilePictureBottomSheet = {},
         isReadOnly = true,
         changeView = {},
         enteringMajor = {},
-        enteredMajor = ""
+        enteredMajor = "",
+        onMajorBottomSheetOpenButtonClick = {},
+        onPhotoPickBottomSheetOpenButtonClick = {}
     )
 }
