@@ -25,6 +25,7 @@ fun ProfileScreen(
     viewModel: FillOutViewModel,
     detailStack: List<String>,
     profileImageUri: Uri,
+    selectedMajor: String,
     isImageExtensionInCorrect: Boolean,
     onDialogDissmissButtonClick: () -> Unit,
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
@@ -32,9 +33,6 @@ fun ProfileScreen(
 ) {
     val scrollState = rememberScrollState()
     val data = viewModel.getEnteredProfileInformation()
-    val selectedMajor = remember {
-        mutableStateOf(if (data.major != "") data.major else "")
-    }
     val introduce = remember {
         mutableStateOf("")
     }
@@ -121,8 +119,8 @@ fun ProfileScreen(
         ) {
             SmsSpacer()
             ProfileComponent(
-                isReadOnly = selectedMajor.value != "직접입력",
-                selectedMajor = selectedMajor.value,
+                isReadOnly = selectedMajor != "직접입력",
+                selectedMajor = selectedMajor,
                 savedData = { getIntroduce: String, getPortfolio: String, getContactEmail: String, getProfileImageUri: Uri ->
                     introduce.value = getIntroduce
                     portfolioUrl.value = getPortfolio
@@ -135,7 +133,7 @@ fun ProfileScreen(
                 profileImageUri = profileImageUri,
                 changeView = {
                     viewModel.setEnteredProfileInformation(
-                        major = selectedMajor.value,
+                        major = selectedMajor,
                         techStack = detailStack.joinToString(", "),
                         profileImgUri = profileImageUri,
                         introduce = introduce.value,
@@ -159,12 +157,12 @@ fun ProfileScreen(
                         .fillMaxWidth()
                         .height(48.dp),
                     enabled = isRequired.value && textFieldChecker(
-                        if (selectedMajor.value == "직접입력") enteredMajor.value else selectedMajor.value
+                        if (selectedMajor == "직접입력") enteredMajor.value else selectedMajor
                     )
                 ) {
                     if (contactEmail.value.isEmailRegularExpression() && portfolioUrl.value.isUrlRegularExpression()) {
                         viewModel.setEnteredProfileInformation(
-                            major = selectedMajor.value,
+                            major = selectedMajor,
                             techStack = detailStack.joinToString(", "),
                             profileImgUri = profileImageUri,
                             introduce = introduce.value,

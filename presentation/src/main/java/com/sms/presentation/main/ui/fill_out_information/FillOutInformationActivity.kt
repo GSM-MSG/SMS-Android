@@ -25,6 +25,7 @@ import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.fill_out_information.component.FillOutInformationTopBarComponent
+import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MajorSelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.PhotoPickBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
@@ -86,11 +87,18 @@ class FillOutInformationActivity : BaseActivity() {
             val snackBarVisible = remember {
                 mutableStateOf(false)
             }
+
+            //PhotoPickBottomSheet
             val profileImageUri = remember {
                 mutableStateOf(Uri.EMPTY)
             }
             val isImageExtensionInCorrect = remember {
                 mutableStateOf(false)
+            }
+
+            //MajorSelectorBottomSheet
+            val selectedMajor = remember {
+                mutableStateOf("")
             }
 
             ModalBottomSheetLayout(
@@ -106,7 +114,18 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         BottomSheetValues.Major -> {
+                            val list = fillOutViewModel.getMajorListResponse.collectAsState()
 
+                            MajorSelectorBottomSheet(
+                                bottomSheetState = bottomSheetState,
+                                majorList = if (list.value.data != null) list.value.data!!.major else listOf(
+                                    ""
+                                ),
+                                selectedMajor = selectedMajor.value,
+                                onSelectedMajhorChange = {
+                                    selectedMajor.value = it
+                                },
+                            )
                         }
                         BottomSheetValues.WorkingForm -> {
 
@@ -145,6 +164,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         detailStack = detailStackList[FillOutPage.Profile.value]
                                             ?: emptyList(),
                                         profileImageUri = profileImageUri.value,
+                                        selectedMajor = selectedMajor.value,
                                         isImageExtensionInCorrect = isImageExtensionInCorrect.value,
                                         onPhotoPickBottomSheetOpenButtonClick = {
                                             scope.launch { bottomSheetState.show() }
