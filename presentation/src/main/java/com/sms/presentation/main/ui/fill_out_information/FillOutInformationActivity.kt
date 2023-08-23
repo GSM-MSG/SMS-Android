@@ -71,6 +71,7 @@ class FillOutInformationActivity : BaseActivity() {
 
         setContent {
             val scope = rememberCoroutineScope()
+            val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
             val bottomSheetValues = remember {
                 mutableStateOf(BottomSheetValues.Major)
             }
@@ -137,8 +138,6 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         BottomSheetValues.Major -> {
-                            val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
-                            //list.value.data != null
                             MajorSelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
                                 majorList = if (majorList.value.data != null) majorList.value.data!!.major else listOf(
@@ -225,8 +224,10 @@ class FillOutInformationActivity : BaseActivity() {
                                             scope.launch { bottomSheetState.show() }
                                         },
                                         onMajorBottomSheetOpenButtonClick = {
-                                            bottomSheetValues.value = BottomSheetValues.Major
-                                            scope.launch { bottomSheetState.show() }
+                                            if (majorList.value.data != null) {
+                                                bottomSheetValues.value = BottomSheetValues.Major
+                                                scope.launch { bottomSheetState.show() }
+                                            }
                                         },
                                         onDialogDissmissButtonClick = {
                                             isImageExtensionInCorrect.value = false
