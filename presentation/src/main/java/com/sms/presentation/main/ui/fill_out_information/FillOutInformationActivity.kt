@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information
 
+import android.net.Uri
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -24,12 +25,24 @@ import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.fill_out_information.component.FillOutInformationTopBarComponent
+import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.DatePickerBottomSheet
+import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MajorSelectorBottomSheet
+import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MilitarySelectorBottomSheet
+import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.PhotoPickBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
+private enum class BottomSheetValues {
+    PhotoPicker,
+    Major,
+    WorkingForm,
+    Military,
+    Date
+}
 
 enum class FillOutPage(val value: String) {
     Profile("Profile"),
@@ -57,12 +70,14 @@ class FillOutInformationActivity : BaseActivity() {
         }
 
         setContent {
+            val scope = rememberCoroutineScope()
+            val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
+            val bottomSheetValues = remember {
+                mutableStateOf(BottomSheetValues.Major)
+            }
             val navController = rememberNavController()
             val bottomSheetState =
                 rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-            val bottomSheetContent = remember {
-                mutableStateOf<@Composable ColumnScope.() -> Unit>({})
-            }
             val currentRoute = remember {
                 mutableStateOf("Profile")
             }
@@ -73,8 +88,109 @@ class FillOutInformationActivity : BaseActivity() {
                 mutableStateOf(false)
             }
 
+            //PhotoPickBottomSheet
+            val profileImageUri = remember {
+                mutableStateOf(Uri.EMPTY)
+            }
+            val isImageExtensionInCorrect = remember {
+                mutableStateOf(false)
+            }
+
+            //MajorSelectorBottomSheet
+            val selectedMajor = remember {
+                mutableStateOf("")
+            }
+
+            //WorkingFormBottomSheet
+            val selectedWorkingCondition = remember {
+                mutableStateOf("")
+            }
+
+            //MilitaryServiceBottomSheet
+            val selectedMilitaryService = remember {
+                mutableStateOf("")
+            }
+
+            //DateBottomSheet
+            val isProjectStartDate = remember {
+                mutableStateOf(true)
+            }
+            val projectIdx = remember {
+                mutableStateOf(0)
+            }
+            val projectStartDateMap = remember {
+                mutableStateMapOf<Int, String>()
+            }
+            val projectEndDateMap = remember {
+                mutableStateMapOf<Int, String>()
+            }
+
             ModalBottomSheetLayout(
-                sheetContent = bottomSheetContent.value,
+                sheetContent = {
+                    when (bottomSheetValues.value) {
+                        BottomSheetValues.PhotoPicker -> {
+                            PhotoPickBottomSheet(
+                                bottomSheetState = bottomSheetState,
+                                onProfileImageUriChanged = { uri, extension ->
+                                    isImageExtensionInCorrect.value = extension
+                                    profileImageUri.value = if (extension) Uri.EMPTY else uri
+                                }
+                            )
+                        }
+                        BottomSheetValues.Major -> {
+                            MajorSelectorBottomSheet(
+                                bottomSheetState = bottomSheetState,
+                                majorList = if (majorList.value.data != null) majorList.value.data!!.major else listOf(
+                                    ""
+                                ),
+                                selectedMajor = selectedMajor.value,
+                                onSelectedMajhorChange = {
+                                    selectedMajor.value = it
+                                },
+                            )
+                        }
+                        BottomSheetValues.WorkingForm -> {
+                            val workConditionData =
+                                fillOutViewModel.getEnteredWorkConditionInformation()
+
+                            MajorSelectorBottomSheet(
+                                bottomSheetState = bottomSheetState,
+                                majorList = listOf("정규직", "비정규직", "계약직", "인턴"),
+                                selectedMajor = if (selectedWorkingCondition.value == "") workConditionData.formOfEmployment else selectedWorkingCondition.value,
+                                onSelectedMajhorChange = { selectedWorkingCondition.value = it }
+                            )
+                        }
+                        BottomSheetValues.Military -> {
+                            val militaryServiceData =
+                                fillOutViewModel.getEnteredMilitaryServiceInformation()
+
+                            MilitarySelectorBottomSheet(
+                                bottomSheetState = bottomSheetState,
+                                militaryServiceList = listOf(
+                                    "병특 희망",
+                                    "희망하지 않음",
+                                    "상관없음",
+                                    "해당 사항 없음"
+                                ),
+                                selectedMilitaryService = if (selectedMilitaryService.value == "") militaryServiceData.militaryService else selectedMilitaryService.value,
+                                onSelectedMilitaryServiceChange = {
+                                    selectedMilitaryService.value = it
+                                },
+                            )
+                        }
+                        BottomSheetValues.Date -> {
+                            DatePickerBottomSheet(
+                                bottomSheetState = bottomSheetState,
+                                onDateValueChanged = {
+                                    if (isProjectStartDate.value)
+                                        projectStartDateMap[projectIdx.value] = it
+                                    else
+                                        projectEndDateMap[projectIdx.value] = it
+                                }
+                            )
+                        }
+                    }
+                },
                 sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
                 sheetState = bottomSheetState
             ) {
@@ -100,10 +216,23 @@ class FillOutInformationActivity : BaseActivity() {
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
                                         detailStack = detailStackList[FillOutPage.Profile.value]
                                             ?: emptyList(),
-                                        bottomSheetState = bottomSheetState
-                                    ) {
-                                        bottomSheetContent.value = it
-                                    }
+                                        profileImageUri = profileImageUri.value,
+                                        selectedMajor = selectedMajor.value,
+                                        isImageExtensionInCorrect = isImageExtensionInCorrect.value,
+                                        onPhotoPickBottomSheetOpenButtonClick = {
+                                            bottomSheetValues.value = BottomSheetValues.PhotoPicker
+                                            scope.launch { bottomSheetState.show() }
+                                        },
+                                        onMajorBottomSheetOpenButtonClick = {
+                                            if (majorList.value.data != null) {
+                                                bottomSheetValues.value = BottomSheetValues.Major
+                                                scope.launch { bottomSheetState.show() }
+                                            }
+                                        },
+                                        onDialogDissmissButtonClick = {
+                                            isImageExtensionInCorrect.value = false
+                                        }
+                                    )
                                 }
                                 composable(FillOutPage.SchoolLife.value) {
                                     currentRoute.value = FillOutPage.SchoolLife.value
@@ -119,10 +248,12 @@ class FillOutInformationActivity : BaseActivity() {
                                     WorkConditionScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        bottomSheetState = bottomSheetState
-                                    ) {
-                                        bottomSheetContent.value = it
-                                    }
+                                        selectedWorkingCondition = selectedWorkingCondition.value,
+                                        onWorkingConditionBottomSheetOpenButtonClick = {
+                                            bottomSheetValues.value = BottomSheetValues.WorkingForm
+                                            scope.launch { bottomSheetState.show() }
+                                        }
+                                    )
                                 }
                                 composable(FillOutPage.MilitaryService.value) {
                                     currentRoute.value = FillOutPage.MilitaryService.value
@@ -130,10 +261,12 @@ class FillOutInformationActivity : BaseActivity() {
                                     MilitaryServiceScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        bottomSheetState = bottomSheetState
-                                    ) {
-                                        bottomSheetContent.value = it
-                                    }
+                                        selectedMilitaryService = selectedMilitaryService.value,
+                                        onMilitaryServiceBottomSheetOpenButtonClick = {
+                                            bottomSheetValues.value = BottomSheetValues.Military
+                                            scope.launch { bottomSheetState.show() }
+                                        }
+                                    )
                                 }
                                 composable(FillOutPage.Certification.value) {
                                     currentRoute.value = FillOutPage.Certification.value
@@ -158,12 +291,17 @@ class FillOutInformationActivity : BaseActivity() {
                                     ProjectsScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        bottomSheetState = bottomSheetState,
                                         detailStackList = detailStackList,
-                                        onSnackBarVisibleChanged = { snackBarVisible.value = true }
-                                    ) {
-                                        bottomSheetContent.value = it
-                                    }
+                                        onSnackBarVisibleChanged = { snackBarVisible.value = true },
+                                        startDateMap = projectStartDateMap,
+                                        endDateMap = projectEndDateMap,
+                                        onDateBottomSheetOpenButtonClick = { isStartDate, idx ->
+                                            bottomSheetValues.value = BottomSheetValues.Date
+                                            isProjectStartDate.value = isStartDate
+                                            projectIdx.value = idx
+                                            scope.launch { bottomSheetState.show() }
+                                        }
+                                    )
                                 }
                                 composable(
                                     "${FillOutPage.Search.value}/{idx}",

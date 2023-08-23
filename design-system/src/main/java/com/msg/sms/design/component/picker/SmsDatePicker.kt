@@ -16,14 +16,13 @@ import com.msg.sms.design.theme.SMSTheme
 
 @Composable
 fun SmsDatePicker(
+    modifier: Modifier = Modifier,
     onYearValueChange: (String) -> Unit,
     onMonthValueChange: (String) -> Unit
 ) {
     SMSTheme { colors, _ ->
         Box(
-            modifier = Modifier
-                .width(300.dp)
-                .height(163.dp)
+            modifier = modifier
         ) {
             Box(
                 modifier = Modifier
@@ -33,14 +32,18 @@ fun SmsDatePicker(
                     .background(colors.N10)
                     .align(Alignment.Center)
             )
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center)
+            ) {
                 SmsPicker(
-                    modifier = Modifier.fillMaxWidth(0.5f),
+                    modifier = Modifier.weight(1f),
                     itemRange = 2015..2030,
                     onSelectedItemChange = onYearValueChange
                 )
                 SmsPicker(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.weight(1f),
                     itemRange = 1..12,
                     onSelectedItemChange = onMonthValueChange
                 )
@@ -74,8 +77,8 @@ fun SmsDatePickerPre() {
             .background(Color.White)
     ) {
         SmsDatePicker(
-            onMonthValueChange = { Log.d("dd",it) },
-            onYearValueChange = { Log.d("dd",it) }
+            onMonthValueChange = { Log.d("dd", it) },
+            onYearValueChange = { Log.d("dd", it) }
         )
     }
 }

@@ -13,10 +13,10 @@ import com.sms.presentation.main.ui.fill_out_information.data.AwardData
 @Composable
 fun AwardComponent(
     data: AwardData,
+    onCancelButtonClick: () -> Unit,
+    onDateBottomSheetOpenButtonClick: () -> Unit,
     onNameValueChange: (value: String) -> Unit,
     onTypeValueChange: (value: String) -> Unit,
-    onDateBottomSheetOpenButtonClick: () -> Unit,
-    onCancelButtonClick: () -> Unit
 ) {
     ToggleComponent(name = data.name, onCancelButtonClick = onCancelButtonClick) {
         Column(
