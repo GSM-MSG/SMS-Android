@@ -112,6 +112,14 @@ class FillOutInformationActivity : BaseActivity() {
                 mutableStateOf("")
             }
 
+            //DateBottomSheet
+            val selectedStartDate = remember {
+                mutableStateOf("")
+            }
+            val selectedEndDate = remember {
+                mutableStateOf("")
+            }
+
             ModalBottomSheetLayout(
                 sheetContent = {
                     when (bottomSheetValues.value) {
@@ -153,7 +161,12 @@ class FillOutInformationActivity : BaseActivity() {
 
                             MilitarySelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                militaryServiceList = listOf("병특 희망", "희망하지 않음", "상관없음", "해당 사항 없음"),
+                                militaryServiceList = listOf(
+                                    "병특 희망",
+                                    "희망하지 않음",
+                                    "상관없음",
+                                    "해당 사항 없음"
+                                ),
                                 selectedMilitaryService = if (selectedMilitaryService.value == "") data.militaryService else selectedMilitaryService.value,
                                 onSelectedMilitaryServiceChange = {
                                     selectedMilitaryService.value = it

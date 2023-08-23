@@ -4,17 +4,11 @@ import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.msg.sms.design.component.picker.SmsDatePicker
 import com.msg.sms.design.component.toggle.ToggleComponent
-import com.msg.sms.design.modifier.smsClickable
-import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.component.projects.*
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 import kotlinx.coroutines.launch
@@ -45,51 +39,44 @@ fun ProjectsComponent(
         mutableStateOf(true)
     }
 
-    bottomSheetContent(content = {
-        val year = remember {
-            mutableStateOf(0)
-        }
-        val month = remember {
-            mutableStateOf(0)
-        }
-
-        SMSTheme { colors, typography ->
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-            ) {
-                Text(
-                    text = "날짜 선택",
-                    style = typography.title2,
-                    color = colors.BLACK,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "완료",
-                    style = typography.body2,
-                    color = colors.P2,
-                    fontWeight = FontWeight.Normal,
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .smsClickable {
-                            coroutineScope.launch { bottomSheetState.hide() }
-                            if (isProjectStartDate.value)
-                                onStartDateValueChanged("${year.value}.${month.value}")
-                            else
-                                onEndDateValueChanged("${year.value}.${month.value}")
-                        }
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            SmsDatePicker(yearValue = year.value,
-                monthValue = month.value,
-                yearRange = 2000..2030,
-                monthRange = 1..12,
-                onYearValueChange = { year.value = it },
-                onMonthValueChange = { month.value = it })
-        }
-    })
+//    bottomSheetContent(content = {
+//        SMSTheme { colors, typography ->
+//            Box(
+//                Modifier
+//                    .fillMaxWidth()
+//                    .padding(20.dp)
+//            ) {
+//                Text(
+//                    text = "날짜 선택",
+//                    style = typography.title2,
+//                    color = colors.BLACK,
+//                    fontWeight = FontWeight.Bold
+//                )
+//                Text(
+//                    text = "완료",
+//                    style = typography.body2,
+//                    color = colors.P2,
+//                    fontWeight = FontWeight.Normal,
+//                    modifier = Modifier
+//                        .align(Alignment.CenterEnd)
+//                        .smsClickable {
+//                            coroutineScope.launch { bottomSheetState.hide() }
+//                            if (isProjectStartDate.value)
+//                                onStartDateValueChanged("${year.value}.${month.value}")
+//                            else
+//                                onEndDateValueChanged("${year.value}.${month.value}")
+//                        }
+//                )
+//            }
+//            Spacer(modifier = Modifier.height(16.dp))
+//            SmsDatePicker(yearValue = year.value,
+//                monthValue = month.value,
+//                yearRange = 2000..2030,
+//                monthRange = 1..12,
+//                onYearValueChange = { year.value = it },
+//                onMonthValueChange = { month.value = it })
+//        }
+//    })
 
     ToggleComponent(name = "프로젝트", onCancelButtonClick = onCancelButtonClick) {
         Column(
