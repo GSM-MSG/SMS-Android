@@ -19,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.design.theme.SMSTheme
@@ -101,6 +102,11 @@ class FillOutInformationActivity : BaseActivity() {
                 mutableStateOf("")
             }
 
+            //WorkingFormBottomSheet
+            val selectedWorkingCondition = remember {
+                mutableStateOf("")
+            }
+
             ModalBottomSheetLayout(
                 sheetContent = {
                     when (bottomSheetValues.value) {
@@ -128,7 +134,14 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         BottomSheetValues.WorkingForm -> {
+                            val data = fillOutViewModel.getEnteredWorkConditionInformation()
 
+                            SelectorBottomSheet(
+                                list = listOf("정규직", "비정규직", "계약직", "인턴"),
+                                bottomSheetState = bottomSheetState,
+                                selected = if (selectedWorkingCondition.value == "") data.formOfEmployment else selectedWorkingCondition.value,
+                                itemChange = { selectedWorkingCondition.value = it },
+                            )
                         }
                         BottomSheetValues.Military -> {
 
@@ -193,10 +206,12 @@ class FillOutInformationActivity : BaseActivity() {
                                     WorkConditionScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        bottomSheetState = bottomSheetState
-                                    ) {
-                                        bottomSheetContent.value = it
-                                    }
+                                        selectedWorkingCondition = selectedWorkingCondition.value,
+                                        onWorkingConditionBottomSheetOpenButtonClick = {
+                                            scope.launch { bottomSheetState.show() }
+                                            bottomSheetValues.value = BottomSheetValues.WorkingForm
+                                        }
+                                    )
                                 }
                                 composable(FillOutPage.MilitaryService.value) {
                                     currentRoute.value = FillOutPage.MilitaryService.value

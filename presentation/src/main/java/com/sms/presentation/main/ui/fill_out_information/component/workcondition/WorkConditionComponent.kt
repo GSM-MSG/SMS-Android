@@ -5,8 +5,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,16 +31,14 @@ import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 import com.sms.presentation.main.ui.util.hideKeyboard
 import com.sms.presentation.main.ui.util.textFieldChecker
 import com.sms.presentation.main.viewmodel.FillOutViewModel
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WorkConditionComponent(
     wantWorkingCondition: String,
-    bottomSheetState: ModalBottomSheetState,
     navController: NavController,
     data: WorkConditionData,
     viewModel: FillOutViewModel,
+    onWorkingConditionBottomSheetOpenButtonClick: () -> Unit,
 ) {
     SMSTheme { colors, typography ->
         val wantWorkingArea = remember {
@@ -48,8 +50,6 @@ fun WorkConditionComponent(
         }
 
         val context = LocalContext.current as FillOutInformationActivity
-
-        val coroutineScope = rememberCoroutineScope()
 
         val isRequired = remember {
             mutableStateOf(false)
@@ -81,10 +81,8 @@ fun WorkConditionComponent(
                         placeHolder = "정규직",
                         readOnly = true,
                         clickAction = {
-                            coroutineScope.launch {
-                                context.hideKeyboard()
-                                bottomSheetState.show()
-                            }
+                            context.hideKeyboard()
+                            onWorkingConditionBottomSheetOpenButtonClick()
                         },
                         setChangeText = wantWorkingCondition
                     )
