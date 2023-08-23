@@ -1,18 +1,15 @@
 package com.sms.presentation.main.ui.main.screen
 
-import android.content.Intent
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListFloatingButton
@@ -21,8 +18,6 @@ import com.msg.sms.domain.model.student.response.GetStudentForStudent
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
-import com.sms.presentation.main.ui.login.LoginActivity
-import com.sms.presentation.main.ui.main.MainActivity
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.ui.main.data.StudentDetailData
@@ -39,9 +34,9 @@ fun MainScreen(
     lifecycleScope: CoroutineScope,
     role: String,
     onFilterClick: () -> Unit,
+    onProfileClick: (role: String) -> Unit,
     onClickBackPressed: () -> Unit,
 ) {
-    val context = LocalContext.current as MainActivity
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     val studentList = remember {
@@ -177,16 +172,7 @@ fun MainScreen(
                     profileImageUrl = profileImageUrl.value,
                     isScolled = isScrolled.value,
                     filterButtonOnClick = onFilterClick,
-                    profileButtonOnClick = {
-                        if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
-                            scope.launch {
-                                bottomSheetState.show()
-                            }
-                        } else {
-                            context.startActivity(Intent(context, LoginActivity::class.java))
-                            context.finish()
-                        }
-                    }
+                    profileButtonOnClick = { onProfileClick(role) }
                 )
             }
             Box(modifier = Modifier.fillMaxSize()) {
