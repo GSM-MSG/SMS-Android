@@ -19,7 +19,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.design.theme.SMSTheme
@@ -27,6 +26,7 @@ import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.fill_out_information.component.FillOutInformationTopBarComponent
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MajorSelectorBottomSheet
+import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MilitarySelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.PhotoPickBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
@@ -107,6 +107,11 @@ class FillOutInformationActivity : BaseActivity() {
                 mutableStateOf("")
             }
 
+            //MilitaryServiceBottomSheet
+            val selectedMilitaryService = remember {
+                mutableStateOf("")
+            }
+
             ModalBottomSheetLayout(
                 sheetContent = {
                     when (bottomSheetValues.value) {
@@ -136,15 +141,24 @@ class FillOutInformationActivity : BaseActivity() {
                         BottomSheetValues.WorkingForm -> {
                             val data = fillOutViewModel.getEnteredWorkConditionInformation()
 
-                            SelectorBottomSheet(
-                                list = listOf("정규직", "비정규직", "계약직", "인턴"),
+                            MajorSelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                selected = if (selectedWorkingCondition.value == "") data.formOfEmployment else selectedWorkingCondition.value,
-                                itemChange = { selectedWorkingCondition.value = it },
+                                majorList = listOf("정규직", "비정규직", "계약직", "인턴"),
+                                selectedMajor = if (selectedWorkingCondition.value == "") data.formOfEmployment else selectedWorkingCondition.value,
+                                onSelectedMajhorChange = { selectedWorkingCondition.value = it }
                             )
                         }
                         BottomSheetValues.Military -> {
+                            val data = fillOutViewModel.getEnteredMilitaryServiceInformation()
 
+                            MilitarySelectorBottomSheet(
+                                bottomSheetState = bottomSheetState,
+                                militaryServiceList = listOf("병특 희망", "희망하지 않음", "상관없음", "해당 사항 없음"),
+                                selectedMilitaryService = if (selectedMilitaryService.value == "") data.militaryService else selectedMilitaryService.value,
+                                onSelectedMilitaryServiceChange = {
+                                    selectedMilitaryService.value = it
+                                },
+                            )
                         }
                         BottomSheetValues.Date -> {
 
@@ -219,10 +233,12 @@ class FillOutInformationActivity : BaseActivity() {
                                     MilitaryServiceScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        bottomSheetState = bottomSheetState
-                                    ) {
-                                        bottomSheetContent.value = it
-                                    }
+                                        selectedMilitaryService = selectedMilitaryService.value,
+                                        onMilitaryServiceBottomSheetOpenButtonClick = {
+                                            scope.launch { bottomSheetState.show() }
+                                            bottomSheetValues.value = BottomSheetValues.Military
+                                        }
+                                    )
                                 }
                                 composable(FillOutPage.Certification.value) {
                                     currentRoute.value = FillOutPage.Certification.value
