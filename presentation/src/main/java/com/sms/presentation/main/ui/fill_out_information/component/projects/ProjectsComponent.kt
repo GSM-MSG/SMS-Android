@@ -1,93 +1,35 @@
 package com.sms.presentation.main.ui.fill_out_information.component.projects
 
 import android.net.Uri
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.msg.sms.design.component.picker.SmsDatePicker
 import com.msg.sms.design.component.toggle.ToggleComponent
-import com.msg.sms.design.modifier.smsClickable
-import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.fill_out_information.component.projects.*
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProjectsComponent(
     navController: NavController,
-    bottomSheetState: ModalBottomSheetState,
-    bottomSheetContent: @Composable (content: @Composable ColumnScope.() -> Unit) -> Unit,
     data: ProjectInfo,
-    onStartDateValueChanged: (value: String) -> Unit,
-    onEndDateValueChanged: (value: String) -> Unit,
+    onCancelButtonClick: () -> Unit,
+    onSnackBarVisibleChanged: () -> Unit,
+    onDetailStackSearchBarClick: () -> Unit,
     onProjectNameValueChanged: (value: String) -> Unit,
     onProjectIconValueChanged: (value: Uri) -> Unit,
     onProjectPreviewsValueChanged: (value: List<Uri>) -> Unit,
     onProjectKeyTaskValueChanged: (value: String) -> Unit,
     onProjectRelatedLinksValueChanged: (value: List<Pair<String, String>>) -> Unit,
-    onSnackBarVisibleChanged: () -> Unit,
-    onCancelButtonClick: () -> Unit,
-    onDetailStackSearchBarClick: () -> Unit,
+    onDateBottomSheetOpenButtonClick: (isStartDate: Boolean) -> Unit,
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val isProjectProgress = remember {
         mutableStateOf(false)
     }
-    val isProjectStartDate = remember {
-        mutableStateOf(true)
-    }
-
-    bottomSheetContent(content = {
-        val year = remember {
-            mutableStateOf("")
-        }
-        val month = remember {
-            mutableStateOf("")
-        }
-
-        SMSTheme { colors, typography ->
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-            ) {
-                Text(
-                    text = "날짜 선택",
-                    style = typography.title2,
-                    color = colors.BLACK,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "완료",
-                    style = typography.body2,
-                    color = colors.P2,
-                    fontWeight = FontWeight.Normal,
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .smsClickable {
-                            coroutineScope.launch { bottomSheetState.hide() }
-                            if (isProjectStartDate.value)
-                                onStartDateValueChanged("${year.value}.${month.value}")
-                            else
-                                onEndDateValueChanged("${year.value}.${month.value}")
-                        }
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            SmsDatePicker(
-                onYearValueChange = { year.value = it },
-                onMonthValueChange = { month.value = it }
-            )
-        }
-    })
 
     ToggleComponent(name = "프로젝트", onCancelButtonClick = onCancelButtonClick) {
         Column(
@@ -119,14 +61,8 @@ fun ProjectsComponent(
                 startDateText = data.startDate,
                 endDateText = data.endDate,
                 isProjectProgress = isProjectProgress.value,
-                onStartDateCalendarClick = {
-                    isProjectStartDate.value = true
-                    coroutineScope.launch { bottomSheetState.show() }
-                },
-                onEndDateCalendarClick = {
-                    isProjectStartDate.value = false
-                    coroutineScope.launch { bottomSheetState.show() }
-                },
+                onStartDateCalendarClick = { onDateBottomSheetOpenButtonClick(true) },
+                onEndDateCalendarClick = { onDateBottomSheetOpenButtonClick(false) },
                 onProgressButtonClick = {
                     isProjectProgress.value = !isProjectProgress.value
                 }

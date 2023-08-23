@@ -1,7 +1,5 @@
 package com.msg.sms.design.component.bottomsheet
 
-import android.Manifest
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
@@ -18,9 +16,8 @@ import com.msg.sms.design.theme.SMSTheme
 @Composable
 fun ChooseProfilePictureBottomSheet(
     bottomSheetState: ModalBottomSheetState,
-    isCamera: (Boolean) -> Unit,
-    permissionLauncher: ManagedActivityResultLauncher<String, Boolean>,
-    permission: String
+    onGalleryLaunchButtonClick: () -> Unit,
+    onCameraLaunchButtonClick: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -38,11 +35,9 @@ fun ChooseProfilePictureBottomSheet(
                 text = "앨범에서 가져오기",
                 textStyle = typography.body1,
                 textColor = colors.N50,
-                fontWeight = FontWeight.Normal
-            ) {
-                isCamera(false)
-                permissionLauncher.launch(permission)
-            }
+                fontWeight = FontWeight.Normal,
+                onClick = onGalleryLaunchButtonClick
+            )
             Spacer(modifier = Modifier.size(8.dp))
             BaseBottomSheetComponent(
                 coroutineScope = coroutineScope,
@@ -55,11 +50,9 @@ fun ChooseProfilePictureBottomSheet(
                 text = "카메라에서 촬영",
                 textStyle = typography.body1,
                 textColor = colors.N50,
-                fontWeight = FontWeight.Normal
-            ) {
-                isCamera(true)
-                permissionLauncher.launch(Manifest.permission.CAMERA)
-            }
+                fontWeight = FontWeight.Normal,
+                onClick = onCameraLaunchButtonClick
+            )
             Spacer(modifier = Modifier.size(16.dp))
         }
     }

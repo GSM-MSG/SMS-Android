@@ -23,7 +23,10 @@ import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
-fun ProjectIconInputComponent(iconImageUri: Uri, onValueChanged: (value: Uri) -> Unit) {
+fun ProjectIconInputComponent(
+    iconImageUri: Uri,
+    onValueChanged: (value: Uri) -> Unit
+) {
     val permission =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES
