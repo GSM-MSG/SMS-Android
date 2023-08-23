@@ -61,7 +61,6 @@ fun ProjectsScreen(
                 endDate = endDateMap[idx] ?: ""
             )
 
-
             ProjectsComponent(
                 navController = navController,
                 data = item,
