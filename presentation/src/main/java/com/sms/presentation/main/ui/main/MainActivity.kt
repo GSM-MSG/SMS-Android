@@ -100,7 +100,20 @@ class MainActivity : BaseActivity() {
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
                                     role = response.data!!,
-                                    onFilterClick = { navController.navigate(MainPage.Filter.value) }
+                                    onFilterClick = { navController.navigate(MainPage.Filter.value) },
+                                    onProfileClick = { role ->
+                                        if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
+                                            navController.navigate(MainPage.MyPage.value)
+                                        } else {
+                                            this@MainActivity.startActivity(
+                                                Intent(
+                                                    this@MainActivity,
+                                                    LoginActivity::class.java
+                                                )
+                                            )
+                                            this@MainActivity.finish()
+                                        }
+                                    }
                                 ) {
                                     controlTheStackWhenBackPressed()
                                 }
