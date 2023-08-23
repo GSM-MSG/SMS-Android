@@ -56,7 +56,7 @@ fun WorkConditionComponent(
         }
 
         isRequired.value =
-            wantWorkingArea != listOf("") && wantPayroll.value != "0" && textFieldChecker(
+            wantWorkingArea != listOf("") && wantPayroll.value != "" && textFieldChecker(
                 wantWorkingCondition
             )
 
