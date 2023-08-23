@@ -118,6 +118,7 @@ fun ProjectsScreen(
                             project.relatedLinkList.first() != Pair("", "")
                         }
                     )
+                    navController.navigate("Award")
                 }
             )
             Spacer(modifier = Modifier.height(48.dp))
