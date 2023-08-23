@@ -31,7 +31,15 @@ import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-enum class FillOutPage(val value: String) {
+private enum class BottomSheetValues {
+    PhotoPicker,
+    Major,
+    WorkingForm,
+    Military,
+    Date
+}
+
+private enum class FillOutPage(val value: String) {
     Profile("Profile"),
     SchoolLife("SchoolLife"),
     WorkCondition("WorkCondition"),
@@ -57,6 +65,9 @@ class FillOutInformationActivity : BaseActivity() {
         }
 
         setContent {
+            val bottomSheetValues = remember {
+                mutableStateOf(BottomSheetValues.Major)
+            }
             val navController = rememberNavController()
             val bottomSheetState =
                 rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -74,7 +85,25 @@ class FillOutInformationActivity : BaseActivity() {
             }
 
             ModalBottomSheetLayout(
-                sheetContent = bottomSheetContent.value,
+                sheetContent = {
+                    when (bottomSheetValues.value) {
+                        BottomSheetValues.PhotoPicker -> {
+
+                        }
+                        BottomSheetValues.Major -> {
+
+                        }
+                        BottomSheetValues.WorkingForm -> {
+
+                        }
+                        BottomSheetValues.Military -> {
+
+                        }
+                        BottomSheetValues.Date -> {
+
+                        }
+                    }
+                },
                 sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
                 sheetState = bottomSheetState
             ) {
