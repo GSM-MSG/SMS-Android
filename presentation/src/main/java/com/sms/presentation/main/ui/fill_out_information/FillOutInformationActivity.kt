@@ -27,7 +27,9 @@ import com.sms.presentation.main.ui.fill_out_information.component.FillOutInform
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
+import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 enum class FillOutPage(val value: String) {
     Profile("Profile"),
@@ -45,10 +47,14 @@ class FillOutInformationActivity : BaseActivity() {
 
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
+    private val searchDetailStack = mutableStateOf(listOf<String>())
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun init() {
         fillOutViewModel.getMajorList()
+        lifecycleScope.launch {
+            searchDetailStack()
+        }
 
         setContent {
             val navController = rememberNavController()
@@ -175,8 +181,11 @@ class FillOutInformationActivity : BaseActivity() {
 
                                     DetailStackSearchScreen(
                                         navController = navController,
-                                        viewModel = searchDetailStackViewModel,
+                                        detailStack = searchDetailStack.value,
                                         selectedStack = detailStackList[idx.value] ?: listOf(""),
+                                        onSearchStack = {
+                                            searchDetailStackViewModel.searchDetailStack(it)
+                                        }
                                     ) {
                                         detailStackList[idx.value] = it
                                         navController.popBackStack()
@@ -193,6 +202,18 @@ class FillOutInformationActivity : BaseActivity() {
                         )
                     }
                 }
+            }
+        }
+    }
+
+    private suspend fun searchDetailStack() {
+        searchDetailStackViewModel.searchResultEvent.collect {
+            when (it) {
+                Event.Success<List<String>>() -> {
+                    searchDetailStack.value = it.data!!.techStack
+                }
+
+                else -> {}
             }
         }
     }

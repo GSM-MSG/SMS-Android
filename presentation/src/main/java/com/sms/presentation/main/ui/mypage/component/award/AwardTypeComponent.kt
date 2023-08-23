@@ -8,14 +8,15 @@ import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
-fun AwardTypeComponent() {
+fun AwardTypeComponent(type: String, onValueChange: (value: String) -> Unit) {
     AddGrayBody1Title(titleText = "종류") {
         SmsTextField(
-            setText = "",
+            setText = type,
             placeHolder = "제 19회 스마틴 앱 챌린지 대상",
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            onValueChange = onValueChange
         ) {
-
+            onValueChange("")
         }
     }
 }
@@ -23,5 +24,5 @@ fun AwardTypeComponent() {
 @Preview
 @Composable
 private fun AwardTypeComponentPre() {
-    AwardTypeComponent()
+    AwardTypeComponent(type = "제 19회 스마틴 앱 챌린지", onValueChange = {})
 }
