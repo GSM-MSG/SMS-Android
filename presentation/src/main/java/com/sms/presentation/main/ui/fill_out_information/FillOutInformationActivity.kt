@@ -113,16 +113,25 @@ class FillOutInformationActivity : BaseActivity() {
             }
 
             //DateBottomSheet
+            val isProjectDate = remember {
+                mutableStateOf(true)
+            }
             val isProjectStartDate = remember {
                 mutableStateOf(true)
             }
             val projectIdx = remember {
                 mutableStateOf(0)
             }
+            val awardIdx = remember {
+                mutableStateOf(0)
+            }
             val projectStartDateMap = remember {
                 mutableStateMapOf<Int, String>()
             }
             val projectEndDateMap = remember {
+                mutableStateMapOf<Int, String>()
+            }
+            val awardDateMap = remember {
                 mutableStateMapOf<Int, String>()
             }
 
@@ -183,10 +192,14 @@ class FillOutInformationActivity : BaseActivity() {
                             DatePickerBottomSheet(
                                 bottomSheetState = bottomSheetState,
                                 onDateValueChanged = {
-                                    if (isProjectStartDate.value)
-                                        projectStartDateMap[projectIdx.value] = it
-                                    else
-                                        projectEndDateMap[projectIdx.value] = it
+                                    if (isProjectDate.value) {
+                                        if (isProjectStartDate.value)
+                                            projectStartDateMap[projectIdx.value] = it
+                                        else
+                                            projectEndDateMap[projectIdx.value] = it
+                                    } else {
+                                        awardDateMap[awardIdx.value] = it
+                                    }
                                 }
                             )
                         }
@@ -299,6 +312,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         onDateBottomSheetOpenButtonClick = { isStartDate, idx ->
                                             bottomSheetValues.value = BottomSheetValues.Date
                                             isProjectStartDate.value = isStartDate
+                                            isProjectDate.value = true
                                             projectIdx.value = idx
                                             scope.launch { bottomSheetState.show() }
                                         }
@@ -306,6 +320,18 @@ class FillOutInformationActivity : BaseActivity() {
                                 }
                                 composable(FillOutPage.Award.value) {
                                     currentRoute.value = FillOutPage.Award.value
+                                    setSoftInputMode("PAN")
+                                    AwardScreen(
+                                        navController = navController,
+                                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                                        awardDateMap = awardDateMap,
+                                        onDateBottomSheetOpenButtonClick = { idx ->
+                                            awardIdx.value = idx
+                                            isProjectDate.value = false
+                                            bottomSheetValues.value = BottomSheetValues.Date
+                                            scope.launch { bottomSheetState.show() }
+                                        }
+                                    )
                                 }
                                 composable(
                                     "${FillOutPage.Search.value}/{idx}",
