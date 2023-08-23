@@ -137,11 +137,11 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         BottomSheetValues.Major -> {
-                            val list = fillOutViewModel.getMajorListResponse.collectAsState()
-
+                            val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
+                            //list.value.data != null
                             MajorSelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                majorList = if (list.value.data != null) list.value.data!!.major else listOf(
+                                majorList = if (majorList.value.data != null) majorList.value.data!!.major else listOf(
                                     ""
                                 ),
                                 selectedMajor = selectedMajor.value,
@@ -151,22 +151,22 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         BottomSheetValues.WorkingForm -> {
-                            val data = fillOutViewModel.getEnteredWorkConditionInformation()
+                            val workConditionData = fillOutViewModel.getEnteredWorkConditionInformation()
 
                             MajorSelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
                                 majorList = listOf("정규직", "비정규직", "계약직", "인턴"),
-                                selectedMajor = if (selectedWorkingCondition.value == "") data.formOfEmployment else selectedWorkingCondition.value,
+                                selectedMajor = if (selectedWorkingCondition.value == "") workConditionData.formOfEmployment else selectedWorkingCondition.value,
                                 onSelectedMajhorChange = { selectedWorkingCondition.value = it }
                             )
                         }
                         BottomSheetValues.Military -> {
-                            val data = fillOutViewModel.getEnteredMilitaryServiceInformation()
+                            val militaryServiceData = fillOutViewModel.getEnteredMilitaryServiceInformation()
 
                             MilitarySelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
                                 militaryServiceList = listOf("병특 희망", "희망하지 않음", "상관없음", "해당 사항 없음"),
-                                selectedMilitaryService = if (selectedMilitaryService.value == "") data.militaryService else selectedMilitaryService.value,
+                                selectedMilitaryService = if (selectedMilitaryService.value == "") militaryServiceData.militaryService else selectedMilitaryService.value,
                                 onSelectedMilitaryServiceChange = {
                                     selectedMilitaryService.value = it
                                 },
