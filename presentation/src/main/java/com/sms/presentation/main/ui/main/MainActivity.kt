@@ -49,14 +49,18 @@ class MainActivity : BaseActivity() {
 
     override fun init() {
         observeEvent()
-        lifecycleScope.launch {
-            searchDetailStack()
-        }
         authViewModel.getRoleInfo()
         fillOutViewModel.getMajorList()
     }
 
     private fun observeEvent() {
+        lifecycleScope.launch {
+            searchDetailStackViewModel.searchResultEvent.collect {
+                if (it is Event.Success) {
+                    searchDetailStack.value = it.data!!.techStack
+                }
+            }
+        }
         lifecycleScope.launch {
             studentListViewModel.logoutResponse.collect {
                 if (it is Event.Success) {
@@ -79,18 +83,23 @@ class MainActivity : BaseActivity() {
                     setContent {
                         val navController = rememberNavController()
                         val technologyStackList = remember {
-                            mutableStateListOf<String>()
+                            mutableStateListOf("Android Studio", "Kotlin")
                         }
                         val technologyStackListByProjectPage = remember {
-                            mutableStateListOf(listOf<String>())
+                            mutableStateListOf(
+                                listOf("Kotlin", "Jetpack Compose"),
+                                listOf("Android Studio", "XML")
+                            )
                         }
                         val filterTechStack = remember {
-                            mutableStateListOf<String>()
+                            mutableStateListOf("Android Studio", "Kotlin")
                         }
                         val selectedTechStack = remember {
                             mutableStateOf(SelectedTechStack.Filter)
                         }
-                        var projectIndex = 0
+                        val projectIndex = remember {
+                            mutableStateOf(0)
+                        }
                         NavHost(
                             navController = navController,
                             startDestination = "Main"
@@ -120,10 +129,31 @@ class MainActivity : BaseActivity() {
                             }
                             composable(MainPage.Filter.name) {
                                 FilterScreen(
-                                    navController = navController,
                                     viewModel = viewModel(LocalContext.current as MainActivity),
-                                    lifecycleScope = lifecycleScope,
-                                    role = response.data!!
+                                    role = response.data!!,
+                                    onRemoveFilterDetailStack = {
+
+                                    },
+                                    onBackPressed = {
+                                        navController.navigate(MainPage.Main.value) {
+                                            popUpTo(route = MainPage.Main.value) {
+                                                inclusive = false
+                                            }
+                                        }
+                                    },
+                                    onChangeToMainPage = {
+                                        navController.navigate(MainPage.Main.value)
+                                    },
+                                    onChangeToSearchPage = {
+                                        navController.navigate(MainPage.Search.value)
+                                    },
+                                    onRightButtonClick = {
+                                        navController.navigate(MainPage.Main.value) {
+                                            popUpTo(route = MainPage.Main.value) {
+                                                inclusive = false
+                                            }
+                                        }
+                                    }
                                 )
                             }
                             composable(MainPage.Search.name) {
@@ -136,11 +166,10 @@ class MainActivity : BaseActivity() {
                                     selectedStack = when (selectedTechStack.value) {
                                         SelectedTechStack.MyPage -> technologyStackList
                                         SelectedTechStack.Filter -> filterTechStack
-                                        SelectedTechStack.Project -> technologyStackListByProjectPage[projectIndex]
+                                        SelectedTechStack.Project -> technologyStackListByProjectPage[projectIndex.value]
                                     },
                                     detailStack = searchDetailStack.value,
                                 ) { list ->
-                                    navController.navigate(MainPage.Filter.name)
                                     when (selectedTechStack.value) {
                                         SelectedTechStack.MyPage -> {
                                             technologyStackList.removeAll(technologyStackList.filter {
@@ -161,17 +190,22 @@ class MainActivity : BaseActivity() {
                                         }
 
                                         SelectedTechStack.Project -> {
-                                            technologyStackListByProjectPage[projectIndex] = list
+                                            technologyStackListByProjectPage[projectIndex.value] =
+                                                list
                                         }
                                     }
-                                    studentListViewModel.detailStackList.value =
-                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
-                                            "detailStack"
-                                        ) ?: ""
+                                    navController.popBackStack()
+//                                    studentListViewModel.detailStackList.value =
+//                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
+//                                            "detailStack"
+//                                        ) ?: ""
                                 }
                             }
                             composable(MainPage.MyPage.value) {
                                 MyPageScreen(
+                                    majorList = listOf("Android", "Flutter", "Android Studio"),
+                                    selectedTechList = technologyStackList,
+                                    selectedTechListOnProject = technologyStackListByProjectPage,
                                     onWithdrawal = {
                                         studentListViewModel.withdrawal()
                                         authViewModel.deleteToken()
@@ -182,9 +216,15 @@ class MainActivity : BaseActivity() {
                                         selectedTechStack.value = SelectedTechStack.MyPage
                                         navController.navigate(MainPage.Search.value)
                                     }, onClickProjectSearchBar = {
-                                        projectIndex = it
-                                        selectedTechStack.value = SelectedTechStack.MyPage
+                                        projectIndex.value = it
+                                        selectedTechStack.value = SelectedTechStack.Project
                                         navController.navigate(MainPage.Search.value)
+                                    }, onRemoveDetailStack = {
+                                        technologyStackList.remove(it)
+                                    },
+                                    onRemoveProjectDetailStack = { index: Int, value: String ->
+                                        technologyStackListByProjectPage[index] =
+                                            technologyStackListByProjectPage[index].filter { it != value }
                                     }
                                 )
                             }
@@ -212,18 +252,6 @@ class MainActivity : BaseActivity() {
                     } else {
                         mutableStateListOf()
                     }
-            }
-        }
-    }
-
-    private suspend fun searchDetailStack() {
-        searchDetailStackViewModel.searchResultEvent.collect {
-            when (it) {
-                Event.Success<List<String>>() -> {
-                    searchDetailStack.value = it.data!!.techStack
-                }
-
-                else -> {}
             }
         }
     }
