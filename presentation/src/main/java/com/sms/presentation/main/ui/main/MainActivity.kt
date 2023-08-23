@@ -134,17 +134,9 @@ class MainActivity : BaseActivity() {
                                         searchDetailStackViewModel.searchDetailStack(it)
                                     },
                                     selectedStack = when (selectedTechStack.value) {
-                                        SelectedTechStack.MyPage -> {
-                                            technologyStackList
-                                        }
-
-                                        SelectedTechStack.Filter -> {
-                                            filterTechStack
-                                        }
-
-                                        SelectedTechStack.Project -> {
-                                            technologyStackListByProjectPage[projectIndex]
-                                        }
+                                        SelectedTechStack.MyPage -> technologyStackList
+                                        SelectedTechStack.Filter -> filterTechStack
+                                        SelectedTechStack.Project -> technologyStackListByProjectPage[projectIndex]
                                     },
                                     detailStack = searchDetailStack.value,
                                 ) { list ->

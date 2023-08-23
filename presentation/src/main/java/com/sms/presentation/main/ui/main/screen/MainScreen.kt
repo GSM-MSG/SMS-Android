@@ -157,10 +157,6 @@ fun MainScreen(
             )
         },
         sheetState = bottomSheetState,
-        sheetShape = RoundedCornerShape(
-            topStart = 0.dp,
-            topEnd = 0.dp,
-        )
     ) {
         Column(
             modifier = Modifier
