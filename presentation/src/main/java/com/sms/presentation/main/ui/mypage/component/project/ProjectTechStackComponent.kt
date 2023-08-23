@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.DetailTechStackItem
@@ -18,7 +19,11 @@ import com.sms.presentation.main.ui.mypage.component.profile.DisplaySearchBar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ProjectTechStackComponent(techStack: List<String>, onRemoveButton: (value: String) -> Unit) {
+fun ProjectTechStackComponent(
+    techStack: List<String>,
+    onRemoveButton: (value: String) -> Unit,
+    onClickSearchBar: () -> Unit,
+) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -27,6 +32,11 @@ fun ProjectTechStackComponent(techStack: List<String>, onRemoveButton: (value: S
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(end = 20.dp)
+                .onFocusChanged {
+                    if(it.isFocused) {
+                        onClickSearchBar()
+                    }
+                }
         )
         LazyHorizontalStaggeredGrid(
             modifier = Modifier
@@ -65,6 +75,6 @@ private fun ProjectTechStackComponentPre() {
             "git",
             "Github",
             "Jetpack Compose"
-        )
+        ), onRemoveButton = {}
     ) {}
 }

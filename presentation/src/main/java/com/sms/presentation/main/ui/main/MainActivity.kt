@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -33,6 +32,10 @@ private enum class MainPage(val value: String) {
     Filter("Filter"),
     Search("Search"),
     MyPage("MyPage")
+}
+
+private enum class SelectedTechStack {
+    MyPage, Project, Filter
 }
 
 @AndroidEntryPoint
@@ -75,19 +78,29 @@ class MainActivity : BaseActivity() {
                 if (response is Event.Success) {
                     setContent {
                         val navController = rememberNavController()
-                        val detailStackList = remember {
-                            mutableStateMapOf<String, List<String>>()
+                        val technologyStackList = remember {
+                            mutableStateListOf<String>()
                         }
+                        val technologyStackListByProjectPage = remember {
+                            mutableStateListOf(listOf<String>())
+                        }
+                        val filterTechStack = remember {
+                            mutableStateListOf<String>()
+                        }
+                        val selectedTechStack = remember {
+                            mutableStateOf(SelectedTechStack.Filter)
+                        }
+                        var projectIndex = 0
                         NavHost(
                             navController = navController,
                             startDestination = "Main"
                         ) {
                             composable(MainPage.Main.value) {
                                 MainScreen(
-                                    navController = navController,
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
                                     role = response.data!!,
+                                    onFilterClick = { navController.navigate(MainPage.Filter.value) }
                                 ) {
                                     controlTheStackWhenBackPressed()
                                 }
@@ -102,20 +115,50 @@ class MainActivity : BaseActivity() {
                             }
                             composable(MainPage.Search.name) {
                                 setSoftInputMode("RESIZE")
-                                val data = remember {
-                                    mutableStateOf(
-                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
-                                            "detailStack"
-                                        )
-                                    )
-                                }
                                 DetailStackSearchScreen(
                                     navController = navController,
-                                    onSearchStack = { searchDetailStackViewModel.searchDetailStack(it) },
-                                    selectedStack = detailStackList[data.value] ?: listOf(""),
-                                    detailStack = searchDetailStack.value
-                                ) {
+                                    onSearchStack = {
+                                        searchDetailStackViewModel.searchDetailStack(it)
+                                    },
+                                    selectedStack = when (selectedTechStack.value) {
+                                        SelectedTechStack.MyPage -> {
+                                            technologyStackList
+                                        }
+
+                                        SelectedTechStack.Filter -> {
+                                            filterTechStack
+                                        }
+
+                                        SelectedTechStack.Project -> {
+                                            technologyStackListByProjectPage[projectIndex]
+                                        }
+                                    },
+                                    detailStack = searchDetailStack.value,
+                                ) { list ->
                                     navController.navigate(MainPage.Filter.name)
+                                    when (selectedTechStack.value) {
+                                        SelectedTechStack.MyPage -> {
+                                            technologyStackList.removeAll(technologyStackList.filter {
+                                                !list.contains(it)
+                                            })
+                                            technologyStackList.addAll(list.filter {
+                                                !technologyStackList.contains(it)
+                                            })
+                                        }
+
+                                        SelectedTechStack.Filter -> {
+                                            filterTechStack.removeAll(filterTechStack.filter {
+                                                !list.contains(it)
+                                            })
+                                            filterTechStack.addAll(list.filter {
+                                                !filterTechStack.contains(it)
+                                            })
+                                        }
+
+                                        SelectedTechStack.Project -> {
+                                            technologyStackListByProjectPage[projectIndex] = list
+                                        }
+                                    }
                                     studentListViewModel.detailStackList.value =
                                         navController.previousBackStackEntry?.savedStateHandle?.get<String>(
                                             "detailStack"
@@ -130,7 +173,15 @@ class MainActivity : BaseActivity() {
                                     }, onLogout = {
                                         studentListViewModel.logout()
                                         authViewModel.deleteToken()
-                                    })
+                                    }, onClickSearchBar = {
+                                        selectedTechStack.value = SelectedTechStack.MyPage
+                                        navController.navigate(MainPage.Search.value)
+                                    }, onClickProjectSearchBar = {
+                                        projectIndex = it
+                                        selectedTechStack.value = SelectedTechStack.MyPage
+                                        navController.navigate(MainPage.Search.value)
+                                    }
+                                )
                             }
                         }
                     }
@@ -166,6 +217,7 @@ class MainActivity : BaseActivity() {
                 Event.Success<List<String>>() -> {
                     searchDetailStack.value = it.data!!.techStack
                 }
+
                 else -> {}
             }
         }

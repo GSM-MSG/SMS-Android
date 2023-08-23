@@ -14,9 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
-import com.msg.sms.design.component.bottomsheet.LogoutWithDrawalBottomSheet
 import com.msg.sms.design.component.button.ListFloatingButton
 import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
 import com.msg.sms.domain.model.student.response.GetStudentForStudent
@@ -37,10 +35,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
-    navController: NavController,
     viewModel: StudentListViewModel,
     lifecycleScope: CoroutineScope,
     role: String,
+    onFilterClick: () -> Unit,
     onClickBackPressed: () -> Unit,
 ) {
     val context = LocalContext.current as MainActivity
@@ -72,9 +70,6 @@ fun MainScreen(
     }
     val dialogOnClick = remember {
         mutableStateOf({})
-    }
-    val isDetailBottomSheet = remember {
-        mutableStateOf(false)
     }
     val studentDetailData = remember {
         mutableStateOf(StudentDetailData())
@@ -156,43 +151,20 @@ fun MainScreen(
 
     ModalBottomSheetLayout(
         sheetContent = {
-            if (isDetailBottomSheet.value) {
-                StudentDetailScreen(
-                    studentDetailData = studentDetailData.value,
-                    role = role,
-                    onDismissButtonClick = {
-                        scope.launch {
-                            bottomSheetState.hide()
-                        }
+            StudentDetailScreen(
+                studentDetailData = studentDetailData.value,
+                role = role,
+                onDismissButtonClick = {
+                    scope.launch {
+                        bottomSheetState.hide()
                     }
-                )
-            } else {
-                LogoutWithDrawalBottomSheet(
-                    onLogoutClick = {
-                        dialogState.value = true
-                        dialogTitle.value = "로그아웃"
-                        dialogMsg.value = "정말로 로그아웃 하시겠습니까?"
-                        dialogOnClick.value = {
-                            viewModel.logout()
-                        }
-                    },
-                    onWithDrawalClick = {
-                        dialogState.value = true
-                        dialogTitle.value = "회원탈퇴"
-                        dialogMsg.value = "정말로 회원탈퇴 하시겠습니까?"
-                        dialogOnClick.value = {
-                            viewModel.withdrawal()
-                        }
-                    },
-                    coroutineScope = scope,
-                    bottomSheetState = bottomSheetState
-                )
-            }
+                }
+            )
         },
         sheetState = bottomSheetState,
         sheetShape = RoundedCornerShape(
-            topStart = if (isDetailBottomSheet.value) 0.dp else 16.dp,
-            topEnd = if (isDetailBottomSheet.value) 0.dp else 16.dp,
+            topStart = 0.dp,
+            topEnd = 0.dp,
         )
     ) {
         Column(
@@ -204,12 +176,9 @@ fun MainScreen(
                 MainScreenTopBar(
                     profileImageUrl = profileImageUrl.value,
                     isScolled = isScrolled.value,
-                    filterButtonOnClick = {
-                        navController.navigate("Filter")
-                    },
+                    filterButtonOnClick = onFilterClick,
                     profileButtonOnClick = {
                         if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
-                            isDetailBottomSheet.value = false
                             scope.launch {
                                 bottomSheetState.show()
                             }
@@ -239,7 +208,6 @@ fun MainScreen(
                                         dialogMsg.value = msg
                                     },
                                     {
-                                        isDetailBottomSheet.value = true
                                         studentDetailData.value = StudentDetailData(
                                             name = it.name,
                                             introduce = it.introduce,
@@ -267,6 +235,7 @@ fun MainScreen(
                                     }
                                 )
                             }
+
                             "ROLE_STUDENT" -> {
                                 viewModel.getStudentDetailForStudent(it)
                                 getStudentDetailForStudent(
@@ -277,7 +246,6 @@ fun MainScreen(
                                         dialogMsg.value = msg
                                     },
                                     {
-                                        isDetailBottomSheet.value = true
                                         studentDetailData.value = StudentDetailData(
                                             name = it.name,
                                             introduce = it.introduce,
@@ -295,6 +263,7 @@ fun MainScreen(
                                     }
                                 )
                             }
+
                             else -> {
                                 viewModel.getStudentDetailForAnonymous(it)
                                 getStudentDetailForAnonymous(
@@ -305,7 +274,6 @@ fun MainScreen(
                                         dialogMsg.value = msg
                                     },
                                     {
-                                        isDetailBottomSheet.value = true
                                         // Todo(LeeHyeonbin): 디테일 페이지 API 수정하면서 여기 변경하기
 //                                        studentDetailData.value = StudentDetailData(
 //                                            name = it.name,
@@ -352,9 +320,11 @@ suspend fun getStudentList(
                 progressState(false)
                 onSuccess(response.data!!.content, response.data.contentSize)
             }
+
             is Event.Loading -> {
                 progressState(true)
             }
+
             else -> {
                 progressState(false)
             }
@@ -372,6 +342,7 @@ suspend fun getStudentDetailForTeacher(
             is Event.Success -> {
                 onSuccess(response.data!!)
             }
+
             is Event.Loading -> {}
             else -> {
                 dialog(true, "에러", "알 수 없는 에러 발생")
@@ -390,6 +361,7 @@ suspend fun getStudentDetailForStudent(
             is Event.Success -> {
                 onSuccess(response.data!!)
             }
+
             is Event.Loading -> {}
             else -> {
                 dialog(true, "에러", "알 수 없는 에러 발생")
@@ -408,6 +380,7 @@ suspend fun getStudentDetailForAnonymous(
             is Event.Success -> {
                 onSuccess(response.data!!)
             }
+
             is Event.Loading -> {}
             else -> {
                 dialog(true, "에러", "알 수 없는 에러 발생")
@@ -425,6 +398,7 @@ suspend fun getUserProfileImageUrl(
             is Event.Success -> {
                 onSuccess(response.data!!.profileImgUrl)
             }
+
             else -> {}
         }
     }

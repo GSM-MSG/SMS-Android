@@ -10,19 +10,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.DetailTechStackItem
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
-fun DetailTechStackComponent(addedList: List<String>) {
+fun DetailTechStackComponent(addedList: List<String>, onClickSearchBar: () -> Unit) {
     val addedListedValue = remember {
         mutableStateListOf(*addedList.toTypedArray())
     }
     Column {
         AddGrayBody1Title(titleText = "세부스택 (5개)") {
-            DisplaySearchBar()
+            DisplaySearchBar(
+                modifier = Modifier.onFocusChanged {
+                    if (it.isFocused) {
+                        onClickSearchBar()
+                    }
+                },
+            )
         }
         LazyRow(
             modifier = Modifier.heightIn(max = 300.dp),
@@ -41,5 +48,5 @@ fun DetailTechStackComponent(addedList: List<String>) {
 @Preview
 @Composable
 fun DetailTechStackComponentPre() {
-    DetailTechStackComponent(listOf("Android Stdio", "Kotlin", "Flutter"))
+    DetailTechStackComponent(listOf("Android Stdio", "Kotlin", "Flutter"), onClickSearchBar = {})
 }

@@ -116,9 +116,8 @@ fun DetailStackSearchScreen(
                 .fillMaxWidth(),
             text = nextButtonText,
             enabled = selectedStackList.isNotEmpty(),
-        ) {
-            onAddButtonClick(selectedStackList)
-        }
+            onClick = { onAddButtonClick(selectedStackList) }
+        )
     }
 }
 

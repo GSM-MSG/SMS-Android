@@ -20,6 +20,7 @@ fun ProjectComponent(
     onLinkNameChanged: (index: Int, value: String) -> Unit,
     onLinkChanged: (index: Int, value: String) -> Unit,
     onAddLinkButton: () -> Unit,
+    onClickSearchBar: () -> Unit,
     onRemoveProjectImageButton: (list: List<String>) -> Unit,
     onRemoveBitmapButton: (index: Int) -> Unit,
     onRemoveTechStack: (value: String) -> Unit,
@@ -47,7 +48,8 @@ fun ProjectComponent(
         )
         ProjectTechStackComponent(
             techStack = data.techStack,
-            onRemoveButton = onRemoveTechStack
+            onRemoveButton = onRemoveTechStack,
+            onClickSearchBar = onClickSearchBar
         )
         ProjectKeyTaskComponent(data.keyTask, onValueChange = onKeyTaskValueChange)
         ProjectScheduleComponent()
@@ -94,6 +96,7 @@ private fun ProjectComponentPre() {
         onRemoveTechStack = {},
         onRemoveRelatedLInk = {},
         onLinkChanged = { _, _ -> },
+        onClickSearchBar = {},
         onLinkNameChanged = { _, _ -> }
     )
 }

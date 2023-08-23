@@ -50,6 +50,8 @@ fun MyPageComponent(
     onClickTopLeftButton: () -> Unit,
     onClickTopRightButton: () -> Unit,
     onClickMajorButton: () -> Unit,
+    onProjectSearchBar: (index: Int) -> Unit,
+    onMyPageSearchBar: () -> Unit,
 ) {
     val projects = remember {
         mutableStateListOf(
@@ -136,7 +138,11 @@ fun MyPageComponent(
                 TitleHeader(titleText = "프로필 *")
             }
             item {
-                ProfileSection(setMajor = setMajor, onClickMajorComponent = onClickMajorButton)
+                ProfileSection(
+                    setMajor = setMajor,
+                    onClickMajorComponent = onClickMajorButton,
+                    onClickSearchBar = onMyPageSearchBar
+                )
                 SmsSpacer()
             }
             stickyHeader {
@@ -272,7 +278,8 @@ fun MyPageComponent(
                             onRemoveRelatedLink = {
                                 projects[index] =
                                     itemData.copy(relatedLinks = itemData.relatedLinks.filterIndexed { index, _ -> index != it })
-                            }
+                            },
+                            onClickSearchBar = { onProjectSearchBar(index) }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
@@ -382,5 +389,7 @@ private fun MyPageComponentPre() {
         onClickTopRightButton = {},
         onClickMajorButton = {},
         onClickOpenWorkForm = {},
+        onMyPageSearchBar = {},
+        onProjectSearchBar = {}
     )
 }

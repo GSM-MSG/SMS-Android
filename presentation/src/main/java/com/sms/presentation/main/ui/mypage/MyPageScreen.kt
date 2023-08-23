@@ -36,6 +36,8 @@ private enum class ModalValue {
 fun MyPageScreen(
     onWithdrawal: () -> Unit,
     onLogout: () -> Unit,
+    onClickSearchBar: () -> Unit,
+    onClickProjectSearchBar: (itemIndex: Int) -> Unit,
 ) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -181,7 +183,9 @@ fun MyPageScreen(
                     keyboardController!!.hide()
                     bottomSheetState.show()
                 }
-            })
+            }, onMyPageSearchBar = onClickSearchBar,
+            onProjectSearchBar = onClickProjectSearchBar
+        )
     }
 }
 
@@ -190,6 +194,8 @@ fun MyPageScreen(
 private fun MyPageScreenPre() {
     MyPageScreen(
         onLogout = {},
-        onWithdrawal = {}
+        onWithdrawal = {},
+        onClickSearchBar = {},
+        onClickProjectSearchBar = {}
     )
 }
