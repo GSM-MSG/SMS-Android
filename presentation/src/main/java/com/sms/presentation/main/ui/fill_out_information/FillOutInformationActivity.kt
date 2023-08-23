@@ -25,6 +25,7 @@ import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.fill_out_information.component.FillOutInformationTopBarComponent
+import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.DatePickerBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MajorSelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MilitarySelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.PhotoPickBottomSheet
@@ -76,9 +77,6 @@ class FillOutInformationActivity : BaseActivity() {
             val navController = rememberNavController()
             val bottomSheetState =
                 rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-            val bottomSheetContent = remember {
-                mutableStateOf<@Composable ColumnScope.() -> Unit>({})
-            }
             val currentRoute = remember {
                 mutableStateOf("Profile")
             }
@@ -113,11 +111,17 @@ class FillOutInformationActivity : BaseActivity() {
             }
 
             //DateBottomSheet
-            val selectedStartDate = remember {
-                mutableStateOf("")
+            val isProjectStartDate = remember {
+                mutableStateOf(true)
             }
-            val selectedEndDate = remember {
-                mutableStateOf("")
+            val projectIdx = remember {
+                mutableStateOf(0)
+            }
+            val projectStartDateMap = remember {
+                mutableStateMapOf<Int, String>()
+            }
+            val projectEndDateMap = remember {
+                mutableStateMapOf<Int, String>()
             }
 
             ModalBottomSheetLayout(
@@ -161,12 +165,7 @@ class FillOutInformationActivity : BaseActivity() {
 
                             MilitarySelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                militaryServiceList = listOf(
-                                    "병특 희망",
-                                    "희망하지 않음",
-                                    "상관없음",
-                                    "해당 사항 없음"
-                                ),
+                                militaryServiceList = listOf("병특 희망", "희망하지 않음", "상관없음", "해당 사항 없음"),
                                 selectedMilitaryService = if (selectedMilitaryService.value == "") data.militaryService else selectedMilitaryService.value,
                                 onSelectedMilitaryServiceChange = {
                                     selectedMilitaryService.value = it
@@ -174,7 +173,15 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         BottomSheetValues.Date -> {
-
+                            DatePickerBottomSheet(
+                                bottomSheetState = bottomSheetState,
+                                onDateValueChanged = {
+                                    if (isProjectStartDate.value)
+                                        projectStartDateMap[projectIdx.value] = it
+                                    else
+                                        projectEndDateMap[projectIdx.value] = it
+                                }
+                            )
                         }
                     }
                 },
@@ -276,12 +283,15 @@ class FillOutInformationActivity : BaseActivity() {
                                     ProjectsScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        bottomSheetState = bottomSheetState,
                                         detailStackList = detailStackList,
-                                        onSnackBarVisibleChanged = { snackBarVisible.value = true }
-                                    ) {
-                                        bottomSheetContent.value = it
-                                    }
+                                        onSnackBarVisibleChanged = { snackBarVisible.value = true },
+                                        startDateMap = projectStartDateMap,
+                                        endDateMap = projectEndDateMap,
+                                        onDateBottomSheetOpenButtonClick = { isStartDate, idx ->
+                                            isProjectStartDate.value = isStartDate
+                                            projectIdx.value = idx
+                                        }
+                                    )
                                 }
                                 composable(
                                     "${FillOutPage.Search.value}/{idx}",
