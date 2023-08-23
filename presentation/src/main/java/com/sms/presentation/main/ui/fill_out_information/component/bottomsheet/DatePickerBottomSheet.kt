@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.msg.sms.design.component.picker.SmsDatePicker
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 import kotlinx.coroutines.launch
@@ -31,38 +32,41 @@ fun DatePickerBottomSheet(
     }
 
     SMSTheme { colors, typography ->
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
-        ) {
-            Text(
-                text = "날짜 선택",
-                style = typography.title2,
-                color = colors.BLACK,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "완료",
-                style = typography.body2,
-                color = colors.P2,
-                fontWeight = FontWeight.Normal,
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+            ) {
+                Text(
+                    text = "날짜 선택",
+                    style = typography.title2,
+                    color = colors.BLACK,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "완료",
+                    style = typography.body2,
+                    color = colors.P2,
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .smsClickable {
+                            scope.launch { bottomSheetState.hide() }
+                            onDateValueChanged("${year.value}.${month.value}")
+                        }
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            SmsDatePicker(
                 modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .smsClickable {
-                        scope.launch { bottomSheetState.hide() }
-                        onDateValueChanged("${year.value}.${month.value}")
-                    }
+                    .fillMaxWidth()
+                    .height(162.dp)
+                    .padding(horizontal = 30.dp),
+                onYearValueChange = { year.value = it },
+                onMonthValueChange = { month.value = it }
             )
+            Spacer(modifier = Modifier.height(24.dp))
         }
-        Spacer(modifier = Modifier.height(16.dp))
-//        SmsDatePicker(
-//            yearValue = year.value,
-//            monthValue = month.value,
-//            yearRange = 2000..2030,
-//            monthRange = 1..12,
-//            onYearValueChange = { year.value = it },
-//            onMonthValueChange = { month.value = it }
-//        )
     }
 }

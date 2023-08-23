@@ -200,7 +200,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = FillOutPage.Profile.value
+                                startDestination = FillOutPage.Projects.value
                             ) {
                                 composable(FillOutPage.Profile.value) {
                                     currentRoute.value = FillOutPage.Profile.value
@@ -288,6 +288,8 @@ class FillOutInformationActivity : BaseActivity() {
                                         startDateMap = projectStartDateMap,
                                         endDateMap = projectEndDateMap,
                                         onDateBottomSheetOpenButtonClick = { isStartDate, idx ->
+                                            scope.launch { bottomSheetState.show() }
+                                            bottomSheetValues.value = BottomSheetValues.Date
                                             isProjectStartDate.value = isStartDate
                                             projectIdx.value = idx
                                         }
