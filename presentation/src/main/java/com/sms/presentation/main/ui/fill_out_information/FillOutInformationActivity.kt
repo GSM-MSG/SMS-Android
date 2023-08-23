@@ -151,7 +151,8 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         BottomSheetValues.WorkingForm -> {
-                            val workConditionData = fillOutViewModel.getEnteredWorkConditionInformation()
+                            val workConditionData =
+                                fillOutViewModel.getEnteredWorkConditionInformation()
 
                             MajorSelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
@@ -161,11 +162,17 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         BottomSheetValues.Military -> {
-                            val militaryServiceData = fillOutViewModel.getEnteredMilitaryServiceInformation()
+                            val militaryServiceData =
+                                fillOutViewModel.getEnteredMilitaryServiceInformation()
 
                             MilitarySelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                militaryServiceList = listOf("병특 희망", "희망하지 않음", "상관없음", "해당 사항 없음"),
+                                militaryServiceList = listOf(
+                                    "병특 희망",
+                                    "희망하지 않음",
+                                    "상관없음",
+                                    "해당 사항 없음"
+                                ),
                                 selectedMilitaryService = if (selectedMilitaryService.value == "") militaryServiceData.militaryService else selectedMilitaryService.value,
                                 onSelectedMilitaryServiceChange = {
                                     selectedMilitaryService.value = it
@@ -214,12 +221,12 @@ class FillOutInformationActivity : BaseActivity() {
                                         selectedMajor = selectedMajor.value,
                                         isImageExtensionInCorrect = isImageExtensionInCorrect.value,
                                         onPhotoPickBottomSheetOpenButtonClick = {
-                                            scope.launch { bottomSheetState.show() }
                                             bottomSheetValues.value = BottomSheetValues.PhotoPicker
+                                            scope.launch { bottomSheetState.show() }
                                         },
                                         onMajorBottomSheetOpenButtonClick = {
-                                            scope.launch { bottomSheetState.show() }
                                             bottomSheetValues.value = BottomSheetValues.Major
+                                            scope.launch { bottomSheetState.show() }
                                         },
                                         onDialogDissmissButtonClick = {
                                             isImageExtensionInCorrect.value = false
@@ -242,8 +249,8 @@ class FillOutInformationActivity : BaseActivity() {
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
                                         selectedWorkingCondition = selectedWorkingCondition.value,
                                         onWorkingConditionBottomSheetOpenButtonClick = {
-                                            scope.launch { bottomSheetState.show() }
                                             bottomSheetValues.value = BottomSheetValues.WorkingForm
+                                            scope.launch { bottomSheetState.show() }
                                         }
                                     )
                                 }
@@ -255,8 +262,8 @@ class FillOutInformationActivity : BaseActivity() {
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
                                         selectedMilitaryService = selectedMilitaryService.value,
                                         onMilitaryServiceBottomSheetOpenButtonClick = {
-                                            scope.launch { bottomSheetState.show() }
                                             bottomSheetValues.value = BottomSheetValues.Military
+                                            scope.launch { bottomSheetState.show() }
                                         }
                                     )
                                 }
@@ -288,10 +295,10 @@ class FillOutInformationActivity : BaseActivity() {
                                         startDateMap = projectStartDateMap,
                                         endDateMap = projectEndDateMap,
                                         onDateBottomSheetOpenButtonClick = { isStartDate, idx ->
-                                            scope.launch { bottomSheetState.show() }
                                             bottomSheetValues.value = BottomSheetValues.Date
                                             isProjectStartDate.value = isStartDate
                                             projectIdx.value = idx
+                                            scope.launch { bottomSheetState.show() }
                                         }
                                     )
                                 }
