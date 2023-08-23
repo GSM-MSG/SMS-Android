@@ -3,6 +3,7 @@ package com.msg.sms.design.component.picker
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +24,7 @@ fun SmsPicker(
     itemRange: Iterable<Int> = emptyList(),
     selectedItem: (value: String) -> Unit
 ) {
+    val listState = rememberLazyListState()
     val boxPosition = remember {
         mutableStateOf(0f)
     }
@@ -38,24 +40,27 @@ fun SmsPicker(
             )
             LazyColumn(
                 modifier = modifier,
+                state = listState,
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
                     Spacer(modifier = Modifier.height(64.dp))
                 }
-                itemsIndexed(itemList.ifEmpty { itemRange.map { it.toString() } }) { _, item ->
+                itemsIndexed(itemList.ifEmpty { itemRange.map { it.toString() } }) { idx, item ->
                     val isSelected = remember {
                         mutableStateOf(false)
                     }
 
-                    if (isSelected.value) selectedItem(item)
+                    if (isSelected.value) {
+                        selectedItem(item)
+                    }
 
                     Box(
                         modifier = Modifier
                             .onGloballyPositioned {
                                 isSelected.value =
-                                    boxPosition.value in it.positionInWindow().y..it.positionInWindow().y + 90
+                                    boxPosition.value in it.positionInWindow().y..it.positionInWindow().y + it.size.height
                             }
                     ) {
                         Text(
