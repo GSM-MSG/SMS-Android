@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -16,17 +17,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 @Composable
 fun SmsPicker(
     modifier: Modifier = Modifier,
     itemList: List<String> = emptyList(),
     itemRange: Iterable<Int> = emptyList(),
-    selectedItem: (value: String) -> Unit
+    onSelectedItemChange: (value: String) -> Unit
 ) {
     val listState = rememberLazyListState()
+    val selectedItem = remember {
+        mutableStateOf("")
+    }
     val boxPosition = remember {
         mutableStateOf(0f)
+    }
+
+    LaunchedEffect(selectedItem.value) {
+        val debounce = Job()
+
+        delay(300L)
+        onSelectedItemChange(selectedItem.value)
+
+        debounce.cancel()
     }
 
     SMSTheme { colors, typography ->
@@ -47,13 +62,13 @@ fun SmsPicker(
                 item {
                     Spacer(modifier = Modifier.height(64.dp))
                 }
-                itemsIndexed(itemList.ifEmpty { itemRange.map { it.toString() } }) { idx, item ->
+                itemsIndexed(itemList.ifEmpty { itemRange.map { it.toString() } }) { _, item ->
                     val isSelected = remember {
                         mutableStateOf(false)
                     }
 
                     if (isSelected.value) {
-                        selectedItem(item)
+                        selectedItem.value = item
                     }
 
                     Box(

@@ -1,5 +1,6 @@
 package com.msg.sms.design.component.picker
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,12 +37,12 @@ fun SmsDatePicker(
                 SmsPicker(
                     modifier = Modifier.fillMaxWidth(0.5f),
                     itemRange = 2015..2030,
-                    selectedItem = onYearValueChange
+                    onSelectedItemChange = onYearValueChange
                 )
                 SmsPicker(
                     modifier = Modifier.fillMaxWidth(),
                     itemRange = 1..12,
-                    selectedItem = onMonthValueChange
+                    onSelectedItemChange = onMonthValueChange
                 )
             }
             Box(
@@ -73,8 +74,8 @@ fun SmsDatePickerPre() {
             .background(Color.White)
     ) {
         SmsDatePicker(
-            onMonthValueChange = {},
-            onYearValueChange = {}
+            onMonthValueChange = { Log.d("dd",it) },
+            onYearValueChange = { Log.d("dd",it) }
         )
     }
 }
