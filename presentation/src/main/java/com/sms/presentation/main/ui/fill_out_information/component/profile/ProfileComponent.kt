@@ -32,18 +32,18 @@ import com.sms.presentation.main.ui.util.textFieldChecker
 
 @Composable
 fun ProfileComponent(
+    data: ProfileData,
+    enteredMajor: String,
     selectedMajor: String,
     detailStack: String,
-    savedData: (introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit,
-    enteringMajor: (String) -> Unit,
-    enteredMajor: String,
-    data: ProfileData,
+    profileImageUri: Uri,
     isReadOnly: Boolean,
     changeView: () -> Unit,
     isRequired: (Boolean) -> Unit,
-    profileImageUri: Uri,
+    enteringMajor: (String) -> Unit,
+    onMajorBottomSheetOpenButtonClick: () -> Unit,
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
-    onMajorBottomSheetOpenButtonClick: () -> Unit
+    savedData: (introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit
 ) {
     SMSTheme { _, typography ->
         val context = LocalContext.current as FillOutInformationActivity

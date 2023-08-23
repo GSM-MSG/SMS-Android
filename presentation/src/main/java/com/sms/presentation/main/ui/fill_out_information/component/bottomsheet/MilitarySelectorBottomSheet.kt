@@ -8,10 +8,10 @@ import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MilitarySelectorBottomSheet(
-    militaryServiceList: List<String>,
+    bottomSheetState: ModalBottomSheetState,
     selectedMilitaryService: String,
+    militaryServiceList: List<String>,
     onSelectedMilitaryServiceChange: (value: String) -> Unit,
-    bottomSheetState: ModalBottomSheetState
 ) {
     SelectorBottomSheet(
         list = militaryServiceList,

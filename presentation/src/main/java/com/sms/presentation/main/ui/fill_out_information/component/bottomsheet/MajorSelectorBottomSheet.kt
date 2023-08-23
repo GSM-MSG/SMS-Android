@@ -11,10 +11,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MajorSelectorBottomSheet(
-    majorList: List<String>,
+    bottomSheetState: ModalBottomSheetState,
     selectedMajor: String,
+    majorList: List<String>,
     onSelectedMajhorChange: (value: String) -> Unit,
-    bottomSheetState: ModalBottomSheetState
 ) {
     val scope = rememberCoroutineScope()
 

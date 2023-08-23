@@ -34,10 +34,10 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @Composable
 fun WorkConditionComponent(
-    wantWorkingCondition: String,
     navController: NavController,
-    data: WorkConditionData,
     viewModel: FillOutViewModel,
+    data: WorkConditionData,
+    wantWorkingCondition: String,
     onWorkingConditionBottomSheetOpenButtonClick: () -> Unit,
 ) {
     SMSTheme { colors, typography ->

@@ -15,7 +15,10 @@ import com.sms.presentation.main.ui.mypage.component.profile.DisplaySearchBar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ProjectTechStackInputComponent(techStack: List<String>, onClick: () -> Unit) {
+fun ProjectTechStackInputComponent(
+    techStack: List<String>,
+    onClick: () -> Unit
+) {
     AddGrayBody1Title(titleText = "사용기술 (최대 20개)") {
         Column(
             modifier = Modifier.fillMaxWidth(),

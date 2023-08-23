@@ -23,13 +23,13 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 fun ProfileScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
-    detailStack: List<String>,
     profileImageUri: Uri,
     selectedMajor: String,
+    detailStack: List<String>,
     isImageExtensionInCorrect: Boolean,
-    onDialogDissmissButtonClick: () -> Unit,
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
-    onMajorBottomSheetOpenButtonClick: () -> Unit
+    onMajorBottomSheetOpenButtonClick: () -> Unit,
+    onDialogDissmissButtonClick: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val data = viewModel.getEnteredProfileInformation()
@@ -51,9 +51,6 @@ fun ProfileScreen(
     val dialogState = remember {
         mutableStateOf(false)
     }
-    val scope = rememberCoroutineScope()
-
-    val list = viewModel.getMajorListResponse.collectAsState()
 
     if (isImageExtensionInCorrect) {
         SmsDialog(
@@ -80,37 +77,6 @@ fun ProfileScreen(
         )
     }
 
-//    bottomSheetContent(
-//        content = {
-//            if (isProfilePictureBottomSheet.value) {
-//
-//            } else {
-//                SelectorBottomSheet(
-//                    list = if (list.value.data != null) list.value.data!!.major else listOf(
-//                        ""
-//                    ),
-//                    bottomSheetState = bottomSheetState,
-//                    selected = selectedMajor.value,
-//                    itemChange = {
-//                        selectedMajor.value = it
-//                        Log.d("major", it)
-//                    },
-//                    lastItem = {
-//                        MajorSelector(
-//                            major = "직접입력",
-//                            selected = selectedMajor.value == "직접입력"
-//                        ) {
-//                            selectedMajor.value = "직접입력"
-//                            scope.launch {
-//                                bottomSheetState.hide()
-//                            }
-//                        }
-//                    }
-//                )
-//            }
-//        }
-//    )
-
     Column {
         Column(
             Modifier
@@ -129,7 +95,6 @@ fun ProfileScreen(
                 enteredMajor = enteredMajor.value,
                 data = data,
                 isRequired = { result -> isRequired.value = result },
-                //isEnable = list.value.data != null,
                 profileImageUri = profileImageUri,
                 changeView = {
                     viewModel.setEnteredProfileInformation(

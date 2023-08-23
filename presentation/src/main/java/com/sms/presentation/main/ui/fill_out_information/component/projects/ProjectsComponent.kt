@@ -17,15 +17,15 @@ import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 fun ProjectsComponent(
     navController: NavController,
     data: ProjectInfo,
+    onCancelButtonClick: () -> Unit,
+    onSnackBarVisibleChanged: () -> Unit,
+    onDetailStackSearchBarClick: () -> Unit,
     onProjectNameValueChanged: (value: String) -> Unit,
     onProjectIconValueChanged: (value: Uri) -> Unit,
     onProjectPreviewsValueChanged: (value: List<Uri>) -> Unit,
     onProjectKeyTaskValueChanged: (value: String) -> Unit,
     onProjectRelatedLinksValueChanged: (value: List<Pair<String, String>>) -> Unit,
-    onSnackBarVisibleChanged: () -> Unit,
-    onCancelButtonClick: () -> Unit,
     onDateBottomSheetOpenButtonClick: (isStartDate: Boolean) -> Unit,
-    onDetailStackSearchBarClick: () -> Unit,
 ) {
     val isProjectProgress = remember {
         mutableStateOf(false)

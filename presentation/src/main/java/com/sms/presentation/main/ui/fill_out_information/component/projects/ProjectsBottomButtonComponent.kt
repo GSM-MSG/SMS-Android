@@ -9,8 +9,8 @@ import com.msg.sms.design.component.button.SmsRoundedButton
 
 @Composable
 fun ProjectsBottomButtonComponent(
+    onNextButtonClick: () -> Unit,
     onPreviousButtonClick: () -> Unit,
-    onNextButtonClick: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),

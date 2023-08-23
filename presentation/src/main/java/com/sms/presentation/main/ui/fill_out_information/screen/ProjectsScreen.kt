@@ -22,9 +22,9 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 fun ProjectsScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
-    detailStackList: Map<String, List<String>>,
     startDateMap: Map<Int, String>,
     endDateMap: Map<Int, String>,
+    detailStackList: Map<String, List<String>>,
     onSnackBarVisibleChanged: () -> Unit,
     onDateBottomSheetOpenButtonClick: (isStartDate: Boolean, idx: Int) -> Unit
 ) {
