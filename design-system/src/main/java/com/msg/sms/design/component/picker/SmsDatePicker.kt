@@ -1,37 +1,29 @@
 package com.msg.sms.design.component.picker
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.chargemap.compose.numberpicker.NumberPicker
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
 fun SmsDatePicker(
-    yearValue: Int,
-    monthValue: Int,
-    yearRange: Iterable<Int>,
-    monthRange: Iterable<Int>,
-    onYearValueChange: (Int) -> Unit,
-    onMonthValueChange: (Int) -> Unit
+    onYearValueChange: (String) -> Unit,
+    onMonthValueChange: (String) -> Unit
 ) {
-    SMSTheme { colors, typography ->
+    SMSTheme { colors, _ ->
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+                .width(300.dp)
+                .height(163.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -41,62 +33,49 @@ fun SmsDatePicker(
                     .background(colors.N10)
                     .align(Alignment.Center)
             )
-            Row(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .height(163.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                NumberPicker(
-                    value = yearValue,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    range = yearRange,
-                    dividersColor = Color.Transparent,
-                    textStyle = TextStyle(
-                        fontFamily = typography.pretendard,
-                        fontSize = 20.sp,
-                        lineHeight = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    onValueChange = onYearValueChange
+            Row(modifier = Modifier.fillMaxWidth()) {
+                SmsPicker(
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    itemRange = 2015..2030,
+                    onSelectedItemChange = onYearValueChange
                 )
-                NumberPicker(
-                    value = monthValue,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    range = monthRange,
-                    dividersColor = Color.Transparent,
-                    textStyle = TextStyle(
-                        fontFamily = typography.pretendard,
-                        fontSize = 20.sp,
-                        lineHeight = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    onValueChange = onMonthValueChange
+                SmsPicker(
+                    modifier = Modifier.fillMaxWidth(),
+                    itemRange = 1..12,
+                    onSelectedItemChange = onMonthValueChange
                 )
             }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            listOf(
+                                colors.WHITE,
+                                Color.Transparent,
+                                Color.Transparent,
+                                Color.Transparent,
+                                Color.Transparent,
+                                colors.WHITE
+                            )
+                        )
+                    )
+            )
         }
     }
 }
 
 @Preview
 @Composable
-fun DatePickerPre() {
-    val month = remember {
-        mutableStateOf(0)
+fun SmsDatePickerPre() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        SmsDatePicker(
+            onMonthValueChange = { Log.d("dd",it) },
+            onYearValueChange = { Log.d("dd",it) }
+        )
     }
-    val year = remember {
-        mutableStateOf(0)
-    }
-    SmsDatePicker(
-        monthValue = month.value,
-        yearValue = year.value,
-        monthRange = 0..12,
-        yearRange = 2000..2030,
-        onMonthValueChange = {},
-        onYearValueChange = {}
-    )
 }
