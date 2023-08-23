@@ -47,10 +47,10 @@ fun ProjectsComponent(
 
     bottomSheetContent(content = {
         val year = remember {
-            mutableStateOf(0)
+            mutableStateOf("")
         }
         val month = remember {
-            mutableStateOf(0)
+            mutableStateOf("")
         }
 
         SMSTheme { colors, typography ->
@@ -82,12 +82,10 @@ fun ProjectsComponent(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            SmsDatePicker(yearValue = year.value,
-                monthValue = month.value,
-                yearRange = 2000..2030,
-                monthRange = 1..12,
+            SmsDatePicker(
                 onYearValueChange = { year.value = it },
-                onMonthValueChange = { month.value = it })
+                onMonthValueChange = { month.value = it }
+            )
         }
     })
 
