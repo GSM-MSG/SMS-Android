@@ -3,6 +3,7 @@ package com.sms.presentation.main.ui.fill_out_information.component.bottomsheet
 import android.Manifest
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.ExperimentalMaterialApi
@@ -31,8 +32,9 @@ fun PhotoPickBottomSheet(
             if (uri != null) {
                 onProfileImageUriChanged(
                     uri,
-                    getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()
+                    !getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()
                 )
+                Log.d("ddddd", getFileNameFromUri(context, uri).toString())
             }
         }
     val cameraLauncher =
@@ -41,8 +43,9 @@ fun PhotoPickBottomSheet(
             if (uri != null) {
                 onProfileImageUriChanged(
                     uri,
-                    getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()
+                    !getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()
                 )
+                Log.d("ddddd", getFileNameFromUri(context, uri).toString())
             }
         }
     val permissionLauncher = rememberLauncherForActivityResult(
