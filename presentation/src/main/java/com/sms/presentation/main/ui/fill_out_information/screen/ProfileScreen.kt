@@ -23,7 +23,7 @@ import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.selector.MajorSelector
 import com.msg.sms.design.component.spacer.SmsSpacer
-import com.sms.presentation.main.ui.fill_out_information.component.ProfileComponent
+import com.sms.presentation.main.ui.fill_out_information.component.profile.ProfileComponent
 import com.sms.presentation.main.ui.util.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import kotlinx.coroutines.launch
@@ -126,9 +126,9 @@ fun ProfileScreen(
             title = "에러",
             msg = "이미지의 확장자가 jpg, jpeg, png, heic가 아닙니다.",
             outLineButtonText = "취소",
-            normalButtonText = "확인",
+            importantButtonText = "확인",
             outlineButtonOnClick = { isImageExtensionInCorrect.value = false },
-            normalButtonOnClick = { isImageExtensionInCorrect.value = false }
+            importantButtonOnClick = { isImageExtensionInCorrect.value = false }
         )
     }
 
@@ -139,9 +139,9 @@ fun ProfileScreen(
             title = "에러",
             msg = "이메일 형식또는 url형식을 확인해 주세요.",
             outLineButtonText = "취소",
-            normalButtonText = "확인",
+            importantButtonText = "확인",
             outlineButtonOnClick = { dialogState.value = false },
-            normalButtonOnClick = { dialogState.value = false }
+            importantButtonOnClick = { dialogState.value = false }
         )
     }
 
@@ -216,11 +216,7 @@ fun ProfileScreen(
                         portfolioUrl = portfolioUrl.value,
                         enteredMajor = enteredMajor.value
                     )
-                    navController.currentBackStackEntry?.savedStateHandle?.set(
-                        key = "detailStack",
-                        value = detailStack.joinToString(",")
-                    )
-                    navController.navigate("Search")
+                    navController.navigate("Search/Profile")
                 },
                 enteringMajor = { string ->
                     enteredMajor.value = string

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -18,6 +19,7 @@ import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.filter.screen.FilterScreen
 import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.main.screen.MainScreen
+import com.sms.presentation.main.ui.mypage.MyPageScreen
 import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
@@ -26,16 +28,27 @@ import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+private enum class MainPage(val value: String) {
+    Main("Main"),
+    Filter("Filter"),
+    Search("Search"),
+    MyPage("MyPage")
+}
+
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
-
     private val studentListViewModel by viewModels<StudentListViewModel>()
     private val authViewModel by viewModels<AuthViewModel>()
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
 
+    private val searchDetailStack = mutableStateOf(listOf<String>())
+
     override fun init() {
         observeEvent()
+        lifecycleScope.launch {
+            searchDetailStack()
+        }
         authViewModel.getRoleInfo()
         fillOutViewModel.getMajorList()
     }
@@ -62,11 +75,14 @@ class MainActivity : BaseActivity() {
                 if (response is Event.Success) {
                     setContent {
                         val navController = rememberNavController()
+                        val detailStackList = remember {
+                            mutableStateMapOf<String, List<String>>()
+                        }
                         NavHost(
                             navController = navController,
                             startDestination = "Main"
                         ) {
-                            composable("Main") {
+                            composable(MainPage.Main.value) {
                                 MainScreen(
                                     navController = navController,
                                     viewModel = viewModel(LocalContext.current as MainActivity),
@@ -76,7 +92,7 @@ class MainActivity : BaseActivity() {
                                     controlTheStackWhenBackPressed()
                                 }
                             }
-                            composable("Filter") {
+                            composable(MainPage.Filter.name) {
                                 FilterScreen(
                                     navController = navController,
                                     viewModel = viewModel(LocalContext.current as MainActivity),
@@ -84,7 +100,7 @@ class MainActivity : BaseActivity() {
                                     role = response.data!!
                                 )
                             }
-                            composable("Search") {
+                            composable(MainPage.Search.name) {
                                 setSoftInputMode("RESIZE")
                                 val data = remember {
                                     mutableStateOf(
@@ -95,15 +111,26 @@ class MainActivity : BaseActivity() {
                                 }
                                 DetailStackSearchScreen(
                                     navController = navController,
-                                    viewModel = searchDetailStackViewModel,
-                                    selectedStack = (if (data.value != null) data.value!!.split(",") else listOf(""))
+                                    onSearchStack = { searchDetailStackViewModel.searchDetailStack(it) },
+                                    selectedStack = detailStackList[data.value] ?: listOf(""),
+                                    detailStack = searchDetailStack.value
                                 ) {
-                                    navController.navigate("Filter")
+                                    navController.navigate(MainPage.Filter.name)
                                     studentListViewModel.detailStackList.value =
                                         navController.previousBackStackEntry?.savedStateHandle?.get<String>(
                                             "detailStack"
                                         ) ?: ""
                                 }
+                            }
+                            composable(MainPage.MyPage.value) {
+                                MyPageScreen(
+                                    onWithdrawal = {
+                                        studentListViewModel.withdrawal()
+                                        authViewModel.deleteToken()
+                                    }, onLogout = {
+                                        studentListViewModel.logout()
+                                        authViewModel.deleteToken()
+                                    })
                             }
                         }
                     }
@@ -113,9 +140,9 @@ class MainActivity : BaseActivity() {
                             title = "에러",
                             msg = "알 수 없는 오류 발생",
                             outLineButtonText = "취소",
-                            normalButtonText = "확인",
+                            importantButtonText = "확인",
                             outlineButtonOnClick = { finish() },
-                            normalButtonOnClick = { finish() }
+                            importantButtonOnClick = { finish() }
                         )
                     }
                 }
@@ -129,6 +156,17 @@ class MainActivity : BaseActivity() {
                     } else {
                         mutableStateListOf()
                     }
+            }
+        }
+    }
+
+    private suspend fun searchDetailStack() {
+        searchDetailStackViewModel.searchResultEvent.collect {
+            when (it) {
+                Event.Success<List<String>>() -> {
+                    searchDetailStack.value = it.data!!.techStack
+                }
+                else -> {}
             }
         }
     }

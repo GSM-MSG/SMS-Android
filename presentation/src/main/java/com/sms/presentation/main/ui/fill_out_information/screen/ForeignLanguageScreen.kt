@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import com.msg.sms.design.component.spacer.SmsSpacer
-import com.sms.presentation.main.ui.fill_out_information.component.ForeignLanguageComponent
+import com.sms.presentation.main.ui.fill_out_information.component.foreignlanguage.ForeignLanguageComponent
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import kotlinx.coroutines.CoroutineScope
 

@@ -17,19 +17,20 @@ import javax.inject.Inject
 class SearchDetailStackViewModel @Inject constructor(
     private val searchDetailStackUseCase: GetSearchDetailStackUseCase,
 ) : ViewModel() {
-    private val _searchResult = MutableStateFlow<Event<DetailStackListModel>>(Event.Loading)
-    val searchResult = _searchResult.asStateFlow()
+    private val _searchResultEvent = MutableStateFlow<Event<DetailStackListModel>>(Event.Loading)
+    val searchResultEvent = _searchResultEvent.asStateFlow()
 
     fun searchDetailStack(name: String) {
         viewModelScope.launch {
             searchDetailStackUseCase(name).onSuccess {
                 it.catch { remoteError ->
-                    _searchResult.value = remoteError.errorHandling()
+                    _searchResultEvent.value = remoteError.errorHandling()
                 }.collect { response ->
-                    _searchResult.value = Event.Success(data = response)
+                    _searchResultEvent.value = Event.Success(data = response)
+                    _searchResultEvent.value = Event.Loading
                 }
             }.onFailure {
-                _searchResult.value = it.errorHandling()
+                _searchResultEvent.value = it.errorHandling()
             }
         }
     }

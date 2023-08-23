@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.fill_out_information.component
+package com.sms.presentation.main.ui.fill_out_information.component.militaryservice
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi

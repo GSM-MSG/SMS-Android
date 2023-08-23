@@ -3,7 +3,11 @@ package com.msg.sms.design.component.button
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -35,6 +39,7 @@ fun SmsBoxButton(
             when (it) {
                 ButtonState.OutLine -> if (isPressed) colors.N10 else colors.WHITE
                 ButtonState.Normal -> if (isPressed) colors.P3 else colors.P2
+                ButtonState.Error -> if (isPressed) colors.ERROR else colors.ERROR
             }
         }
 
@@ -42,6 +47,7 @@ fun SmsBoxButton(
             when (it) {
                 ButtonState.OutLine -> colors.BLACK
                 ButtonState.Normal -> colors.WHITE
+                ButtonState.Error -> colors.WHITE
             }
         }
 

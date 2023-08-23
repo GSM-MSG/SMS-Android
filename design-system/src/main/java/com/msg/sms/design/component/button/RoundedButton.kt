@@ -41,6 +41,7 @@ fun SmsRoundedButton(
             when (it) {
                 ButtonState.OutLine -> if (isPressed) colors.N10 else colors.WHITE
                 ButtonState.Normal -> if (isPressed) colors.P3 else colors.P2
+                ButtonState.Error -> if(isPressed) colors.ERROR else colors.ERROR
             }
         }
 
@@ -48,6 +49,7 @@ fun SmsRoundedButton(
             when (it) {
                 ButtonState.OutLine -> colors.BLACK
                 ButtonState.Normal -> colors.WHITE
+                ButtonState.Error -> colors.WHITE
             }
         }
 

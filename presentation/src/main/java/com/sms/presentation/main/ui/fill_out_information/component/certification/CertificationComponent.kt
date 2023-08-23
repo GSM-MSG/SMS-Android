@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.fill_out_information.component
+package com.sms.presentation.main.ui.fill_out_information.component.certification
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -29,7 +29,7 @@ fun CertificationComponent(
     val data = viewModel.getEnteredCertification()
     SMSTheme { colors, typography ->
         val certificationList = remember {
-            mutableStateListOf(*data.certification.toTypedArray())
+            mutableStateListOf(*data.certifications.toTypedArray())
         }
         Column(
             modifier = Modifier

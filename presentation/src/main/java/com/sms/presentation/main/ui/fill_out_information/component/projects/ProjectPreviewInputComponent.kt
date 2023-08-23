@@ -1,6 +1,10 @@
-package com.sms.presentation.main.ui.fill_out_information.component
+package com.sms.presentation.main.ui.fill_out_information.component.projects
 
+import android.Manifest
 import android.net.Uri
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,6 +13,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,32 +31,65 @@ import com.msg.sms.design.util.AddGrayBody1Title
 @Composable
 fun ProjectPreviewInputComponent(
     previewUriList: List<Uri>,
-    deletedIndex: (Int) -> Unit,
-    onClick: () -> Unit
+    onSnackBarVisibleChanged: () -> Unit,
+    onValueChanged: (value: List<Uri>) -> Unit
 ) {
+    val previews = remember {
+        mutableStateListOf(*previewUriList.toTypedArray())
+    }
+
+    val multipleSelectGalleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+            if (uris.isNotEmpty()) {
+                if ((previews.size + uris.size) <= 4) {
+                    previews.addAll(uris)
+                } else onSnackBarVisibleChanged()
+            }
+        }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            if (previews.size == 4) {
+                onSnackBarVisibleChanged()
+            } else {
+                multipleSelectGalleryLauncher.launch("image/*")
+            }
+        }
+    }
+
+    val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.READ_MEDIA_IMAGES
+    } else {
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    }
+
+    if (previews.isNotEmpty()) {
+        onValueChanged(previews)
+    }
+
     SMSTheme { colors, typography ->
         AddGrayBody1Title(titleText = "미리보기 사진") {
             LazyRow(modifier = Modifier.fillMaxWidth()) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .size(132.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(colors.N10)
-                            .smsClickable(onClick = onClick)
-                    ) {
+                    Box(modifier = Modifier
+                        .size(132.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(colors.N10)
+                        .smsClickable { permissionLauncher.launch(permission) }) {
                         Column(modifier = Modifier.align(Alignment.Center)) {
                             GalleryIcon()
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "${previewUriList.size}/4",
+                                text = "${previews.size}/4",
                                 style = typography.body2,
                                 fontWeight = FontWeight.Normal
                             )
                         }
                     }
                 }
-                itemsIndexed(previewUriList) { idx, uri ->
+                itemsIndexed(previews) { idx, uri ->
                     Spacer(modifier = Modifier.width(8.dp))
                     Box(
                         modifier = Modifier
@@ -73,7 +112,9 @@ fun ProjectPreviewInputComponent(
                                 .padding(6.dp)
                                 .smsClickable(
                                     bounded = false
-                                ) { deletedIndex(idx) }
+                                ) {
+                                    previews.removeAt(idx)
+                                }
                         )
                     }
                 }

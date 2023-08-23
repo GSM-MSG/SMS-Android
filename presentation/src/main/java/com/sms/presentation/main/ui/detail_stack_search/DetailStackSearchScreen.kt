@@ -1,13 +1,22 @@
 package com.sms.presentation.main.ui.detail_stack_search
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.msg.sms.design.component.button.SmsBoxButton
@@ -15,7 +24,6 @@ import com.msg.sms.design.component.snackbar.TechStackSnackBar
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.SearchTopBar
 import com.sms.presentation.main.ui.util.textFieldChecker
-import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
@@ -23,15 +31,14 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun DetailStackSearchScreen(
     navController: NavController,
-    viewModel: SearchDetailStackViewModel,
     selectedStack: List<String>,
-    onAddButtonClick: () -> Unit
+    detailStack: List<String>,
+    onSearchStack: (query: String) -> Unit,
+    onAddButtonClick: (list: List<String>) -> Unit,
 ) {
     val searchQuery = remember {
         mutableStateOf("")
     }
-    val detailStack =
-        viewModel.searchResult.collectAsState()
     val selectedStackList = remember {
         if (selectedStack.first() == "") mutableStateListOf() else mutableStateListOf(*selectedStack.toTypedArray())
     }
@@ -61,7 +68,7 @@ fun DetailStackSearchScreen(
                 onClickButton = { searchQuery.value = "" },
                 onClickBackButton = { navController.popBackStack() },
                 debounceTime = 300L,
-                debounceTextChanged = { if (textFieldChecker(it)) viewModel.searchDetailStack(name = it) }
+                debounceTextChanged = { if (textFieldChecker(it)) onSearchStack(it) }
             )
             TechStackSnackBar(
                 modifier = Modifier.align(Alignment.Center),
@@ -74,7 +81,7 @@ fun DetailStackSearchScreen(
         SmsSpacer()
         RecentlyAddedListComponent(
             modifier = Modifier.weight(1f),
-            list = if (detailStack.value.data != null) detailStack.value.data!!.techStack else emptyList(),
+            list = detailStack,
             selectedList = selectedStackList,
             searchQuery = searchQuery.value,
             onClickRemoveAll = { selectedStackList.clear() },
@@ -110,11 +117,7 @@ fun DetailStackSearchScreen(
             text = nextButtonText,
             enabled = selectedStackList.isNotEmpty(),
         ) {
-            navController.currentBackStackEntry?.savedStateHandle?.set(
-                key = "detailStack",
-                value = selectedStackList.joinToString(",")
-            )
-            onAddButtonClick()
+            onAddButtonClick(selectedStackList)
         }
     }
 }
@@ -124,7 +127,9 @@ fun DetailStackSearchScreen(
 fun DetailStackSearchScreenPre() {
     DetailStackSearchScreen(
         navController = rememberNavController(),
-        viewModel = viewModel(),
-        listOf()
-    ) {}
+        listOf(),
+        detailStack = listOf(),
+        onSearchStack = {},
+        onAddButtonClick = {}
+    )
 }

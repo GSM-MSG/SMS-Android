@@ -1,12 +1,15 @@
 package com.sms.presentation.main.ui.mypage
 
+import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -23,6 +26,7 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.icon.BlackLogoutIcon
+import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.button.SaveButtonComponent
 import com.sms.presentation.main.ui.mypage.section.AwardSection
 import com.sms.presentation.main.ui.mypage.section.CertificationsSection
@@ -32,6 +36,8 @@ import com.sms.presentation.main.ui.mypage.section.ProfileSection
 import com.sms.presentation.main.ui.mypage.section.ProjectsSection
 import com.sms.presentation.main.ui.mypage.section.SchoolLifeSection
 import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
+import com.sms.presentation.main.ui.mypage.state.ExpandableAwardDate
+import com.sms.presentation.main.ui.mypage.state.ExpandableProjectData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,15 +51,66 @@ fun MyPageComponent(
     onClickTopRightButton: () -> Unit,
     onClickMajorButton: () -> Unit,
 ) {
-
-    val projectExpandList = remember {
-        mutableStateListOf(*listOf("프로젝트 1", "프로젝트 2").map { true }.toTypedArray())
+    val projects = remember {
+        mutableStateListOf(
+            ExpandableProjectData(
+                name = "SMS",
+                activityDuration = "2023 ~",
+                projectImage = listOf(
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
+                ),
+                icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                techStack = listOf("Github", "Git", "Kotlin", "Android Studio"),
+                keyTask = "모이자 ㅋㅋ",
+                relatedLinks = listOf(
+                    RelatedLinksData("Youtube", "https://dolmc.com"),
+                    RelatedLinksData("GitHujb", "https://youyu.com"),
+                    RelatedLinksData("X", "https://asdgasgw.com")
+                ),
+                isExpand = true
+            ),
+            ExpandableProjectData(
+                name = "MOIZA",
+                activityDuration = "2023 ~",
+                projectImage = listOf(
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
+                ),
+                icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                techStack = listOf("Github", "Git", "Kotlin", "Android Studio"),
+                keyTask = "모이자 ㅋㅋ",
+                relatedLinks = listOf(
+                    RelatedLinksData("Youtube", "https://dolmc.com"),
+                    RelatedLinksData("GitHujb", "https://youyu.com"),
+                    RelatedLinksData("X", "https://asdgasgw.com")
+                ),
+                isExpand = true
+            ),
+        )
     }
-    val awardExpandList = remember {
-        mutableStateListOf(*listOf("수상 1", "수상 2").map { true }.toTypedArray())
+
+    val awards = remember {
+        mutableStateListOf(
+            ExpandableAwardDate(title = "수상 1", organization = "", date = "", isExpand = true),
+            ExpandableAwardDate(title = "수상 2", organization = "", date = "", isExpand = true)
+        )
     }
     val wantWorkingArea = remember {
         mutableStateListOf(*listOf("광저우", "충칭", "하노이", "도쿄").toTypedArray())
+    }
+    val bitmapPreviews = remember {
+        mutableStateListOf(*projects.map { listOf<Bitmap>() }.toTypedArray())
+    }
+    val foreignLanguages = remember {
+        mutableStateListOf(*listOf(Pair("한국어", "원어민"), Pair("토익", "990")).toTypedArray())
+    }
+    val certifications = remember {
+        mutableStateListOf(*listOf("정보처리 산업기사").toTypedArray())
     }
 
     Box(
@@ -120,67 +177,162 @@ fun MyPageComponent(
                 TitleHeader(titleText = "자격증")
             }
             item {
-                CertificationsSection()
+                CertificationsSection(
+                    certifications = certifications,
+                    onValueChange = { index, value -> certifications[index] = value },
+                    onClickRemoveButton = { certifications.removeAt(index = it) },
+                    onClickAddButton = { certifications.add("") }
+                )
                 SmsSpacer()
             }
             stickyHeader {
                 TitleHeader(titleText = "외국어")
             }
             item {
-                ForeignLanguagesSection()
+                ForeignLanguagesSection(
+                    foreignLanguages = foreignLanguages,
+                    onValueChangeForeignName = { index, value ->
+                        foreignLanguages[index] = foreignLanguages[index].copy(first = value)
+                    },
+                    onValueChangeForeignValue = { index, value ->
+                        foreignLanguages[index] = foreignLanguages[index].copy(second = value)
+                    },
+                    onClickRemoveButton = { foreignLanguages.removeAt(it) }
+                ) {
+                    foreignLanguages.add(Pair("", ""))
+                }
                 SmsSpacer()
             }
-            listOf("프로젝트 1", "프로젝트 2").forEachIndexed { index, it ->
+            projects.forEachIndexed { index, it ->
                 stickyHeader {
                     TitleHeader(
-                        titleText = it,
+                        titleText = it.name,
                         isExpandable = true,
                         isRemovable = true,
-                        onClickToggleButton = { projectExpandList[index] = it },
-                        onClickRemoveButton = {})
-                }
-                item {
-                    AnimatedVisibility(
-                        modifier = Modifier.fillMaxWidth(),
-                        visible = projectExpandList[index],
-                        enter = expandVertically(),
-                        exit = shrinkVertically(),
-                    ) {
-                        ProjectsSection(data = it)
-                        SmsSpacer()
-                    }
-                }
-            }
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 20.dp, end = 20.dp, bottom = 20.dp)
-                ) {
-                    BlackAddItemButton(modifier = Modifier.align(Alignment.TopEnd)) {
-
-                    }
-                }
-            }
-            listOf("수상 1", "수상 2").forEachIndexed { index, it ->
-                stickyHeader {
-                    TitleHeader(
-                        titleText = it,
-                        isExpandable = true,
-                        isRemovable = true,
-                        onClickRemoveButton = {},
-                        onClickToggleButton = { rotateState ->
-                            awardExpandList[index] = rotateState
+                        isExpand = it.isExpand,
+                        onClickToggleButton = {
+                            projects[index] =
+                                projects[index].copy(isExpand = !it.isExpand)
+                        },
+                        onClickRemoveButton = {
+                            bitmapPreviews.removeAt(index)
+                            projects.removeAt(index)
                         })
                 }
                 item {
                     AnimatedVisibility(
                         modifier = Modifier.fillMaxWidth(),
-                        visible = awardExpandList[index],
+                        visible = projects[index].isExpand,
                         enter = expandVertically(),
                         exit = shrinkVertically(),
                     ) {
-                        AwardSection(awardData = it)
+                        val itemData = projects[index]
+                        ProjectsSection(
+                            data = itemData,
+                            onNameValueChange = {
+                                projects[index] = itemData.copy(name = it)
+                            },
+                            onKeyTaskValueChange = {
+                                projects[index] = itemData.copy(keyTask = it)
+                            },
+                            onLinkNameChanged = { itemIndex, value ->
+                                val relatedLink = itemData.relatedLinks.toMutableList()
+                                relatedLink.set(
+                                    index = itemIndex,
+                                    element = itemData.relatedLinks[itemIndex].copy(name = value)
+                                )
+                                projects[index] = itemData.copy(relatedLinks = relatedLink)
+                            },
+                            onLinkChanged = { itemIndex, value ->
+                                val relatedLink = itemData.relatedLinks.toMutableList()
+                                relatedLink.set(
+                                    index = itemIndex,
+                                    element = itemData.relatedLinks[itemIndex].copy(link = value)
+                                )
+                                projects[index] = itemData.copy(relatedLinks = relatedLink)
+                            },
+                            onRemoveProjectImage = {
+                                projects[index] = itemData.copy(projectImage = it)
+                            },
+                            onAddBitmap = { bitmapPreviews[index] = bitmapPreviews[index] + it },
+                            onAddLink = {
+                                val relatedLink = itemData.relatedLinks.toMutableList()
+                                relatedLink.add(RelatedLinksData(name = "", link = ""))
+                                projects[index] = itemData.copy(relatedLinks = relatedLink)
+                            },
+                            onRemoveBitmapButton = {
+                                bitmapPreviews[index] =
+                                    bitmapPreviews[index].filterIndexed { index, _ -> it != index }
+                            },
+                            enteredPreviews = bitmapPreviews[index],
+                            onRemoveTechStack = {
+                                projects[index] =
+                                    itemData.copy(techStack = itemData.techStack.minus(it))
+                            },
+                            onRemoveRelatedLink = {
+                                projects[index] =
+                                    itemData.copy(relatedLinks = itemData.relatedLinks.filterIndexed { index, _ -> index != it })
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
+            }
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp, end = 20.dp, bottom = 20.dp)
+                ) {
+                    BlackAddItemButton(modifier = Modifier.align(Alignment.TopEnd)) {
+                        bitmapPreviews.add(listOf())
+                        projects.add(
+                            ExpandableProjectData(
+                                name = "프로젝트 ${projects.size + 1}",
+                                activityDuration = "",
+                                projectImage = listOf(),
+                                icon = "",
+                                techStack = listOf(),
+                                keyTask = "",
+                                relatedLinks = listOf(),
+                                isExpand = true
+                            )
+                        )
+                    }
+                }
+            }
+            awards.forEachIndexed { index, it ->
+                stickyHeader {
+                    TitleHeader(
+                        titleText = it.title,
+                        isExpandable = true,
+                        isRemovable = true,
+                        isExpand = it.isExpand,
+                        onClickRemoveButton = {},
+                        onClickToggleButton = {
+                            awards[index] = awards[index].copy(isExpand = !it.isExpand)
+                        })
+                }
+                item {
+                    AnimatedVisibility(
+                        modifier = Modifier.fillMaxWidth(),
+                        visible = awards[index].isExpand,
+                        enter = expandVertically(),
+                        exit = shrinkVertically(),
+                    ) {
+                        AwardSection(
+                            awardData = it,
+                            onNameValueChange = {
+                                awards[index] = awards[index].copy(title = it)
+                            },
+                            onTypeValueChange = {
+                                awards[index] = awards[index].copy(organization = it)
+                            },
+                            onDateValueChange = {
+                                awards[index] = awards[index].copy(date = it)
+                            },
+                            onClickCalendar = { /*(Todo): kimhs - 넘버핔커 열어줘요*/ }
+                        )
                         SmsSpacer()
                     }
                 }
@@ -192,7 +344,14 @@ fun MyPageComponent(
                         .padding(top = 20.dp, end = 20.dp, bottom = 20.dp)
                 ) {
                     BlackAddItemButton(modifier = Modifier.align(Alignment.TopEnd)) {
-
+                        awards.add(
+                            ExpandableAwardDate(
+                                title = "수상 ${awards.size + 1}",
+                                organization = "",
+                                date = "",
+                                isExpand = true
+                            )
+                        )
                     }
                 }
             }
