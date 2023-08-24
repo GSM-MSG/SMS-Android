@@ -30,6 +30,7 @@ import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.D
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MajorSelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MilitarySelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.PhotoPickBottomSheet
+import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
@@ -74,6 +75,9 @@ class FillOutInformationActivity : BaseActivity() {
         setContent {
             val scope = rememberCoroutineScope()
             val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
+            val projectList = remember {
+                mutableStateListOf(*fillOutViewModel.getEnteredProjectsInformation().projects.toTypedArray())
+            }
             val bottomSheetValues = remember {
                 mutableStateOf(BottomSheetValues.Major)
             }
@@ -125,12 +129,6 @@ class FillOutInformationActivity : BaseActivity() {
             }
             val awardIdx = remember {
                 mutableStateOf(0)
-            }
-            val projectStartDateMap = remember {
-                mutableStateMapOf<Int, String>()
-            }
-            val projectEndDateMap = remember {
-                mutableStateMapOf<Int, String>()
             }
             val awardDateMap = remember {
                 mutableStateMapOf<Int, String>()
@@ -195,10 +193,10 @@ class FillOutInformationActivity : BaseActivity() {
                                 onDateValueChanged = { date ->
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
-                                            projectStartDateMap[projectIdx.value] = date
+                                            projectList[projectIdx.value] = projectList[projectIdx.value].copy(startDate = date)
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
-                                            projectEndDateMap[projectIdx.value] = date
+                                            projectList[projectIdx.value] = projectList[projectIdx.value].copy(endDate = date)
                                         }
                                         !isProjectDate.value -> {
                                             awardDateMap[awardIdx.value] = date
@@ -232,8 +230,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     ProfileScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        detailStack = detailStackList[FillOutPage.Profile.value]
-                                            ?: emptyList(),
+                                        detailStack = detailStackList[FillOutPage.Profile.value] ?: emptyList(),
                                         profileImageUri = profileImageUri.value,
                                         selectedMajor = selectedMajor.value,
                                         isImageExtensionInCorrect = isImageExtensionInCorrect.value,
@@ -308,20 +305,52 @@ class FillOutInformationActivity : BaseActivity() {
                                     setSoftInputMode("PAN")
                                     ProjectsScreen(
                                         navController = navController,
-                                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        detailStackList = detailStackList,
-                                        onSnackBarVisibleChanged = { snackBarVisible.value = true },
-                                        startDateMap = projectStartDateMap,
-                                        endDateMap = projectEndDateMap,
-                                        onProjectTechStackValueChanged = { idx, list ->
-                                            detailStackList["Project$idx"] = list
+                                        projects = projectList,
+                                        onAddButtonClick = { projectList.add(ProjectInfo()) },
+                                        onNextButtonClick = {
+                                            fillOutViewModel.setEnteredProjectsInformation(
+                                                projectList.filter { project ->
+                                                    project.name.isNotEmpty() ||
+                                                    project.icon != Uri.EMPTY ||
+                                                    project.keyTask.isNotEmpty() ||
+                                                    project.preview.isNotEmpty() ||
+                                                    project.endDate.isNotEmpty() ||
+                                                    project.startDate.isNotEmpty() ||
+                                                    project.technologyOfUse.isNotEmpty() ||
+                                                    project.relatedLinkList.first() != Pair("", "")
+                                                }
+                                            )
+                                            navController.navigate("Award")
                                         },
-                                        onDateBottomSheetOpenButtonClick = { isStartDate, idx ->
+                                        onCancelButtonClick = { idx -> projectList.removeAt(idx) },
+                                        onDateBottomSheetOpenButtonClick = { idx, isStartDate ->
                                             bottomSheetValues.value = BottomSheetValues.Date
                                             isProjectStartDate.value = isStartDate
                                             isProjectDate.value = true
                                             projectIdx.value = idx
                                             scope.launch { bottomSheetState.show() }
+                                        },
+                                        onProjectItemToggleIsOpenValueChanged = { idx, visible ->
+                                            projectList[idx] = projectList[idx].copy(isToggleOpen = visible)
+                                        },
+                                        onSnackBarVisibleChanged = { snackBarVisible.value = true },
+                                        onProjectNameValueChanged = { idx, name ->
+                                            projectList[idx] = projectList[idx].copy(name = name)
+                                        },
+                                        onProjectIconValueChanged = { idx, icon ->
+                                            projectList[idx] = projectList[idx].copy(icon = icon)
+                                        },
+                                        onProjectPreviewsValueChanged = { idx, previews ->
+                                            projectList[idx] = projectList[idx].copy(preview = previews)
+                                        },
+                                        onProjectTechStackValueChanged = { idx, list ->
+                                            detailStackList["Project$idx"] = list
+                                        },
+                                        onProjectKeyTaskValueChanged = { idx, keytask ->
+                                            projectList[idx] = projectList[idx].copy(keyTask = keytask)
+                                        },
+                                        onProjectRelatedLinksValueChanged = { idx, links ->
+                                            projectList[idx] = projectList[idx].copy(relatedLinkList = links)
                                         }
                                     )
                                 }

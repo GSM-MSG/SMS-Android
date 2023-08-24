@@ -1,12 +1,10 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -22,24 +20,25 @@ import com.sms.presentation.main.ui.fill_out_information.component.projects.Proj
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isImageExtensionCorrect
-import com.sms.presentation.main.viewmodel.FillOutViewModel
 
 @Composable
 fun ProjectsScreen(
     navController: NavController,
-    viewModel: FillOutViewModel,
-    startDateMap: Map<Int, String>,
-    endDateMap: Map<Int, String>,
-    detailStackList: Map<String, List<String>>,
+    projects: List<ProjectInfo>,
+    onAddButtonClick: () -> Unit,
+    onNextButtonClick: () -> Unit,
+    onCancelButtonClick: (idx: Int) -> Unit,
+    onDateBottomSheetOpenButtonClick: (idx: Int, isStartDate: Boolean) -> Unit,
     onSnackBarVisibleChanged: () -> Unit,
+    onProjectItemToggleIsOpenValueChanged: (idx: Int, value: Boolean) -> Unit,
+    onProjectNameValueChanged: (idx: Int, value: String) -> Unit,
+    onProjectIconValueChanged: (idx: Int, value: Uri) -> Unit,
+    onProjectPreviewsValueChanged: (idx: Int, value: List<Uri>) -> Unit,
     onProjectTechStackValueChanged: (idx: Int, list: List<String>) -> Unit,
-    onDateBottomSheetOpenButtonClick: (isStartDate: Boolean, idx: Int) -> Unit
+    onProjectKeyTaskValueChanged: (idx: Int, value: String) -> Unit,
+    onProjectRelatedLinksValueChanged: (idx: Int, value: List<Pair<String, String>>) -> Unit,
 ) {
     val context = LocalContext.current
-    val data = viewModel.getEnteredProjectsInformation()
-    val projectList = remember {
-        mutableStateListOf(*data.projects.toTypedArray())
-    }
     val isImageExtensionInCorrect = remember {
         mutableStateOf(false)
     }
@@ -60,21 +59,14 @@ fun ProjectsScreen(
         item {
             SmsSpacer()
         }
-        itemsIndexed(projectList) { idx, item ->
-            projectList[idx] = projectList[idx].copy(
-                technologyOfUse = detailStackList["Project$idx"] ?: emptyList(),
-                startDate = startDateMap[idx] ?: "",
-                endDate = endDateMap[idx] ?: ""
-            )
-
+        itemsIndexed(projects) { idx, item ->
             ProjectsComponent(
-                navController = navController,
                 data = item,
-                onProjectNameValueChanged = { projectList[idx] = projectList[idx].copy(name = it) },
+                onProjectNameValueChanged = { onProjectNameValueChanged(idx, it) },
                 onProjectIconValueChanged = { uri ->
                     if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
                         isImageExtensionInCorrect.value = false
-                        projectList[idx] = projectList[idx].copy(icon = uri)
+                        onProjectIconValueChanged(idx, uri)
                     } else {
                         isImageExtensionInCorrect.value = true
                     }
@@ -82,7 +74,7 @@ fun ProjectsScreen(
                 onProjectPreviewsValueChanged = { uris ->
                     if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
                         isImageExtensionInCorrect.value = false
-                        projectList[idx] = projectList[idx].copy(preview = uris)
+                        onProjectPreviewsValueChanged(idx, uris)
                     } else {
                         isImageExtensionInCorrect.value = true
                     }
@@ -90,23 +82,15 @@ fun ProjectsScreen(
                 onProjectTechStackValueChanged = {
                     onProjectTechStackValueChanged(idx, it)
                 },
-                onProjectKeyTaskValueChanged = {
-                    projectList[idx] = projectList[idx].copy(keyTask = it)
-                },
-                onProjectRelatedLinksValueChanged = {
-                    projectList[idx] = projectList[idx].copy(relatedLinkList = it)
-                },
-                onDateBottomSheetOpenButtonClick = {
-                    onDateBottomSheetOpenButtonClick(it, idx)
-                },
-                onProjectItemToggleIsOpenValueChanged = {
-                    projectList[idx] = projectList[idx].copy(isToggleOpen = it)
-                },
+                onProjectKeyTaskValueChanged = { onProjectKeyTaskValueChanged(idx, it) },
+                onProjectRelatedLinksValueChanged = { onProjectRelatedLinksValueChanged(idx, it) },
+                onDateBottomSheetOpenButtonClick = { onDateBottomSheetOpenButtonClick(idx, it) },
+                onProjectItemToggleIsOpenValueChanged = { onProjectItemToggleIsOpenValueChanged(idx, it) },
                 onSnackBarVisibleChanged = onSnackBarVisibleChanged,
-                onCancelButtonClick = { projectList.removeAt(idx) },
+                onCancelButtonClick = { onCancelButtonClick(idx) },
                 onDetailStackSearchBarClick = { navController.navigate("Search/Project$idx") }
             )
-        }.also { Log.d("dddd", "ProjectCompoent") }
+        }
         item {
             Column(
                 modifier = Modifier
@@ -114,29 +98,13 @@ fun ProjectsScreen(
                     .padding(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 52.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                ListAddButton {
-                    projectList.add(ProjectInfo())
-                }
+                ListAddButton(onClick = onAddButtonClick)
             }
         }
         item {
             ProjectsBottomButtonComponent(
                 onPreviousButtonClick = { navController.popBackStack() },
-                onNextButtonClick = {
-                    viewModel.setEnteredProjectsInformation(
-                        projectList.filter { project ->
-                            project.name.isNotEmpty() ||
-                                    project.icon != Uri.EMPTY ||
-                                    project.keyTask.isNotEmpty() ||
-                                    project.preview.isNotEmpty() ||
-                                    project.endDate.isNotEmpty() ||
-                                    project.startDate.isNotEmpty() ||
-                                    project.technologyOfUse.isNotEmpty() ||
-                                    project.relatedLinkList.first() != Pair("", "")
-                        }
-                    )
-                    navController.navigate("Award")
-                }
+                onNextButtonClick = onNextButtonClick
             )
             Spacer(modifier = Modifier.height(48.dp))
         }

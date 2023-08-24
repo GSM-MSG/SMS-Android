@@ -10,13 +10,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.msg.sms.design.component.toggle.ToggleComponent
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 
 @Composable
 fun ProjectsComponent(
-    navController: NavController,
     data: ProjectInfo,
     onCancelButtonClick: () -> Unit,
     onSnackBarVisibleChanged: () -> Unit,
