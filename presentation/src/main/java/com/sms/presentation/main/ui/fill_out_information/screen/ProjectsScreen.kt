@@ -121,13 +121,13 @@ fun ProjectsScreen(
                     viewModel.setEnteredProjectsInformation(
                         projectList.filter { project ->
                             project.name.isNotEmpty() ||
-                                    project.icon != Uri.EMPTY ||
-                                    project.keyTask.isNotEmpty() ||
-                                    project.preview.isNotEmpty() ||
-                                    project.endDate.isNotEmpty() ||
-                                    project.startDate.isNotEmpty() ||
-                                    project.technologyOfUse.isNotEmpty() ||
-                                    project.relatedLinkList.first() != Pair("", "")
+                            project.icon != Uri.EMPTY ||
+                            project.keyTask.isNotEmpty() ||
+                            project.preview.isNotEmpty() ||
+                            project.endDate.isNotEmpty() ||
+                            project.startDate.isNotEmpty() ||
+                            project.technologyOfUse.isNotEmpty() ||
+                            project.relatedLinkList.first() != Pair("", "")
                         }
                     )
                     navController.navigate("Award")
