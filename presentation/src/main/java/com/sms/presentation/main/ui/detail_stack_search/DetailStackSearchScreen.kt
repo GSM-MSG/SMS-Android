@@ -40,7 +40,7 @@ fun DetailStackSearchScreen(
         mutableStateOf("")
     }
     val selectedStackList = remember {
-        if (selectedStack.first() == "") mutableStateListOf() else mutableStateListOf(*selectedStack.toTypedArray())
+        mutableStateListOf(*selectedStack.toTypedArray())
     }
     val snackBarVisible = remember {
         mutableStateOf(false)
