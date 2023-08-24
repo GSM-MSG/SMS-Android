@@ -78,12 +78,7 @@ fun ProjectsScreen(
                     }
                 },
                 onProjectPreviewsValueChanged = { uris ->
-                    if (uris.all { uri ->
-                            getFileNameFromUri(
-                                context,
-                                uri
-                            )?.isImageExtensionCorrect() == true
-                        }) {
+                    if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
                         isImageExtensionInCorrect.value = false
                         projectList[idx] = projectList[idx].copy(preview = uris)
                     } else {
@@ -98,6 +93,9 @@ fun ProjectsScreen(
                 },
                 onDateBottomSheetOpenButtonClick = {
                     onDateBottomSheetOpenButtonClick(it, idx)
+                },
+                onProjectItemToggleIsOpenValueChanged = {
+                    projectList[idx] = projectList[idx].copy(isToggleOpen = it)
                 },
                 onSnackBarVisibleChanged = onSnackBarVisibleChanged,
                 onCancelButtonClick = { projectList.removeAt(idx) },
@@ -123,13 +121,13 @@ fun ProjectsScreen(
                     viewModel.setEnteredProjectsInformation(
                         projectList.filter { project ->
                             project.name.isNotEmpty() ||
-                            project.icon != Uri.EMPTY ||
-                            project.keyTask.isNotEmpty() ||
-                            project.preview.isNotEmpty() ||
-                            project.endDate.isNotEmpty() ||
-                            project.startDate.isNotEmpty() ||
-                            project.technologyOfUse.isNotEmpty() ||
-                            project.relatedLinkList.first() != Pair("", "")
+                                    project.icon != Uri.EMPTY ||
+                                    project.keyTask.isNotEmpty() ||
+                                    project.preview.isNotEmpty() ||
+                                    project.endDate.isNotEmpty() ||
+                                    project.startDate.isNotEmpty() ||
+                                    project.technologyOfUse.isNotEmpty() ||
+                                    project.relatedLinkList.first() != Pair("", "")
                         }
                     )
                     navController.navigate("Award")

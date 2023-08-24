@@ -26,13 +26,11 @@ fun ProjectsComponent(
     onProjectPreviewsValueChanged: (value: List<Uri>) -> Unit,
     onProjectKeyTaskValueChanged: (value: String) -> Unit,
     onProjectRelatedLinksValueChanged: (value: List<Pair<String, String>>) -> Unit,
+    onProjectItemToggleIsOpenValueChanged: (value: Boolean) -> Unit,
     onDateBottomSheetOpenButtonClick: (isStartDate: Boolean) -> Unit,
 ) {
     val isProjectProgress = remember {
         mutableStateOf(false)
-    }
-    val contentVisible = remember {
-        mutableStateOf(data.isToggleOpen)
     }
 
     ToggleComponent(
@@ -40,8 +38,8 @@ fun ProjectsComponent(
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
         name = "프로젝트",
-        contentVisible = contentVisible.value,
-        onOpenButtonClick = { contentVisible.value = !contentVisible.value },
+        contentVisible = data.isToggleOpen,
+        onOpenButtonClick = { onProjectItemToggleIsOpenValueChanged(!data.isToggleOpen) },
         onCancelButtonClick = onCancelButtonClick
     ) {
         Column(
