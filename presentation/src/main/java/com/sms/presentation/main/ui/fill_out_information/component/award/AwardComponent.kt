@@ -2,6 +2,8 @@ package com.sms.presentation.main.ui.fill_out_information.component.award
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.toggle.ToggleComponent
@@ -15,11 +17,17 @@ fun AwardComponent(
     onNameValueChange: (value: String) -> Unit,
     onTypeValueChange: (value: String) -> Unit,
 ) {
+    val contentVisible = remember {
+        mutableStateOf(false)
+    }
+
     ToggleComponent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
         name = data.name.ifEmpty { "수상" },
+        contentVisible = contentVisible.value,
+        onOpenButtonClick = { contentVisible.value = !contentVisible.value },
         onCancelButtonClick = onCancelButtonClick
     ) {
         Column(

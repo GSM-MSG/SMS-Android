@@ -26,12 +26,11 @@ import com.msg.sms.design.theme.SMSTheme
 fun ToggleComponent(
     modifier: Modifier = Modifier,
     name: String,
+    contentVisible: Boolean,
+    onOpenButtonClick: () -> Unit,
     onCancelButtonClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val contentVisible = remember {
-        mutableStateOf(false)
-    }
     val currentRotation = remember {
         mutableStateOf(90f)
     }
@@ -39,10 +38,10 @@ fun ToggleComponent(
         Animatable(currentRotation.value)
     }
 
-    LaunchedEffect(contentVisible.value) {
+    LaunchedEffect(contentVisible) {
         rotation.animateTo(
             targetValue =
-            if (contentVisible.value) currentRotation.value - 90f
+            if (contentVisible) currentRotation.value - 90f
             else if (currentRotation.value != 90f) currentRotation.value + 90f
             else currentRotation.value,
             animationSpec = tween(
@@ -75,9 +74,7 @@ fun ToggleComponent(
                     ChevronDownIcon(
                         modifier = Modifier
                             .rotate(rotation.value)
-                            .smsClickable(bounded = false) {
-                                contentVisible.value = !contentVisible.value
-                            }
+                            .smsClickable(bounded = false, onClick = onOpenButtonClick)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     CloseIcon(
@@ -88,7 +85,7 @@ fun ToggleComponent(
                     )
                 }
             }
-            AnimatedVisibility(visible = contentVisible.value) {
+            AnimatedVisibility(visible = contentVisible) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

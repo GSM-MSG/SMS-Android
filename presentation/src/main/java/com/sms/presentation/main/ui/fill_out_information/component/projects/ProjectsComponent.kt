@@ -31,12 +31,17 @@ fun ProjectsComponent(
     val isProjectProgress = remember {
         mutableStateOf(false)
     }
+    val contentVisible = remember {
+        mutableStateOf(false)
+    }
 
     ToggleComponent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
         name = "프로젝트",
+        contentVisible = contentVisible.value,
+        onOpenButtonClick = { contentVisible.value = !contentVisible.value },
         onCancelButtonClick = onCancelButtonClick
     ) {
         Column(
