@@ -388,7 +388,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         selectedStack = when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> profileDetailTechStack
                                             DetailSearchLocation.Projects -> projectsDetailTechStack[projectIndex.value]
-                                        }?.ifEmpty { listOf() } ?: listOf(),
+                                        } ?: emptyList(),
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
                                         }
@@ -404,8 +404,7 @@ class FillOutInformationActivity : BaseActivity() {
                                             }
                                             DetailSearchLocation.Projects -> {
                                                 projectsDetailTechStack[projectIndex.value] = stack
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(technologyOfUse = stack)
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(technologyOfUse = stack)
                                             }
                                         }
                                         navController.popBackStack()
