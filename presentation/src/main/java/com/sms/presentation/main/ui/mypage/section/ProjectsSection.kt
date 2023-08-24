@@ -10,9 +10,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.sms.presentation.main.ui.mypage.state.ExpandableProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.project.ProjectComponent
+import com.sms.presentation.main.ui.mypage.state.ExpandableProjectData
 
 @Composable
 fun ProjectsSection(
@@ -27,7 +27,7 @@ fun ProjectsSection(
     onAddLink: () -> Unit,
     onClickSearchBar: () -> Unit,
     onRemoveBitmapButton: (itemIndex: Int) -> Unit,
-    onRemoveTechStack: (value: String) -> Unit,
+    onRemoveProjectDetailStack: (value: String) -> Unit,
     onRemoveRelatedLink: (index: Int) -> Unit,
 ) {
     val context = LocalContext.current
@@ -59,7 +59,7 @@ fun ProjectsSection(
         enteredList = enteredPreviews,
         onOpenGallery = { multiGalleyLauncher.launch("image/*") },
         onAddLinkButton = onAddLink,
-        onRemoveTechStack = onRemoveTechStack,
+        onRemoveProjectDetailStack = onRemoveProjectDetailStack,
         onRemoveRelatedLInk = onRemoveRelatedLink,
         onClickSearchBar = onClickSearchBar
     )
@@ -95,7 +95,7 @@ private fun ProjectSectionPre() {
         onAddBitmap = {},
         onAddLink = {},
         onRemoveBitmapButton = {},
-        onRemoveTechStack = {},
+        onRemoveProjectDetailStack = {},
         onRemoveRelatedLink = {},
         onClickSearchBar = {}
     )
