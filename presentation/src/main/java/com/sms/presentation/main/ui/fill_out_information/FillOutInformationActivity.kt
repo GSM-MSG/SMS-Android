@@ -14,11 +14,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.design.theme.SMSTheme
@@ -92,13 +90,13 @@ class FillOutInformationActivity : BaseActivity() {
                 mutableStateOf(DetailSearchLocation.Profile)
             }
             val currentRoute = remember {
-                mutableStateOf("Profile")
+                mutableStateOf(FillOutPage.Profile.value)
             }
             val profileDetailTechStack = remember {
                 mutableStateListOf<String>()
             }
             val projectsDetailTechStack = remember {
-                mutableStateListOf<List<String>>()
+                mutableStateMapOf<Int, List<String>>()
             }
             val snackBarVisible = remember {
                 mutableStateOf(false)
@@ -159,9 +157,7 @@ class FillOutInformationActivity : BaseActivity() {
                         BottomSheetValues.Major -> {
                             MajorSelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                majorList = if (majorList.value.data != null) majorList.value.data!!.major else listOf(
-                                    ""
-                                ),
+                                majorList = if (majorList.value.data != null) majorList.value.data!!.major else listOf(""),
                                 selectedMajor = selectedMajor.value,
                                 onSelectedMajhorChange = {
                                     selectedMajor.value = it
@@ -185,12 +181,7 @@ class FillOutInformationActivity : BaseActivity() {
 
                             MilitarySelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                militaryServiceList = listOf(
-                                    "병특 희망",
-                                    "희망하지 않음",
-                                    "상관없음",
-                                    "해당 사항 없음"
-                                ),
+                                militaryServiceList = listOf("병특 희망", "희망하지 않음", "상관없음", "해당 사항 없음"),
                                 selectedMilitaryService = if (selectedMilitaryService.value == "") militaryServiceData.militaryService else selectedMilitaryService.value,
                                 onSelectedMilitaryServiceChange = {
                                     selectedMilitaryService.value = it
@@ -203,12 +194,10 @@ class FillOutInformationActivity : BaseActivity() {
                                 onDateValueChanged = { date ->
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
-                                            projectList[projectIndex.value] =
-                                                projectList[projectIndex.value].copy(startDate = date)
+                                            projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
-                                            projectList[projectIndex.value] =
-                                                projectList[projectIndex.value].copy(endDate = date)
+                                            projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
                                         }
                                         !isProjectDate.value -> {
                                             awardDateMap[awardIndex.value] = date
@@ -343,9 +332,13 @@ class FillOutInformationActivity : BaseActivity() {
                                             projectIndex.value = index
                                             scope.launch { bottomSheetState.show() }
                                         },
+                                        onDetailStackSearchBarClick = { index ->
+                                            projectIndex.value = index
+                                            detailStackSearchLocation.value = DetailSearchLocation.Projects
+                                            navController.navigate("Search")
+                                        },
                                         onProjectItemToggleIsOpenValueChanged = { index, visible ->
-                                            projectList[index] =
-                                                projectList[index].copy(isToggleOpen = visible)
+                                            projectList[index] = projectList[index].copy(isToggleOpen = visible)
                                         },
                                         onSnackBarVisibleChanged = { snackBarVisible.value = true },
                                         onProjectNameValueChanged = { index, name ->
@@ -355,19 +348,16 @@ class FillOutInformationActivity : BaseActivity() {
                                             projectList[index] = projectList[index].copy(icon = icon)
                                         },
                                         onProjectPreviewsValueChanged = { index, previews ->
-                                            projectList[index] =
-                                                projectList[index].copy(preview = previews)
+                                            projectList[index] = projectList[index].copy(preview = previews)
                                         },
                                         onProjectTechStackValueChanged = { index, list ->
                                             projectsDetailTechStack[index] = list
                                         },
                                         onProjectKeyTaskValueChanged = { index, keytask ->
-                                            projectList[index] =
-                                                projectList[index].copy(keyTask = keytask)
+                                            projectList[index] = projectList[index].copy(keyTask = keytask)
                                         },
                                         onProjectRelatedLinksValueChanged = { index, links ->
-                                            projectList[index] =
-                                                projectList[index].copy(relatedLinkList = links)
+                                            projectList[index] = projectList[index].copy(relatedLinkList = links)
                                         }
                                     )
                                 }
@@ -390,12 +380,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         }
                                     )
                                 }
-                                composable(
-                                    "${FillOutPage.Search.value}/{index}",
-                                    arguments = listOf(
-                                        navArgument("index") { type = NavType.StringType }
-                                    )
-                                ) {
+                                composable(FillOutPage.Search.value) {
                                     currentRoute.value = FillOutPage.Search.value
                                     setSoftInputMode("RESIZE")
                                     DetailStackSearchScreen(
@@ -404,20 +389,26 @@ class FillOutInformationActivity : BaseActivity() {
                                         selectedStack = when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> profileDetailTechStack
                                             DetailSearchLocation.Projects -> projectsDetailTechStack[projectIndex.value]
-                                        },
+                                        }?.ifEmpty { listOf("") } ?: listOf(""),
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
                                         }
                                     ) { stack ->
                                         when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> {
-                                                //TODO : 이현빈.copy
+                                                profileDetailTechStack.removeAll(profileDetailTechStack.filter {
+                                                    !stack.contains(it)
+                                                })
+                                                profileDetailTechStack.addAll(stack.filter {
+                                                    !profileDetailTechStack.contains(it)
+                                                })
                                             }
                                             DetailSearchLocation.Projects -> {
                                                 projectsDetailTechStack[projectIndex.value] = stack
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(technologyOfUse = stack)
                                             }
                                         }
-
                                         navController.popBackStack()
                                     }
                                 }

@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -29,6 +30,7 @@ fun ProjectsScreen(
     onNextButtonClick: () -> Unit,
     onCancelButtonClick: (index: Int) -> Unit,
     onDateBottomSheetOpenButtonClick: (index: Int, isStartDate: Boolean) -> Unit,
+    onDetailStackSearchBarClick: (index: Int) -> Unit,
     onSnackBarVisibleChanged: () -> Unit,
     onProjectItemToggleIsOpenValueChanged: (index: Int, value: Boolean) -> Unit,
     onProjectNameValueChanged: (index: Int, value: String) -> Unit,
@@ -54,6 +56,8 @@ fun ProjectsScreen(
             importantButtonOnClick = { isImageExtensionInCorrect.value = false }
         )
     }
+
+    Log.d("dddd",projects.joinToString())
 
     LazyColumn {
         item {
@@ -83,12 +87,16 @@ fun ProjectsScreen(
                     onProjectTechStackValueChanged(index, it)
                 },
                 onProjectKeyTaskValueChanged = { onProjectKeyTaskValueChanged(index, it) },
-                onProjectRelatedLinksValueChanged = { onProjectRelatedLinksValueChanged(index, it) },
+                onProjectRelatedLinksValueChanged = {
+                    onProjectRelatedLinksValueChanged(index, it)
+                },
                 onDateBottomSheetOpenButtonClick = { onDateBottomSheetOpenButtonClick(index, it) },
-                onProjectItemToggleIsOpenValueChanged = { onProjectItemToggleIsOpenValueChanged(index, it) },
+                onProjectItemToggleIsOpenValueChanged = {
+                    onProjectItemToggleIsOpenValueChanged(index, it)
+                },
                 onSnackBarVisibleChanged = onSnackBarVisibleChanged,
                 onCancelButtonClick = { onCancelButtonClick(index) },
-                onDetailStackSearchBarClick = { navController.navigate("Search/Project$index") }
+                onDetailStackSearchBarClick = { onDetailStackSearchBarClick(index) }
             )
         }
         item {
