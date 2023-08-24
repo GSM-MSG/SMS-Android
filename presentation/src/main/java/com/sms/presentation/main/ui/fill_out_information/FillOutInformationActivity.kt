@@ -320,6 +320,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                     project.relatedLinkList.first() != Pair("", "")
                                                 }
                                             )
+                                            //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
                                             navController.navigate("Award")
                                         },
                                         onCancelButtonClick = { idx -> projectList.removeAt(idx) },
