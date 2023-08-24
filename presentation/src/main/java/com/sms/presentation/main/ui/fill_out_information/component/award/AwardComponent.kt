@@ -18,7 +18,7 @@ fun AwardComponent(
     onTypeValueChange: (value: String) -> Unit,
 ) {
     val contentVisible = remember {
-        mutableStateOf(false)
+        mutableStateOf(data.isToggleOpen)
     }
 
     ToggleComponent(

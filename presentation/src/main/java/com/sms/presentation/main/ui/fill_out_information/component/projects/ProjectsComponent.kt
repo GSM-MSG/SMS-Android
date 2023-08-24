@@ -32,7 +32,7 @@ fun ProjectsComponent(
         mutableStateOf(false)
     }
     val contentVisible = remember {
-        mutableStateOf(data.isExpand)
+        mutableStateOf(data.isToggleOpen)
     }
 
     ToggleComponent(

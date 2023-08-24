@@ -27,7 +27,7 @@ fun AwardScreen(
     onDateBottomSheetOpenButtonClick: (idx: Int) -> Unit
 ) {
     val awardList = remember {
-        mutableStateListOf(AwardData("", "", ""))
+        mutableStateListOf(AwardData("", "", "", isToggleOpen = true))
     }
 
     LazyColumn {
