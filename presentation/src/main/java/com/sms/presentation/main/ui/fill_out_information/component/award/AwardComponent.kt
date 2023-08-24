@@ -1,6 +1,9 @@
 package com.sms.presentation.main.ui.fill_out_information.component.award
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,9 +34,11 @@ fun AwardComponent(
         onCancelButtonClick = onCancelButtonClick
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp, bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            Spacer(modifier = Modifier.height(32.dp))
             AwardNameInputComponent(
                 title = "이름",
                 placeHolder = "수상 내역 이름 입력",
@@ -41,7 +46,6 @@ fun AwardComponent(
                 onButtonClick = { onNameValueChange("") },
                 onValueChange = onNameValueChange
             )
-            Spacer(modifier = Modifier.height(24.dp))
             AwardNameInputComponent(
                 title = "종류",
                 placeHolder = "수상 종류입력",
@@ -49,9 +53,7 @@ fun AwardComponent(
                 onButtonClick = { onTypeValueChange("") },
                 onValueChange = onTypeValueChange
             )
-            Spacer(modifier = Modifier.height(24.dp))
             AwardDateBarComponent(date = data.date, onClick = onDateBottomSheetOpenButtonClick)
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

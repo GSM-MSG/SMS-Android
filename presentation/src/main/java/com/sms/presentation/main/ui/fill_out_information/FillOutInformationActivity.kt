@@ -62,7 +62,6 @@ enum class FillOutPage(val value: String) {
 
 @AndroidEntryPoint
 class FillOutInformationActivity : BaseActivity() {
-
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
     private val searchDetailStack = mutableStateOf(listOf<String>())
@@ -223,7 +222,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = FillOutPage.Projects.value
+                                startDestination = FillOutPage.Profile.value
                             ) {
                                 composable(FillOutPage.Profile.value) {
                                     currentRoute.value = FillOutPage.Profile.value
@@ -389,7 +388,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         selectedStack = when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> profileDetailTechStack
                                             DetailSearchLocation.Projects -> projectsDetailTechStack[projectIndex.value]
-                                        }?.ifEmpty { listOf("") } ?: listOf(""),
+                                        }?.ifEmpty { listOf() } ?: listOf(),
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
                                         }

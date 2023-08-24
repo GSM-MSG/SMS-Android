@@ -106,7 +106,7 @@ fun ProfileScreen(
                         portfolioUrl = portfolioUrl.value,
                         enteredMajor = enteredMajor.value
                     )
-                    navController.navigate("Search/Profile")
+                    navController.navigate("Search")
                 },
                 enteringMajor = { string ->
                     enteredMajor.value = string
