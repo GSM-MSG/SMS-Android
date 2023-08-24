@@ -36,15 +36,21 @@ fun AwardScreen(
         itemsIndexed(awardList) { idx, item ->
             awardList[idx] = awardList[idx].copy(date = awardDateMap[idx] ?: "")
 
-            AwardComponent(data = item,
+            AwardComponent(
+                data = item,
                 onDateBottomSheetOpenButtonClick = {
                     onDateBottomSheetOpenButtonClick(idx)
                 },
-                onNameValueChange = { awardList[idx] = awardList[idx].copy(name = it) },
-                onTypeValueChange = { awardList[idx] = awardList[idx].copy(type = it) },
+                onNameValueChange = {
+                    awardList[idx] = awardList[idx].copy(name = it)
+                },
+                onTypeValueChange = {
+                    awardList[idx] = awardList[idx].copy(type = it)
+                },
                 onCancelButtonClick = {
                     awardList.removeAt(idx)
-                })
+                }
+            )
         }
         item {
             Column(
@@ -59,8 +65,14 @@ fun AwardScreen(
             }
         }
         item {
-            AwardBottomButtonComponent(onPreviousButtonClick = { navController.popBackStack() },
-                onCompleteButtonClick = { /* TODO kimhyunseung : 데이터 모아서 정보기입 요청 보내기 */ })
+            AwardBottomButtonComponent(
+                onPreviousButtonClick = {
+                    navController.popBackStack()
+                },
+                onCompleteButtonClick = {
+                    /* TODO kimhyunseung : 데이터 모아서 정보기입 요청 보내기 */
+                }
+            )
         }
     }
 }
