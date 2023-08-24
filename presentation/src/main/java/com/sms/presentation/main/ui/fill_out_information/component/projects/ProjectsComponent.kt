@@ -32,7 +32,7 @@ fun ProjectsComponent(
         mutableStateOf(false)
     }
     val contentVisible = remember {
-        mutableStateOf(false)
+        mutableStateOf(data.isExpand)
     }
 
     ToggleComponent(
@@ -46,7 +46,7 @@ fun ProjectsComponent(
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(24.dp),
-            modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+            modifier = Modifier.padding(top = 32.dp, bottom = 16.dp)
         ) {
             ProjectNameInputComponent(
                 projectName = data.name,
