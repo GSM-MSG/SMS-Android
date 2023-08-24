@@ -191,14 +191,17 @@ class FillOutInformationActivity : BaseActivity() {
                         BottomSheetValues.Date -> {
                             DatePickerBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                onDateValueChanged = {
-                                    if (isProjectDate.value) {
-                                        if (isProjectStartDate.value)
-                                            projectStartDateMap[projectIdx.value] = it
-                                        else
-                                            projectEndDateMap[projectIdx.value] = it
-                                    } else {
-                                        awardDateMap[awardIdx.value] = it
+                                onDateValueChanged = { date ->
+                                    when {
+                                        isProjectDate.value && isProjectStartDate.value -> {
+                                            projectStartDateMap[projectIdx.value] = date
+                                        }
+                                        isProjectDate.value && !isProjectStartDate.value -> {
+                                            projectEndDateMap[projectIdx.value] = date
+                                        }
+                                        !isProjectDate.value -> {
+                                            awardDateMap[awardIdx.value] = date
+                                        }
                                     }
                                 }
                             )
