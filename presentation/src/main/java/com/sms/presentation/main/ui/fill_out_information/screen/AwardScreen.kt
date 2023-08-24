@@ -24,7 +24,7 @@ fun AwardScreen(
     viewModel: FillOutViewModel,
     awardDateMap: Map<Int, String>,
     onPreviousButtonClick: () -> Unit,
-    onDateBottomSheetOpenButtonClick: (idx: Int) -> Unit
+    onDateBottomSheetOpenButtonClick: (index: Int) -> Unit
 ) {
     val awardList = remember {
         mutableStateListOf(AwardData("", "", "", isToggleOpen = true))
@@ -34,22 +34,22 @@ fun AwardScreen(
         item {
             SmsSpacer()
         }
-        itemsIndexed(awardList) { idx, item ->
-            awardList[idx] = awardList[idx].copy(date = awardDateMap[idx] ?: "")
+        itemsIndexed(awardList) { index, item ->
+            awardList[index] = awardList[index].copy(date = awardDateMap[index] ?: "")
 
             AwardComponent(
                 data = item,
                 onDateBottomSheetOpenButtonClick = {
-                    onDateBottomSheetOpenButtonClick(idx)
+                    onDateBottomSheetOpenButtonClick(index)
                 },
                 onNameValueChange = {
-                    awardList[idx] = awardList[idx].copy(name = it)
+                    awardList[index] = awardList[index].copy(name = it)
                 },
                 onTypeValueChange = {
-                    awardList[idx] = awardList[idx].copy(type = it)
+                    awardList[index] = awardList[index].copy(type = it)
                 },
                 onCancelButtonClick = {
-                    awardList.removeAt(idx)
+                    awardList.removeAt(index)
                 }
             )
         }

@@ -103,7 +103,7 @@ class FillOutInformationActivity : BaseActivity() {
             val snackBarVisible = remember {
                 mutableStateOf(false)
             }
-            val projectIdx = remember {
+            val projectIndex = remember {
                 mutableStateOf(0)
             }
 
@@ -137,7 +137,7 @@ class FillOutInformationActivity : BaseActivity() {
             val isProjectStartDate = remember {
                 mutableStateOf(true)
             }
-            val awardIdx = remember {
+            val awardIndex = remember {
                 mutableStateOf(0)
             }
             val awardDateMap = remember {
@@ -203,15 +203,15 @@ class FillOutInformationActivity : BaseActivity() {
                                 onDateValueChanged = { date ->
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
-                                            projectList[projectIdx.value] =
-                                                projectList[projectIdx.value].copy(startDate = date)
+                                            projectList[projectIndex.value] =
+                                                projectList[projectIndex.value].copy(startDate = date)
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
-                                            projectList[projectIdx.value] =
-                                                projectList[projectIdx.value].copy(endDate = date)
+                                            projectList[projectIndex.value] =
+                                                projectList[projectIndex.value].copy(endDate = date)
                                         }
                                         !isProjectDate.value -> {
-                                            awardDateMap[awardIdx.value] = date
+                                            awardDateMap[awardIndex.value] = date
                                         }
                                     }
                                 }
@@ -323,54 +323,51 @@ class FillOutInformationActivity : BaseActivity() {
                                             fillOutViewModel.setEnteredProjectsInformation(
                                                 projectList.filter { project ->
                                                     project.name.isNotEmpty() ||
-                                                            project.icon != Uri.EMPTY ||
-                                                            project.keyTask.isNotEmpty() ||
-                                                            project.preview.isNotEmpty() ||
-                                                            project.endDate.isNotEmpty() ||
-                                                            project.startDate.isNotEmpty() ||
-                                                            project.technologyOfUse.isNotEmpty() ||
-                                                            project.relatedLinkList.first() != Pair(
-                                                        "",
-                                                        ""
-                                                    )
+                                                    project.icon != Uri.EMPTY ||
+                                                    project.keyTask.isNotEmpty() ||
+                                                    project.preview.isNotEmpty() ||
+                                                    project.endDate.isNotEmpty() ||
+                                                    project.startDate.isNotEmpty() ||
+                                                    project.technologyOfUse.isNotEmpty() ||
+                                                    project.relatedLinkList.first() != Pair("", "")
                                                 }
                                             )
                                             //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
                                             navController.navigate("Award")
                                         },
-                                        onCancelButtonClick = { idx -> projectList.removeAt(idx) },
-                                        onDateBottomSheetOpenButtonClick = { idx, isStartDate ->
+                                        onCancelButtonClick = { index -> projectList.removeAt(index) },
+                                        onDateBottomSheetOpenButtonClick = { index, isStartDate ->
                                             bottomSheetValues.value = BottomSheetValues.Date
                                             isProjectStartDate.value = isStartDate
                                             isProjectDate.value = true
-                                            projectIdx.value = idx
+                                            projectIndex.value = index
                                             scope.launch { bottomSheetState.show() }
                                         },
-                                        onProjectItemToggleIsOpenValueChanged = { idx, visible ->
-                                            projectList[idx] =
-                                                projectList[idx].copy(isToggleOpen = visible)
+                                        onProjectItemToggleIsOpenValueChanged = { index, visible ->
+                                            projectList[index] =
+                                                projectList[index].copy(isToggleOpen = visible)
                                         },
                                         onSnackBarVisibleChanged = { snackBarVisible.value = true },
-                                        onProjectNameValueChanged = { idx, name ->
-                                            projectList[idx] = projectList[idx].copy(name = name)
+                                        onProjectNameValueChanged = { index, name ->
+                                            projectList[index] = projectList[index].copy(name = name)
                                         },
-                                        onProjectIconValueChanged = { idx, icon ->
-                                            projectList[idx] = projectList[idx].copy(icon = icon)
+                                        onProjectIconValueChanged = { index, icon ->
+                                            projectList[index] = projectList[index].copy(icon = icon)
                                         },
-                                        onProjectPreviewsValueChanged = { idx, previews ->
-                                            projectList[idx] =
-                                                projectList[idx].copy(preview = previews)
+                                        onProjectPreviewsValueChanged = { index, previews ->
+                                            projectList[index] =
+                                                projectList[index].copy(preview = previews)
                                         },
-                                        onProjectTechStackValueChanged = { idx, list ->
-                                            projectsDetailTechStack[idx] = list
+                                        onProjectTechStackValueChanged = { index, list ->
+                                            projectsDetailTechStack[index] = list
                                         },
-                                        onProjectKeyTaskValueChanged = { idx, keytask ->
-                                            projectList[idx] =
-                                                projectList[idx].copy(keyTask = keytask)
+                                        onProjectKeyTaskValueChanged = { index, keytask ->
+                                            projectList[index] =
+                                                projectList[index].copy(keyTask = keytask)
                                         },
-                                        onProjectRelatedLinksValueChanged = { idx, links ->
-                                            projectList[idx] =
-                                                projectList[idx].copy(relatedLinkList = links)
+                                        onProjectRelatedLinksValueChanged = { index, links ->
+                                            projectList[index] =
+                                                projectList[index].copy(relatedLinkList = links)
                                         }
                                     )
                                 }
@@ -381,8 +378,8 @@ class FillOutInformationActivity : BaseActivity() {
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
                                         awardDateMap = awardDateMap,
-                                        onDateBottomSheetOpenButtonClick = { idx ->
-                                            awardIdx.value = idx
+                                        onDateBottomSheetOpenButtonClick = { index ->
+                                            awardIndex.value = index
                                             isProjectDate.value = false
                                             bottomSheetValues.value = BottomSheetValues.Date
                                             scope.launch { bottomSheetState.show() }
@@ -394,25 +391,19 @@ class FillOutInformationActivity : BaseActivity() {
                                     )
                                 }
                                 composable(
-                                    "${FillOutPage.Search.value}/{idx}",
+                                    "${FillOutPage.Search.value}/{index}",
                                     arguments = listOf(
-                                        navArgument("idx") { type = NavType.StringType }
+                                        navArgument("index") { type = NavType.StringType }
                                     )
-                                ) { backStackEntry ->
+                                ) {
                                     currentRoute.value = FillOutPage.Search.value
                                     setSoftInputMode("RESIZE")
-                                    val idx = remember {
-                                        mutableStateOf(
-                                            backStackEntry.arguments?.getString("idx") ?: ""
-                                        )
-                                    }
-
                                     DetailStackSearchScreen(
                                         navController = navController,
                                         detailStack = searchDetailStack.value,
                                         selectedStack = when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> profileDetailTechStack
-                                            DetailSearchLocation.Projects -> projectsDetailTechStack[projectIdx.value]
+                                            DetailSearchLocation.Projects -> projectsDetailTechStack[projectIndex.value]
                                         },
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
@@ -423,7 +414,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                 //TODO : 이현빈.copy
                                             }
                                             DetailSearchLocation.Projects -> {
-                                                projectsDetailTechStack[projectIdx.value] = stack
+                                                projectsDetailTechStack[projectIndex.value] = stack
                                             }
                                         }
 

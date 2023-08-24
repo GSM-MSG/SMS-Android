@@ -27,16 +27,16 @@ fun ProjectsScreen(
     projects: List<ProjectInfo>,
     onAddButtonClick: () -> Unit,
     onNextButtonClick: () -> Unit,
-    onCancelButtonClick: (idx: Int) -> Unit,
-    onDateBottomSheetOpenButtonClick: (idx: Int, isStartDate: Boolean) -> Unit,
+    onCancelButtonClick: (index: Int) -> Unit,
+    onDateBottomSheetOpenButtonClick: (index: Int, isStartDate: Boolean) -> Unit,
     onSnackBarVisibleChanged: () -> Unit,
-    onProjectItemToggleIsOpenValueChanged: (idx: Int, value: Boolean) -> Unit,
-    onProjectNameValueChanged: (idx: Int, value: String) -> Unit,
-    onProjectIconValueChanged: (idx: Int, value: Uri) -> Unit,
-    onProjectPreviewsValueChanged: (idx: Int, value: List<Uri>) -> Unit,
-    onProjectTechStackValueChanged: (idx: Int, list: List<String>) -> Unit,
-    onProjectKeyTaskValueChanged: (idx: Int, value: String) -> Unit,
-    onProjectRelatedLinksValueChanged: (idx: Int, value: List<Pair<String, String>>) -> Unit,
+    onProjectItemToggleIsOpenValueChanged: (index: Int, value: Boolean) -> Unit,
+    onProjectNameValueChanged: (index: Int, value: String) -> Unit,
+    onProjectIconValueChanged: (index: Int, value: Uri) -> Unit,
+    onProjectPreviewsValueChanged: (index: Int, value: List<Uri>) -> Unit,
+    onProjectTechStackValueChanged: (index: Int, list: List<String>) -> Unit,
+    onProjectKeyTaskValueChanged: (index: Int, value: String) -> Unit,
+    onProjectRelatedLinksValueChanged: (index: Int, value: List<Pair<String, String>>) -> Unit,
 ) {
     val context = LocalContext.current
     val isImageExtensionInCorrect = remember {
@@ -59,14 +59,14 @@ fun ProjectsScreen(
         item {
             SmsSpacer()
         }
-        itemsIndexed(projects) { idx, item ->
+        itemsIndexed(projects) { index, item ->
             ProjectsComponent(
                 data = item,
-                onProjectNameValueChanged = { onProjectNameValueChanged(idx, it) },
+                onProjectNameValueChanged = { onProjectNameValueChanged(index, it) },
                 onProjectIconValueChanged = { uri ->
                     if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
                         isImageExtensionInCorrect.value = false
-                        onProjectIconValueChanged(idx, uri)
+                        onProjectIconValueChanged(index, uri)
                     } else {
                         isImageExtensionInCorrect.value = true
                     }
@@ -74,21 +74,21 @@ fun ProjectsScreen(
                 onProjectPreviewsValueChanged = { uris ->
                     if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
                         isImageExtensionInCorrect.value = false
-                        onProjectPreviewsValueChanged(idx, uris)
+                        onProjectPreviewsValueChanged(index, uris)
                     } else {
                         isImageExtensionInCorrect.value = true
                     }
                 },
                 onProjectTechStackValueChanged = {
-                    onProjectTechStackValueChanged(idx, it)
+                    onProjectTechStackValueChanged(index, it)
                 },
-                onProjectKeyTaskValueChanged = { onProjectKeyTaskValueChanged(idx, it) },
-                onProjectRelatedLinksValueChanged = { onProjectRelatedLinksValueChanged(idx, it) },
-                onDateBottomSheetOpenButtonClick = { onDateBottomSheetOpenButtonClick(idx, it) },
-                onProjectItemToggleIsOpenValueChanged = { onProjectItemToggleIsOpenValueChanged(idx, it) },
+                onProjectKeyTaskValueChanged = { onProjectKeyTaskValueChanged(index, it) },
+                onProjectRelatedLinksValueChanged = { onProjectRelatedLinksValueChanged(index, it) },
+                onDateBottomSheetOpenButtonClick = { onDateBottomSheetOpenButtonClick(index, it) },
+                onProjectItemToggleIsOpenValueChanged = { onProjectItemToggleIsOpenValueChanged(index, it) },
                 onSnackBarVisibleChanged = onSnackBarVisibleChanged,
-                onCancelButtonClick = { onCancelButtonClick(idx) },
-                onDetailStackSearchBarClick = { navController.navigate("Search/Project$idx") }
+                onCancelButtonClick = { onCancelButtonClick(index) },
+                onDetailStackSearchBarClick = { navController.navigate("Search/Project$index") }
             )
         }
         item {
