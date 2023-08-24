@@ -1,13 +1,10 @@
 package com.msg.sms.design.component.button
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import com.msg.sms.design.icon.SmallPlusIcon
 import com.msg.sms.design.theme.SMSTheme
@@ -15,13 +12,8 @@ import com.msg.sms.design.theme.SMSTheme
 @Composable
 fun ListAddButton(onClick: () -> Unit) {
     SMSTheme { colors, typography ->
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.Center
-        ) {
-            TextButton(onClick = onClick) {
+        TextButton(onClick = onClick) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 SmallPlusIcon()
                 Text(
                     text = "추가",

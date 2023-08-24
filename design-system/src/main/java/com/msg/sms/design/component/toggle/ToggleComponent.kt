@@ -24,6 +24,7 @@ import com.msg.sms.design.theme.SMSTheme
 
 @Composable
 fun ToggleComponent(
+    modifier: Modifier = Modifier,
     name: String,
     onCancelButtonClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
@@ -54,7 +55,7 @@ fun ToggleComponent(
     }
 
     SMSTheme { colors, typography ->
-        Column {
+        Column(modifier = modifier) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

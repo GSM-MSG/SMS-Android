@@ -1,9 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.component.award
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,7 +15,13 @@ fun AwardComponent(
     onNameValueChange: (value: String) -> Unit,
     onTypeValueChange: (value: String) -> Unit,
 ) {
-    ToggleComponent(name = data.name.ifEmpty { "수상" }, onCancelButtonClick = onCancelButtonClick) {
+    ToggleComponent(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        name = data.name.ifEmpty { "수상" },
+        onCancelButtonClick = onCancelButtonClick
+    ) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
