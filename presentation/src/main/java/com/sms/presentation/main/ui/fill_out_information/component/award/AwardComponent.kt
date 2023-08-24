@@ -43,6 +43,7 @@ fun AwardComponent(
             )
             Spacer(modifier = Modifier.height(24.dp))
             AwardDateBarComponent(date = data.date, onClick = onDateBottomSheetOpenButtonClick)
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
