@@ -10,10 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.ListAddButton
-import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.spacer.SmsSpacer
+import com.sms.presentation.main.ui.fill_out_information.component.award.AwardBottomButtonComponent
 import com.sms.presentation.main.ui.fill_out_information.component.award.AwardComponent
 import com.sms.presentation.main.ui.fill_out_information.data.AwardData
 import com.sms.presentation.main.viewmodel.FillOutViewModel
@@ -62,22 +61,10 @@ fun AwardScreen(
             }
         }
         item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                SmsRoundedButton(
-                    text = "이전", modifier = Modifier.weight(1f),
-                    state = ButtonState.OutLine,
-                    onClick = { navController.popBackStack() }
-                )
-                SmsRoundedButton(
-                    text = "완료", modifier = Modifier.weight(2.25f),
-                    onClick = { /* TODO kimhyunseung : 데이터 모아서 정보기입 요청 보내기 */ }
-                )
-            }
+            AwardBottomButtonComponent(
+                onBackButtonClick = { navController.popBackStack() },
+                onNextButtonClick = { /* TODO kimhyunseung : 데이터 모아서 정보기입 요청 보내기 */ }
+            )
         }
     }
 }
