@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -312,6 +313,9 @@ class FillOutInformationActivity : BaseActivity() {
                                         onSnackBarVisibleChanged = { snackBarVisible.value = true },
                                         startDateMap = projectStartDateMap,
                                         endDateMap = projectEndDateMap,
+                                        onProjectTechStackValueChanged = { idx, list ->
+                                            detailStackList["Project$idx"] = list
+                                        },
                                         onDateBottomSheetOpenButtonClick = { isStartDate, idx ->
                                             bottomSheetValues.value = BottomSheetValues.Date
                                             isProjectStartDate.value = isStartDate
@@ -362,6 +366,7 @@ class FillOutInformationActivity : BaseActivity() {
                                             searchDetailStackViewModel.searchDetailStack(it)
                                         }
                                     ) {
+                                        Log.d("dddd", idx.value)
                                         detailStackList[idx.value] = it
                                         navController.popBackStack()
                                     }

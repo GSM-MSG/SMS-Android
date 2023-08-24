@@ -24,6 +24,7 @@ fun ProjectsComponent(
     onProjectNameValueChanged: (value: String) -> Unit,
     onProjectIconValueChanged: (value: Uri) -> Unit,
     onProjectPreviewsValueChanged: (value: List<Uri>) -> Unit,
+    onProjectTechStackValueChanged: (value: List<String>) -> Unit,
     onProjectKeyTaskValueChanged: (value: String) -> Unit,
     onProjectRelatedLinksValueChanged: (value: List<Pair<String, String>>) -> Unit,
     onProjectItemToggleIsOpenValueChanged: (value: Boolean) -> Unit,
@@ -61,7 +62,8 @@ fun ProjectsComponent(
             )
             ProjectTechStackInputComponent(
                 techStack = data.technologyOfUse,
-                onClick = onDetailStackSearchBarClick
+                onClick = onDetailStackSearchBarClick,
+                onProjectTechStackValueChanged = onProjectTechStackValueChanged
             )
             ProjectKeyTaskInputComponent(
                 projectKeyTask = data.keyTask,
