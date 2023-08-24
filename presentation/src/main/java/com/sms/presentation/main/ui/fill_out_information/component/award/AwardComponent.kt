@@ -18,7 +18,7 @@ fun AwardComponent(
     onNameValueChange: (value: String) -> Unit,
     onTypeValueChange: (value: String) -> Unit,
 ) {
-    ToggleComponent(name = data.name, onCancelButtonClick = onCancelButtonClick) {
+    ToggleComponent(name = data.name.ifEmpty { "수상" }, onCancelButtonClick = onCancelButtonClick) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
