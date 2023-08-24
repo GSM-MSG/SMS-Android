@@ -13,10 +13,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.project.ProjectComponent
 import com.sms.presentation.main.ui.mypage.state.ExpandableProjectData
+import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 
 @Composable
 fun ProjectsSection(
     data: ExpandableProjectData,
+    techStacks: ProjectTechStack,
     enteredPreviews: List<Bitmap>,
     onNameValueChange: (value: String) -> Unit,
     onKeyTaskValueChange: (value: String) -> Unit,
@@ -50,6 +52,7 @@ fun ProjectsSection(
     }
     ProjectComponent(
         data = data,
+        techStacks = techStacks,
         onNameValueChange = onNameValueChange,
         onKeyTaskValueChange = onKeyTaskValueChange,
         onLinkNameChanged = onLinkNameChanged,
@@ -78,7 +81,6 @@ private fun ProjectSectionPre() {
             "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
         ),
         icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-        techStack = listOf("Github", "Git", "Kotlin", "Android Studio"),
         keyTask = "모이자 ㅋㅋ",
         relatedLinks = listOf(
             RelatedLinksData("Youtube", "https://dolmc.com"),
@@ -97,6 +99,7 @@ private fun ProjectSectionPre() {
         onRemoveBitmapButton = {},
         onRemoveProjectDetailStack = {},
         onRemoveRelatedLink = {},
-        onClickSearchBar = {}
+        onClickSearchBar = {},
+        techStacks = ProjectTechStack(listOf())
     )
 }

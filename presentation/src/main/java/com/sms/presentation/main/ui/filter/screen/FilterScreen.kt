@@ -2,7 +2,11 @@ package com.sms.presentation.main.ui.filter.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
@@ -12,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.msg.sms.design.component.button.SmsBoxButton
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
@@ -22,21 +25,24 @@ import com.sms.presentation.main.ui.filter.component.FilterSelectionControlsGrou
 import com.sms.presentation.main.ui.filter.component.FilterSelectorGroup
 import com.sms.presentation.main.ui.filter.component.FilterSliderGroup
 import com.sms.presentation.main.viewmodel.StudentListViewModel
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun FilterScreen(
-    navController: NavController,
     viewModel: StudentListViewModel,
-    lifecycleScope: CoroutineScope,
-    role: String
+    role: String,
+    onBackPressed: () -> Unit,
+    onChangeToMainPage: () -> Unit,
+    onRemoveFilterDetailStack: (value: String) -> Unit,
+    onChangeToSearchPage: () -> Unit,
+    onRightButtonClick: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
     BackHandler {
-        navController.navigate("Main") {
-            popUpTo("Main") { inclusive = false }
-        }
+        onBackPressed()
+//        navController.navigate("Main") {
+//            popUpTo("Main") { inclusive = false }
+//        }
     }
 
     SMSTheme { colors, typography ->
@@ -46,10 +52,9 @@ fun FilterScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     text = "확인",
-                    enabled = true
-                ) {
-                    navController.navigate("Main")
-                }
+                    enabled = true,
+                    onClick = onChangeToMainPage
+                )
             }
         ) {
             Column(
@@ -72,11 +77,7 @@ fun FilterScreen(
                     onClickLeftButton = {
                         viewModel.resetFilter()
                     },
-                    onClickRightButton = {
-                        navController.navigate("Main") {
-                            popUpTo("Main") { inclusive = false }
-                        }
-                    }
+                    onClickRightButton = onRightButtonClick
                 )
                 Divider(thickness = 16.dp, color = colors.N10)
                 Spacer(modifier = Modifier.height(20.dp))
@@ -84,9 +85,10 @@ fun FilterScreen(
                     FilterSelectorGroup(role = role, viewModel = viewModel)
                     FilterSliderGroup(role = role, viewModel = viewModel)
                     FilterSelectionControlsGroup(role = role, viewModel = viewModel)
-                    FilterDetailStackSearchComponent(detailStack = viewModel.detailStackList.value) {
-                        navController.navigate("Search")
-                    }
+                    FilterDetailStackSearchComponent(
+                        detailStack = viewModel.detailStackList.value,
+                        onClick = onChangeToSearchPage
+                    )
                     Spacer(modifier = Modifier.height(it.calculateBottomPadding() + 64.dp))
                 }
             }

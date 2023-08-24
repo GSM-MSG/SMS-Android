@@ -33,7 +33,7 @@ fun ProjectTechStackComponent(
                 .fillMaxWidth()
                 .padding(end = 20.dp)
                 .onFocusChanged {
-                    if(it.isFocused) {
+                    if (it.isFocused) {
                         onClickSearchBar()
                     }
                 }
@@ -59,7 +59,9 @@ fun ProjectTechStackComponent(
             )
         ) {
             items(techStack) { item: String ->
-                DetailTechStackItem(stack = item, onClick = { onRemoveButton(item) })
+                DetailTechStackItem(
+                    stack = item,
+                    onClick = { onRemoveButton(item) })
             }
         }
     }

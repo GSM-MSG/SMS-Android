@@ -16,7 +16,13 @@ import com.sms.presentation.main.ui.mypage.component.profile.PortfolioComponent
 import com.sms.presentation.main.ui.mypage.component.profile.SelfIntroduceComponent
 
 @Composable
-fun ProfileSection(setMajor: String, onClickMajorComponent: () -> Unit, onClickSearchBar: () -> Unit) {
+fun ProfileSection(
+    setMajor: String,
+    selectedTechList: List<String>,
+    onClickMajorComponent: () -> Unit,
+    onClickSearchBar: () -> Unit,
+    onRemoveDetailStack: (value: String) -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,12 +39,22 @@ fun ProfileSection(setMajor: String, onClickMajorComponent: () -> Unit, onClickS
             setMajorText = setMajor
         )
         PortfolioComponent(portfolioValue = "https://youtube.com")
-        DetailTechStackComponent(addedList = listOf("AndroidStdio", "Kotlin", "Flutter"), onClickSearchBar = onClickSearchBar)
+        DetailTechStackComponent(
+            addedList = selectedTechList,
+            onClickSearchBar = onClickSearchBar,
+            onRemoveDetailStack = onRemoveDetailStack
+        )
     }
 }
 
 @Preview
 @Composable
 private fun ProfileSectionPre() {
-    ProfileSection(setMajor = "Android", onClickMajorComponent = {}, onClickSearchBar = {})
+    ProfileSection(
+        setMajor = "Android",
+        selectedTechList = listOf("Android Studio", "Kotlin", "Flutter"),
+        onClickMajorComponent = {},
+        onClickSearchBar = {},
+        onRemoveDetailStack = {}
+    )
 }

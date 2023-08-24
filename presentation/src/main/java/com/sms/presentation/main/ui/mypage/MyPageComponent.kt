@@ -38,6 +38,7 @@ import com.sms.presentation.main.ui.mypage.section.SchoolLifeSection
 import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
 import com.sms.presentation.main.ui.mypage.state.ExpandableAwardDate
 import com.sms.presentation.main.ui.mypage.state.ExpandableProjectData
+import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,11 +46,15 @@ fun MyPageComponent(
     setMajor: String,
     setWantWorkForm: String,
     setMilitary: String,
+    selectedTechList: List<String>,
+    selectedTechListOnProject: List<ProjectTechStack>,
     onClickMilitaryOpenButton: () -> Unit,
     onClickOpenWorkForm: () -> Unit,
     onClickTopLeftButton: () -> Unit,
     onClickTopRightButton: () -> Unit,
     onClickMajorButton: () -> Unit,
+    onRemoveDetailStack: (value: String) -> Unit,
+    onRemoveProjectDetailStack: (index: Int, value: String) -> Unit,
     onProjectSearchBar: (index: Int) -> Unit,
     onMyPageSearchBar: () -> Unit,
 ) {
@@ -65,11 +70,10 @@ fun MyPageComponent(
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
                 ),
                 icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                techStack = listOf("Github", "Git", "Kotlin", "Android Studio"),
                 keyTask = "모이자 ㅋㅋ",
                 relatedLinks = listOf(
                     RelatedLinksData("Youtube", "https://dolmc.com"),
-                    RelatedLinksData("GitHujb", "https://youyu.com"),
+                    RelatedLinksData("GitHub", "https://youyu.com"),
                     RelatedLinksData("X", "https://asdgasgw.com")
                 ),
                 isExpand = true
@@ -84,7 +88,6 @@ fun MyPageComponent(
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
                 ),
                 icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                techStack = listOf("Github", "Git", "Kotlin", "Android Studio"),
                 keyTask = "모이자 ㅋㅋ",
                 relatedLinks = listOf(
                     RelatedLinksData("Youtube", "https://dolmc.com"),
@@ -140,8 +143,10 @@ fun MyPageComponent(
             item {
                 ProfileSection(
                     setMajor = setMajor,
+                    selectedTechList = selectedTechList,
                     onClickMajorComponent = onClickMajorButton,
-                    onClickSearchBar = onMyPageSearchBar
+                    onClickSearchBar = onMyPageSearchBar,
+                    onRemoveDetailStack = onRemoveDetailStack
                 )
                 SmsSpacer()
             }
@@ -235,6 +240,7 @@ fun MyPageComponent(
                         val itemData = projects[index]
                         ProjectsSection(
                             data = itemData,
+                            techStacks = selectedTechListOnProject[index],
                             onNameValueChange = {
                                 projects[index] = itemData.copy(name = it)
                             },
@@ -260,6 +266,7 @@ fun MyPageComponent(
                             onRemoveProjectImage = {
                                 projects[index] = itemData.copy(projectImage = it)
                             },
+                            onRemoveProjectDetailStack = { onRemoveProjectDetailStack(index, it) },
                             onAddBitmap = { bitmapPreviews[index] = bitmapPreviews[index] + it },
                             onAddLink = {
                                 val relatedLink = itemData.relatedLinks.toMutableList()
@@ -271,10 +278,6 @@ fun MyPageComponent(
                                     bitmapPreviews[index].filterIndexed { index, _ -> it != index }
                             },
                             enteredPreviews = bitmapPreviews[index],
-                            onRemoveTechStack = {
-                                projects[index] =
-                                    itemData.copy(techStack = itemData.techStack.minus(it))
-                            },
                             onRemoveRelatedLink = {
                                 projects[index] =
                                     itemData.copy(relatedLinks = itemData.relatedLinks.filterIndexed { index, _ -> index != it })
@@ -299,7 +302,6 @@ fun MyPageComponent(
                                 activityDuration = "",
                                 projectImage = listOf(),
                                 icon = "",
-                                techStack = listOf(),
                                 keyTask = "",
                                 relatedLinks = listOf(),
                                 isExpand = true
@@ -384,12 +386,16 @@ private fun MyPageComponentPre() {
         setMajor = "Android",
         setWantWorkForm = "정규직",
         setMilitary = "병특 희망",
+        selectedTechList = listOf("Android", ""),
         onClickMilitaryOpenButton = {},
         onClickTopLeftButton = {},
         onClickTopRightButton = {},
         onClickMajorButton = {},
         onClickOpenWorkForm = {},
         onMyPageSearchBar = {},
-        onProjectSearchBar = {}
+        onProjectSearchBar = {},
+        onRemoveDetailStack = {},
+        onRemoveProjectDetailStack = { _, _ -> },
+        selectedTechListOnProject = listOf()
     )
 }
