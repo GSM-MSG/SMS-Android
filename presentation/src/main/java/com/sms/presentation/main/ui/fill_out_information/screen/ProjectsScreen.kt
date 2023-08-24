@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListAddButton
+import com.msg.sms.design.component.spacer.SmsSpacer
 import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsBottomButtonComponent
 import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsComponent
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
@@ -53,11 +54,10 @@ fun ProjectsScreen(
         )
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-    ) {
+    LazyColumn {
+        item {
+            SmsSpacer()
+        }
         itemsIndexed(projectList) { idx, item ->
             projectList[idx] = projectList[idx].copy(
                 technologyOfUse = detailStackList["Project$idx"] ?: emptyList(),
@@ -78,7 +78,12 @@ fun ProjectsScreen(
                     }
                 },
                 onProjectPreviewsValueChanged = { uris ->
-                    if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
+                    if (uris.all { uri ->
+                            getFileNameFromUri(
+                                context,
+                                uri
+                            )?.isImageExtensionCorrect() == true
+                        }) {
                         isImageExtensionInCorrect.value = false
                         projectList[idx] = projectList[idx].copy(preview = uris)
                     } else {
@@ -103,14 +108,12 @@ fun ProjectsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                    .padding(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 52.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                Spacer(modifier = Modifier.height(12.dp))
                 ListAddButton {
                     projectList.add(ProjectInfo())
                 }
-                Spacer(modifier = Modifier.height(52.dp))
             }
         }
         item {

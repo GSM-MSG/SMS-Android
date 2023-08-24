@@ -3,6 +3,7 @@ package com.sms.presentation.main.ui.fill_out_information.component.projects
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +32,13 @@ fun ProjectsComponent(
         mutableStateOf(false)
     }
 
-    ToggleComponent(name = "프로젝트", onCancelButtonClick = onCancelButtonClick) {
+    ToggleComponent(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        name = "프로젝트",
+        onCancelButtonClick = onCancelButtonClick
+    ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(24.dp),
             modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)

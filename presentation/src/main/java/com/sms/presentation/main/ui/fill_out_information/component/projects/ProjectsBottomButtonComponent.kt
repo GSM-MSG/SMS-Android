@@ -13,7 +13,9 @@ fun ProjectsBottomButtonComponent(
     onPreviousButtonClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         SmsRoundedButton(

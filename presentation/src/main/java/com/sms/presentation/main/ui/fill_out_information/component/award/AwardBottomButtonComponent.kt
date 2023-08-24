@@ -12,8 +12,8 @@ import com.msg.sms.design.component.button.SmsRoundedButton
 
 @Composable
 fun AwardBottomButtonComponent(
-    onBackButtonClick: () -> Unit,
-    onNextButtonClick: () -> Unit
+    onCompleteButtonClick: () -> Unit,
+    onPreviousButtonClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -24,11 +24,11 @@ fun AwardBottomButtonComponent(
         SmsRoundedButton(
             text = "이전", modifier = Modifier.weight(1f),
             state = ButtonState.OutLine,
-            onClick = onBackButtonClick
+            onClick = onPreviousButtonClick
         )
         SmsRoundedButton(
             text = "완료", modifier = Modifier.weight(2.25f),
-            onClick = onNextButtonClick
+            onClick = onCompleteButtonClick
         )
     }
 }

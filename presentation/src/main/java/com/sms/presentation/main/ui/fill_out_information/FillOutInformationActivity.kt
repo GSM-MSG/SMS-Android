@@ -220,7 +220,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = FillOutPage.Award.value
+                                startDestination = FillOutPage.Projects.value
                             ) {
                                 composable(FillOutPage.Profile.value) {
                                     currentRoute.value = FillOutPage.Profile.value

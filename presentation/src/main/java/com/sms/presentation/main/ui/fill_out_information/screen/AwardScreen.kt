@@ -30,12 +30,13 @@ fun AwardScreen(
     }
 
     LazyColumn {
-        item { SmsSpacer() }
+        item {
+            SmsSpacer()
+        }
         itemsIndexed(awardList) { idx, item ->
             awardList[idx] = awardList[idx].copy(date = awardDateMap[idx] ?: "")
 
-            AwardComponent(
-                data = item,
+            AwardComponent(data = item,
                 onDateBottomSheetOpenButtonClick = {
                     onDateBottomSheetOpenButtonClick(idx)
                 },
@@ -43,28 +44,23 @@ fun AwardScreen(
                 onTypeValueChange = { awardList[idx] = awardList[idx].copy(type = it) },
                 onCancelButtonClick = {
                     awardList.removeAt(idx)
-                }
-            )
+                })
         }
         item {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                    .padding(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 52.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                Spacer(modifier = Modifier.height(12.dp))
                 ListAddButton {
                     awardList.add(AwardData("", "", ""))
                 }
-                Spacer(modifier = Modifier.height(52.dp))
             }
         }
         item {
-            AwardBottomButtonComponent(
-                onBackButtonClick = { navController.popBackStack() },
-                onNextButtonClick = { /* TODO kimhyunseung : 데이터 모아서 정보기입 요청 보내기 */ }
-            )
+            AwardBottomButtonComponent(onPreviousButtonClick = { navController.popBackStack() },
+                onCompleteButtonClick = { /* TODO kimhyunseung : 데이터 모아서 정보기입 요청 보내기 */ })
         }
     }
 }
