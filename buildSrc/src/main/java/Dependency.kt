@@ -41,7 +41,6 @@ object Dependency {
         const val OKHTTP_LOGGING_INTERCEPTOR =
             "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
         const val COIL = "io.coil-kt:coil-compose:${Versions.COIL}"
-        const val NUMBER_PICKER = "com.chargemap.compose:numberpicker:${Versions.NUMBER_PICKER}"
     }
 
     object Msg {

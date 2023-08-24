@@ -31,7 +31,7 @@ fun SmsPicker(
     val selectedItem = remember {
         mutableStateOf("")
     }
-    val boxPosition = remember {
+    val baseLine = remember {
         mutableStateOf(0f)
     }
 
@@ -45,51 +45,44 @@ fun SmsPicker(
     }
 
     SMSTheme { colors, typography ->
-        Box {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .onGloballyPositioned {
-                        boxPosition.value = it.positionInWindow().y
-                    }
-            )
-            LazyColumn(
-                modifier = modifier,
-                state = listState,
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                item {
-                    Spacer(modifier = Modifier.height(64.dp))
+        LazyColumn(
+            modifier = modifier.onGloballyPositioned {
+                baseLine.value = it.positionInWindow().y + it.size.height / 2
+            },
+            state = listState,
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(64.dp))
+            }
+            itemsIndexed(itemList.ifEmpty { itemRange.map { it.toString() } }) { _, item ->
+                val isSelected = remember {
+                    mutableStateOf(false)
                 }
-                itemsIndexed(itemList.ifEmpty { itemRange.map { it.toString() } }) { _, item ->
-                    val isSelected = remember {
-                        mutableStateOf(false)
-                    }
 
-                    if (isSelected.value) {
-                        selectedItem.value = item
-                    }
+                if (isSelected.value) {
+                    selectedItem.value = item
+                }
 
-                    Box(
-                        modifier = Modifier
-                            .onGloballyPositioned {
-                                isSelected.value =
-                                    boxPosition.value in it.positionInWindow().y..it.positionInWindow().y + it.size.height
-                            }
-                    ) {
-                        Text(
-                            text = item,
-                            style = if (isSelected.value) typography.title1 else typography.title2,
-                            color = if (isSelected.value) colors.BLACK else colors.N30,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(vertical = 3.dp)
-                        )
-                    }
+                Box(
+                    modifier = Modifier
+                        .onGloballyPositioned {
+                            isSelected.value =
+                                baseLine.value in it.positionInWindow().y..it.positionInWindow().y + it.size.height
+                        }
+                ) {
+                    Text(
+                        text = item,
+                        style = if (isSelected.value) typography.title1 else typography.title2,
+                        color = if (isSelected.value) colors.BLACK else colors.N30,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(vertical = 3.dp)
+                    )
                 }
-                item {
-                    Spacer(modifier = Modifier.height(64.dp))
-                }
+            }
+            item {
+                Spacer(modifier = Modifier.height(64.dp))
             }
         }
     }
