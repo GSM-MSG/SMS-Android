@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sms.presentation.main.ui.mypage.state.ExpandableProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
+import com.sms.presentation.main.ui.mypage.state.ExpandableProjectData
 
 @Composable
 fun ProjectComponent(
@@ -23,7 +23,7 @@ fun ProjectComponent(
     onClickSearchBar: () -> Unit,
     onRemoveProjectImageButton: (list: List<String>) -> Unit,
     onRemoveBitmapButton: (index: Int) -> Unit,
-    onRemoveTechStack: (value: String) -> Unit,
+    onRemoveProjectDetailStack: (value: String) -> Unit,
     onRemoveRelatedLInk: (index: Int) -> Unit,
     enteredList: List<Bitmap>,
     onOpenGallery: () -> Unit,
@@ -48,7 +48,7 @@ fun ProjectComponent(
         )
         ProjectTechStackComponent(
             techStack = data.techStack,
-            onRemoveButton = onRemoveTechStack,
+            onRemoveButton = onRemoveProjectDetailStack,
             onClickSearchBar = onClickSearchBar
         )
         ProjectKeyTaskComponent(data.keyTask, onValueChange = onKeyTaskValueChange)
@@ -93,7 +93,7 @@ private fun ProjectComponentPre() {
         onRemoveBitmapButton = {},
         onOpenGallery = {},
         onAddLinkButton = {},
-        onRemoveTechStack = {},
+        onRemoveProjectDetailStack = { },
         onRemoveRelatedLInk = {},
         onLinkChanged = { _, _ -> },
         onClickSearchBar = {},
