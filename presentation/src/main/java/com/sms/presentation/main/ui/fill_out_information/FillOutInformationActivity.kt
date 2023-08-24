@@ -330,6 +330,10 @@ class FillOutInformationActivity : BaseActivity() {
                                             isProjectDate.value = false
                                             bottomSheetValues.value = BottomSheetValues.Date
                                             scope.launch { bottomSheetState.show() }
+                                        },
+                                        onPreviousButtonClick = {
+                                            awardDateMap.clear()
+                                            navController.popBackStack()
                                         }
                                     )
                                 }

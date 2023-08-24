@@ -23,6 +23,7 @@ fun AwardScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
     awardDateMap: Map<Int, String>,
+    onPreviousButtonClick: () -> Unit,
     onDateBottomSheetOpenButtonClick: (idx: Int) -> Unit
 ) {
     val awardList = remember {
@@ -66,9 +67,7 @@ fun AwardScreen(
         }
         item {
             AwardBottomButtonComponent(
-                onPreviousButtonClick = {
-                    navController.popBackStack()
-                },
+                onPreviousButtonClick = onPreviousButtonClick,
                 onCompleteButtonClick = {
                     /* TODO kimhyunseung : 데이터 모아서 정보기입 요청 보내기 */
                 }
