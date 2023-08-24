@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -46,6 +45,11 @@ private enum class BottomSheetValues {
     Date
 }
 
+private enum class DetailSearchLocation {
+    Profile,
+    Projects
+}
+
 enum class FillOutPage(val value: String) {
     Profile("Profile"),
     SchoolLife("SchoolLife"),
@@ -78,20 +82,29 @@ class FillOutInformationActivity : BaseActivity() {
             val projectList = remember {
                 mutableStateListOf(*fillOutViewModel.getEnteredProjectsInformation().projects.toTypedArray())
             }
-            val bottomSheetValues = remember {
-                mutableStateOf(BottomSheetValues.Major)
-            }
             val navController = rememberNavController()
             val bottomSheetState =
                 rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+            val bottomSheetValues = remember {
+                mutableStateOf(BottomSheetValues.Major)
+            }
+            val detailStackSearchLocation = remember {
+                mutableStateOf(DetailSearchLocation.Profile)
+            }
             val currentRoute = remember {
                 mutableStateOf("Profile")
             }
-            val detailStackList = remember {
-                mutableStateMapOf<String, List<String>>()
+            val profileDetailTechStack = remember {
+                mutableStateListOf<String>()
+            }
+            val projectsDetailTechStack = remember {
+                mutableStateListOf<List<String>>()
             }
             val snackBarVisible = remember {
                 mutableStateOf(false)
+            }
+            val projectIdx = remember {
+                mutableStateOf(0)
             }
 
             //PhotoPickBottomSheet
@@ -123,9 +136,6 @@ class FillOutInformationActivity : BaseActivity() {
             }
             val isProjectStartDate = remember {
                 mutableStateOf(true)
-            }
-            val projectIdx = remember {
-                mutableStateOf(0)
             }
             val awardIdx = remember {
                 mutableStateOf(0)
@@ -193,10 +203,12 @@ class FillOutInformationActivity : BaseActivity() {
                                 onDateValueChanged = { date ->
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
-                                            projectList[projectIdx.value] = projectList[projectIdx.value].copy(startDate = date)
+                                            projectList[projectIdx.value] =
+                                                projectList[projectIdx.value].copy(startDate = date)
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
-                                            projectList[projectIdx.value] = projectList[projectIdx.value].copy(endDate = date)
+                                            projectList[projectIdx.value] =
+                                                projectList[projectIdx.value].copy(endDate = date)
                                         }
                                         !isProjectDate.value -> {
                                             awardDateMap[awardIdx.value] = date
@@ -230,7 +242,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     ProfileScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        detailStack = detailStackList[FillOutPage.Profile.value] ?: emptyList(),
+                                        detailStack = profileDetailTechStack,
                                         profileImageUri = profileImageUri.value,
                                         selectedMajor = selectedMajor.value,
                                         isImageExtensionInCorrect = isImageExtensionInCorrect.value,
@@ -311,13 +323,16 @@ class FillOutInformationActivity : BaseActivity() {
                                             fillOutViewModel.setEnteredProjectsInformation(
                                                 projectList.filter { project ->
                                                     project.name.isNotEmpty() ||
-                                                    project.icon != Uri.EMPTY ||
-                                                    project.keyTask.isNotEmpty() ||
-                                                    project.preview.isNotEmpty() ||
-                                                    project.endDate.isNotEmpty() ||
-                                                    project.startDate.isNotEmpty() ||
-                                                    project.technologyOfUse.isNotEmpty() ||
-                                                    project.relatedLinkList.first() != Pair("", "")
+                                                            project.icon != Uri.EMPTY ||
+                                                            project.keyTask.isNotEmpty() ||
+                                                            project.preview.isNotEmpty() ||
+                                                            project.endDate.isNotEmpty() ||
+                                                            project.startDate.isNotEmpty() ||
+                                                            project.technologyOfUse.isNotEmpty() ||
+                                                            project.relatedLinkList.first() != Pair(
+                                                        "",
+                                                        ""
+                                                    )
                                                 }
                                             )
                                             //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
@@ -332,7 +347,8 @@ class FillOutInformationActivity : BaseActivity() {
                                             scope.launch { bottomSheetState.show() }
                                         },
                                         onProjectItemToggleIsOpenValueChanged = { idx, visible ->
-                                            projectList[idx] = projectList[idx].copy(isToggleOpen = visible)
+                                            projectList[idx] =
+                                                projectList[idx].copy(isToggleOpen = visible)
                                         },
                                         onSnackBarVisibleChanged = { snackBarVisible.value = true },
                                         onProjectNameValueChanged = { idx, name ->
@@ -342,16 +358,19 @@ class FillOutInformationActivity : BaseActivity() {
                                             projectList[idx] = projectList[idx].copy(icon = icon)
                                         },
                                         onProjectPreviewsValueChanged = { idx, previews ->
-                                            projectList[idx] = projectList[idx].copy(preview = previews)
+                                            projectList[idx] =
+                                                projectList[idx].copy(preview = previews)
                                         },
                                         onProjectTechStackValueChanged = { idx, list ->
-                                            detailStackList["Project$idx"] = list
+                                            projectsDetailTechStack[idx] = list
                                         },
                                         onProjectKeyTaskValueChanged = { idx, keytask ->
-                                            projectList[idx] = projectList[idx].copy(keyTask = keytask)
+                                            projectList[idx] =
+                                                projectList[idx].copy(keyTask = keytask)
                                         },
                                         onProjectRelatedLinksValueChanged = { idx, links ->
-                                            projectList[idx] = projectList[idx].copy(relatedLinkList = links)
+                                            projectList[idx] =
+                                                projectList[idx].copy(relatedLinkList = links)
                                         }
                                     )
                                 }
@@ -391,13 +410,23 @@ class FillOutInformationActivity : BaseActivity() {
                                     DetailStackSearchScreen(
                                         navController = navController,
                                         detailStack = searchDetailStack.value,
-                                        selectedStack = detailStackList[idx.value] ?: listOf(""),
+                                        selectedStack = when (detailStackSearchLocation.value) {
+                                            DetailSearchLocation.Profile -> profileDetailTechStack
+                                            DetailSearchLocation.Projects -> projectsDetailTechStack[projectIdx.value]
+                                        },
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
                                         }
-                                    ) {
-                                        Log.d("dddd", idx.value)
-                                        detailStackList[idx.value] = it
+                                    ) { stack ->
+                                        when (detailStackSearchLocation.value) {
+                                            DetailSearchLocation.Profile -> {
+                                                //TODO : 이현빈.copy
+                                            }
+                                            DetailSearchLocation.Projects -> {
+                                                projectsDetailTechStack[projectIdx.value] = stack
+                                            }
+                                        }
+
                                         navController.popBackStack()
                                     }
                                 }
