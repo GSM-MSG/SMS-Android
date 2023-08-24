@@ -198,10 +198,6 @@ class MainActivity : BaseActivity() {
                                         }
                                     }
                                     navController.popBackStack()
-//                                    studentListViewModel.detailStackList.value =
-//                                        navController.previousBackStackEntry?.savedStateHandle?.get<String>(
-//                                            "detailStack"
-//                                        ) ?: ""
                                 }
                             }
                             composable(MainPage.MyPage.value) {

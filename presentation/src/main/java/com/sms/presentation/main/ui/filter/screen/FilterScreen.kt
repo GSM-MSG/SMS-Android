@@ -32,17 +32,14 @@ fun FilterScreen(
     role: String,
     onBackPressed: () -> Unit,
     onChangeToMainPage: () -> Unit,
-    onRemoveFilterDetailStack: (value: String) -> Unit,
     onChangeToSearchPage: () -> Unit,
     onRightButtonClick: () -> Unit,
+    onRemoveFilterDetailStack: (value: String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
     BackHandler {
         onBackPressed()
-//        navController.navigate("Main") {
-//            popUpTo("Main") { inclusive = false }
-//        }
     }
 
     SMSTheme { colors, typography ->
