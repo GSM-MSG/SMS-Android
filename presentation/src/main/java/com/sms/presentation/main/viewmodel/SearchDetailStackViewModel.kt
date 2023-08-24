@@ -22,6 +22,7 @@ class SearchDetailStackViewModel @Inject constructor(
 
     fun searchDetailStack(name: String) {
         viewModelScope.launch {
+            _searchResultEvent.value = Event.Loading
             searchDetailStackUseCase(name).onSuccess {
                 it.catch { remoteError ->
                     _searchResultEvent.value = remoteError.errorHandling()
