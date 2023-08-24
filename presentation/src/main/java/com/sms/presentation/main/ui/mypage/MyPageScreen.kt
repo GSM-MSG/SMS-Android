@@ -17,6 +17,7 @@ import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.selector.MajorSelector
 import com.sms.presentation.main.ui.mypage.modal.MyPageBottomSheet
+import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 import kotlinx.coroutines.launch
 
 private enum class BottomSheetValues {
@@ -34,16 +35,20 @@ private enum class ModalValue {
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MyPageScreen(
+    majorList: List<String>,
+    selectedTechList: List<String>,
+    selectedTechListOnProject: List<ProjectTechStack>,
     onWithdrawal: () -> Unit,
     onLogout: () -> Unit,
+    onClickSearchBar: () -> Unit,
+    onClickProjectSearchBar: (itemIndex: Int) -> Unit,
+    onRemoveDetailStack: (value: String) -> Unit,
+    onRemoveProjectDetailStack: (index: Int, value: String) -> Unit,
 ) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
 
-    val list = remember {
-        mutableStateOf(listOf("Android", "iOS", "Back-End"))
-    }
     val selectedMajor = remember {
         mutableStateOf("")
     }
@@ -90,7 +95,7 @@ fun MyPageScreen(
             when (bottomSheetValues.value) {
                 BottomSheetValues.Major -> {
                     SelectorBottomSheet(
-                        list = list.value,
+                        list = majorList,
                         bottomSheetState = bottomSheetState,
                         selected = selectedMajor.value,
                         itemChange = {
@@ -154,6 +159,8 @@ fun MyPageScreen(
             setMajor = selectedMajor.value,
             setWantWorkForm = selectedWorkForm.value,
             setMilitary = selectedMilitary.value,
+            selectedTechListOnProject = selectedTechListOnProject,
+            selectedTechList = selectedTechList,
             onClickTopLeftButton = {},
             onClickOpenWorkForm = {
                 coroutineScope.launch {
@@ -175,13 +182,21 @@ fun MyPageScreen(
                     keyboardController!!.hide()
                     bottomSheetState.show()
                 }
-            }, onClickMajorButton = {
+            },
+            onClickMajorButton = {
                 coroutineScope.launch {
                     bottomSheetValues.value = BottomSheetValues.Major
                     keyboardController!!.hide()
                     bottomSheetState.show()
                 }
-            })
+            },
+            onMyPageSearchBar = onClickSearchBar,
+            onProjectSearchBar = onClickProjectSearchBar,
+            onRemoveDetailStack = onRemoveDetailStack,
+            onRemoveProjectDetailStack = { index: Int, value: String ->
+                onRemoveProjectDetailStack(index, value)
+            }
+        )
     }
 }
 
@@ -189,7 +204,14 @@ fun MyPageScreen(
 @Composable
 private fun MyPageScreenPre() {
     MyPageScreen(
+        selectedTechListOnProject = listOf(ProjectTechStack(listOf())),
+        selectedTechList = listOf("Kotlin", "Flutter"),
+        majorList = listOf("BackEnd", "Android", "iOS"),
         onLogout = {},
-        onWithdrawal = {}
+        onWithdrawal = {},
+        onClickSearchBar = {},
+        onClickProjectSearchBar = {},
+        onRemoveDetailStack = {},
+        onRemoveProjectDetailStack = { _, _ -> }
     )
 }

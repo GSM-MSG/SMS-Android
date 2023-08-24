@@ -323,7 +323,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         selectedStack = detailStackList[idx.value] ?: listOf(""),
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
-                                        }
+                                        },
                                     ) {
                                         detailStackList[idx.value] = it
                                         navController.popBackStack()
