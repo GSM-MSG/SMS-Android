@@ -19,6 +19,7 @@ import com.sms.presentation.main.ui.filter.screen.FilterScreen
 import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.main.screen.MainScreen
 import com.sms.presentation.main.ui.mypage.MyPageScreen
+import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
@@ -87,8 +88,8 @@ class MainActivity : BaseActivity() {
                         }
                         val technologyStackListByProjectPage = remember {
                             mutableStateListOf(
-                                listOf("Kotlin", "Jetpack Compose"),
-                                listOf("Android Studio", "XML")
+                                ProjectTechStack(listOf("Kotlin", "Jetpack Compose")),
+                                ProjectTechStack(listOf("Git"))
                             )
                         }
                         val filterTechStack = remember {
@@ -166,7 +167,7 @@ class MainActivity : BaseActivity() {
                                     selectedStack = when (selectedTechStack.value) {
                                         SelectedTechStack.MyPage -> technologyStackList
                                         SelectedTechStack.Filter -> filterTechStack
-                                        SelectedTechStack.Project -> technologyStackListByProjectPage[projectIndex.value]
+                                        SelectedTechStack.Project -> technologyStackListByProjectPage[projectIndex.value].techStacks
                                     },
                                     detailStack = searchDetailStack.value,
                                 ) { list ->
@@ -191,7 +192,9 @@ class MainActivity : BaseActivity() {
 
                                         SelectedTechStack.Project -> {
                                             technologyStackListByProjectPage[projectIndex.value] =
-                                                list
+                                                technologyStackListByProjectPage[projectIndex.value].copy(
+                                                    techStacks = list
+                                                )
                                         }
                                     }
                                     navController.popBackStack()
@@ -223,8 +226,8 @@ class MainActivity : BaseActivity() {
                                         technologyStackList.remove(it)
                                     },
                                     onRemoveProjectDetailStack = { index: Int, value: String ->
-                                        technologyStackListByProjectPage[index] =
-                                            technologyStackListByProjectPage[index].filter { it != value }
+                                        val item = technologyStackListByProjectPage[index].techStacks.filterNot { it == value }
+                                        technologyStackListByProjectPage[index] = technologyStackListByProjectPage[index].copy(techStacks = item)
                                     }
                                 )
                             }
