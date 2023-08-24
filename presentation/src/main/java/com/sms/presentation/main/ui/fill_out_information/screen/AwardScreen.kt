@@ -58,6 +58,7 @@ fun AwardScreen(
                 ListAddButton {
                     awardList.add(AwardData("", "", ""))
                 }
+                Spacer(modifier = Modifier.height(52.dp))
             }
         }
         item {
@@ -70,11 +71,11 @@ fun AwardScreen(
                 SmsRoundedButton(
                     text = "이전", modifier = Modifier.weight(1f),
                     state = ButtonState.OutLine,
-                    onClick = {}
+                    onClick = { navController.popBackStack() }
                 )
                 SmsRoundedButton(
-                    text = "다음", modifier = Modifier.weight(2.25f),
-                    onClick = {}
+                    text = "완료", modifier = Modifier.weight(2.25f),
+                    onClick = { /* TODO kimhyunseung : 데이터 모아서 정보기입 요청 보내기 */ }
                 )
             }
         }
