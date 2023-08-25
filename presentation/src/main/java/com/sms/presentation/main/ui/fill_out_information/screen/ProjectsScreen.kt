@@ -66,42 +66,46 @@ fun ProjectsScreen(
             ProjectsComponent(
                 data = item,
                 detailStacks = detailStacks[index],
-                onProjectNameValueChanged = {
-                    onProjectNameValueChanged(index, it)
-                },
-                onProjectIconValueChanged = { uri ->
-                    if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
-                        isImageExtensionInCorrect.value = false
-                        onProjectIconValueChanged(index, uri)
-                    } else {
-                        isImageExtensionInCorrect.value = true
-                    }
-                },
-                onProjectPreviewsValueChanged = { uris ->
-                    if (uris.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
-                        isImageExtensionInCorrect.value = false
-                        onProjectPreviewsValueChanged(index, uris)
-                    } else {
-                        isImageExtensionInCorrect.value = true
-                    }
-                },
-                onProjectTechStackValueChanged = {
-                    onProjectTechStackValueChanged(index, it)
-                },
-                onProjectDescriptionValueChanged = {
-                    onProjectDescriptionValueChanged(index, it)
-                },
-                onProjectKeyTaskValueChanged = { onProjectKeyTaskValueChanged(index, it) },
-                onProjectRelatedLinksValueChanged = {
-                    onProjectRelatedLinksValueChanged(index, it)
-                },
-                onDateBottomSheetOpenButtonClick = { onDateBottomSheetOpenButtonClick(index, it) },
-                onProjectItemToggleIsOpenValueChanged = {
-                    onProjectItemToggleIsOpenValueChanged(index, it)
-                },
-                onSnackBarVisibleChanged = onSnackBarVisibleChanged,
                 onCancelButtonClick = { onCancelButtonClick(index) },
-                onDetailStackSearchBarClick = { onDetailStackSearchBarClick(index) }
+                onDetailStackSearchBarClick = { onDetailStackSearchBarClick(index) },
+                onProjectNameValueChanged = { name ->
+                    onProjectNameValueChanged(index, name)
+                },
+                onProjectIconValueChanged = { icon ->
+                    if (getFileNameFromUri(context, icon)!!.isImageExtensionCorrect()) {
+                        isImageExtensionInCorrect.value = false
+                        onProjectIconValueChanged(index, icon)
+                    } else {
+                        isImageExtensionInCorrect.value = true
+                    }
+                },
+                onProjectPreviewsValueChanged = { previews ->
+                    if (previews.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
+                        isImageExtensionInCorrect.value = false
+                        onProjectPreviewsValueChanged(index, previews)
+                    } else {
+                        isImageExtensionInCorrect.value = true
+                    }
+                },
+                onProjectTechStackValueChanged = { techStacks ->
+                    onProjectTechStackValueChanged(index, techStacks)
+                },
+                onProjectDescriptionValueChanged = { description ->
+                    onProjectDescriptionValueChanged(index, description)
+                },
+                onProjectKeyTaskValueChanged = { keyTask ->
+                    onProjectKeyTaskValueChanged(index, keyTask)
+                },
+                onProjectRelatedLinksValueChanged = { links ->
+                    onProjectRelatedLinksValueChanged(index, links)
+                },
+                onDateBottomSheetOpenButtonClick = { isStartDate ->
+                    onDateBottomSheetOpenButtonClick(index, isStartDate)
+                },
+                onProjectItemToggleIsOpenValueChanged = { visible ->
+                    onProjectItemToggleIsOpenValueChanged(index, visible)
+                },
+                onSnackBarVisibleChanged = onSnackBarVisibleChanged
             )
         }
         item {
