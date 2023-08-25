@@ -202,7 +202,7 @@ class MainActivity : BaseActivity() {
                             }
                             composable(MainPage.MyPage.value) {
                                 MyPageScreen(
-                                    majorList = listOf("Android", "Flutter", "Android Studio"),
+                                    majorList = studentListViewModel.majorList,
                                     selectedTechList = technologyStackList,
                                     selectedTechListOnProject = technologyStackListByProjectPage,
                                     onWithdrawal = {
