@@ -3,7 +3,6 @@ package com.msg.sms.domain.model.user.response
 data class MyProfileModel(
     val name: String,
     val introduce: String,
-    val dreamBookFileUrl: String,
     val portfolioUrl: String,
     val grade: Int,
     val classNum: Int,
@@ -20,4 +19,6 @@ data class MyProfileModel(
     val languageCertificates: List<LanguageCertificateModel>,
     val certificates: List<String>,
     val techStacks: List<String>,
+    val projects: List<ProjectModel>,
+    val prizes: List<PrizeModel>
 )
