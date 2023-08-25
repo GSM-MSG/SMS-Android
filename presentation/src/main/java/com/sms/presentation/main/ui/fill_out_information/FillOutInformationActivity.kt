@@ -323,11 +323,12 @@ class FillOutInformationActivity : BaseActivity() {
                                                 projectList.filter { project ->
                                                     project.name.isNotEmpty() ||
                                                     project.icon != Uri.EMPTY ||
-                                                    project.keyTask.isNotEmpty() ||
                                                     project.preview.isNotEmpty() ||
+                                                    project.technologyOfUse.isNotEmpty() ||
+                                                    project.description.isNotEmpty() ||
+                                                    project.keyTask.isNotEmpty() ||
                                                     project.endDate.isNotEmpty() ||
                                                     project.startDate.isNotEmpty() ||
-                                                    project.technologyOfUse.isNotEmpty() ||
                                                     project.relatedLinkList.first() != Pair("", "")
                                                 }
                                             )
