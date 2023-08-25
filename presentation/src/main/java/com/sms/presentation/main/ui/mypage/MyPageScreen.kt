@@ -41,6 +41,7 @@ fun MyPageScreen(
     onWithdrawal: () -> Unit,
     onLogout: () -> Unit,
     onClickSearchBar: () -> Unit,
+    onClickBackButton: () -> Unit,
     onClickProjectSearchBar: (itemIndex: Int) -> Unit,
     onRemoveDetailStack: (value: String) -> Unit,
     onRemoveProjectDetailStack: (index: Int, value: String) -> Unit,
@@ -161,7 +162,7 @@ fun MyPageScreen(
             setMilitary = selectedMilitary.value,
             selectedTechListOnProject = selectedTechListOnProject,
             selectedTechList = selectedTechList,
-            onClickTopLeftButton = {},
+            onClickTopLeftButton = onClickBackButton,
             onClickOpenWorkForm = {
                 coroutineScope.launch {
                     bottomSheetValues.value = BottomSheetValues.WorkingForm
@@ -209,6 +210,7 @@ private fun MyPageScreenPre() {
         majorList = listOf("BackEnd", "Android", "iOS"),
         onLogout = {},
         onWithdrawal = {},
+        onClickBackButton = {},
         onClickSearchBar = {},
         onClickProjectSearchBar = {},
         onRemoveDetailStack = {},
