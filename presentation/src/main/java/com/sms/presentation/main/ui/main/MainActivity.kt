@@ -202,7 +202,7 @@ class MainActivity : BaseActivity() {
                             }
                             composable(MainPage.MyPage.value) {
                                 MyPageScreen(
-                                    majorList = listOf("Android", "Flutter", "Android Studio"),
+                                    majorList = studentListViewModel.majorList,
                                     selectedTechList = technologyStackList,
                                     selectedTechListOnProject = technologyStackListByProjectPage,
                                     onWithdrawal = {
@@ -214,7 +214,11 @@ class MainActivity : BaseActivity() {
                                     }, onClickSearchBar = {
                                         selectedTechStack.value = SelectedTechStack.MyPage
                                         navController.navigate(MainPage.Search.value)
-                                    }, onClickProjectSearchBar = {
+                                    },
+                                    onClickBackButton = {
+                                        navController.popBackStack()
+                                    },
+                                    onClickProjectSearchBar = {
                                         projectIndex.value = it
                                         selectedTechStack.value = SelectedTechStack.Project
                                         navController.navigate(MainPage.Search.value)
@@ -222,8 +226,10 @@ class MainActivity : BaseActivity() {
                                         technologyStackList.remove(it)
                                     },
                                     onRemoveProjectDetailStack = { index: Int, value: String ->
-                                        val item = technologyStackListByProjectPage[index].techStacks.filterNot { it == value }
-                                        technologyStackListByProjectPage[index] = technologyStackListByProjectPage[index].copy(techStacks = item)
+                                        val item =
+                                            technologyStackListByProjectPage[index].techStacks.filterNot { it == value }
+                                        technologyStackListByProjectPage[index] =
+                                            technologyStackListByProjectPage[index].copy(techStacks = item)
                                     }
                                 )
                             }
