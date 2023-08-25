@@ -8,9 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.toggle.ToggleComponent
+import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.fill_out_information.data.AwardData
+import com.sms.presentation.main.ui.util.hideKeyboard
 
 @Composable
 fun AwardComponent(
@@ -20,6 +23,7 @@ fun AwardComponent(
     onNameValueChange: (value: String) -> Unit,
     onTypeValueChange: (value: String) -> Unit,
 ) {
+    val context = LocalContext.current as FillOutInformationActivity
     val contentVisible = remember {
         mutableStateOf(data.isToggleOpen)
     }
@@ -53,7 +57,13 @@ fun AwardComponent(
                 onButtonClick = { onTypeValueChange("") },
                 onValueChange = onTypeValueChange
             )
-            AwardDateBarComponent(date = data.date, onClick = onDateBottomSheetOpenButtonClick)
+            AwardDateBarComponent(
+                date = data.date,
+                onClick = {
+                    context.hideKeyboard()
+                    onDateBottomSheetOpenButtonClick()
+                }
+            )
         }
     }
 }

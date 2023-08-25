@@ -5,6 +5,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.selector.SmsCheckBox
@@ -13,6 +14,8 @@ import com.msg.sms.design.icon.CalendarIcon
 import com.msg.sms.design.icon.FlowIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.util.AddGrayBody1Title
+import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
+import com.sms.presentation.main.ui.util.hideKeyboard
 
 @Composable
 fun ProjectScheduleInputComponent(
@@ -23,6 +26,8 @@ fun ProjectScheduleInputComponent(
     onEndDateCalendarClick: () -> Unit,
     onProgressButtonClick: () -> Unit
 ) {
+    val context = LocalContext.current as FillOutInformationActivity
+
     AddGrayBody1Title(titleText = "진행 기간") {
         Column(
             modifier = Modifier
@@ -38,7 +43,10 @@ fun ProjectScheduleInputComponent(
                     SmsCustomTextField(
                         modifier = Modifier.fillMaxWidth(),
                         endIcon = { CalendarIcon() },
-                        clickAction = onStartDateCalendarClick,
+                        clickAction = {
+                            context.hideKeyboard()
+                            onStartDateCalendarClick()
+                        },
                         setChangeText = startDateText,
                         placeHolder = "yyyy.mm",
                         readOnly = true
@@ -49,7 +57,10 @@ fun ProjectScheduleInputComponent(
                     Box(modifier = Modifier.weight(1f)) {
                         SmsCustomTextField(
                             endIcon = { CalendarIcon() },
-                            clickAction = onEndDateCalendarClick,
+                            clickAction = {
+                                context.hideKeyboard()
+                                onEndDateCalendarClick()
+                            },
                             setChangeText = endDateText,
                             placeHolder = "yyyy.mm",
                             readOnly = true
