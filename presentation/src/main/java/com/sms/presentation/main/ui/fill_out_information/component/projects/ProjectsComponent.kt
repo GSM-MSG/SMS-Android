@@ -64,6 +64,10 @@ fun ProjectsComponent(
                 onClick = onDetailStackSearchBarClick,
                 onProjectTechStackValueChanged = onProjectTechStackValueChanged
             )
+            ProjectDescriptionInputComponent(
+                projectDescription = "",
+                onValueChange = {}
+            )
             ProjectKeyTaskInputComponent(
                 projectKeyTask = data.keyTask,
                 onValueChange = onProjectKeyTaskValueChanged
