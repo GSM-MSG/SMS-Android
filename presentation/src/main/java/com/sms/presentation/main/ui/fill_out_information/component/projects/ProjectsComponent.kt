@@ -16,6 +16,7 @@ import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 @Composable
 fun ProjectsComponent(
     data: ProjectInfo,
+    detailStacks: List<String>,
     onCancelButtonClick: () -> Unit,
     onSnackBarVisibleChanged: () -> Unit,
     onDetailStackSearchBarClick: () -> Unit,
@@ -59,7 +60,7 @@ fun ProjectsComponent(
                 onValueChanged = onProjectPreviewsValueChanged
             )
             ProjectTechStackInputComponent(
-                techStack = data.technologyOfUse,
+                techStack = detailStacks,
                 onClick = onDetailStackSearchBarClick,
                 onProjectTechStackValueChanged = onProjectTechStackValueChanged
             )

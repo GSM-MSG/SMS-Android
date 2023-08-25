@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -26,6 +25,7 @@ import com.sms.presentation.main.ui.util.isImageExtensionCorrect
 fun ProjectsScreen(
     navController: NavController,
     projects: List<ProjectInfo>,
+    detailStacks: List<List<String>>,
     onAddButtonClick: () -> Unit,
     onNextButtonClick: () -> Unit,
     onCancelButtonClick: (index: Int) -> Unit,
@@ -57,8 +57,6 @@ fun ProjectsScreen(
         )
     }
 
-    Log.d("dddd",projects.joinToString())
-
     LazyColumn {
         item {
             SmsSpacer()
@@ -66,6 +64,7 @@ fun ProjectsScreen(
         itemsIndexed(projects) { index, item ->
             ProjectsComponent(
                 data = item,
+                detailStacks = detailStacks[index],
                 onProjectNameValueChanged = { onProjectNameValueChanged(index, it) },
                 onProjectIconValueChanged = { uri ->
                     if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {

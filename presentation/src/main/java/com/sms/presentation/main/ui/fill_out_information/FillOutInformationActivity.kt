@@ -76,8 +76,9 @@ class FillOutInformationActivity : BaseActivity() {
         setContent {
             val scope = rememberCoroutineScope()
             val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
+            val enteredProjectsDate = fillOutViewModel.getEnteredProjectsInformation().projects
             val projectList = remember {
-                mutableStateListOf(*fillOutViewModel.getEnteredProjectsInformation().projects.toTypedArray())
+                mutableStateListOf(*enteredProjectsDate.toTypedArray())
             }
             val navController = rememberNavController()
             val bottomSheetState =
@@ -95,7 +96,7 @@ class FillOutInformationActivity : BaseActivity() {
                 mutableStateListOf<String>()
             }
             val projectsDetailTechStack = remember {
-                mutableStateMapOf<Int, List<String>>()
+                mutableStateListOf(*enteredProjectsDate.map { it.technologyOfUse }.toTypedArray())
             }
             val snackBarVisible = remember {
                 mutableStateOf(false)
@@ -156,7 +157,9 @@ class FillOutInformationActivity : BaseActivity() {
                         BottomSheetValues.Major -> {
                             MajorSelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                majorList = if (majorList.value.data != null) majorList.value.data!!.major else listOf(""),
+                                majorList = if (majorList.value.data != null) majorList.value.data!!.major else listOf(
+                                    ""
+                                ),
                                 selectedMajor = selectedMajor.value,
                                 onSelectedMajhorChange = {
                                     selectedMajor.value = it
@@ -180,7 +183,12 @@ class FillOutInformationActivity : BaseActivity() {
 
                             MilitarySelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                militaryServiceList = listOf("병특 희망", "희망하지 않음", "상관없음", "해당 사항 없음"),
+                                militaryServiceList = listOf(
+                                    "병특 희망",
+                                    "희망하지 않음",
+                                    "상관없음",
+                                    "해당 사항 없음"
+                                ),
                                 selectedMilitaryService = if (selectedMilitaryService.value == "") militaryServiceData.militaryService else selectedMilitaryService.value,
                                 onSelectedMilitaryServiceChange = {
                                     selectedMilitaryService.value = it
@@ -193,10 +201,12 @@ class FillOutInformationActivity : BaseActivity() {
                                 onDateValueChanged = { date ->
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
-                                            projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
+                                            projectList[projectIndex.value] =
+                                                projectList[projectIndex.value].copy(startDate = date)
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
-                                            projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
+                                            projectList[projectIndex.value] =
+                                                projectList[projectIndex.value].copy(endDate = date)
                                         }
                                         !isProjectDate.value -> {
                                             awardDateMap[awardIndex.value] = date
@@ -222,7 +232,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = FillOutPage.Profile.value
+                                startDestination = FillOutPage.Projects.value
                             ) {
                                 composable(FillOutPage.Profile.value) {
                                     currentRoute.value = FillOutPage.Profile.value
@@ -306,6 +316,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     ProjectsScreen(
                                         navController = navController,
                                         projects = projectList,
+                                        detailStacks = projectsDetailTechStack,
                                         onAddButtonClick = { projectList.add(ProjectInfo()) },
                                         onNextButtonClick = {
                                             fillOutViewModel.setEnteredProjectsInformation(
@@ -395,16 +406,16 @@ class FillOutInformationActivity : BaseActivity() {
                                     ) { stack ->
                                         when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> {
-                                                profileDetailTechStack.removeAll(profileDetailTechStack.filter {
-                                                    !stack.contains(it)
-                                                })
+                                                profileDetailTechStack.removeAll(
+                                                    profileDetailTechStack.filter {
+                                                        !stack.contains(it)
+                                                    })
                                                 profileDetailTechStack.addAll(stack.filter {
                                                     !profileDetailTechStack.contains(it)
                                                 })
                                             }
                                             DetailSearchLocation.Projects -> {
                                                 projectsDetailTechStack[projectIndex.value] = stack
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(technologyOfUse = stack)
                                             }
                                         }
                                         navController.popBackStack()
