@@ -37,6 +37,7 @@ fun ProjectsScreen(
     onProjectIconValueChanged: (index: Int, value: Uri) -> Unit,
     onProjectPreviewsValueChanged: (index: Int, value: List<Uri>) -> Unit,
     onProjectTechStackValueChanged: (index: Int, list: List<String>) -> Unit,
+    onProjectDescriptionValueChanged: (index: Int, value: String) -> Unit,
     onProjectKeyTaskValueChanged: (index: Int, value: String) -> Unit,
     onProjectRelatedLinksValueChanged: (index: Int, value: List<Pair<String, String>>) -> Unit,
 ) {
@@ -65,7 +66,9 @@ fun ProjectsScreen(
             ProjectsComponent(
                 data = item,
                 detailStacks = detailStacks[index],
-                onProjectNameValueChanged = { onProjectNameValueChanged(index, it) },
+                onProjectNameValueChanged = {
+                    onProjectNameValueChanged(index, it)
+                },
                 onProjectIconValueChanged = { uri ->
                     if (getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()) {
                         isImageExtensionInCorrect.value = false
@@ -84,6 +87,9 @@ fun ProjectsScreen(
                 },
                 onProjectTechStackValueChanged = {
                     onProjectTechStackValueChanged(index, it)
+                },
+                onProjectDescriptionValueChanged = {
+                    onProjectDescriptionValueChanged(index, it)
                 },
                 onProjectKeyTaskValueChanged = { onProjectKeyTaskValueChanged(index, it) },
                 onProjectRelatedLinksValueChanged = {

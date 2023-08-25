@@ -24,6 +24,7 @@ fun ProjectsComponent(
     onProjectIconValueChanged: (value: Uri) -> Unit,
     onProjectPreviewsValueChanged: (value: List<Uri>) -> Unit,
     onProjectTechStackValueChanged: (value: List<String>) -> Unit,
+    onProjectDescriptionValueChanged: (value: String) -> Unit,
     onProjectKeyTaskValueChanged: (value: String) -> Unit,
     onProjectRelatedLinksValueChanged: (value: List<Pair<String, String>>) -> Unit,
     onProjectItemToggleIsOpenValueChanged: (value: Boolean) -> Unit,
@@ -65,8 +66,8 @@ fun ProjectsComponent(
                 onProjectTechStackValueChanged = onProjectTechStackValueChanged
             )
             ProjectDescriptionInputComponent(
-                projectDescription = "",
-                onValueChange = {}
+                projectDescription = data.description,
+                onValueChange = onProjectDescriptionValueChanged
             )
             ProjectKeyTaskInputComponent(
                 projectKeyTask = data.keyTask,

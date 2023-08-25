@@ -363,6 +363,9 @@ class FillOutInformationActivity : BaseActivity() {
                                         onProjectTechStackValueChanged = { index, list ->
                                             projectsDetailTechStack[index] = list
                                         },
+                                        onProjectDescriptionValueChanged = { index, description ->
+                                            projectList[index] = projectList[index].copy(description = description)
+                                        },
                                         onProjectKeyTaskValueChanged = { index, keytask ->
                                             projectList[index] = projectList[index].copy(keyTask = keytask)
                                         },
@@ -399,17 +402,16 @@ class FillOutInformationActivity : BaseActivity() {
                                         selectedStack = when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> profileDetailTechStack
                                             DetailSearchLocation.Projects -> projectsDetailTechStack[projectIndex.value]
-                                        } ?: emptyList(),
+                                        },
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
                                         }
                                     ) { stack ->
                                         when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> {
-                                                profileDetailTechStack.removeAll(
-                                                    profileDetailTechStack.filter {
-                                                        !stack.contains(it)
-                                                    })
+                                                profileDetailTechStack.removeAll(profileDetailTechStack.filter {
+                                                    !stack.contains(it)
+                                                })
                                                 profileDetailTechStack.addAll(stack.filter {
                                                     !profileDetailTechStack.contains(it)
                                                 })
