@@ -198,18 +198,18 @@ class FillOutInformationActivity : BaseActivity() {
                         BottomSheetValues.Date -> {
                             DatePickerBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                onDateValueChanged = { date ->
+                                onDateValueChanged = { year, month ->
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
                                             projectList[projectIndex.value] =
-                                                projectList[projectIndex.value].copy(startDate = date)
+                                                projectList[projectIndex.value].copy(startDate = projectList[projectIndex.value].endDate)
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
                                             projectList[projectIndex.value] =
-                                                projectList[projectIndex.value].copy(endDate = date)
+                                                projectList[projectIndex.value].copy(endDate = projectList[projectIndex.value].startDate)
                                         }
                                         !isProjectDate.value -> {
-                                            awardDateMap[awardIndex.value] = date
+                                            awardDateMap[awardIndex.value] = "$year.$month"
                                         }
                                     }
                                 }
