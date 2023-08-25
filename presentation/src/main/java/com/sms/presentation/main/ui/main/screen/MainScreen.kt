@@ -168,7 +168,24 @@ fun MainScreen(
                     profileImageUrl = profileImageUrl.value,
                     isScolled = isScrolled.value,
                     filterButtonOnClick = onFilterClick,
-                    profileButtonOnClick = { onProfileClick(role) }
+                    profileButtonOnClick = {
+                        when (role) {
+                            "ROLE_STUDENT" -> onProfileClick(role)
+                            "ROLE_TEACHER" -> {
+                                dialogTitle.value = "게스트모드 종료"
+                                dialogMsg.value = "정말로 게스트 모드를 종료하시겠습니까?"
+                                dialogOnClick.value = { onProfileClick(role) }
+                                dialogState.value = true
+                            }
+
+                            else -> {
+                                dialogTitle.value = "게스트모드 종료"
+                                dialogMsg.value = "정말로 게스트 모드를 종료하시겠습니까?"
+                                dialogOnClick.value = { onProfileClick(role) }
+                                dialogState.value = true
+                            }
+                        }
+                    }
                 )
             }
             Box(modifier = Modifier.fillMaxSize()) {
