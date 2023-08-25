@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.main
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf
@@ -24,6 +25,7 @@ import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import com.sms.presentation.main.viewmodel.StudentListViewModel
+import com.sms.presentation.main.viewmodel.UserViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -45,6 +47,7 @@ class MainActivity : BaseActivity() {
     private val authViewModel by viewModels<AuthViewModel>()
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
+    private val userViewModel by viewModels<UserViewModel>()
 
     private val searchDetailStack = mutableStateOf(listOf<String>())
 
@@ -68,6 +71,11 @@ class MainActivity : BaseActivity() {
                     startActivity(Intent(this@MainActivity, LoginActivity::class.java))
                     finish()
                 }
+            }
+        }
+        lifecycleScope.launch {
+            userViewModel.getProfileResponse.collect {
+                Log.d("TAG", "observeEvent: ${it.data}, $it")
             }
         }
         lifecycleScope.launch {
@@ -112,9 +120,11 @@ class MainActivity : BaseActivity() {
                                     role = response.data!!,
                                     onFilterClick = { navController.navigate(MainPage.Filter.value) },
                                     onProfileClick = { role ->
-                                        if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
+                                        if (role == "ROLE_STUDENT") {
+                                            userViewModel.getMyProfile()
                                             navController.navigate(MainPage.MyPage.value)
                                         } else {
+                                            authViewModel.deleteToken()
                                             this@MainActivity.startActivity(
                                                 Intent(
                                                     this@MainActivity,
