@@ -76,9 +76,10 @@ class FillOutInformationActivity : BaseActivity() {
         setContent {
             val scope = rememberCoroutineScope()
             val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
-            val enteredProjectsDate = fillOutViewModel.getEnteredProjectsInformation().projects
+            val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
+            val enteredProfileData = fillOutViewModel.getEnteredProfileInformation()
             val projectList = remember {
-                mutableStateListOf(*enteredProjectsDate.toTypedArray())
+                mutableStateListOf(*enteredProjectsData.toTypedArray())
             }
             val navController = rememberNavController()
             val bottomSheetState =
@@ -93,10 +94,10 @@ class FillOutInformationActivity : BaseActivity() {
                 mutableStateOf(FillOutPage.Profile.value)
             }
             val profileDetailTechStack = remember {
-                mutableStateListOf<String>()
+                mutableStateListOf(*(enteredProfileData.techStack.split(",")).toTypedArray())
             }
             val projectsDetailTechStack = remember {
-                mutableStateListOf(*enteredProjectsDate.map { it.technologyOfUse }.toTypedArray())
+                mutableStateListOf(*enteredProjectsData.map { it.technologyOfUse }.toTypedArray())
             }
             val snackBarVisible = remember {
                 mutableStateOf(false)
@@ -232,7 +233,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = FillOutPage.Projects.value
+                                startDestination = FillOutPage.Profile.value
                             ) {
                                 composable(FillOutPage.Profile.value) {
                                     currentRoute.value = FillOutPage.Profile.value
@@ -240,7 +241,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     ProfileScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        detailStack = profileDetailTechStack,
+                                        detailStacks = profileDetailTechStack,
                                         profileImageUri = profileImageUri.value,
                                         selectedMajor = selectedMajor.value,
                                         isImageExtensionInCorrect = isImageExtensionInCorrect.value,
@@ -256,6 +257,15 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onDialogDissmissButtonClick = {
                                             isImageExtensionInCorrect.value = false
+                                        },
+                                        onProfileTechStackValueChanged = { stack ->
+                                            profileDetailTechStack.removeAll(
+                                                profileDetailTechStack.filter {
+                                                    !stack.contains(it)
+                                                })
+                                            profileDetailTechStack.addAll(stack.filter {
+                                                !profileDetailTechStack.contains(it)
+                                            })
                                         }
                                     )
                                 }
@@ -322,13 +332,16 @@ class FillOutInformationActivity : BaseActivity() {
                                             fillOutViewModel.setEnteredProjectsInformation(
                                                 projectList.filter { project ->
                                                     project.name.isNotEmpty() ||
-                                                    project.icon != Uri.EMPTY ||
-                                                    project.keyTask.isNotEmpty() ||
-                                                    project.preview.isNotEmpty() ||
-                                                    project.endDate.isNotEmpty() ||
-                                                    project.startDate.isNotEmpty() ||
-                                                    project.technologyOfUse.isNotEmpty() ||
-                                                    project.relatedLinkList.first() != Pair("", "")
+                                                            project.icon != Uri.EMPTY ||
+                                                            project.keyTask.isNotEmpty() ||
+                                                            project.preview.isNotEmpty() ||
+                                                            project.endDate.isNotEmpty() ||
+                                                            project.startDate.isNotEmpty() ||
+                                                            project.technologyOfUse.isNotEmpty() ||
+                                                            project.relatedLinkList.first() != Pair(
+                                                        "",
+                                                        ""
+                                                    )
                                                 }
                                             )
                                             //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
@@ -344,30 +357,37 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onDetailStackSearchBarClick = { index ->
                                             projectIndex.value = index
-                                            detailStackSearchLocation.value = DetailSearchLocation.Projects
+                                            detailStackSearchLocation.value =
+                                                DetailSearchLocation.Projects
                                             navController.navigate("Search")
                                         },
                                         onProjectItemToggleIsOpenValueChanged = { index, visible ->
-                                            projectList[index] = projectList[index].copy(isToggleOpen = visible)
+                                            projectList[index] =
+                                                projectList[index].copy(isToggleOpen = visible)
                                         },
                                         onSnackBarVisibleChanged = { snackBarVisible.value = true },
                                         onProjectNameValueChanged = { index, name ->
-                                            projectList[index] = projectList[index].copy(name = name)
+                                            projectList[index] =
+                                                projectList[index].copy(name = name)
                                         },
                                         onProjectIconValueChanged = { index, icon ->
-                                            projectList[index] = projectList[index].copy(icon = icon)
+                                            projectList[index] =
+                                                projectList[index].copy(icon = icon)
                                         },
                                         onProjectPreviewsValueChanged = { index, previews ->
-                                            projectList[index] = projectList[index].copy(preview = previews)
+                                            projectList[index] =
+                                                projectList[index].copy(preview = previews)
                                         },
                                         onProjectTechStackValueChanged = { index, list ->
                                             projectsDetailTechStack[index] = list
                                         },
                                         onProjectKeyTaskValueChanged = { index, keytask ->
-                                            projectList[index] = projectList[index].copy(keyTask = keytask)
+                                            projectList[index] =
+                                                projectList[index].copy(keyTask = keytask)
                                         },
                                         onProjectRelatedLinksValueChanged = { index, links ->
-                                            projectList[index] = projectList[index].copy(relatedLinkList = links)
+                                            projectList[index] =
+                                                projectList[index].copy(relatedLinkList = links)
                                         }
                                     )
                                 }
@@ -399,7 +419,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         selectedStack = when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> profileDetailTechStack
                                             DetailSearchLocation.Projects -> projectsDetailTechStack[projectIndex.value]
-                                        } ?: emptyList(),
+                                        },
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
                                         }
