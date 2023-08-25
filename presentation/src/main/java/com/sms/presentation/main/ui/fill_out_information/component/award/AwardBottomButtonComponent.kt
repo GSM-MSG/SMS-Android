@@ -1,6 +1,9 @@
-package com.sms.presentation.main.ui.fill_out_information.component.projects
+package com.sms.presentation.main.ui.fill_out_information.component.award
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -8,9 +11,9 @@ import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 
 @Composable
-fun ProjectsBottomButtonComponent(
-    onNextButtonClick: () -> Unit,
-    onPreviousButtonClick: () -> Unit,
+fun AwardBottomButtonComponent(
+    onCompleteButtonClick: () -> Unit,
+    onPreviousButtonClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -24,8 +27,8 @@ fun ProjectsBottomButtonComponent(
             onClick = onPreviousButtonClick
         )
         SmsRoundedButton(
-            text = "다음", modifier = Modifier.weight(2.25f),
-            onClick = onNextButtonClick
+            text = "완료", modifier = Modifier.weight(2.25f),
+            onClick = onCompleteButtonClick
         )
     }
 }

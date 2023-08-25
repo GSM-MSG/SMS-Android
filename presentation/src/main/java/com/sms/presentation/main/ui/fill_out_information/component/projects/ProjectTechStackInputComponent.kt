@@ -17,7 +17,8 @@ import com.sms.presentation.main.ui.mypage.component.profile.DisplaySearchBar
 @Composable
 fun ProjectTechStackInputComponent(
     techStack: List<String>,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onProjectTechStackValueChanged: (value: List<String>) -> Unit,
 ) {
     AddGrayBody1Title(titleText = "사용기술 (최대 20개)") {
         Column(
@@ -53,7 +54,12 @@ fun ProjectTechStackInputComponent(
                 )
             ) {
                 itemsIndexed(techStack) { _: Int, item: String ->
-                    DetailTechStackItem(stack = item, onClick = {})
+                    DetailTechStackItem(
+                        stack = item,
+                        onClick = {
+                            onProjectTechStackValueChanged(techStack.minus(item))
+                        }
+                    )
                 }
             }
         }

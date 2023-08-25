@@ -14,11 +14,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.design.theme.SMSTheme
@@ -29,6 +27,7 @@ import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.D
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MajorSelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MilitarySelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.PhotoPickBottomSheet
+import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
@@ -44,6 +43,11 @@ private enum class BottomSheetValues {
     Date
 }
 
+private enum class DetailSearchLocation {
+    Profile,
+    Projects
+}
+
 enum class FillOutPage(val value: String) {
     Profile("Profile"),
     SchoolLife("SchoolLife"),
@@ -52,12 +56,12 @@ enum class FillOutPage(val value: String) {
     Certification("Certification"),
     ForeignLanguage("ForeignLanguage"),
     Projects("Projects"),
+    Award("Award"),
     Search("Search")
 }
 
 @AndroidEntryPoint
 class FillOutInformationActivity : BaseActivity() {
-
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
     private val searchDetailStack = mutableStateOf(listOf<String>())
@@ -72,20 +76,33 @@ class FillOutInformationActivity : BaseActivity() {
         setContent {
             val scope = rememberCoroutineScope()
             val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
-            val bottomSheetValues = remember {
-                mutableStateOf(BottomSheetValues.Major)
+            val enteredProjectsDate = fillOutViewModel.getEnteredProjectsInformation().projects
+            val projectList = remember {
+                mutableStateListOf(*enteredProjectsDate.toTypedArray())
             }
             val navController = rememberNavController()
             val bottomSheetState =
                 rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-            val currentRoute = remember {
-                mutableStateOf("Profile")
+            val bottomSheetValues = remember {
+                mutableStateOf(BottomSheetValues.Major)
             }
-            val detailStackList = remember {
-                mutableStateMapOf<String, List<String>>()
+            val detailStackSearchLocation = remember {
+                mutableStateOf(DetailSearchLocation.Profile)
+            }
+            val currentRoute = remember {
+                mutableStateOf(FillOutPage.Profile.value)
+            }
+            val profileDetailTechStack = remember {
+                mutableStateListOf<String>()
+            }
+            val projectsDetailTechStack = remember {
+                mutableStateListOf(*enteredProjectsDate.map { it.technologyOfUse }.toTypedArray())
             }
             val snackBarVisible = remember {
                 mutableStateOf(false)
+            }
+            val projectIndex = remember {
+                mutableStateOf(0)
             }
 
             //PhotoPickBottomSheet
@@ -112,16 +129,16 @@ class FillOutInformationActivity : BaseActivity() {
             }
 
             //DateBottomSheet
+            val isProjectDate = remember {
+                mutableStateOf(true)
+            }
             val isProjectStartDate = remember {
                 mutableStateOf(true)
             }
-            val projectIdx = remember {
+            val awardIndex = remember {
                 mutableStateOf(0)
             }
-            val projectStartDateMap = remember {
-                mutableStateMapOf<Int, String>()
-            }
-            val projectEndDateMap = remember {
+            val awardDateMap = remember {
                 mutableStateMapOf<Int, String>()
             }
 
@@ -181,11 +198,20 @@ class FillOutInformationActivity : BaseActivity() {
                         BottomSheetValues.Date -> {
                             DatePickerBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                onDateValueChanged = {
-                                    if (isProjectStartDate.value)
-                                        projectStartDateMap[projectIdx.value] = it
-                                    else
-                                        projectEndDateMap[projectIdx.value] = it
+                                onDateValueChanged = { date ->
+                                    when {
+                                        isProjectDate.value && isProjectStartDate.value -> {
+                                            projectList[projectIndex.value] =
+                                                projectList[projectIndex.value].copy(startDate = date)
+                                        }
+                                        isProjectDate.value && !isProjectStartDate.value -> {
+                                            projectList[projectIndex.value] =
+                                                projectList[projectIndex.value].copy(endDate = date)
+                                        }
+                                        !isProjectDate.value -> {
+                                            awardDateMap[awardIndex.value] = date
+                                        }
+                                    }
                                 }
                             )
                         }
@@ -206,7 +232,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = FillOutPage.Profile.value
+                                startDestination = FillOutPage.Projects.value
                             ) {
                                 composable(FillOutPage.Profile.value) {
                                     currentRoute.value = FillOutPage.Profile.value
@@ -214,8 +240,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     ProfileScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        detailStack = detailStackList[FillOutPage.Profile.value]
-                                            ?: emptyList(),
+                                        detailStack = profileDetailTechStack,
                                         profileImageUri = profileImageUri.value,
                                         selectedMajor = selectedMajor.value,
                                         isImageExtensionInCorrect = isImageExtensionInCorrect.value,
@@ -290,42 +315,109 @@ class FillOutInformationActivity : BaseActivity() {
                                     setSoftInputMode("PAN")
                                     ProjectsScreen(
                                         navController = navController,
-                                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        detailStackList = detailStackList,
-                                        onSnackBarVisibleChanged = { snackBarVisible.value = true },
-                                        startDateMap = projectStartDateMap,
-                                        endDateMap = projectEndDateMap,
-                                        onDateBottomSheetOpenButtonClick = { isStartDate, idx ->
+                                        projects = projectList,
+                                        detailStacks = projectsDetailTechStack,
+                                        onAddButtonClick = { projectList.add(ProjectInfo()) },
+                                        onNextButtonClick = {
+                                            fillOutViewModel.setEnteredProjectsInformation(
+                                                projectList.filter { project ->
+                                                    project.name.isNotEmpty() ||
+                                                    project.icon != Uri.EMPTY ||
+                                                    project.keyTask.isNotEmpty() ||
+                                                    project.preview.isNotEmpty() ||
+                                                    project.endDate.isNotEmpty() ||
+                                                    project.startDate.isNotEmpty() ||
+                                                    project.technologyOfUse.isNotEmpty() ||
+                                                    project.relatedLinkList.first() != Pair("", "")
+                                                }
+                                            )
+                                            //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
+                                            navController.navigate("Award")
+                                        },
+                                        onCancelButtonClick = { index -> projectList.removeAt(index) },
+                                        onDateBottomSheetOpenButtonClick = { index, isStartDate ->
                                             bottomSheetValues.value = BottomSheetValues.Date
                                             isProjectStartDate.value = isStartDate
-                                            projectIdx.value = idx
+                                            isProjectDate.value = true
+                                            projectIndex.value = index
                                             scope.launch { bottomSheetState.show() }
+                                        },
+                                        onDetailStackSearchBarClick = { index ->
+                                            projectIndex.value = index
+                                            detailStackSearchLocation.value = DetailSearchLocation.Projects
+                                            navController.navigate("Search")
+                                        },
+                                        onProjectItemToggleIsOpenValueChanged = { index, visible ->
+                                            projectList[index] = projectList[index].copy(isToggleOpen = visible)
+                                        },
+                                        onSnackBarVisibleChanged = { snackBarVisible.value = true },
+                                        onProjectNameValueChanged = { index, name ->
+                                            projectList[index] = projectList[index].copy(name = name)
+                                        },
+                                        onProjectIconValueChanged = { index, icon ->
+                                            projectList[index] = projectList[index].copy(icon = icon)
+                                        },
+                                        onProjectPreviewsValueChanged = { index, previews ->
+                                            projectList[index] = projectList[index].copy(preview = previews)
+                                        },
+                                        onProjectTechStackValueChanged = { index, list ->
+                                            projectsDetailTechStack[index] = list
+                                        },
+                                        onProjectKeyTaskValueChanged = { index, keytask ->
+                                            projectList[index] = projectList[index].copy(keyTask = keytask)
+                                        },
+                                        onProjectRelatedLinksValueChanged = { index, links ->
+                                            projectList[index] = projectList[index].copy(relatedLinkList = links)
                                         }
                                     )
                                 }
-                                composable(
-                                    "${FillOutPage.Search.value}/{idx}",
-                                    arguments = listOf(
-                                        navArgument("idx") { type = NavType.StringType }
+                                composable(FillOutPage.Award.value) {
+                                    currentRoute.value = FillOutPage.Award.value
+                                    setSoftInputMode("PAN")
+                                    AwardScreen(
+                                        navController = navController,
+                                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                                        awardDateMap = awardDateMap,
+                                        onDateBottomSheetOpenButtonClick = { index ->
+                                            awardIndex.value = index
+                                            isProjectDate.value = false
+                                            bottomSheetValues.value = BottomSheetValues.Date
+                                            scope.launch { bottomSheetState.show() }
+                                        },
+                                        onPreviousButtonClick = {
+                                            awardDateMap.clear()
+                                            navController.popBackStack()
+                                        }
                                     )
-                                ) { backStackEntry ->
+                                }
+                                composable(FillOutPage.Search.value) {
                                     currentRoute.value = FillOutPage.Search.value
                                     setSoftInputMode("RESIZE")
-                                    val idx = remember {
-                                        mutableStateOf(
-                                            backStackEntry.arguments?.getString("idx") ?: ""
-                                        )
-                                    }
-
                                     DetailStackSearchScreen(
                                         navController = navController,
                                         detailStack = searchDetailStack.value,
-                                        selectedStack = detailStackList[idx.value] ?: listOf(""),
+                                        selectedStack = when (detailStackSearchLocation.value) {
+                                            DetailSearchLocation.Profile -> profileDetailTechStack
+                                            DetailSearchLocation.Projects -> projectsDetailTechStack[projectIndex.value]
+                                        } ?: emptyList(),
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
-                                        },
-                                    ) {
-                                        detailStackList[idx.value] = it
+                                        }
+                                    ) { stack ->
+                                        when (detailStackSearchLocation.value) {
+                                            DetailSearchLocation.Profile -> {
+                                                profileDetailTechStack.removeAll(
+                                                    profileDetailTechStack.filter {
+                                                        !stack.contains(it)
+                                                    })
+                                                profileDetailTechStack.addAll(stack.filter {
+                                                    !profileDetailTechStack.contains(it)
+                                                })
+                                            }
+                                            DetailSearchLocation.Projects -> {
+                                                projectsDetailTechStack[projectIndex.value] = stack
+                                            }
+                                        }
                                         navController.popBackStack()
                                     }
                                 }

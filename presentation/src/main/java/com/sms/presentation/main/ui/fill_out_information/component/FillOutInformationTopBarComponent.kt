@@ -28,7 +28,8 @@ fun FillOutInformationTopBarComponent(
                 FillOutPage.MilitaryService.value,
                 FillOutPage.Certification.value,
                 FillOutPage.ForeignLanguage.value,
-                FillOutPage.Projects.value
+                FillOutPage.Projects.value,
+                FillOutPage.Award.value
             ),
             currentRoute = currentRoute
         )
