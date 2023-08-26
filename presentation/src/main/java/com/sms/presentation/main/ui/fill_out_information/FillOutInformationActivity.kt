@@ -75,11 +75,6 @@ class FillOutInformationActivity : BaseActivity() {
 
         setContent {
             val scope = rememberCoroutineScope()
-            val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
-            val enteredProjectsDate = fillOutViewModel.getEnteredProjectsInformation().projects
-            val projectList = remember {
-                mutableStateListOf(*enteredProjectsDate.toTypedArray())
-            }
             val navController = rememberNavController()
             val bottomSheetState =
                 rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -92,17 +87,29 @@ class FillOutInformationActivity : BaseActivity() {
             val currentRoute = remember {
                 mutableStateOf(FillOutPage.Profile.value)
             }
-            val profileDetailTechStack = remember {
-                mutableStateListOf<String>()
-            }
-            val projectsDetailTechStack = remember {
-                mutableStateListOf(*enteredProjectsDate.map { it.technologyOfUse }.toTypedArray())
-            }
             val snackBarVisible = remember {
                 mutableStateOf(false)
             }
             val projectIndex = remember {
                 mutableStateOf(0)
+            }
+
+            //data
+            val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
+            val enteredProfileData = fillOutViewModel.getEnteredProfileInformation()
+            val projectList = remember {
+                mutableStateListOf(*enteredProjectsData.toTypedArray())
+            }
+            val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
+
+            //DetailStacks
+            val profileDetailTechStack = remember {
+                mutableStateListOf(
+                    *(enteredProfileData.techStack.split(",").filter { it != "" }).toTypedArray()
+                )
+            }
+            val projectsDetailTechStack = remember {
+                mutableStateListOf(*enteredProjectsData.map { it.technologyOfUse }.toTypedArray())
             }
 
             //PhotoPickBottomSheet
@@ -157,9 +164,7 @@ class FillOutInformationActivity : BaseActivity() {
                         BottomSheetValues.Major -> {
                             MajorSelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                majorList = if (majorList.value.data != null) majorList.value.data!!.major else listOf(
-                                    ""
-                                ),
+                                majorList = if (majorList.value.data != null) majorList.value.data!!.major else listOf(),
                                 selectedMajor = selectedMajor.value,
                                 onSelectedMajhorChange = {
                                     selectedMajor.value = it
@@ -183,12 +188,7 @@ class FillOutInformationActivity : BaseActivity() {
 
                             MilitarySelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                militaryServiceList = listOf(
-                                    "병특 희망",
-                                    "희망하지 않음",
-                                    "상관없음",
-                                    "해당 사항 없음"
-                                ),
+                                militaryServiceList = listOf("병특 희망", "희망하지 않음", "상관없음", "해당 사항 없음"),
                                 selectedMilitaryService = if (selectedMilitaryService.value == "") militaryServiceData.militaryService else selectedMilitaryService.value,
                                 onSelectedMilitaryServiceChange = {
                                     selectedMilitaryService.value = it
@@ -201,12 +201,10 @@ class FillOutInformationActivity : BaseActivity() {
                                 onDateValueChanged = { date ->
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
-                                            projectList[projectIndex.value] =
-                                                projectList[projectIndex.value].copy(startDate = date)
+                                            projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
-                                            projectList[projectIndex.value] =
-                                                projectList[projectIndex.value].copy(endDate = date)
+                                            projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
                                         }
                                         !isProjectDate.value -> {
                                             awardDateMap[awardIndex.value] = date
@@ -232,7 +230,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = FillOutPage.Projects.value
+                                startDestination = FillOutPage.Profile.value
                             ) {
                                 composable(FillOutPage.Profile.value) {
                                     currentRoute.value = FillOutPage.Profile.value
@@ -240,7 +238,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     ProfileScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        detailStack = profileDetailTechStack,
+                                        detailStacks = profileDetailTechStack,
                                         profileImageUri = profileImageUri.value,
                                         selectedMajor = selectedMajor.value,
                                         isImageExtensionInCorrect = isImageExtensionInCorrect.value,
@@ -256,6 +254,15 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onDialogDissmissButtonClick = {
                                             isImageExtensionInCorrect.value = false
+                                        },
+                                        onProfileTechStackValueChanged = { stack ->
+                                            profileDetailTechStack.removeAll(
+                                                profileDetailTechStack.filter {
+                                                    !stack.contains(it)
+                                                })
+                                            profileDetailTechStack.addAll(stack.filter {
+                                                !profileDetailTechStack.contains(it)
+                                            })
                                         }
                                     )
                                 }
@@ -317,7 +324,10 @@ class FillOutInformationActivity : BaseActivity() {
                                         navController = navController,
                                         projects = projectList,
                                         detailStacks = projectsDetailTechStack,
-                                        onAddButtonClick = { projectList.add(ProjectInfo()) },
+                                        onAddButtonClick = {
+                                            projectList.add(ProjectInfo())
+                                            projectsDetailTechStack.add(emptyList())
+                                        },
                                         onNextButtonClick = {
                                             fillOutViewModel.setEnteredProjectsInformation(
                                                 projectList.filter { project ->
@@ -334,7 +344,10 @@ class FillOutInformationActivity : BaseActivity() {
                                             //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
                                             navController.navigate("Award")
                                         },
-                                        onCancelButtonClick = { index -> projectList.removeAt(index) },
+                                        onCancelButtonClick = { index ->
+                                            projectList.removeAt(index)
+                                            projectsDetailTechStack.removeAt(index)
+                                        },
                                         onDateBottomSheetOpenButtonClick = { index, isStartDate ->
                                             bottomSheetValues.value = BottomSheetValues.Date
                                             isProjectStartDate.value = isStartDate
@@ -399,17 +412,16 @@ class FillOutInformationActivity : BaseActivity() {
                                         selectedStack = when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> profileDetailTechStack
                                             DetailSearchLocation.Projects -> projectsDetailTechStack[projectIndex.value]
-                                        } ?: emptyList(),
+                                        },
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
                                         }
                                     ) { stack ->
                                         when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> {
-                                                profileDetailTechStack.removeAll(
-                                                    profileDetailTechStack.filter {
-                                                        !stack.contains(it)
-                                                    })
+                                                profileDetailTechStack.removeAll(profileDetailTechStack.filter {
+                                                    !stack.contains(it)
+                                                })
                                                 profileDetailTechStack.addAll(stack.filter {
                                                     !profileDetailTechStack.contains(it)
                                                 })
