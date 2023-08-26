@@ -6,13 +6,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -35,7 +34,7 @@ fun ProfileComponent(
     data: ProfileData,
     enteredMajor: String,
     selectedMajor: String,
-    detailStack: String,
+    detailStacks: List<String>,
     profileImageUri: Uri,
     isReadOnly: Boolean,
     changeView: () -> Unit,
@@ -43,6 +42,7 @@ fun ProfileComponent(
     enteringMajor: (String) -> Unit,
     onMajorBottomSheetOpenButtonClick: () -> Unit,
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
+    onProfileTechStackValueChanged: (list: List<String>) -> Unit,
     savedData: (introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit
 ) {
     SMSTheme { _, typography ->
@@ -67,11 +67,10 @@ fun ProfileComponent(
 
         isRequired(
             textFieldChecker(
-                detailStack,
                 introduce.value,
                 profileImageUri.toString(),
                 contactEmail.value
-            ) && profileImageUri != Uri.EMPTY
+            ) && profileImageUri != Uri.EMPTY && detailStacks.isNotEmpty()
         )
 
         Column(
@@ -155,28 +154,15 @@ fun ProfileComponent(
                 portfolioUrl.value = ""
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Text(text = "세부스택", style = typography.body2)
-            SmsCustomTextField(
-                placeHolder = "예시) HTML, CSS, C#",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(FocusRequester())
-                    .onFocusChanged {
-                        if (it.isFocused) {
-                            changeView()
-                        }
-                    },
-                setChangeText = detailStack,
-                readOnly = true,
-                endIcon = null,
-                onValueChange = {},
-                clickAction = {}
+            ProfileTechStackInputComponent(
+                techStack = detailStacks,
+                onClick = changeView,
+                onProfileTechStackValueChanged = onProfileTechStackValueChanged
             )
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun ProfileComponentPre() {
@@ -185,13 +171,14 @@ fun ProfileComponentPre() {
         savedData = { _: String, _: String, _: String, _: Uri -> },
         data = ProfileData(Uri.EMPTY, "", "", "", "", "", ""),
         isRequired = {},
-        detailStack = "",
+        detailStacks = listOf("a", "b", "c"),
         profileImageUri = Uri.EMPTY,
         isReadOnly = true,
         changeView = {},
         enteringMajor = {},
         enteredMajor = "",
         onMajorBottomSheetOpenButtonClick = {},
-        onPhotoPickBottomSheetOpenButtonClick = {}
+        onPhotoPickBottomSheetOpenButtonClick = {},
+        onProfileTechStackValueChanged = {}
     )
 }

@@ -53,7 +53,7 @@ fun DatePickerBottomSheet(
                         .align(Alignment.TopEnd)
                         .smsClickable {
                             scope.launch { bottomSheetState.hide() }
-                            onDateValueChanged("$year.$month")
+                            onDateValueChanged("${year.value}.${month.value}")
                         }
                 )
             }
