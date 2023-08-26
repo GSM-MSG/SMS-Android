@@ -175,7 +175,6 @@ fun ForeignLanguageComponent(
                             }
                         )
                         navController.navigate("Projects")
-                        //TODO (kim hyunseung) - 서버 통신 관련 로직들 수상경력 페이지 퍼블리싱 후에 그쪽으로 이전하기
                     }
                 }
             }
