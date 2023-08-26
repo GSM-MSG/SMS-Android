@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
@@ -24,7 +23,7 @@ import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
+import com.sms.presentation.main.ui.fill_out_information.data.ForeignLanguageInfo
 import com.sms.presentation.main.ui.util.isEmailRegularExpression
 import com.sms.presentation.main.ui.util.isUrlRegularExpression
 import com.sms.presentation.main.viewmodel.FillOutViewModel
@@ -37,18 +36,10 @@ fun ForeignLanguageComponent(
     viewModel: FillOutViewModel,
     lifecycleScope: CoroutineScope,
 ) {
+    val data = viewModel.getEnteredForeignLanguagesInformation()
     SMSTheme { colors, typography ->
-        val enteredProfileData = viewModel.getEnteredProfileInformation()
-        val enteredSchoolLifeData = viewModel.getEnteredSchoolLifeInformation()
-        val enteredMilitaryServiceData = viewModel.getEnteredMilitaryServiceInformation()
-        val enteredWorkConditionData = viewModel.getEnteredWorkConditionInformation()
-        val enteredCertificateData = viewModel.getEnteredCertification()
-        val context = LocalContext.current as FillOutInformationActivity
         val foreignLanguageList = remember {
-            mutableStateListOf("")
-        }
-        val foreignLanguageScoreList = remember {
-            mutableStateListOf("")
+            mutableStateListOf(*data.foreignLanguages.toTypedArray())
         }
         val dialogState = remember {
             mutableStateOf(false)
@@ -108,34 +99,33 @@ fun ForeignLanguageComponent(
                         SmsTextField(
                             modifier = Modifier
                                 .fillMaxWidth(0.5f),
-                            setText = foreignLanguageList[it],
+                            setText = foreignLanguageList[it].languageCertificateName,
                             onClickButton = {
-                                foreignLanguageList[it] = ""
+                                foreignLanguageList[it] = foreignLanguageList[it].copy(languageCertificateName = "")
                             },
                             maxLines = 1,
                             placeHolder = "예) 토익",
                             onValueChange = { str ->
-                                foreignLanguageList[it] = str.trim()
+                                foreignLanguageList[it] = foreignLanguageList[it].copy(languageCertificateName = str.trim())
                             }
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         SmsTextField(
                             modifier = Modifier
                                 .fillMaxWidth(0.7f),
-                            setText = foreignLanguageScoreList[it],
+                            setText = foreignLanguageList[it].score,
                             onClickButton = {
-                                foreignLanguageScoreList[it] = ""
+                                foreignLanguageList[it] = foreignLanguageList[it].copy(score = "")
                             },
                             maxLines = 1,
                             placeHolder = "990",
                             onValueChange = { str ->
-                                foreignLanguageScoreList[it] = str.trim()
+                                foreignLanguageList[it] = foreignLanguageList[it].copy(score = str.trim())
                             }
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         IconButton(onClick = {
                             foreignLanguageList.removeAt(it)
-                            foreignLanguageScoreList.removeAt(it)
                         }) {
                             TrashCanIcon(modifier = Modifier.size(24.dp))
                         }
@@ -150,8 +140,7 @@ fun ForeignLanguageComponent(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
                             ) {
-                                foreignLanguageScoreList.add("")
-                                foreignLanguageList.add("")
+                                foreignLanguageList.add(ForeignLanguageInfo(languageCertificateName = "", score = ""))
                             }) {
                         Text(text = "+", style = typography.body1, color = colors.N30)
                         Spacer(modifier = Modifier.width(5.dp))
@@ -180,96 +169,11 @@ fun ForeignLanguageComponent(
                         text = "다음",
                         state = ButtonState.Normal
                     ) {
-//                        loadingModalState.value = true
-//                        val foreignLanguage =
-//                            foreignLanguageList.mapIndexed { index: Int, name: String ->
-//                                CertificateInformationModel(
-//                                    languageCertificateName = name,
-//                                    score = foreignLanguageScoreList[index]
-//                                )
-//                            }
-//                        lifecycleScope.launch {
-//                            viewModel.imageUpload(
-//                                enteredProfileData.profileImageUri.toMultipartBody(
-//                                    context
-//                                )!!
-//                            )
-//                            imageFileUpload(
-//                                viewModel = viewModel,
-//                                dialog = { errorState, title, msg ->
-//                                    dialogState.value = errorState
-//                                    errorTitle.value = title
-//                                    errorMsg.value = msg
-//                                },
-//                                isUnauthorized = {
-//                                    onClick.value = {
-//                                        context.startActivity(
-//                                            Intent(
-//                                                context,
-//                                                LoginActivity::class.java
-//                                            )
-//                                        )
-//                                        context.finish()
-//                                    }
-//                                },
-//                                isBadRequest = {
-//                                    onClick.value = {
-//                                        navController.navigate("Profile")
-//                                    }
-//                                }
-//                            )
-//                        }
-//
-//                        lifecycleScope.launch {
-//                            viewModel.fileUploadCompleted.collect { isComplete ->
-//                                Log.d("fileUploadCompleted", isComplete.toString())
-//                                if (isComplete) {
-//                                    viewModel.enterStudentInformation(
-//                                        major = if (enteredProfileData.major == "직접입력") enteredProfileData.enteredMajor else enteredProfileData.major,
-//                                        techStack = enteredProfileData.techStack.split(",")
-//                                            .map { it.trim() },
-//                                        profileImgUrl = viewModel.getProfileImageUrl(),
-//                                        introduce = enteredProfileData.introduce,
-//                                        portfolioUrl = enteredProfileData.portfolioUrl,
-//                                        contactEmail = enteredProfileData.contactEmail,
-//                                        formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
-//                                        gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
-//                                        salary = enteredWorkConditionData.salary.toInt(),
-//                                        region = enteredWorkConditionData.region,
-//                                        languageCertificate = foreignLanguage,
-//                                        militaryService = enteredMilitaryServiceData.militaryService.toEnum(),
-//                                        certificate = enteredCertificateData.certification
-//                                    )
-//                                }
-//                            }
-//                        }
-//
-//                        lifecycleScope.launch {
-//                            enterStudentInformation(
-//                                viewModel = viewModel,
-//                                dialog = { visible, title, msg ->
-//                                    dialogState.value = visible
-//                                    errorTitle.value = title
-//                                    errorMsg.value = msg
-//                                },
-//                                isSuccess = {
-//                                    onClick.value = {
-//                                        context.startActivity(
-//                                            Intent(
-//                                                context,
-//                                                MainActivity::class.java
-//                                            )
-//                                        )
-//                                        context.finish()
-//                                    }
-//                                },
-//                                onDialogButtonClick = {
-//                                    onClick.value = {
-//                                        navController.navigate("Profile")
-//                                    }
-//                                }
-//                            )
-//                        }
+                        viewModel.setEnteredForeignLanguagesInformation(
+                            foreignLanguageList.filter {
+                                it != ForeignLanguageInfo("","")
+                            }
+                        )
                         navController.navigate("Projects")
                         //TODO (kim hyunseung) - 서버 통신 관련 로직들 수상경력 페이지 퍼블리싱 후에 그쪽으로 이전하기
                     }
