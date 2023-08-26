@@ -55,6 +55,8 @@ class FillOutViewModel @Inject constructor(
     private val regions = mutableStateListOf("")
     private val militaryService = mutableStateOf("")
     private val certificates = mutableStateListOf("")
+    private val foreignLanguages =
+        mutableStateListOf(ForeignLanguageInfo(languageCertificateName = "", score = ""))
     private val projects = mutableStateListOf(ProjectInfo(isToggleOpen = true))
     private lateinit var profileImageUrl: String
 
@@ -145,6 +147,17 @@ class FillOutViewModel @Inject constructor(
     ) {
         this.projects.removeAll { !projects.contains(it) }
         this.projects.addAll(projects.filter { !this.projects.contains(it) })
+    }
+
+    fun getEnteredForeignLanguagesInformation(): ForeignLanguagesData {
+        return ForeignLanguagesData(foreignLanguages = foreignLanguages)
+    }
+
+    fun setEnteredForeignLanguagesInformation(
+        foreignLanguages: List<ForeignLanguageInfo>
+    ) {
+        this.foreignLanguages.removeAll { !foreignLanguages.contains(it) }
+        this.foreignLanguages.addAll(foreignLanguages.filter { !this.foreignLanguages.contains(it) })
     }
 
     fun getProfileImageUrl(): String {
