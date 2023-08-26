@@ -79,6 +79,10 @@ fun ProfileScreen(
         )
     }
 
+    if (detailStacks.size > 5) {
+        onSnackBarVisibleChanged("세부스택 ${detailStacks.size - 5}개가 제외되었어요.")
+    }
+
     Column {
         Column(
             Modifier
@@ -108,7 +112,7 @@ fun ProfileScreen(
                 enteringMajor = { string ->
                     enteredMajor.value = string
                 },
-                detailStacks = detailStacks,
+                detailStacks = if (detailStacks.size > 5) detailStacks.subList(0, 5) else detailStacks,
                 onPhotoPickBottomSheetOpenButtonClick = onPhotoPickBottomSheetOpenButtonClick,
                 onMajorBottomSheetOpenButtonClick = onMajorBottomSheetOpenButtonClick,
                 onProfileTechStackValueChanged = onProfileTechStackValueChanged

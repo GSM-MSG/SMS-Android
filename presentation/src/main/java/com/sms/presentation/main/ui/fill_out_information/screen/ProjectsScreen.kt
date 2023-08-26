@@ -63,9 +63,11 @@ fun ProjectsScreen(
             SmsSpacer()
         }
         itemsIndexed(projects) { index, item ->
+            if (detailStacks[index].size > 20) onSnackBarVisibleChanged("세부스택 ${detailStacks[index].size - 20}개가 제외되었어요.")
+
             ProjectsComponent(
                 data = item,
-                detailStacks = detailStacks[index],
+                detailStacks = if (detailStacks[index].size > 20) detailStacks[index].subList(0, 20) else detailStacks[index],
                 onCancelButtonClick = { onCancelButtonClick(index) },
                 onDetailStackSearchBarClick = { onDetailStackSearchBarClick(index) },
                 onProjectNameValueChanged = { name ->
