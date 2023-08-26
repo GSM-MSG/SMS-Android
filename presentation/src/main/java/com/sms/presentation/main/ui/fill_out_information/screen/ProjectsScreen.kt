@@ -63,7 +63,7 @@ fun ProjectsScreen(
             SmsSpacer()
         }
         itemsIndexed(projects) { index, item ->
-            if (detailStacks[index].size > 20) onSnackBarVisibleChanged("세부스택 ${detailStacks[index].size - 20}개가 제외되었어요.")
+            if (detailStacks[index].size > 20) onSnackBarVisibleChanged("스택 갯수를 초과하여 ${detailStacks[index].size - 20}개가 제외되었어요.")
 
             ProjectsComponent(
                 data = item,

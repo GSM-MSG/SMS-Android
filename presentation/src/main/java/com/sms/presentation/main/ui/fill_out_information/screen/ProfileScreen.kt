@@ -80,7 +80,7 @@ fun ProfileScreen(
     }
 
     if (detailStacks.size > 5) {
-        onSnackBarVisibleChanged("세부스택 ${detailStacks.size - 5}개가 제외되었어요.")
+        onSnackBarVisibleChanged("스택 갯수를 초과하여 ${detailStacks.size - 5}개가 제외되었어요.")
     }
 
     Column {
