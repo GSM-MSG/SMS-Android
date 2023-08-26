@@ -31,7 +31,7 @@ fun ProjectsScreen(
     onCancelButtonClick: (index: Int) -> Unit,
     onDateBottomSheetOpenButtonClick: (index: Int, isStartDate: Boolean) -> Unit,
     onDetailStackSearchBarClick: (index: Int) -> Unit,
-    onSnackBarVisibleChanged: () -> Unit,
+    onSnackBarVisibleChanged: (text: String) -> Unit,
     onProjectItemToggleIsOpenValueChanged: (index: Int, value: Boolean) -> Unit,
     onProjectNameValueChanged: (index: Int, value: String) -> Unit,
     onProjectIconValueChanged: (index: Int, value: Uri) -> Unit,

@@ -30,6 +30,7 @@ fun ProfileScreen(
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
     onMajorBottomSheetOpenButtonClick: () -> Unit,
     onDialogDissmissButtonClick: () -> Unit,
+    onSnackBarVisibleChanged: (text: String) -> Unit,
     onProfileTechStackValueChanged: (list: List<String>) -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -98,16 +99,11 @@ fun ProfileScreen(
                 isRequired = { result -> isRequired.value = result },
                 profileImageUri = profileImageUri,
                 changeView = {
-                    viewModel.setEnteredProfileInformation(
-                        major = selectedMajor,
-                        techStack = detailStacks.joinToString(", "),
-                        profileImgUri = profileImageUri,
-                        introduce = introduce.value,
-                        contactEmail = contactEmail.value,
-                        portfolioUrl = portfolioUrl.value,
-                        enteredMajor = enteredMajor.value
-                    )
-                    navController.navigate("Search")
+                    if (detailStacks.size < 5) {
+                        navController.navigate("Search")
+                    } else {
+                        onSnackBarVisibleChanged("세부스택은 최대 5개 까지 설정할 수 있습니다.")
+                    }
                 },
                 enteringMajor = { string ->
                     enteredMajor.value = string
