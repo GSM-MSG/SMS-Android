@@ -25,11 +25,12 @@ fun ProfileScreen(
     viewModel: FillOutViewModel,
     profileImageUri: Uri,
     selectedMajor: String,
-    detailStack: List<String>,
+    detailStacks: List<String>,
     isImageExtensionInCorrect: Boolean,
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
     onMajorBottomSheetOpenButtonClick: () -> Unit,
-    onDialogDissmissButtonClick: () -> Unit
+    onDialogDissmissButtonClick: () -> Unit,
+    onProfileTechStackValueChanged: (list: List<String>) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val data = viewModel.getEnteredProfileInformation()
@@ -99,7 +100,7 @@ fun ProfileScreen(
                 changeView = {
                     viewModel.setEnteredProfileInformation(
                         major = selectedMajor,
-                        techStack = detailStack.joinToString(", "),
+                        techStack = detailStacks.joinToString(", "),
                         profileImgUri = profileImageUri,
                         introduce = introduce.value,
                         contactEmail = contactEmail.value,
@@ -111,9 +112,10 @@ fun ProfileScreen(
                 enteringMajor = { string ->
                     enteredMajor.value = string
                 },
-                detailStack = detailStack.joinToString(", "),
+                detailStacks = detailStacks,
                 onPhotoPickBottomSheetOpenButtonClick = onPhotoPickBottomSheetOpenButtonClick,
-                onMajorBottomSheetOpenButtonClick = onMajorBottomSheetOpenButtonClick
+                onMajorBottomSheetOpenButtonClick = onMajorBottomSheetOpenButtonClick,
+                onProfileTechStackValueChanged = onProfileTechStackValueChanged
             )
             Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.height(32.dp))
@@ -128,7 +130,7 @@ fun ProfileScreen(
                     if (contactEmail.value.isEmailRegularExpression() && portfolioUrl.value.isUrlRegularExpression()) {
                         viewModel.setEnteredProfileInformation(
                             major = selectedMajor,
-                            techStack = detailStack.joinToString(", "),
+                            techStack = detailStacks.joinToString(", "),
                             profileImgUri = profileImageUri,
                             introduce = introduce.value,
                             contactEmail = contactEmail.value,
