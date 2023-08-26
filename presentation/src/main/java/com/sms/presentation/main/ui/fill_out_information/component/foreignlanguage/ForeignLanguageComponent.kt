@@ -1,6 +1,5 @@
 package com.sms.presentation.main.ui.fill_out_information.component.foreignlanguage
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -24,10 +23,7 @@ import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.fill_out_information.data.ForeignLanguageInfo
-import com.sms.presentation.main.ui.util.isEmailRegularExpression
-import com.sms.presentation.main.ui.util.isUrlRegularExpression
 import com.sms.presentation.main.viewmodel.FillOutViewModel
-import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -101,12 +97,14 @@ fun ForeignLanguageComponent(
                                 .fillMaxWidth(0.5f),
                             setText = foreignLanguageList[it].languageCertificateName,
                             onClickButton = {
-                                foreignLanguageList[it] = foreignLanguageList[it].copy(languageCertificateName = "")
+                                foreignLanguageList[it] =
+                                    foreignLanguageList[it].copy(languageCertificateName = "")
                             },
                             maxLines = 1,
                             placeHolder = "예) 토익",
                             onValueChange = { str ->
-                                foreignLanguageList[it] = foreignLanguageList[it].copy(languageCertificateName = str.trim())
+                                foreignLanguageList[it] =
+                                    foreignLanguageList[it].copy(languageCertificateName = str.trim())
                             }
                         )
                         Spacer(modifier = Modifier.width(16.dp))
@@ -120,7 +118,8 @@ fun ForeignLanguageComponent(
                             maxLines = 1,
                             placeHolder = "990",
                             onValueChange = { str ->
-                                foreignLanguageList[it] = foreignLanguageList[it].copy(score = str.trim())
+                                foreignLanguageList[it] =
+                                    foreignLanguageList[it].copy(score = str.trim())
                             }
                         )
                         Spacer(modifier = Modifier.width(16.dp))
@@ -140,7 +139,12 @@ fun ForeignLanguageComponent(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
                             ) {
-                                foreignLanguageList.add(ForeignLanguageInfo(languageCertificateName = "", score = ""))
+                                foreignLanguageList.add(
+                                    ForeignLanguageInfo(
+                                        languageCertificateName = "",
+                                        score = ""
+                                    )
+                                )
                             }) {
                         Text(text = "+", style = typography.body1, color = colors.N30)
                         Spacer(modifier = Modifier.width(5.dp))
@@ -171,7 +175,7 @@ fun ForeignLanguageComponent(
                     ) {
                         viewModel.setEnteredForeignLanguagesInformation(
                             foreignLanguageList.filter {
-                                it != ForeignLanguageInfo("","")
+                                it != ForeignLanguageInfo("", "")
                             }
                         )
                         navController.navigate("Projects")
@@ -180,86 +184,5 @@ fun ForeignLanguageComponent(
             }
             Spacer(modifier = Modifier.height(48.dp))
         }
-    }
-}
-
-suspend fun imageFileUpload(
-    viewModel: FillOutViewModel,
-    dialog: (visible: Boolean, title: String, msg: String) -> Unit,
-    isUnauthorized: () -> Unit,
-    isBadRequest: () -> Unit,
-) {
-    viewModel.imageUploadResponse.collect { response ->
-        viewModel.specifyWhenCompleteFileUpload()
-        when (response) {
-            is Event.Success -> {
-                viewModel.setProfileImageUrl(response.data!!.fileUrl)
-            }
-            is Event.Unauthorized -> {
-                dialog(true, "토큰 만료", "다시 로그인 해주세요")
-                isUnauthorized()
-            }
-            is Event.BadRequest -> {
-                dialog(true, "에러", "파일이 jpg, jpeg, png, heic 가 아닙니다.")
-                isBadRequest()
-            }
-            is Event.Loading -> {}
-            else -> {
-                dialog(true, "에러", "알 수 없는 오류 발생")
-            }
-        }
-    }
-}
-
-suspend fun enterStudentInformation(
-    viewModel: FillOutViewModel,
-    dialog: (visible: Boolean, title: String, msg: String) -> Unit,
-    onDialogButtonClick: () -> Unit,
-    isSuccess: () -> Unit,
-) {
-    viewModel.enterInformationResponse.collect { response ->
-        Log.d("정보기입", response.toString())
-        when (response) {
-            is Event.Success -> {
-                dialog(true, "성공", "정보기입을 완료했습니다.")
-                isSuccess()
-            }
-
-            is Event.BadRequest -> {
-                if (!viewModel.getEnteredProfileInformation().contactEmail.isEmailRegularExpression()) {
-                    dialog(true, "에러", "이메일 형식이 맞지 않습니다. \n수정하시겠습니까?")
-                    onDialogButtonClick()
-                } else if (!viewModel.getEnteredProfileInformation().portfolioUrl.isUrlRegularExpression()) {
-                    dialog(true, "에러", "포트폴리오 Url이 형식에 맞지 않습니다. \n수정하시겠습니까?")
-                    onDialogButtonClick()
-                } else {
-                    dialog(true, "에러", "이메일 형식또는 url형식이 맞지 않습니다. \n수정하시겠습니까?")
-                    onDialogButtonClick()
-                }
-            }
-
-            is Event.Conflict -> {
-                dialog(true, "에러", "이미 존재하는 유저 입니다.")
-            }
-
-            is Event.Loading -> {}
-            else -> {
-                dialog(true, "에러", "알 수 없는 오류 발생")
-            }
-        }
-    }
-}
-
-private fun String.toEnum(): String {
-    return when (this) {
-        "정규직" -> "FULL_TIME"
-        "비정규직" -> "TEMPORARY"
-        "계약직" -> "CONSTRACT"
-        "인턴" -> "INTERN"
-        "병특 희망" -> "HOPE"
-        "희망하지 않음" -> "NOT_HOPE"
-        "상관없음" -> "NO_MATTER"
-        "해당 사항 없음" -> "NONE"
-        else -> ""
     }
 }
