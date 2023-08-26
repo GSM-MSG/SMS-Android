@@ -199,14 +199,34 @@ class FillOutInformationActivity : BaseActivity() {
                             DatePickerBottomSheet(
                                 bottomSheetState = bottomSheetState,
                                 onDateValueChanged = { year, month ->
+                                    val startDate = projectList[projectIndex.value].startDate
+                                    val endDate = projectList[projectIndex.value].endDate
+                                    val input = "$year.$month"
+
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
-                                            projectList[projectIndex.value] =
-                                                projectList[projectIndex.value].copy(startDate = projectList[projectIndex.value].endDate)
+                                            if (minOf(endDate, input).isEmpty()) {
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(startDate = input)
+                                            } else {
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(startDate = minOf(endDate, input))
+
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(endDate = maxOf(endDate, input))
+                                            }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
-                                            projectList[projectIndex.value] =
-                                                projectList[projectIndex.value].copy(endDate = projectList[projectIndex.value].startDate)
+                                            if (maxOf(startDate, input).isEmpty()) {
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(endDate = input)
+                                            } else {
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(startDate = minOf(startDate, input))
+
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(endDate = maxOf(startDate, input))
+                                            }
                                         }
                                         !isProjectDate.value -> {
                                             awardDateMap[awardIndex.value] = "$year.$month"
