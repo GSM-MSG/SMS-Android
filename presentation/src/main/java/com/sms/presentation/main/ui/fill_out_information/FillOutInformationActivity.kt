@@ -199,12 +199,33 @@ class FillOutInformationActivity : BaseActivity() {
                             DatePickerBottomSheet(
                                 bottomSheetState = bottomSheetState,
                                 onDateValueChanged = { date ->
+                                    val startDate = projectList[projectIndex.value].startDate
+                                    val endDate = projectList[projectIndex.value].endDate
+
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
-                                            projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
+                                            if (endDate.isEmpty()) {
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(startDate = date)
+                                            } else {
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
+
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
+                                            }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
-                                            projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
+                                            if (startDate.isEmpty()) {
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(endDate = date)
+                                            } else {
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
+
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
+                                            }
                                         }
                                         !isProjectDate.value -> {
                                             awardDateMap[awardIndex.value] = date
@@ -230,7 +251,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = FillOutPage.Profile.value
+                                startDestination = FillOutPage.Projects.value
                             ) {
                                 composable(FillOutPage.Profile.value) {
                                     currentRoute.value = FillOutPage.Profile.value
