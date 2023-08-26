@@ -205,7 +205,7 @@ class FillOutInformationActivity : BaseActivity() {
 
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
-                                            if (minOf(endDate, input).isEmpty()) {
+                                            if (endDate.isEmpty()) {
                                                 projectList[projectIndex.value] =
                                                     projectList[projectIndex.value].copy(startDate = input)
                                             } else {
@@ -217,7 +217,7 @@ class FillOutInformationActivity : BaseActivity() {
                                             }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
-                                            if (maxOf(startDate, input).isEmpty()) {
+                                            if (startDate.isEmpty()) {
                                                 projectList[projectIndex.value] =
                                                     projectList[projectIndex.value].copy(endDate = input)
                                             } else {
@@ -419,7 +419,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         selectedStack = when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> profileDetailTechStack
                                             DetailSearchLocation.Projects -> projectsDetailTechStack[projectIndex.value]
-                                        } ?: emptyList(),
+                                        },
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
                                         }
