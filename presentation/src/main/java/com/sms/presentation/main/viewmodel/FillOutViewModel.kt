@@ -9,6 +9,8 @@ import com.msg.sms.domain.model.fileupload.response.FileUploadResponseModel
 import com.msg.sms.domain.model.major.MajorListModel
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
+import com.msg.sms.domain.model.student.request.PrizeModel
+import com.msg.sms.domain.model.student.request.ProjectModel
 import com.msg.sms.domain.usecase.fileupload.ImageUploadUseCase
 import com.msg.sms.domain.usecase.major.GetMajorListUseCase
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
@@ -196,6 +198,8 @@ class FillOutViewModel @Inject constructor(
         languageCertificate: List<CertificateInformationModel>,
         militaryService: String,
         certificate: List<String>,
+        projects: List<ProjectModel>,
+        award: List<PrizeModel>
     ) = viewModelScope.launch {
         enterStudentInformationUseCase(
             EnterStudentInformationModel(
@@ -212,8 +216,8 @@ class FillOutViewModel @Inject constructor(
                 languageCertificates = languageCertificate,
                 militaryService = militaryService,
                 certificates = certificate,
-                projects = emptyList(),
-                prizes = emptyList()
+                projects = projects,
+                prizes = award
             )
         ).onSuccess {
             it.catch { remoteError ->

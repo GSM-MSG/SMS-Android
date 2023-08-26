@@ -1,6 +1,5 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -13,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.msg.sms.design.component.button.ListAddButton
 import com.msg.sms.design.component.spacer.SmsSpacer
+import com.msg.sms.domain.model.student.request.*
 import com.sms.presentation.main.ui.fill_out_information.component.award.AwardBottomButtonComponent
 import com.sms.presentation.main.ui.fill_out_information.component.award.AwardComponent
 import com.sms.presentation.main.ui.fill_out_information.data.AwardData
@@ -36,6 +36,7 @@ fun AwardScreen(
     val enteredMilitaryServiceData = viewModel.getEnteredMilitaryServiceInformation()
     val enteredCertificateData = viewModel.getEnteredCertification()
     val enteredForeignLanguagesData = viewModel.getEnteredForeignLanguagesInformation()
+    val enteredProjectsData = viewModel.getEnteredProjectsInformation()
 
     val awardList = remember {
         mutableStateListOf(AwardData("", "", "", isToggleOpen = true))
@@ -80,7 +81,54 @@ fun AwardScreen(
             AwardBottomButtonComponent(
                 onPreviousButtonClick = onPreviousButtonClick,
                 onCompleteButtonClick = {
-                    /* TODO kimhyunseung : 데이터 모아서 정보기입 요청 보내기 */
+
+                    viewModel.enterStudentInformation(
+                        major = if (enteredProfileData.major == "직접입력") enteredProfileData.enteredMajor else enteredProfileData.major,
+                        techStack = enteredProfileData.techStack.split(",").map { it.trim() },
+                        profileImgUrl = viewModel.getProfileImageUrl(),
+                        introduce = enteredProfileData.introduce,
+                        portfolioUrl = enteredProfileData.portfolioUrl,
+                        contactEmail = enteredProfileData.contactEmail,
+                        formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
+                        gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
+                        salary = enteredWorkConditionData.salary.toInt(),
+                        region = enteredWorkConditionData.regions,
+                        languageCertificate = enteredForeignLanguagesData.foreignLanguages.map {
+                            CertificateInformationModel(
+                                languageCertificateName = it.languageCertificateName,
+                                score = it.score
+                            )
+                        },
+                        militaryService = enteredMilitaryServiceData.militaryService.toEnum(),
+                        certificate = enteredCertificateData.certifications,
+                        projects = enteredProjectsData.projects.map {
+                            ProjectModel(
+                                name = it.name,
+                                icon = "",
+                                previewImages = emptyList(),
+                                description = it.description,
+                                links = it.relatedLinkList.map { relatedLink ->
+                                    ProjectRelatedLinkModel(
+                                        name = relatedLink.first,
+                                        url = relatedLink.second
+                                    )
+                                },
+                                techStacks = it.technologyOfUse,
+                                myActivity = it.keyTask,
+                                inProgress = ProjectDateModel(
+                                    start = it.startDate,
+                                    end = it.endDate
+                                )
+                            )
+                        },
+                        award = awardList.map {
+                            PrizeModel(
+                                name = it.name,
+                                type = it.type,
+                                date = it.date
+                            )
+                        }
+                    )
                 }
             )
         }
@@ -89,28 +137,19 @@ fun AwardScreen(
 
 suspend fun imageFileUpload(
     viewModel: FillOutViewModel,
-    dialog: (visible: Boolean, title: String, msg: String) -> Unit,
-    isUnauthorized: () -> Unit,
-    isBadRequest: () -> Unit,
+    onSuccess: (url: String) -> Unit,
+    onFailure: () -> Unit
 ) {
     viewModel.imageUploadResponse.collect { response ->
         viewModel.specifyWhenCompleteFileUpload()
         when (response) {
             is Event.Success -> {
-                viewModel.setProfileImageUrl(response.data!!.fileUrl)
+                onSuccess(response.data!!.fileUrl)
             }
-            is Event.Unauthorized -> {
-                dialog(true, "토큰 만료", "다시 로그인 해주세요")
-                isUnauthorized()
-            }
-            is Event.BadRequest -> {
-                dialog(true, "에러", "파일이 jpg, jpeg, png, heic 가 아닙니다.")
-                isBadRequest()
-            }
+            is Event.Unauthorized -> {}
+            is Event.BadRequest -> {}
             is Event.Loading -> {}
-            else -> {
-                dialog(true, "에러", "알 수 없는 오류 발생")
-            }
+            else -> {}
         }
     }
 }
@@ -122,7 +161,6 @@ suspend fun enterStudentInformation(
     isSuccess: () -> Unit,
 ) {
     viewModel.enterInformationResponse.collect { response ->
-        Log.d("정보기입", response.toString())
         when (response) {
             is Event.Success -> {
                 dialog(true, "성공", "정보기입을 완료했습니다.")
