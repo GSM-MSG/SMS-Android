@@ -33,7 +33,9 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 private enum class BottomSheetValues {
     PhotoPicker,
@@ -217,20 +219,10 @@ class FillOutInformationActivity : BaseActivity() {
                                                     projectList[projectIndex.value].copy(startDate = date)
                                             } else {
                                                 projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
+                                                    projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
 
                                                 projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
+                                                    projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
                                             }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
@@ -239,20 +231,10 @@ class FillOutInformationActivity : BaseActivity() {
                                                     projectList[projectIndex.value].copy(endDate = date)
                                             } else {
                                                 projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
+                                                    projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
 
                                                 projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
+                                                    projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
                                             }
                                         }
                                         !isProjectDate.value -> {
@@ -305,17 +287,20 @@ class FillOutInformationActivity : BaseActivity() {
                                             isImageExtensionInCorrect.value = false
                                         },
                                         onProfileTechStackValueChanged = { stack ->
-                                            profileDetailTechStack.removeAll(
-                                                profileDetailTechStack.filter {
-                                                    !stack.contains(it)
-                                                })
+                                            profileDetailTechStack.removeAll(profileDetailTechStack.filter {
+                                                !stack.contains(it)
+                                            })
                                             profileDetailTechStack.addAll(stack.filter {
                                                 !profileDetailTechStack.contains(it)
                                             })
                                         },
                                         onSnackBarVisibleChanged = { text ->
-                                            snackBarText.value = text
-                                            snackBarVisible.value = true
+                                            scope.launch {
+                                                snackBarVisible.value = true
+                                                snackBarText.value = text
+                                                delay(1.5.seconds)
+                                                if (snackBarVisible.value) snackBarVisible.value = false
+                                            }
                                         }
                                     )
                                 }
@@ -419,8 +404,12 @@ class FillOutInformationActivity : BaseActivity() {
                                             projectList[index] = projectList[index].copy(isToggleOpen = visible)
                                         },
                                         onSnackBarVisibleChanged = { text ->
-                                            snackBarText.value = text
-                                            snackBarVisible.value = true
+                                            scope.launch {
+                                                snackBarText.value = text
+                                                snackBarVisible.value = true
+                                                delay(1.5.seconds)
+                                                if (snackBarVisible.value) snackBarVisible.value = false
+                                            }
                                         },
                                         onProjectNameValueChanged = { index, name ->
                                             projectList[index] = projectList[index].copy(name = name)
