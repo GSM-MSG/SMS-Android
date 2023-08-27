@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +24,8 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.icon.BlackLogoutIcon
+import com.sms.presentation.main.ui.detail.data.AwardData
+import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.button.SaveButtonComponent
 import com.sms.presentation.main.ui.mypage.section.AwardSection
@@ -36,87 +36,46 @@ import com.sms.presentation.main.ui.mypage.section.ProfileSection
 import com.sms.presentation.main.ui.mypage.section.ProjectsSection
 import com.sms.presentation.main.ui.mypage.section.SchoolLifeSection
 import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
-import com.sms.presentation.main.ui.mypage.state.ExpandableAwardDate
-import com.sms.presentation.main.ui.mypage.state.ExpandableProjectData
+import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.sms.presentation.main.ui.mypage.state.MyProfileData
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MyPageComponent(
-    setMajor: String,
-    setWantWorkForm: String,
-    setMilitary: String,
+    myProfileData: MyProfileData,
+    isExpandedProject: List<Boolean>,
+    isExpandedAward: List<Boolean>,
+    projects: List<ProjectData>,
+    awards: List<AwardData>,
+    bitmapPreviews: List<List<Bitmap>>,
     selectedTechList: List<String>,
     selectedTechListOnProject: List<ProjectTechStack>,
+    onAddProject: () -> Unit,
+    onAddAward: () -> Unit,
+    onAddRegion: () -> Unit,
+    onAddCertificate: () -> Unit,
+    onAddForeignLanguage: () -> Unit,
+    onEnteredMajorValue: (value: String) -> Unit,
+    onProfileValueChange: (value: MyProfileData) -> Unit,
     onClickMilitaryOpenButton: () -> Unit,
     onClickOpenWorkForm: () -> Unit,
     onClickTopLeftButton: () -> Unit,
     onClickTopRightButton: () -> Unit,
     onClickMajorButton: () -> Unit,
+    onExpandProjectClick: (index: Int) -> Unit,
+    onExpandAwardClick: (index: Int) -> Unit,
     onRemoveDetailStack: (value: String) -> Unit,
+    onRemoveAward: (index: Int) -> Unit,
+    onRemoveProject: (index: Int) -> Unit,
+    onAddBitmapPreview: (projectIndex: Int, item: List<Bitmap>) -> Unit,
+    onRemoveBitmapPreview: (projectIndex: Int, itemIndex: Int) -> Unit,
     onRemoveProjectDetailStack: (index: Int, value: String) -> Unit,
+    onProjectValueChange: (index: Int, data: ProjectData) -> Unit,
     onProjectSearchBar: (index: Int) -> Unit,
+    onAwardValueChange: (index: Int, value: AwardData) -> Unit,
     onMyPageSearchBar: () -> Unit,
 ) {
-    val projects = remember {
-        mutableStateListOf(
-            ExpandableProjectData(
-                name = "SMS",
-                activityDuration = "2023 ~",
-                projectImage = listOf(
-                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
-                ),
-                icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                keyTask = "모이자 ㅋㅋ",
-                relatedLinks = listOf(
-                    RelatedLinksData("Youtube", "https://dolmc.com"),
-                    RelatedLinksData("GitHub", "https://youyu.com"),
-                    RelatedLinksData("X", "https://asdgasgw.com")
-                ),
-                isExpand = true
-            ),
-            ExpandableProjectData(
-                name = "MOIZA",
-                activityDuration = "2023 ~",
-                projectImage = listOf(
-                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
-                ),
-                icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                keyTask = "모이자 ㅋㅋ",
-                relatedLinks = listOf(
-                    RelatedLinksData("Youtube", "https://dolmc.com"),
-                    RelatedLinksData("GitHujb", "https://youyu.com"),
-                    RelatedLinksData("X", "https://asdgasgw.com")
-                ),
-                isExpand = true
-            ),
-        )
-    }
-
-    val awards = remember {
-        mutableStateListOf(
-            ExpandableAwardDate(title = "수상 1", organization = "", date = "", isExpand = true),
-            ExpandableAwardDate(title = "수상 2", organization = "", date = "", isExpand = true)
-        )
-    }
-    val wantWorkingArea = remember {
-        mutableStateListOf(*listOf("광저우", "충칭", "하노이", "도쿄").toTypedArray())
-    }
-    val bitmapPreviews = remember {
-        mutableStateListOf(*projects.map { listOf<Bitmap>() }.toTypedArray())
-    }
-    val foreignLanguages = remember {
-        mutableStateListOf(*listOf(Pair("한국어", "원어민"), Pair("토익", "990")).toTypedArray())
-    }
-    val certifications = remember {
-        mutableStateListOf(*listOf("정보처리 산업기사").toTypedArray())
-    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -142,11 +101,13 @@ fun MyPageComponent(
             }
             item {
                 ProfileSection(
-                    setMajor = setMajor,
+                    myProfileData = myProfileData,
                     selectedTechList = selectedTechList,
                     onClickMajorComponent = onClickMajorButton,
                     onClickSearchBar = onMyPageSearchBar,
-                    onRemoveDetailStack = onRemoveDetailStack
+                    onRemoveDetailStack = onRemoveDetailStack,
+                    onValueChange = onProfileValueChange,
+                    onEnteredMajorValue = onEnteredMajorValue
                 )
                 SmsSpacer()
             }
@@ -162,16 +123,21 @@ fun MyPageComponent(
             }
             item {
                 WorkConditionSection(
-                    wantWorkingAreas = wantWorkingArea,
+                    wantWorkingAreas = myProfileData.regions,
                     wantPay = "2000",
-                    wantWorkForm = setWantWorkForm,
+                    wantWorkForm = myProfileData.formOfEmployment,
                     onClickOpenButton = onClickOpenWorkForm,
+                    onClickAddButton = onAddRegion,
                     onValueChange = { index, item ->
-                        wantWorkingArea[index] = item
+                        val regionList = myProfileData.regions.toMutableList()
+                        regionList[index] = item
+                        onProfileValueChange(myProfileData.copy(regions = regionList))
                     },
-                    onClickAddButton = { wantWorkingArea.add("") }) {
-                    wantWorkingArea.remove(it)
-                }
+                    onClickRemoveButton = {
+                        val regionList = myProfileData.regions.toMutableList()
+                        regionList.removeAt(index = it)
+                        onProfileValueChange(myProfileData.copy(regions = regionList))
+                    })
                 SmsSpacer()
             }
             stickyHeader {
@@ -179,7 +145,7 @@ fun MyPageComponent(
             }
             item {
                 MilitaryServiceSection(
-                    setMilitary = setMilitary,
+                    setMilitary = myProfileData.militaryService,
                     onClickMilitaryOpenButton = onClickMilitaryOpenButton
                 )
                 SmsSpacer()
@@ -189,10 +155,18 @@ fun MyPageComponent(
             }
             item {
                 CertificationsSection(
-                    certifications = certifications,
-                    onValueChange = { index, value -> certifications[index] = value },
-                    onClickRemoveButton = { certifications.removeAt(index = it) },
-                    onClickAddButton = { certifications.add("") }
+                    certifications = myProfileData.certificates,
+                    onValueChange = { index, value ->
+                        val certificates = myProfileData.certificates.toMutableList()
+                        certificates[index] = value
+                        onProfileValueChange(myProfileData.copy(certificates = certificates))
+                    },
+                    onClickRemoveButton = {
+                        val certificates = myProfileData.certificates.toMutableList()
+                        certificates.removeAt(index = it)
+                        onProfileValueChange(myProfileData.copy(certificates = certificates))
+                    },
+                    onClickAddButton = onAddCertificate
                 )
                 SmsSpacer()
             }
@@ -201,17 +175,30 @@ fun MyPageComponent(
             }
             item {
                 ForeignLanguagesSection(
-                    foreignLanguages = foreignLanguages,
+                    foreignLanguages = myProfileData.languageCertificates.map {
+                        Pair(
+                            it.languageCertificateName,
+                            it.score
+                        )
+                    },
                     onValueChangeForeignName = { index, value ->
-                        foreignLanguages[index] = foreignLanguages[index].copy(first = value)
+                        val foreignLanguages = myProfileData.languageCertificates.toMutableList()
+                        foreignLanguages[index] =
+                            foreignLanguages[index].copy(languageCertificateName = value)
+                        onProfileValueChange(myProfileData.copy(languageCertificates = foreignLanguages))
                     },
                     onValueChangeForeignValue = { index, value ->
-                        foreignLanguages[index] = foreignLanguages[index].copy(second = value)
+                        val foreignLanguages = myProfileData.languageCertificates.toMutableList()
+                        foreignLanguages[index] = foreignLanguages[index].copy(score = value)
+                        onProfileValueChange(myProfileData.copy(languageCertificates = foreignLanguages))
                     },
-                    onClickRemoveButton = { foreignLanguages.removeAt(it) }
-                ) {
-                    foreignLanguages.add(Pair("", ""))
-                }
+                    onClickRemoveButton = {
+                        val foreignLanguages = myProfileData.languageCertificates.toMutableList()
+                        foreignLanguages.removeAt(it)
+                        onProfileValueChange(myProfileData.copy(languageCertificates = foreignLanguages))
+                    },
+                    onClickAddButton = onAddForeignLanguage
+                )
                 SmsSpacer()
             }
             projects.forEachIndexed { index, it ->
@@ -220,20 +207,18 @@ fun MyPageComponent(
                         titleText = it.name,
                         isExpandable = true,
                         isRemovable = true,
-                        isExpand = it.isExpand,
+                        isExpand = isExpandedProject[index],
                         onClickToggleButton = {
-                            projects[index] =
-                                projects[index].copy(isExpand = !it.isExpand)
+                            onExpandProjectClick(index)
                         },
                         onClickRemoveButton = {
-                            bitmapPreviews.removeAt(index)
-                            projects.removeAt(index)
+                            onRemoveProject(index)
                         })
                 }
                 item {
                     AnimatedVisibility(
                         modifier = Modifier.fillMaxWidth(),
-                        visible = projects[index].isExpand,
+                        visible = isExpandedProject[index],
                         enter = expandVertically(),
                         exit = shrinkVertically(),
                     ) {
@@ -242,10 +227,10 @@ fun MyPageComponent(
                             data = itemData,
                             techStacks = selectedTechListOnProject[index],
                             onNameValueChange = {
-                                projects[index] = itemData.copy(name = it)
+                                onProjectValueChange(index, itemData.copy(name = it))
                             },
                             onKeyTaskValueChange = {
-                                projects[index] = itemData.copy(keyTask = it)
+                                onProjectValueChange(index, itemData.copy(keyTask = it))
                             },
                             onLinkNameChanged = { itemIndex, value ->
                                 val relatedLink = itemData.relatedLinks.toMutableList()
@@ -253,7 +238,10 @@ fun MyPageComponent(
                                     index = itemIndex,
                                     element = itemData.relatedLinks[itemIndex].copy(name = value)
                                 )
-                                projects[index] = itemData.copy(relatedLinks = relatedLink)
+                                onProjectValueChange(
+                                    index,
+                                    itemData.copy(relatedLinks = relatedLink)
+                                )
                             },
                             onLinkChanged = { itemIndex, value ->
                                 val relatedLink = itemData.relatedLinks.toMutableList()
@@ -261,26 +249,33 @@ fun MyPageComponent(
                                     index = itemIndex,
                                     element = itemData.relatedLinks[itemIndex].copy(link = value)
                                 )
-                                projects[index] = itemData.copy(relatedLinks = relatedLink)
+                                onProjectValueChange(
+                                    index,
+                                    itemData.copy(relatedLinks = relatedLink)
+                                )
                             },
                             onRemoveProjectImage = {
-                                projects[index] = itemData.copy(projectImage = it)
+                                onProjectValueChange(index, itemData.copy(projectImage = it))
                             },
                             onRemoveProjectDetailStack = { onRemoveProjectDetailStack(index, it) },
-                            onAddBitmap = { bitmapPreviews[index] = bitmapPreviews[index] + it },
+                            onAddBitmap = { onAddBitmapPreview(index, it) },
                             onAddLink = {
                                 val relatedLink = itemData.relatedLinks.toMutableList()
                                 relatedLink.add(RelatedLinksData(name = "", link = ""))
-                                projects[index] = itemData.copy(relatedLinks = relatedLink)
+                                onProjectValueChange(
+                                    index,
+                                    itemData.copy(relatedLinks = relatedLink)
+                                )
                             },
                             onRemoveBitmapButton = {
-                                bitmapPreviews[index] =
-                                    bitmapPreviews[index].filterIndexed { index, _ -> it != index }
+                                onRemoveBitmapPreview(index, it)
                             },
                             enteredPreviews = bitmapPreviews[index],
                             onRemoveRelatedLink = {
-                                projects[index] =
+                                onProjectValueChange(
+                                    index,
                                     itemData.copy(relatedLinks = itemData.relatedLinks.filterIndexed { index, _ -> index != it })
+                                )
                             },
                             onClickSearchBar = { onProjectSearchBar(index) }
                         )
@@ -295,18 +290,7 @@ fun MyPageComponent(
                         .padding(top = 20.dp, end = 20.dp, bottom = 20.dp)
                 ) {
                     BlackAddItemButton(modifier = Modifier.align(Alignment.TopEnd)) {
-                        bitmapPreviews.add(listOf())
-                        projects.add(
-                            ExpandableProjectData(
-                                name = "프로젝트 ${projects.size + 1}",
-                                activityDuration = "",
-                                projectImage = listOf(),
-                                icon = "",
-                                keyTask = "",
-                                relatedLinks = listOf(),
-                                isExpand = true
-                            )
-                        )
+                        onAddProject()
                     }
                 }
             }
@@ -316,29 +300,29 @@ fun MyPageComponent(
                         titleText = it.title,
                         isExpandable = true,
                         isRemovable = true,
-                        isExpand = it.isExpand,
-                        onClickRemoveButton = {},
+                        isExpand = isExpandedAward[index],
+                        onClickRemoveButton = { onRemoveAward(index) },
                         onClickToggleButton = {
-                            awards[index] = awards[index].copy(isExpand = !it.isExpand)
+                            onExpandAwardClick(index)
                         })
                 }
                 item {
                     AnimatedVisibility(
                         modifier = Modifier.fillMaxWidth(),
-                        visible = awards[index].isExpand,
+                        visible = isExpandedAward[index],
                         enter = expandVertically(),
                         exit = shrinkVertically(),
                     ) {
                         AwardSection(
                             awardData = it,
                             onNameValueChange = {
-                                awards[index] = awards[index].copy(title = it)
+                                onAwardValueChange(index, awards[index].copy(title = it))
                             },
                             onTypeValueChange = {
-                                awards[index] = awards[index].copy(organization = it)
+                                onAwardValueChange(index, awards[index].copy(organization = it))
                             },
                             onDateValueChange = {
-                                awards[index] = awards[index].copy(date = it)
+                                onAwardValueChange(index, awards[index].copy(date = it))
                             },
                             onClickCalendar = { /*(Todo): kimhs - 넘버핔커 열어줘요*/ }
                         )
@@ -353,14 +337,7 @@ fun MyPageComponent(
                         .padding(top = 20.dp, end = 20.dp, bottom = 20.dp)
                 ) {
                     BlackAddItemButton(modifier = Modifier.align(Alignment.TopEnd)) {
-                        awards.add(
-                            ExpandableAwardDate(
-                                title = "수상 ${awards.size + 1}",
-                                organization = "",
-                                date = "",
-                                isExpand = true
-                            )
-                        )
+                        onAddAward()
                     }
                 }
             }
@@ -383,10 +360,59 @@ fun MyPageComponent(
 @Composable
 private fun MyPageComponentPre() {
     MyPageComponent(
-        setMajor = "Android",
-        setWantWorkForm = "정규직",
-        setMilitary = "병특 희망",
+        myProfileData = MyProfileData(
+            name = "",
+            introduce = "",
+            portfolioUrl = "",
+            grade = 0,
+            classNum = 0,
+            number = 0,
+            department = "",
+            major = "",
+            profileImg = "",
+            contactEmail = "",
+            gsmAuthenticationScore = 0,
+            formOfEmployment = "",
+            regions = listOf(),
+            militaryService = "",
+            salary = 0,
+            languageCertificates = listOf(),
+            certificates = listOf(),
+            profileImageBitmap = null
+        ),
+        bitmapPreviews = listOf(),
+        projects = listOf(
+            ProjectData(
+                name = "SMS",
+                activityDuration = ActivityDuration(start = "2023. 03", end = null),
+                projectImage = listOf(
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
+                ),
+                icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                keyTask = "모이자 ㅋㅋ",
+                relatedLinks = listOf(
+                    RelatedLinksData("Youtube", "https://dolmc.com"),
+                    RelatedLinksData("GitHub", "https://youyu.com"),
+                    RelatedLinksData("X", "https://asdgasgw.com")
+                ),
+                techStacks = listOf("Android", "Kotlin")
+            )
+        ),
+        awards = listOf(),
         selectedTechList = listOf("Android", ""),
+        selectedTechListOnProject = listOf(),
+        onAddProject = {},
+        onAddAward = {},
+        onAddCertificate = {},
+        onAddForeignLanguage = {},
+        onAddRegion = {},
+        isExpandedAward = listOf(),
+        isExpandedProject = listOf(),
+        onExpandAwardClick = {},
+        onExpandProjectClick = {},
         onClickMilitaryOpenButton = {},
         onClickTopLeftButton = {},
         onClickTopRightButton = {},
@@ -394,8 +420,15 @@ private fun MyPageComponentPre() {
         onClickOpenWorkForm = {},
         onMyPageSearchBar = {},
         onProjectSearchBar = {},
+        onRemoveBitmapPreview = { _, _ -> },
         onRemoveDetailStack = {},
         onRemoveProjectDetailStack = { _, _ -> },
-        selectedTechListOnProject = listOf()
+        onRemoveProject = {},
+        onProfileValueChange = {},
+        onProjectValueChange = { _, _ -> },
+        onAwardValueChange = { _, _ -> },
+        onAddBitmapPreview = { _, _ -> },
+        onRemoveAward = {},
+        onEnteredMajorValue = {}
     )
 }
