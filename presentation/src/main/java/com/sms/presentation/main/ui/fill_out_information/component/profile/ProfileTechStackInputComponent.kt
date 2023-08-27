@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.DetailTechStackItem
 import com.msg.sms.design.util.AddGrayBody1Title
@@ -23,6 +24,8 @@ fun ProfileTechStackInputComponent(
     onClick: () -> Unit,
     onProfileTechStackValueChanged: (value: List<String>) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+
     AddGrayBody1Title(titleText = "사용기술 (최대 5개)") {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -33,6 +36,8 @@ fun ProfileTechStackInputComponent(
                     .onFocusChanged {
                         if (it.isFocused) {
                             onClick()
+                        } else {
+                            focusManager.clearFocus()
                         }
                     },
                 placeHolder = "찾고 싶은 세부 스택 입력"
