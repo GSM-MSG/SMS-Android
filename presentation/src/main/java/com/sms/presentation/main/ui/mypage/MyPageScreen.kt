@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.mypage
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
@@ -13,11 +14,18 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.selector.MajorSelector
+import com.sms.presentation.main.ui.detail.data.AwardData
+import com.sms.presentation.main.ui.detail.data.ProjectData
+import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.modal.MyPageBottomSheet
+import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.sms.presentation.main.ui.mypage.state.MyProfileData
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
+import com.sms.presentation.main.viewmodel.MyProfileViewModel
 import kotlinx.coroutines.launch
 
 private enum class BottomSheetValues {
@@ -35,30 +43,39 @@ private enum class ModalValue {
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MyPageScreen(
+    viewModel: MyProfileViewModel,
+    myProfileData: MyProfileData,
+    bitmapPreviews: List<List<Bitmap>>,
+    projects: List<ProjectData>,
+    awards: List<AwardData>,
     majorList: List<String>,
     selectedTechList: List<String>,
     selectedTechListOnProject: List<ProjectTechStack>,
+    isExpandedProject: List<Boolean>,
+    isExpandedAward: List<Boolean>,
+    onExpandProjectClick: (index: Int) -> Unit,
+    onExpandAwardClick: (index: Int) -> Unit,
     onWithdrawal: () -> Unit,
     onLogout: () -> Unit,
+    onAddProject: () -> Unit,
+    onAddAward: () -> Unit,
     onClickSearchBar: () -> Unit,
     onClickBackButton: () -> Unit,
     onClickProjectSearchBar: (itemIndex: Int) -> Unit,
+    onProfileValueChange: (value: MyProfileData) -> Unit,
     onRemoveDetailStack: (value: String) -> Unit,
+    onRemoveProject: (index: Int) -> Unit,
+    onRemoveAward: (index: Int) -> Unit,
+    onRemoveBitmapPreview: (projectIndex: Int, previewIndex: Int) -> Unit,
+    onAddBitmapPreview: (projectIndex: Int, previews: List<Bitmap>) -> Unit,
     onRemoveProjectDetailStack: (index: Int, value: String) -> Unit,
+    onProjectValueChange: (index: Int, data: ProjectData) -> Unit,
+    onAwardValueChange: (index: Int, award: AwardData) -> Unit,
 ) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
 
-    val selectedMajor = remember {
-        mutableStateOf("")
-    }
-    val selectedWorkForm = remember {
-        mutableStateOf("정규직")
-    }
-    val selectedMilitary = remember {
-        mutableStateOf("")
-    }
     val bottomSheetValues = remember {
         mutableStateOf(BottomSheetValues.MyPage)
     }
@@ -96,18 +113,16 @@ fun MyPageScreen(
             when (bottomSheetValues.value) {
                 BottomSheetValues.Major -> {
                     SelectorBottomSheet(
+                        itemChange = { viewModel.onChangeMajorValue(it) },
                         list = majorList,
                         bottomSheetState = bottomSheetState,
-                        selected = selectedMajor.value,
-                        itemChange = {
-                            selectedMajor.value = it
-                        },
+                        selected = myProfileData.major,
                         lastItem = {
                             MajorSelector(
                                 major = "직접입력",
-                                selected = selectedMajor.value == "직접입력"
+                                selected = myProfileData.major == "직접입력"
                             ) {
-                                selectedMajor.value = "직접입력"
+                                viewModel.onChangeMajorValue("직접입력")
                                 coroutineScope.launch {
                                     bottomSheetState.hide()
                                 }
@@ -118,10 +133,10 @@ fun MyPageScreen(
 
                 BottomSheetValues.WorkingForm -> {
                     SelectorBottomSheet(
+                        itemChange = { onProfileValueChange(myProfileData.copy(formOfEmployment = it)) },
                         list = listOf("정규직", "비정규직", "계약직", "인턴"),
                         bottomSheetState = bottomSheetState,
-                        selected = selectedWorkForm.value,
-                        itemChange = { selectedWorkForm.value = it }
+                        selected = myProfileData.formOfEmployment,
                     )
                 }
 
@@ -145,10 +160,10 @@ fun MyPageScreen(
 
                 BottomSheetValues.Military -> {
                     SelectorBottomSheet(
+                        itemChange = { onProfileValueChange(myProfileData.copy(militaryService = it)) },
                         list = listOf("병특 희망", "희망 하지 않음", "상관 없음", "해당 사항 없음"),
                         bottomSheetState = bottomSheetState,
-                        selected = selectedMilitary.value,
-                        itemChange = { selectedMilitary.value = it }
+                        selected = myProfileData.militaryService,
                     )
                 }
             }
@@ -157,11 +172,21 @@ fun MyPageScreen(
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
     ) {
         MyPageComponent(
-            setMajor = selectedMajor.value,
-            setWantWorkForm = selectedWorkForm.value,
-            setMilitary = selectedMilitary.value,
+            myProfileData = myProfileData,
+            bitmapPreviews = bitmapPreviews,
+            projects = projects,
+            awards = awards,
+            isExpandedProject = isExpandedProject,
+            isExpandedAward = isExpandedAward,
             selectedTechListOnProject = selectedTechListOnProject,
             selectedTechList = selectedTechList,
+            onExpandProjectClick = onExpandProjectClick,
+            onExpandAwardClick = onExpandAwardClick,
+            onAddProject = onAddProject,
+            onAddAward = onAddAward,
+            onAddRegion = { viewModel.addRegion() },
+            onAddForeignLanguage = { viewModel.addForeignLanguage() },
+            onAddCertificate = { viewModel.addCertificate() },
             onClickTopLeftButton = onClickBackButton,
             onClickOpenWorkForm = {
                 coroutineScope.launch {
@@ -191,12 +216,20 @@ fun MyPageScreen(
                     bottomSheetState.show()
                 }
             },
+            onEnteredMajorValue = { viewModel.onEnteredMajorValue(it) },
             onMyPageSearchBar = onClickSearchBar,
             onProjectSearchBar = onClickProjectSearchBar,
+            onRemoveBitmapPreview = onRemoveBitmapPreview,
+            onAddBitmapPreview = onAddBitmapPreview,
             onRemoveDetailStack = onRemoveDetailStack,
+            onRemoveProject = onRemoveProject,
+            onRemoveAward = onRemoveAward,
             onRemoveProjectDetailStack = { index: Int, value: String ->
                 onRemoveProjectDetailStack(index, value)
-            }
+            },
+            onProjectValueChange = onProjectValueChange,
+            onAwardValueChange = onAwardValueChange,
+            onProfileValueChange = onProfileValueChange
         )
     }
 }
@@ -205,15 +238,71 @@ fun MyPageScreen(
 @Composable
 private fun MyPageScreenPre() {
     MyPageScreen(
+        myProfileData = MyProfileData(
+            name = "",
+            introduce = "",
+            portfolioUrl = "",
+            grade = 0,
+            classNum = 0,
+            number = 0,
+            department = "",
+            major = "",
+            profileImg = "",
+            contactEmail = "",
+            gsmAuthenticationScore = 0,
+            formOfEmployment = "",
+            regions = listOf(),
+            militaryService = "",
+            salary = 0,
+            languageCertificates = listOf(),
+            certificates = listOf(),
+            profileImageBitmap = null
+        ),
+        bitmapPreviews = listOf(),
+        isExpandedAward = listOf(),
+        isExpandedProject = listOf(),
+        projects = listOf(
+            ProjectData(
+                name = "SMS",
+                activityDuration = ActivityDuration(start = "2023. 03", end = null),
+                projectImage = listOf(
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                    "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
+                ),
+                icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                keyTask = "모이자 ㅋㅋ",
+                relatedLinks = listOf(
+                    RelatedLinksData("Youtube", "https://dolmc.com"),
+                    RelatedLinksData("GitHub", "https://youyu.com"),
+                    RelatedLinksData("X", "https://asdgasgw.com")
+                ),
+                techStacks = listOf("Android", "Kotlin")
+            )
+        ),
+        awards = listOf(),
         selectedTechListOnProject = listOf(ProjectTechStack(listOf())),
         selectedTechList = listOf("Kotlin", "Flutter"),
         majorList = listOf("BackEnd", "Android", "iOS"),
         onLogout = {},
         onWithdrawal = {},
+        onAddProject = {},
+        onAddAward = {},
         onClickBackButton = {},
         onClickSearchBar = {},
         onClickProjectSearchBar = {},
+        onProfileValueChange = {},
         onRemoveDetailStack = {},
-        onRemoveProjectDetailStack = { _, _ -> }
+        onRemoveProject = {},
+        onRemoveProjectDetailStack = { _, _ -> },
+        onProjectValueChange = { _, _ -> },
+        onAwardValueChange = { _, _ -> },
+        onAddBitmapPreview = { _, _ -> },
+        onRemoveBitmapPreview = { _, _ -> },
+        onExpandAwardClick = {},
+        onExpandProjectClick = {},
+        onRemoveAward = {},
+        viewModel = viewModel()
     )
 }

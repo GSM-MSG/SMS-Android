@@ -9,8 +9,6 @@ data class GetMyProfileResponse(
     val name: String,
     @SerializedName("introduce")
     val introduce: String,
-    @SerializedName("dreamBookFileUrl")
-    val dreamBookFileUrl: String,
     @SerializedName("portfolioUrl")
     val portfolioUrl: String,
     @SerializedName("grade")
@@ -43,13 +41,16 @@ data class GetMyProfileResponse(
     val certificates: List<String>,
     @SerializedName("techStacks")
     val techStacks: List<String>,
+    @SerializedName("projects")
+    val projects: List<ProjectResponse>,
+    @SerializedName("prizes")
+    val prizes: List<PrizeResponse>,
 )
 
 fun GetMyProfileResponse.toMyProfileModel(): MyProfileModel {
     return MyProfileModel(
         name = this.name,
         introduce = this.introduce,
-        dreamBookFileUrl = this.dreamBookFileUrl,
         portfolioUrl = this.portfolioUrl,
         grade = this.grade,
         classNum = this.classNum,
@@ -70,6 +71,8 @@ fun GetMyProfileResponse.toMyProfileModel(): MyProfileModel {
             )
         },
         certificates = this.certificates,
-        techStacks = this.techStacks
+        techStacks = this.techStacks,
+        projects = this.projects.map { it.toProjectModel() },
+        prizes = this.prizes.map { it.toPrizeModel() }
     )
 }
