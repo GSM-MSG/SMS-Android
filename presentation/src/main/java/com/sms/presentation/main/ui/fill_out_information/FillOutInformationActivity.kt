@@ -329,14 +329,17 @@ class FillOutInformationActivity : BaseActivity() {
                                                 snackBarVisible.value = false
                                             }
                                         },
-                                        onIntroduceValueChanged = {
-                                            profileData.value = profileData.value.copy(introduce = it)
+                                        onIntroduceValueChanged = { introduce ->
+                                            profileData.value = profileData.value.copy(introduce = introduce)
                                         },
-                                        onPortfolioUrlValueChanged = {
-                                            profileData.value = profileData.value.copy(portfolioUrl = it)
+                                        onPortfolioUrlValueChanged = { portfolio ->
+                                            profileData.value = profileData.value.copy(portfolioUrl = portfolio)
                                         },
-                                        onContactEmailValueChanged = {
-                                            profileData.value = profileData.value.copy(contactEmail = it)
+                                        onContactEmailValueChanged = { email ->
+                                            profileData.value = profileData.value.copy(contactEmail = email)
+                                        },
+                                        onEnteringMajorValueChanged = { enteredMajar ->
+                                            profileData.value = profileData.value.copy(enteredMajor = enteredMajar)
                                         }
                                     )
                                 }

@@ -37,13 +37,11 @@ fun ProfileScreen(
     onIntroduceValueChanged: (value: String) -> Unit,
     onPortfolioUrlValueChanged: (value: String) -> Unit,
     onContactEmailValueChanged: (value: String) -> Unit,
+    onEnteringMajorValueChanged: (value: String) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val isRequired = remember {
         mutableStateOf(false)
-    }
-    val enteredMajor = remember {
-        mutableStateOf(if (data.enteredMajor != "") data.enteredMajor else "")
     }
     val dialogState = remember {
         mutableStateOf(false)
@@ -91,8 +89,7 @@ fun ProfileScreen(
                 data = data,
                 isReadOnly = selectedMajor != "직접입력",
                 selectedMajor = selectedMajor,
-                enteredMajor = enteredMajor.value,
-                isRequired = { result -> isRequired.value = result },
+                enteredMajor = data.enteredMajor,
                 profileImageUri = profileImageUri,
                 detailStacks = if (detailStacks.size > 5) detailStacks.subList(0, 5) else detailStacks,
                 changeView = {
@@ -104,15 +101,12 @@ fun ProfileScreen(
                 },
                 onPhotoPickBottomSheetOpenButtonClick = onPhotoPickBottomSheetOpenButtonClick,
                 onMajorBottomSheetOpenButtonClick = onMajorBottomSheetOpenButtonClick,
+                isRequired = { result -> isRequired.value = result },
                 onProfileTechStackValueChanged = onProfileTechStackValueChanged,
-                savedData = { getIntroduce: String, getPortfolio: String, getContactEmail: String ->
-                    onIntroduceValueChanged(getIntroduce)
-                    onPortfolioUrlValueChanged(getPortfolio)
-                    onContactEmailValueChanged(getContactEmail)
-                },
-                enteringMajor = { string ->
-                    enteredMajor.value = string
-                },
+                onEnteringMajorValueChanged = onEnteringMajorValueChanged,
+                onIntroduceValueChanged = onIntroduceValueChanged,
+                onContactEmailValueChanged = onContactEmailValueChanged,
+                onPortFolioUrlValueChanged = onPortfolioUrlValueChanged,
             )
             Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.height(32.dp))
@@ -121,7 +115,7 @@ fun ProfileScreen(
                         .fillMaxWidth()
                         .height(48.dp),
                     enabled = isRequired.value && textFieldChecker(
-                        if (selectedMajor == "직접입력") enteredMajor.value else selectedMajor
+                        if (selectedMajor == "직접입력") data.enteredMajor else selectedMajor
                     )
                 ) {
                     if (data.contactEmail.isEmailRegularExpression() && data.portfolioUrl.isUrlRegularExpression()) {
@@ -132,7 +126,7 @@ fun ProfileScreen(
                             introduce = data.introduce,
                             contactEmail = data.contactEmail,
                             portfolioUrl = data.portfolioUrl,
-                            enteredMajor = enteredMajor.value
+                            enteredMajor = data.enteredMajor
                         )
                         navController.navigate("SchoolLife")
                     } else {
