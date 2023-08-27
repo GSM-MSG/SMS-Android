@@ -91,7 +91,7 @@ fun AwardScreen(
                 onCompleteButtonClick = {
                     viewModel.enterStudentInformation(
                         major = if (enteredProfileData.major == "직접입력") enteredProfileData.enteredMajor else enteredProfileData.major,
-                        techStack = enteredProfileData.techStack.split(",").map { it.trim() },
+                        techStack = enteredProfileData.techStack.map { it.trim() },
                         profileImgUrl = viewModel.getProfileImageUrl(),
                         introduce = enteredProfileData.introduce,
                         portfolioUrl = enteredProfileData.portfolioUrl,
