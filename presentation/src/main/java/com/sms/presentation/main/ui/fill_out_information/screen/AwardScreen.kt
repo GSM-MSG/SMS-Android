@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,12 +8,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListAddButton
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.domain.model.student.request.*
@@ -53,6 +54,27 @@ fun AwardScreen(
 
     val awardList = remember {
         mutableStateListOf(AwardData("", "", "", isToggleOpen = true))
+    }
+
+    val dialogVisile = remember {
+        mutableStateOf(false)
+    }
+    val dialogTitle = remember {
+        mutableStateOf("")
+    }
+    val dialogText = remember {
+        mutableStateOf("")
+    }
+
+    if (dialogVisile.value) {
+        SmsDialog(
+            title = dialogTitle.value,
+            msg = dialogText.value,
+            outLineButtonText = "취소",
+            importantButtonText = "확인",
+            outlineButtonOnClick = { dialogVisile.value = false },
+            importantButtonOnClick = { dialogVisile.value = false }
+        )
     }
 
     LazyColumn {
@@ -95,7 +117,11 @@ fun AwardScreen(
                 onPreviousButtonClick = onPreviousButtonClick,
                 onCompleteButtonClick = {
                     lifecycleScope.launch {
-                        viewModel.imageUpload(enteredProfileData.profileImageUri.toMultipartBody(context)!!) { url ->
+                        viewModel.imageUpload(
+                            enteredProfileData.profileImageUri.toMultipartBody(
+                                context
+                            )!!
+                        ) { url ->
                             profileUrl = url
                         }
 
@@ -172,7 +198,9 @@ fun AwardScreen(
                                 context.finish()
                             },
                             dialog = { visible, title, text ->
-                                Log.d("ddd", "$visible, $title, $text")
+                                dialogVisile.value = visible
+                                dialogTitle.value = title
+                                dialogText.value = text
                             }
                         )
                     }
@@ -195,7 +223,7 @@ suspend fun enterStudentInformation(
             }
 
             is Event.BadRequest -> {
-                dialog(true, "실패", "400")
+                dialog(true, "실패", "배드 리퀘스가")
             }
 
             is Event.Conflict -> {
