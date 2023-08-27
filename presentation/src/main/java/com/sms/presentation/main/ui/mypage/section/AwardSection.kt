@@ -2,12 +2,12 @@ package com.sms.presentation.main.ui.mypage.section
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.mypage.component.award.AwardComponent
-import com.sms.presentation.main.ui.mypage.state.ExpandableAwardDate
 
 @Composable
 fun AwardSection(
-    awardData: ExpandableAwardDate,
+    awardData: AwardData,
     onNameValueChange: (value: String) -> Unit,
     onTypeValueChange: (value: String) -> Unit,
     onDateValueChange: (value: String) -> Unit,
@@ -26,11 +26,10 @@ fun AwardSection(
 @Composable
 private fun AwardSectionPre() {
     AwardSection(
-        ExpandableAwardDate(
+        AwardData(
             title = "수상 1",
             organization = "",
             date = "",
-            isExpand = true
         ),
         onNameValueChange = {},
         onTypeValueChange = {},
