@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -76,6 +77,7 @@ class FillOutInformationActivity : BaseActivity() {
         }
 
         setContent {
+            val focusManager = LocalFocusManager.current
             val scope = rememberCoroutineScope()
             val navController = rememberNavController()
             val bottomSheetState =
@@ -215,24 +217,13 @@ class FillOutInformationActivity : BaseActivity() {
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
                                             if (endDate.isEmpty()) {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(startDate = date)
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
                                             } else {
                                                 projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
+                                                    projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
 
                                                 projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
+                                                    projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
                                             }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
@@ -241,20 +232,10 @@ class FillOutInformationActivity : BaseActivity() {
                                                     projectList[projectIndex.value].copy(endDate = date)
                                             } else {
                                                 projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
+                                                    projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
 
                                                 projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
+                                                    projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
                                             }
                                         }
                                         !isProjectDate.value -> {
@@ -319,6 +300,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                 snackBarVisible.value = true
                                                 snackBarText.value = text
                                                 delay(1.5.seconds)
+                                                focusManager.clearFocus()
                                                 snackBarVisible.value = false
                                             }
                                         }
@@ -390,17 +372,14 @@ class FillOutInformationActivity : BaseActivity() {
                                             fillOutViewModel.setEnteredProjectsInformation(
                                                 projectList.filter { project ->
                                                     project.name.isNotEmpty() ||
-                                                            project.icon != Uri.EMPTY ||
-                                                            project.preview.isNotEmpty() ||
-                                                            project.technologyOfUse.isNotEmpty() ||
-                                                            project.description.isNotEmpty() ||
-                                                            project.keyTask.isNotEmpty() ||
-                                                            project.endDate.isNotEmpty() ||
-                                                            project.startDate.isNotEmpty() ||
-                                                            project.relatedLinkList.first() != Pair(
-                                                        "",
-                                                        ""
-                                                    )
+                                                    project.icon != Uri.EMPTY ||
+                                                    project.preview.isNotEmpty() ||
+                                                    project.technologyOfUse.isNotEmpty() ||
+                                                    project.description.isNotEmpty() ||
+                                                    project.keyTask.isNotEmpty() ||
+                                                    project.endDate.isNotEmpty() ||
+                                                    project.startDate.isNotEmpty() ||
+                                                    project.relatedLinkList.first() != Pair("", "")
                                                 }
                                             )
                                             //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
@@ -432,35 +411,30 @@ class FillOutInformationActivity : BaseActivity() {
                                                 snackBarVisible.value = true
                                                 snackBarText.value = text
                                                 delay(1.5.seconds)
+                                                focusManager.clearFocus()
                                                 snackBarVisible.value = false
                                             }
                                         },
                                         onProjectNameValueChanged = { index, name ->
-                                            projectList[index] =
-                                                projectList[index].copy(name = name)
+                                            projectList[index] = projectList[index].copy(name = name)
                                         },
                                         onProjectIconValueChanged = { index, icon ->
-                                            projectList[index] =
-                                                projectList[index].copy(icon = icon)
+                                            projectList[index] = projectList[index].copy(icon = icon)
                                         },
                                         onProjectPreviewsValueChanged = { index, previews ->
-                                            projectList[index] =
-                                                projectList[index].copy(preview = previews)
+                                            projectList[index] = projectList[index].copy(preview = previews)
                                         },
                                         onProjectTechStackValueChanged = { index, list ->
                                             projectsDetailTechStack[index] = list
                                         },
                                         onProjectDescriptionValueChanged = { index, description ->
-                                            projectList[index] =
-                                                projectList[index].copy(description = description)
+                                            projectList[index] = projectList[index].copy(description = description)
                                         },
                                         onProjectKeyTaskValueChanged = { index, keytask ->
-                                            projectList[index] =
-                                                projectList[index].copy(keyTask = keytask)
+                                            projectList[index] = projectList[index].copy(keyTask = keytask)
                                         },
                                         onProjectRelatedLinksValueChanged = { index, links ->
-                                            projectList[index] =
-                                                projectList[index].copy(relatedLinkList = links)
+                                            projectList[index] = projectList[index].copy(relatedLinkList = links)
                                         }
                                     )
                                 }
