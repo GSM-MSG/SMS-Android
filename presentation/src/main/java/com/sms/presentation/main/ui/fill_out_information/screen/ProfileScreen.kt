@@ -79,8 +79,10 @@ fun ProfileScreen(
         )
     }
 
-    if (detailStacks.size > 5) {
-        onSnackBarVisibleChanged("스택 갯수를 초과하여 ${detailStacks.size - 5}개가 제외되었어요.")
+    LaunchedEffect("SnackBar") {
+        if (detailStacks.size > 5) {
+            onSnackBarVisibleChanged("스택 갯수를 초과하여 ${detailStacks.size - 5}개가 제외되었어요.")
+        }
     }
 
     Column {

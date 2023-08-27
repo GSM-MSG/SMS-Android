@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -63,7 +64,11 @@ fun ProjectsScreen(
             SmsSpacer()
         }
         itemsIndexed(projects) { index, item ->
-            if (detailStacks[index].size > 20) onSnackBarVisibleChanged("스택 갯수를 초과하여 ${detailStacks[index].size - 20}개가 제외되었어요.")
+            LaunchedEffect("SnackBar") {
+                if (detailStacks[index].size > 20) {
+                    onSnackBarVisibleChanged("스택 갯수를 초과하여 ${detailStacks[index].size - 20}개가 제외되었어요.")
+                }
+            }
 
             ProjectsComponent(
                 data = item,

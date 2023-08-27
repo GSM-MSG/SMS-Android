@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.DetailTechStackItem
 import com.msg.sms.design.util.AddGrayBody1Title
@@ -21,8 +20,6 @@ fun ProjectTechStackInputComponent(
     onClick: () -> Unit,
     onProjectTechStackValueChanged: (value: List<String>) -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
-
     AddGrayBody1Title(titleText = "사용기술 (최대 20개)") {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -33,8 +30,6 @@ fun ProjectTechStackInputComponent(
                     .onFocusChanged {
                         if (it.isFocused) {
                             onClick()
-                        } else {
-                            focusManager.clearFocus()
                         }
                     }
             )
