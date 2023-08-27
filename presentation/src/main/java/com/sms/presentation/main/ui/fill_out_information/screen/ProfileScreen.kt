@@ -88,17 +88,13 @@ fun ProfileScreen(
         ) {
             SmsSpacer()
             ProfileComponent(
+                data = data,
                 isReadOnly = selectedMajor != "직접입력",
                 selectedMajor = selectedMajor,
-                savedData = { getIntroduce: String, getPortfolio: String, getContactEmail: String ->
-                    onIntroduceValueChanged(getIntroduce)
-                    onPortfolioUrlValueChanged(getPortfolio)
-                    onContactEmailValueChanged(getContactEmail)
-                },
                 enteredMajor = enteredMajor.value,
-                data = data,
                 isRequired = { result -> isRequired.value = result },
                 profileImageUri = profileImageUri,
+                detailStacks = if (detailStacks.size > 5) detailStacks.subList(0, 5) else detailStacks,
                 changeView = {
                     if (detailStacks.size < 5) {
                         navController.navigate("Search")
@@ -106,13 +102,17 @@ fun ProfileScreen(
                         onSnackBarVisibleChanged("세부스택은 최대 5개 까지 설정할 수 있습니다.")
                     }
                 },
+                onPhotoPickBottomSheetOpenButtonClick = onPhotoPickBottomSheetOpenButtonClick,
+                onMajorBottomSheetOpenButtonClick = onMajorBottomSheetOpenButtonClick,
+                onProfileTechStackValueChanged = onProfileTechStackValueChanged,
+                savedData = { getIntroduce: String, getPortfolio: String, getContactEmail: String ->
+                    onIntroduceValueChanged(getIntroduce)
+                    onPortfolioUrlValueChanged(getPortfolio)
+                    onContactEmailValueChanged(getContactEmail)
+                },
                 enteringMajor = { string ->
                     enteredMajor.value = string
                 },
-                detailStacks = if (detailStacks.size > 5) detailStacks.subList(0, 5) else detailStacks,
-                onPhotoPickBottomSheetOpenButtonClick = onPhotoPickBottomSheetOpenButtonClick,
-                onMajorBottomSheetOpenButtonClick = onMajorBottomSheetOpenButtonClick,
-                onProfileTechStackValueChanged = onProfileTechStackValueChanged
             )
             Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.height(32.dp))

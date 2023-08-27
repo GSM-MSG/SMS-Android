@@ -292,9 +292,9 @@ class FillOutInformationActivity : BaseActivity() {
                                     currentRoute.value = FillOutPage.Profile.value
                                     setSoftInputMode("PAN")
                                     ProfileScreen(
-                                        data = profileData.value,
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                                        data = profileData.value,
                                         detailStacks = profileDetailTechStack,
                                         profileImageUri = profileImageUri.value,
                                         selectedMajor = selectedMajor.value,
