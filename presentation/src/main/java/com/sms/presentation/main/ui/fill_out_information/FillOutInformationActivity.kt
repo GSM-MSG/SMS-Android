@@ -415,6 +415,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     AwardScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                                        lifecycleScope = lifecycleScope,
                                         awardDateMap = awardDateMap,
                                         onDateBottomSheetOpenButtonClick = { index ->
                                             awardIndex.value = index
