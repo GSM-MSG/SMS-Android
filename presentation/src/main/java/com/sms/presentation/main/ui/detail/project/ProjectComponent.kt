@@ -33,6 +33,7 @@ import com.sms.presentation.main.ui.detail.ImportantTaskComponent
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.detail.link.RelatedLinksComponent
+import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 
 @Composable
 fun ProjectComponent(data: ProjectData) {
@@ -59,7 +60,7 @@ fun ProjectComponent(data: ProjectData) {
                         fontWeight = FontWeight.Normal
                     )
                     Text(
-                        text = data.activityDuration,
+                        text = "${data.activityDuration.start} ~ ${data.activityDuration.end ?: "진행 중"}",
                         style = typography.caption2,
                         color = colors.BLACK,
                         fontWeight = FontWeight.Normal
@@ -91,7 +92,7 @@ fun ProjectComponent(data: ProjectData) {
                 }
             }
             AddBody1Title(titleText = "사용기술", spaceSize = 8) {
-                TechStackRow(modifier = Modifier, techStack = data.techStack)
+                TechStackRow(modifier = Modifier, techStack = data.techStacks)
             }
             Spacer(modifier = Modifier.height(24.dp))
             ImportantTaskComponent(importantTask = data.keyTask)
@@ -107,10 +108,10 @@ private fun ProjectComponentPre() {
     ProjectComponent(
         data = ProjectData(
             name = "SMS",
-            activityDuration = "2023 ~",
+            activityDuration = ActivityDuration(start = "2023. 03", end = null),
             projectImage = listOf("https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"),
             icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-            techStack = listOf(
+            techStacks = listOf(
                 "Github",
                 "Git",
                 "Kotlin",
