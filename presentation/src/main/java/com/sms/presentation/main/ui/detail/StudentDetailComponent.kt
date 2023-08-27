@@ -225,7 +225,8 @@ private fun StudentDetailComponentPre() {
                     RelatedLinksData("Youtube", "https://dolmc.com"),
                     RelatedLinksData("GitHujb", "https://youyu.com"),
                     RelatedLinksData("X", "https://asdgasgw.com")
-                )
+                ),
+                description = ""
             ),
             ProjectData(
                 name = "SMS",
@@ -251,7 +252,8 @@ private fun StudentDetailComponentPre() {
                     RelatedLinksData("Youtube", "https://dolmc.com"),
                     RelatedLinksData("GitHujb", "https://youyu.com"),
                     RelatedLinksData("X", "https://asdgasgw.com")
-                )
+                ),
+                description = ""
             )
         ),
         gsmAuthenticationScore = "800",

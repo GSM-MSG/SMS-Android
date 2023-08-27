@@ -226,12 +226,6 @@ fun MyPageComponent(
                         ProjectsSection(
                             data = itemData,
                             techStacks = selectedTechListOnProject[index],
-                            onNameValueChange = {
-                                onProjectValueChange(index, itemData.copy(name = it))
-                            },
-                            onKeyTaskValueChange = {
-                                onProjectValueChange(index, itemData.copy(keyTask = it))
-                            },
                             onLinkNameChanged = { itemIndex, value ->
                                 val relatedLink = itemData.relatedLinks.toMutableList()
                                 relatedLink.set(
@@ -277,7 +271,13 @@ fun MyPageComponent(
                                     itemData.copy(relatedLinks = itemData.relatedLinks.filterIndexed { index, _ -> index != it })
                                 )
                             },
-                            onClickSearchBar = { onProjectSearchBar(index) }
+                            onClickSearchBar = { onProjectSearchBar(index) },
+                            onProjectValueChange = {
+                                onProjectValueChange(
+                                    index,
+                                    it
+                                )
+                            }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
@@ -398,7 +398,8 @@ private fun MyPageComponentPre() {
                     RelatedLinksData("GitHub", "https://youyu.com"),
                     RelatedLinksData("X", "https://asdgasgw.com")
                 ),
-                techStacks = listOf("Android", "Kotlin")
+                techStacks = listOf("Android", "Kotlin"),
+                description = "sljfkd"
             )
         ),
         awards = listOf(),
