@@ -14,10 +14,13 @@ import com.sms.presentation.main.ui.mypage.component.profile.MajorComponent
 import com.sms.presentation.main.ui.mypage.component.profile.PicturePickerComponent
 import com.sms.presentation.main.ui.mypage.component.profile.PortfolioComponent
 import com.sms.presentation.main.ui.mypage.component.profile.SelfIntroduceComponent
+import com.sms.presentation.main.ui.mypage.state.MyProfileData
 
 @Composable
 fun ProfileSection(
-    setMajor: String,
+    myProfileData: MyProfileData,
+    onEnteredMajorValue: (value: String) -> Unit,
+    onValueChange: (value: MyProfileData) -> Unit,
     selectedTechList: List<String>,
     onClickMajorComponent: () -> Unit,
     onClickSearchBar: () -> Unit,
@@ -29,16 +32,26 @@ fun ProfileSection(
             .padding(top = 24.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        PicturePickerComponent(imageUrl = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4")
-        SelfIntroduceComponent(introduceValue = "안드로이드의 왕이 될 남자")
-        EmailComponent(emailValue = "s21042@gsm.hs.kr")
-        MajorComponent(
-            majorValue = "Android",
-            isSelfTyping = setMajor == "직접입력",
-            onClick = onClickMajorComponent,
-            setMajorText = setMajor
+        PicturePickerComponent(
+            onChangeMyProfileImage = { onValueChange(myProfileData.copy(profileImageBitmap = it)) },
+            imageUrl = myProfileData.profileImg,
+            bitmapImage = myProfileData.profileImageBitmap,
         )
-        PortfolioComponent(portfolioValue = "https://youtube.com")
+        SelfIntroduceComponent(introduceValue = myProfileData.introduce, onValueChange = {
+            onValueChange(myProfileData.copy(introduce = it))
+        })
+        EmailComponent(emailValue = myProfileData.contactEmail, onValueChange = {
+            onValueChange(myProfileData.copy(contactEmail = it))
+        })
+        MajorComponent(
+            majorValue = if (myProfileData.major == "직접입력") myProfileData.enteredMajor else myProfileData.major,
+            isSelfTyping = myProfileData.major == "직접입력",
+            onClick = onClickMajorComponent,
+            onValueChange = onEnteredMajorValue
+        )
+        PortfolioComponent(portfolioValue = myProfileData.portfolioUrl, onValueChange = {
+            onValueChange(myProfileData.copy(portfolioUrl = it))
+        })
         DetailTechStackComponent(
             addedList = selectedTechList,
             onClickSearchBar = onClickSearchBar,
@@ -51,10 +64,31 @@ fun ProfileSection(
 @Composable
 private fun ProfileSectionPre() {
     ProfileSection(
-        setMajor = "Android",
+        myProfileData = MyProfileData(
+            name = "",
+            introduce = "",
+            portfolioUrl = "",
+            grade = 0,
+            classNum = 0,
+            number = 0,
+            department = "",
+            major = "",
+            profileImg = "",
+            contactEmail = "",
+            gsmAuthenticationScore = 0,
+            formOfEmployment = "",
+            regions = listOf(),
+            militaryService = "",
+            salary = 0,
+            languageCertificates = listOf(),
+            certificates = listOf(),
+            profileImageBitmap = null
+        ),
+        onValueChange = {},
         selectedTechList = listOf("Android Studio", "Kotlin", "Flutter"),
         onClickMajorComponent = {},
         onClickSearchBar = {},
-        onRemoveDetailStack = {}
+        onRemoveDetailStack = {},
+        onEnteredMajorValue = {}
     )
 }

@@ -18,6 +18,6 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMyProfile(): Flow<MyProfileModel> {
-        return dataSource.getMyProfile().map { it.toMyProfileModel()  }
+        return dataSource.getMyProfile().map { it.toMyProfileModel() }
     }
 }

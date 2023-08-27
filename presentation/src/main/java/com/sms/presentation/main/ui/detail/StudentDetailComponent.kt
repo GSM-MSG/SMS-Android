@@ -38,6 +38,7 @@ import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.detail.project.ProjectListComponent
 import com.sms.presentation.main.ui.fill_out_information.data.CertificationData
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
+import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 
 @Composable
 fun StudentDetailComponent(
@@ -210,7 +211,7 @@ private fun StudentDetailComponentPre() {
         projectList = listOf(
             ProjectData(
                 name = "SMS",
-                activityDuration = "2023 ~",
+                activityDuration = ActivityDuration(start = "2023. 03", end = null),
                 projectImage = listOf(
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
@@ -218,7 +219,7 @@ private fun StudentDetailComponentPre() {
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
                 ),
                 icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                techStack = listOf("Github", "Git", "Kotlin", "Android Studio"),
+                techStacks = listOf("Github", "Git", "Kotlin", "Android Studio"),
                 keyTask = "모이자 ㅋㅋ",
                 relatedLinks = listOf(
                     RelatedLinksData("Youtube", "https://dolmc.com"),
@@ -228,10 +229,10 @@ private fun StudentDetailComponentPre() {
             ),
             ProjectData(
                 name = "SMS",
-                activityDuration = "2023 ~",
+                activityDuration = ActivityDuration(start = "2023.03", end = null),
                 projectImage = listOf("https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"),
                 icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                techStack = listOf(
+                techStacks = listOf(
                     "Github",
                     "Git",
                     "Kotlin",

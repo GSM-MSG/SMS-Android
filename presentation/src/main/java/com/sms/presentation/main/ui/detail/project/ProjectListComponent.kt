@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
+import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 
 @Composable
 fun ProjectListComponent(
@@ -51,7 +52,7 @@ private fun ProjectComponentPre() {
         projectList = listOf(
             ProjectData(
                 name = "SMS",
-                activityDuration = "2023 ~",
+                activityDuration = ActivityDuration(start = "2023. 03", end = null),
                 projectImage = listOf(
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
@@ -59,7 +60,7 @@ private fun ProjectComponentPre() {
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
                 ),
                 icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                techStack = listOf("Github", "Git", "Kotlin", "Android Studio"),
+                techStacks = listOf("Github", "Git", "Kotlin", "Android Studio"),
                 keyTask = "모이자 ㅋㅋ",
                 relatedLinks = listOf(
                     RelatedLinksData("Youtube", "https://dolmc.com"),
@@ -69,10 +70,10 @@ private fun ProjectComponentPre() {
             ),
             ProjectData(
                 name = "SMS",
-                activityDuration = "2023 ~",
+                activityDuration = ActivityDuration(start = "2023. 03", end = "2023. 07"),
                 projectImage = listOf("https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"),
                 icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-                techStack = listOf("Github", "Git", "Kotlin", "Android Studio"),
+                techStacks = listOf("Github", "Git", "Kotlin", "Android Studio"),
                 keyTask = "모이자 ㅋㅋ",
                 relatedLinks = listOf(
                     RelatedLinksData("Youtube", "https://dolmc.com"),
