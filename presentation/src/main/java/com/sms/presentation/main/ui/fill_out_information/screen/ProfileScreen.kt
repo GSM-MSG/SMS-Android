@@ -14,6 +14,7 @@ import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.sms.presentation.main.ui.fill_out_information.component.profile.ProfileComponent
+import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
 import com.sms.presentation.main.ui.util.isEmailRegularExpression
 import com.sms.presentation.main.ui.util.isUrlRegularExpression
 import com.sms.presentation.main.ui.util.textFieldChecker
@@ -23,6 +24,7 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 fun ProfileScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
+    data: ProfileData,
     profileImageUri: Uri,
     selectedMajor: String,
     detailStacks: List<String>,
@@ -31,19 +33,12 @@ fun ProfileScreen(
     onMajorBottomSheetOpenButtonClick: () -> Unit,
     onDialogDissmissButtonClick: () -> Unit,
     onSnackBarVisibleChanged: (text: String) -> Unit,
-    onProfileTechStackValueChanged: (list: List<String>) -> Unit
+    onProfileTechStackValueChanged: (list: List<String>) -> Unit,
+    onIntroduceValueChanged: (value: String) -> Unit,
+    onPortfolioUrlValueChanged: (value: String) -> Unit,
+    onContactEmailValueChanged: (value: String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
-    val data = viewModel.getEnteredProfileInformation()
-    val introduce = remember {
-        mutableStateOf("")
-    }
-    val portfolioUrl = remember {
-        mutableStateOf("")
-    }
-    val contactEmail = remember {
-        mutableStateOf("")
-    }
     val isRequired = remember {
         mutableStateOf(false)
     }
@@ -95,10 +90,10 @@ fun ProfileScreen(
             ProfileComponent(
                 isReadOnly = selectedMajor != "직접입력",
                 selectedMajor = selectedMajor,
-                savedData = { getIntroduce: String, getPortfolio: String, getContactEmail: String, getProfileImageUri: Uri ->
-                    introduce.value = getIntroduce
-                    portfolioUrl.value = getPortfolio
-                    contactEmail.value = getContactEmail
+                savedData = { getIntroduce: String, getPortfolio: String, getContactEmail: String ->
+                    onIntroduceValueChanged(getIntroduce)
+                    onPortfolioUrlValueChanged(getPortfolio)
+                    onContactEmailValueChanged(getContactEmail)
                 },
                 enteredMajor = enteredMajor.value,
                 data = data,
@@ -129,14 +124,14 @@ fun ProfileScreen(
                         if (selectedMajor == "직접입력") enteredMajor.value else selectedMajor
                     )
                 ) {
-                    if (contactEmail.value.isEmailRegularExpression() && portfolioUrl.value.isUrlRegularExpression()) {
+                    if (data.contactEmail.isEmailRegularExpression() && data.portfolioUrl.isUrlRegularExpression()) {
                         viewModel.setEnteredProfileInformation(
                             major = selectedMajor,
                             techStack = detailStacks.joinToString(", "),
                             profileImgUri = profileImageUri,
-                            introduce = introduce.value,
-                            contactEmail = contactEmail.value,
-                            portfolioUrl = portfolioUrl.value,
+                            introduce = data.introduce,
+                            contactEmail = data.contactEmail,
+                            portfolioUrl = data.portfolioUrl,
                             enteredMajor = enteredMajor.value
                         )
                         navController.navigate("SchoolLife")

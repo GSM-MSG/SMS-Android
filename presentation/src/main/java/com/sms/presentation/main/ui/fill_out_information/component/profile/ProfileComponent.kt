@@ -43,7 +43,7 @@ fun ProfileComponent(
     onMajorBottomSheetOpenButtonClick: () -> Unit,
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
     onProfileTechStackValueChanged: (list: List<String>) -> Unit,
-    savedData: (introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit
+    savedData: (introduce: String, portfolio: String, contactEmail: String) -> Unit
 ) {
     SMSTheme { _, typography ->
         val context = LocalContext.current as FillOutInformationActivity
@@ -61,8 +61,7 @@ fun ProfileComponent(
         savedData(
             if (introduce.value == "") data.introduce else introduce.value,
             if (portfolioUrl.value == "") data.portfolioUrl else portfolioUrl.value,
-            if (contactEmail.value == "") data.contactEmail else contactEmail.value,
-            if (profileImageUri == Uri.EMPTY) data.profileImageUri else profileImageUri
+            if (contactEmail.value == "") data.contactEmail else contactEmail.value
         )
 
         isRequired(
@@ -168,7 +167,7 @@ fun ProfileComponent(
 fun ProfileComponentPre() {
     ProfileComponent(
         selectedMajor = "FrontEnd",
-        savedData = { _: String, _: String, _: String, _: Uri -> },
+        savedData = { _: String, _: String, _: String -> },
         data = ProfileData(Uri.EMPTY, "", "", "", "", "", ""),
         isRequired = {},
         detailStacks = listOf("a", "b", "c"),
