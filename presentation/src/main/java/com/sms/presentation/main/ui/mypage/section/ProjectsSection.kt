@@ -10,14 +10,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.project.ProjectComponent
-import com.sms.presentation.main.ui.mypage.state.ExpandableProjectData
+import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 
 @Composable
 fun ProjectsSection(
-    data: ExpandableProjectData,
+    data: ProjectData,
     techStacks: ProjectTechStack,
     enteredPreviews: List<Bitmap>,
     onNameValueChange: (value: String) -> Unit,
@@ -37,15 +38,22 @@ fun ProjectsSection(
         contract = ActivityResultContracts.GetMultipleContents()
     ) {
         if (enteredPreviews.size + data.projectImage.size + it.size <= 4) {
-            val enteredList = if (Build.VERSION.SDK_INT < 28) {
-                it.map { uri -> MediaStore.Images.Media.getBitmap(context.contentResolver, uri) }
-            } else {
-                it.map { uri ->
-                    val source = ImageDecoder.createSource(context.contentResolver, uri)
-                    ImageDecoder.decodeBitmap(source)
+            if (it.isNotEmpty()) {
+                val enteredList = if (Build.VERSION.SDK_INT < 28) {
+                    it.map { uri ->
+                        MediaStore.Images.Media.getBitmap(
+                            context.contentResolver,
+                            uri
+                        )
+                    }
+                } else {
+                    it.map { uri ->
+                        val source = ImageDecoder.createSource(context.contentResolver, uri)
+                        ImageDecoder.decodeBitmap(source)
+                    }
                 }
+                onAddBitmap(enteredList)
             }
-            onAddBitmap(enteredList)
         } else {
             Toast.makeText(context, "최대 4개까지 가능합니다.", Toast.LENGTH_SHORT).show()
         }
@@ -71,23 +79,25 @@ fun ProjectsSection(
 @Preview
 @Composable
 private fun ProjectSectionPre() {
-    ProjectsSection(data = ExpandableProjectData(
-        name = "SMS",
-        activityDuration = "2023 ~",
-        projectImage = listOf(
-            "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-            "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-            "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-            "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
+    ProjectsSection(
+        data = ProjectData(
+            name = "SMS",
+            activityDuration = ActivityDuration(start = "2023. 03", end = null),
+            projectImage = listOf(
+                "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+                "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"
+            ),
+            icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+            keyTask = "모이자 ㅋㅋ",
+            relatedLinks = listOf(
+                RelatedLinksData("Youtube", "https://dolmc.com"),
+                RelatedLinksData("GitHub", "https://youyu.com"),
+                RelatedLinksData("X", "https://asdgasgw.com")
+            ),
+            techStacks = listOf("Android", "Kotlin")
         ),
-        icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
-        keyTask = "모이자 ㅋㅋ",
-        relatedLinks = listOf(
-            RelatedLinksData("Youtube", "https://dolmc.com"),
-            RelatedLinksData("GitHujb", "https://youyu.com"),
-            RelatedLinksData("X", "https://asdgasgw.com")
-        ), isExpand = true
-    ),
         enteredPreviews = listOf(),
         onNameValueChange = {},
         onKeyTaskValueChange = {},

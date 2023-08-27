@@ -14,6 +14,7 @@ import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.sms.presentation.main.ui.fill_out_information.component.profile.ProfileComponent
+import com.sms.presentation.main.ui.fill_out_information.data.ProfileData
 import com.sms.presentation.main.ui.util.isEmailRegularExpression
 import com.sms.presentation.main.ui.util.isUrlRegularExpression
 import com.sms.presentation.main.ui.util.textFieldChecker
@@ -23,6 +24,7 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 fun ProfileScreen(
     navController: NavController,
     viewModel: FillOutViewModel,
+    data: ProfileData,
     profileImageUri: Uri,
     selectedMajor: String,
     detailStacks: List<String>,
@@ -30,24 +32,12 @@ fun ProfileScreen(
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
     onMajorBottomSheetOpenButtonClick: () -> Unit,
     onDialogDissmissButtonClick: () -> Unit,
-    onProfileTechStackValueChanged: (list: List<String>) -> Unit
+    onSnackBarVisibleChanged: (text: String) -> Unit,
+    onProjectValueChanged: (data: ProfileData) -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val data = viewModel.getEnteredProfileInformation()
-    val introduce = remember {
-        mutableStateOf("")
-    }
-    val portfolioUrl = remember {
-        mutableStateOf("")
-    }
-    val contactEmail = remember {
-        mutableStateOf("")
-    }
     val isRequired = remember {
         mutableStateOf(false)
-    }
-    val enteredMajor = remember {
-        mutableStateOf(if (data.enteredMajor != "") data.enteredMajor else "")
     }
     val dialogState = remember {
         mutableStateOf(false)
@@ -78,6 +68,12 @@ fun ProfileScreen(
         )
     }
 
+    LaunchedEffect("SnackBar") {
+        if (detailStacks.size > 5) {
+            onSnackBarVisibleChanged("스택 갯수를 초과하여 ${detailStacks.size - 5}개가 제외되었어요.")
+        }
+    }
+
     Column {
         Column(
             Modifier
@@ -86,36 +82,23 @@ fun ProfileScreen(
         ) {
             SmsSpacer()
             ProfileComponent(
+                data = data,
                 isReadOnly = selectedMajor != "직접입력",
                 selectedMajor = selectedMajor,
-                savedData = { getIntroduce: String, getPortfolio: String, getContactEmail: String, getProfileImageUri: Uri ->
-                    introduce.value = getIntroduce
-                    portfolioUrl.value = getPortfolio
-                    contactEmail.value = getContactEmail
-                },
-                enteredMajor = enteredMajor.value,
-                data = data,
-                isRequired = { result -> isRequired.value = result },
+                enteredMajor = data.enteredMajor,
                 profileImageUri = profileImageUri,
+                detailStacks = if (detailStacks.size > 5) detailStacks.subList(0, 5) else detailStacks,
                 changeView = {
-                    viewModel.setEnteredProfileInformation(
-                        major = selectedMajor,
-                        techStack = detailStacks.joinToString(", "),
-                        profileImgUri = profileImageUri,
-                        introduce = introduce.value,
-                        contactEmail = contactEmail.value,
-                        portfolioUrl = portfolioUrl.value,
-                        enteredMajor = enteredMajor.value
-                    )
-                    navController.navigate("Search")
+                    if (detailStacks.size < 5) {
+                        navController.navigate("Search")
+                    } else {
+                        onSnackBarVisibleChanged("세부스택은 최대 5개 까지 설정할 수 있습니다.")
+                    }
                 },
-                enteringMajor = { string ->
-                    enteredMajor.value = string
-                },
-                detailStacks = detailStacks,
                 onPhotoPickBottomSheetOpenButtonClick = onPhotoPickBottomSheetOpenButtonClick,
                 onMajorBottomSheetOpenButtonClick = onMajorBottomSheetOpenButtonClick,
-                onProfileTechStackValueChanged = onProfileTechStackValueChanged
+                isRequired = { result -> isRequired.value = result },
+                onProfileValueChanged = onProjectValueChanged
             )
             Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.height(32.dp))
@@ -124,18 +107,18 @@ fun ProfileScreen(
                         .fillMaxWidth()
                         .height(48.dp),
                     enabled = isRequired.value && textFieldChecker(
-                        if (selectedMajor == "직접입력") enteredMajor.value else selectedMajor
+                        if (selectedMajor == "직접입력") data.enteredMajor else selectedMajor
                     )
                 ) {
-                    if (contactEmail.value.isEmailRegularExpression() && portfolioUrl.value.isUrlRegularExpression()) {
+                    if (data.contactEmail.isEmailRegularExpression() && data.portfolioUrl.isUrlRegularExpression()) {
                         viewModel.setEnteredProfileInformation(
                             major = selectedMajor,
-                            techStack = detailStacks.joinToString(", "),
+                            techStack = detailStacks,
                             profileImgUri = profileImageUri,
-                            introduce = introduce.value,
-                            contactEmail = contactEmail.value,
-                            portfolioUrl = portfolioUrl.value,
-                            enteredMajor = enteredMajor.value
+                            introduce = data.introduce,
+                            contactEmail = data.contactEmail,
+                            portfolioUrl = data.portfolioUrl,
+                            enteredMajor = data.enteredMajor
                         )
                         navController.navigate("SchoolLife")
                     } else {

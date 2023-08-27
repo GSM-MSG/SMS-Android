@@ -23,7 +23,7 @@ fun WorkLocationComponent(
     workLocationsList: List<String>,
     onValueChange: (index: Int, item: String) -> Unit,
     onClickAddButton: () -> Unit,
-    onClickRemoveButton: (String) -> Unit,
+    onClickRemoveButton: (Int) -> Unit,
 ) {
     AddGrayBody1Title(titleText = "근무지역") {
         LazyColumn(
@@ -47,7 +47,7 @@ fun WorkLocationComponent(
                             onValueChange(index, "")
                         }
                     }
-                    IconButton(onClick = { onClickRemoveButton(item) }) {
+                    IconButton(onClick = { onClickRemoveButton(index) }) {
                         TrashCanIcon()
                     }
                 }

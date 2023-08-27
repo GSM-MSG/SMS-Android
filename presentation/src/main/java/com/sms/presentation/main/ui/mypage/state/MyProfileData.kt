@@ -1,6 +1,9 @@
-package com.msg.sms.domain.model.user.response
+package com.sms.presentation.main.ui.mypage.state
 
-data class MyProfileModel(
+import android.graphics.Bitmap
+import com.msg.sms.domain.model.user.response.LanguageCertificateModel
+
+data class MyProfileData(
     val name: String,
     val introduce: String,
     val portfolioUrl: String,
@@ -9,7 +12,9 @@ data class MyProfileModel(
     val number: Int,
     val department: String,
     val major: String,
+    val enteredMajor: String = "",
     val profileImg: String,
+    val profileImageBitmap: Bitmap? = null,
     val contactEmail: String,
     val gsmAuthenticationScore: Int,
     val formOfEmployment: String,
@@ -18,7 +23,4 @@ data class MyProfileModel(
     val salary: Int,
     val languageCertificates: List<LanguageCertificateModel>,
     val certificates: List<String>,
-    val techStacks: List<String>,
-    val projects: List<ProjectModel>,
-    val prizes: List<PrizeModel>
 )

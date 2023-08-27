@@ -46,7 +46,7 @@ class FillOutViewModel @Inject constructor(
 
     private val major = mutableStateOf("")
     private val enteredMajor = mutableStateOf("")
-    private val techStacks = mutableStateOf("")
+    private val techStacks = mutableStateListOf<String>()
     private val profileImageUri = mutableStateOf(Uri.EMPTY)
     private val introduce = mutableStateOf("")
     private val portfolioUrl = mutableStateOf("")
@@ -70,14 +70,14 @@ class FillOutViewModel @Inject constructor(
             enteredMajor = enteredMajor.value,
             major = major.value,
             portfolioUrl = portfolioUrl.value,
-            techStack = techStacks.value
+            techStack = techStacks
         )
     }
 
     fun setEnteredProfileInformation(
         enteredMajor: String,
         major: String,
-        techStack: String,
+        techStack: List<String>,
         profileImgUri: Uri,
         introduce: String,
         contactEmail: String,
@@ -85,7 +85,8 @@ class FillOutViewModel @Inject constructor(
     ) {
         this.enteredMajor.value = enteredMajor
         this.major.value = major
-        this.techStacks.value = techStack
+        this.techStacks.removeAll { !techStack.contains(it) }
+        this.techStacks.addAll(techStack.filter { !this.techStacks.contains(it) })
         this.profileImageUri.value = profileImgUri
         this.introduce.value = introduce
         this.contactEmail.value = contactEmail

@@ -22,6 +22,7 @@ import com.sms.presentation.main.ui.mypage.MyPageScreen
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
+import com.sms.presentation.main.viewmodel.MyProfileViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -45,6 +46,7 @@ class MainActivity : BaseActivity() {
     private val authViewModel by viewModels<AuthViewModel>()
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
+    private val myProfileViewModel by viewModels<MyProfileViewModel>()
 
     private val searchDetailStack = mutableStateOf(listOf<String>())
 
@@ -83,15 +85,6 @@ class MainActivity : BaseActivity() {
                 if (response is Event.Success) {
                     setContent {
                         val navController = rememberNavController()
-                        val technologyStackList = remember {
-                            mutableStateListOf("Android Studio", "Kotlin")
-                        }
-                        val technologyStackListByProjectPage = remember {
-                            mutableStateListOf(
-                                ProjectTechStack(listOf("Kotlin", "Jetpack Compose")),
-                                ProjectTechStack(listOf("Git"))
-                            )
-                        }
                         val filterTechStack = remember {
                             mutableStateListOf("Android Studio", "Kotlin")
                         }
@@ -112,9 +105,11 @@ class MainActivity : BaseActivity() {
                                     role = response.data!!,
                                     onFilterClick = { navController.navigate(MainPage.Filter.value) },
                                     onProfileClick = { role ->
-                                        if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
+                                        if (role == "ROLE_STUDENT") {
+                                            myProfileViewModel.getMyProfile()
                                             navController.navigate(MainPage.MyPage.value)
                                         } else {
+                                            authViewModel.deleteToken()
                                             this@MainActivity.startActivity(
                                                 Intent(
                                                     this@MainActivity,
@@ -165,20 +160,23 @@ class MainActivity : BaseActivity() {
                                         searchDetailStackViewModel.searchDetailStack(it)
                                     },
                                     selectedStack = when (selectedTechStack.value) {
-                                        SelectedTechStack.MyPage -> technologyStackList
+                                        SelectedTechStack.MyPage -> myProfileViewModel.techStacks.value
                                         SelectedTechStack.Filter -> filterTechStack
-                                        SelectedTechStack.Project -> technologyStackListByProjectPage[projectIndex.value].techStacks
+                                        SelectedTechStack.Project -> myProfileViewModel.projects.value[projectIndex.value].techStacks
                                     },
                                     detailStack = searchDetailStack.value,
                                 ) { list ->
                                     when (selectedTechStack.value) {
                                         SelectedTechStack.MyPage -> {
-                                            technologyStackList.removeAll(technologyStackList.filter {
+                                            val techStacks =
+                                                myProfileViewModel.techStacks.value.toMutableList()
+                                            techStacks.removeAll(techStacks.filter {
                                                 !list.contains(it)
                                             })
-                                            technologyStackList.addAll(list.filter {
-                                                !technologyStackList.contains(it)
+                                            techStacks.addAll(list.filter {
+                                                !techStacks.contains(it)
                                             })
+                                            myProfileViewModel.onChangeTechStackList(techStacks = techStacks)
                                         }
 
                                         SelectedTechStack.Filter -> {
@@ -191,10 +189,10 @@ class MainActivity : BaseActivity() {
                                         }
 
                                         SelectedTechStack.Project -> {
-                                            technologyStackListByProjectPage[projectIndex.value] =
-                                                technologyStackListByProjectPage[projectIndex.value].copy(
-                                                    techStacks = list
-                                                )
+                                            myProfileViewModel.onChangeProjectTechStack(
+                                                projectIndex = projectIndex.value,
+                                                techStacks = list
+                                            )
                                         }
                                     }
                                     navController.popBackStack()
@@ -202,16 +200,29 @@ class MainActivity : BaseActivity() {
                             }
                             composable(MainPage.MyPage.value) {
                                 MyPageScreen(
+                                    viewModel = viewModel(LocalContext.current as MainActivity),
+                                    myProfileData = myProfileViewModel.myProfileData.value,
+                                    bitmapPreviews = myProfileViewModel.bitmapPreviews.value,
+                                    projects = myProfileViewModel.projects.value,
                                     majorList = studentListViewModel.majorList,
-                                    selectedTechList = technologyStackList,
-                                    selectedTechListOnProject = technologyStackListByProjectPage,
+                                    awards = myProfileViewModel.awards.value,
+                                    selectedTechList = myProfileViewModel.techStacks.value,
+                                    selectedTechListOnProject = myProfileViewModel.projects.value.map {
+                                        ProjectTechStack(
+                                            it.techStacks
+                                        )
+                                    },
+                                    onAddAward = { myProfileViewModel.onAddAward() },
+                                    onAddProject = { myProfileViewModel.onAddProject() },
                                     onWithdrawal = {
                                         studentListViewModel.withdrawal()
                                         authViewModel.deleteToken()
-                                    }, onLogout = {
+                                    },
+                                    onLogout = {
                                         studentListViewModel.logout()
                                         authViewModel.deleteToken()
-                                    }, onClickSearchBar = {
+                                    },
+                                    onClickSearchBar = {
                                         selectedTechStack.value = SelectedTechStack.MyPage
                                         navController.navigate(MainPage.Search.value)
                                     },
@@ -222,14 +233,54 @@ class MainActivity : BaseActivity() {
                                         projectIndex.value = it
                                         selectedTechStack.value = SelectedTechStack.Project
                                         navController.navigate(MainPage.Search.value)
-                                    }, onRemoveDetailStack = {
-                                        technologyStackList.remove(it)
+                                    },
+                                    onRemoveDetailStack = {
+                                        myProfileViewModel.removeTechStack(it)
+                                    },
+                                    onRemoveProject = {
+                                        myProfileViewModel.removeProject(index = it)
                                     },
                                     onRemoveProjectDetailStack = { index: Int, value: String ->
-                                        val item =
-                                            technologyStackListByProjectPage[index].techStacks.filterNot { it == value }
-                                        technologyStackListByProjectPage[index] =
-                                            technologyStackListByProjectPage[index].copy(techStacks = item)
+                                        myProfileViewModel.removeProjectTechStack(
+                                            projectIndex = index,
+                                            techStack = value
+                                        )
+                                    },
+                                    onRemoveAward = { myProfileViewModel.removeAward(awardIndex = it) },
+                                    onProjectValueChange = { index, data ->
+                                        myProfileViewModel.onChangeProjectValue(
+                                            index = index,
+                                            value = data
+                                        )
+                                    },
+                                    onAwardValueChange = { index, award ->
+                                        myProfileViewModel.onChangeAwardValue(
+                                            awardIndex = index,
+                                            award = award
+                                        )
+                                    },
+                                    onAddBitmapPreview = { indexOfProject, previews ->
+                                        myProfileViewModel.addBitmapPreview(
+                                            indexOfProject = indexOfProject,
+                                            previews = previews
+                                        )
+                                    },
+                                    onRemoveBitmapPreview = { indexOfProject, indexOfPreview ->
+                                        myProfileViewModel.removeBitmapPreview(
+                                            indexOfProject = indexOfProject,
+                                            indexOfPreview = indexOfPreview
+                                        )
+                                    },
+                                    isExpandedProject = myProfileViewModel.isExpandedProject.value,
+                                    isExpandedAward = myProfileViewModel.isExpandedAward.value,
+                                    onExpandProjectClick = {
+                                        myProfileViewModel.onChangeProjectExpand(index = it)
+                                    },
+                                    onExpandAwardClick = {
+                                        myProfileViewModel.onChangeAwardExpand(index = it)
+                                    },
+                                    onProfileValueChange = {
+                                        myProfileViewModel.onProfileValueChange(myProfile = it)
                                     }
                                 )
                             }

@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -38,38 +36,18 @@ fun ProfileComponent(
     profileImageUri: Uri,
     isReadOnly: Boolean,
     changeView: () -> Unit,
-    isRequired: (Boolean) -> Unit,
-    enteringMajor: (String) -> Unit,
     onMajorBottomSheetOpenButtonClick: () -> Unit,
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
-    onProfileTechStackValueChanged: (list: List<String>) -> Unit,
-    savedData: (introduce: String, portfolio: String, contactEmail: String, profileImageUri: Uri) -> Unit
+    isRequired: (Boolean) -> Unit,
+    onProfileValueChanged: (data: ProfileData) -> Unit
 ) {
     SMSTheme { _, typography ->
         val context = LocalContext.current as FillOutInformationActivity
-
-        val introduce = remember {
-            mutableStateOf(if (data.introduce != "") data.introduce else "")
-        }
-        val portfolioUrl = remember {
-            mutableStateOf(if (data.portfolioUrl != "") data.portfolioUrl else "")
-        }
-        val contactEmail = remember {
-            mutableStateOf(if (data.contactEmail != "") data.contactEmail else "")
-        }
-
-        savedData(
-            if (introduce.value == "") data.introduce else introduce.value,
-            if (portfolioUrl.value == "") data.portfolioUrl else portfolioUrl.value,
-            if (contactEmail.value == "") data.contactEmail else contactEmail.value,
-            if (profileImageUri == Uri.EMPTY) data.profileImageUri else profileImageUri
-        )
-
         isRequired(
             textFieldChecker(
-                introduce.value,
+                data.introduce,
                 profileImageUri.toString(),
-                contactEmail.value
+                data.contactEmail
             ) && profileImageUri != Uri.EMPTY && detailStacks.isNotEmpty()
         )
 
@@ -110,22 +88,24 @@ fun ProfileComponent(
             SmsTextField(
                 placeHolder = "1줄 자기소개 입력",
                 modifier = Modifier.fillMaxWidth(),
-                setText = introduce.value,
-                onValueChange = { introduce.value = it }
-            ) {
-                introduce.value = ""
-            }
+                setText = data.introduce,
+                onValueChange = { introduce ->
+                    onProfileValueChanged(data.copy(introduce = introduce))
+                },
+                onClickButton = { onProfileValueChanged(data.copy(introduce = "")) }
+            )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "이메일", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
             SmsTextField(
                 placeHolder = "공개용 이메일 입력",
                 modifier = Modifier.fillMaxWidth(),
-                setText = contactEmail.value,
-                onValueChange = { contactEmail.value = it }
-            ) {
-                contactEmail.value = ""
-            }
+                setText = data.contactEmail,
+                onValueChange = { email ->
+                    onProfileValueChanged(data.copy(contactEmail = email))
+                },
+                onClickButton = { onProfileValueChanged(data.copy(contactEmail = "")) }
+            )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "분야", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
@@ -139,8 +119,8 @@ fun ProfileComponent(
                     context.hideKeyboard()
                 },
                 setChangeText = if (selectedMajor == "직접입력") enteredMajor else selectedMajor
-            ) {
-                enteringMajor(it)
+            ) { enteredMajor ->
+                onProfileValueChanged(data.copy(enteredMajor = enteredMajor))
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "포트폴리오 URL", style = typography.body2)
@@ -148,16 +128,19 @@ fun ProfileComponent(
             SmsTextField(
                 placeHolder = "https://",
                 modifier = Modifier.fillMaxWidth(),
-                setText = portfolioUrl.value,
-                onValueChange = { portfolioUrl.value = it }
-            ) {
-                portfolioUrl.value = ""
-            }
+                setText = data.portfolioUrl,
+                onValueChange = { portfolio ->
+                    onProfileValueChanged(data.copy(portfolioUrl = portfolio))
+                },
+                onClickButton = { onProfileValueChanged(data.copy(portfolioUrl = "")) }
+            )
             Spacer(modifier = Modifier.height(24.dp))
             ProfileTechStackInputComponent(
                 techStack = detailStacks,
                 onClick = changeView,
-                onProfileTechStackValueChanged = onProfileTechStackValueChanged
+                onProfileTechStackValueChanged = { techStacks ->
+                    onProfileValueChanged(data.copy(techStack = techStacks))
+                }
             )
         }
     }
@@ -168,17 +151,15 @@ fun ProfileComponent(
 fun ProfileComponentPre() {
     ProfileComponent(
         selectedMajor = "FrontEnd",
-        savedData = { _: String, _: String, _: String, _: Uri -> },
-        data = ProfileData(Uri.EMPTY, "", "", "", "", "", ""),
+        data = ProfileData(Uri.EMPTY, "", "", "", "", "", emptyList()),
         isRequired = {},
         detailStacks = listOf("a", "b", "c"),
         profileImageUri = Uri.EMPTY,
         isReadOnly = true,
         changeView = {},
-        enteringMajor = {},
         enteredMajor = "",
         onMajorBottomSheetOpenButtonClick = {},
         onPhotoPickBottomSheetOpenButtonClick = {},
-        onProfileTechStackValueChanged = {}
+        onProfileValueChanged = {}
     )
 }
