@@ -278,7 +278,8 @@ private fun MyPageScreenPre() {
                     RelatedLinksData("GitHub", "https://youyu.com"),
                     RelatedLinksData("X", "https://asdgasgw.com")
                 ),
-                techStacks = listOf("Android", "Kotlin")
+                techStacks = listOf("Android", "Kotlin"),
+                description = ""
             )
         ),
         awards = listOf(),

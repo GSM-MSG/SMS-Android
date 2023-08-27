@@ -21,8 +21,7 @@ fun ProjectsSection(
     data: ProjectData,
     techStacks: ProjectTechStack,
     enteredPreviews: List<Bitmap>,
-    onNameValueChange: (value: String) -> Unit,
-    onKeyTaskValueChange: (value: String) -> Unit,
+    onProjectValueChange: (value: ProjectData) -> Unit,
     onLinkNameChanged: (index: Int, value: String) -> Unit,
     onLinkChanged: (index: Int, value: String) -> Unit,
     onRemoveProjectImage: (list: List<String>) -> Unit,
@@ -61,8 +60,6 @@ fun ProjectsSection(
     ProjectComponent(
         data = data,
         techStacks = techStacks,
-        onNameValueChange = onNameValueChange,
-        onKeyTaskValueChange = onKeyTaskValueChange,
         onLinkNameChanged = onLinkNameChanged,
         onLinkChanged = onLinkChanged,
         onRemoveProjectImageButton = onRemoveProjectImage,
@@ -72,7 +69,8 @@ fun ProjectsSection(
         onAddLinkButton = onAddLink,
         onRemoveProjectDetailStack = onRemoveProjectDetailStack,
         onRemoveRelatedLInk = onRemoveRelatedLink,
-        onClickSearchBar = onClickSearchBar
+        onClickSearchBar = onClickSearchBar,
+        onProjectValueChange = onProjectValueChange
     )
 }
 
@@ -96,11 +94,10 @@ private fun ProjectSectionPre() {
                 RelatedLinksData("GitHub", "https://youyu.com"),
                 RelatedLinksData("X", "https://asdgasgw.com")
             ),
-            techStacks = listOf("Android", "Kotlin")
+            techStacks = listOf("Android", "Kotlin"),
+            description = ""
         ),
         enteredPreviews = listOf(),
-        onNameValueChange = {},
-        onKeyTaskValueChange = {},
         onLinkNameChanged = { _, _ -> },
         onLinkChanged = { _, _ -> },
         onRemoveProjectImage = {},
@@ -110,6 +107,7 @@ private fun ProjectSectionPre() {
         onRemoveProjectDetailStack = {},
         onRemoveRelatedLink = {},
         onClickSearchBar = {},
-        techStacks = ProjectTechStack(listOf())
+        techStacks = ProjectTechStack(listOf()),
+        onProjectValueChange = {}
     )
 }
