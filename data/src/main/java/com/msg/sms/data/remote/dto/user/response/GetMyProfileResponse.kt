@@ -9,7 +9,7 @@ data class GetMyProfileResponse(
     val name: String,
     @SerializedName("introduce")
     val introduce: String,
-    @SerializedName("dreamBookFileUrl")
+    @SerializedName("portfolioUrl")
     val portfolioUrl: String,
     @SerializedName("grade")
     val grade: Int,
