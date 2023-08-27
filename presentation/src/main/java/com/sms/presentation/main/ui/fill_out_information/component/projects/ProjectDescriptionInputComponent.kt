@@ -26,9 +26,7 @@ fun ProjectDescriptionInputComponent(
                 description.value = it
                 onValueChange(it)
             },
-            onClickButton = { description.value = "" },
-            errorText = "프로젝트 내용을 입력해 주세요.",
-            isError = true
+            onClickButton = { description.value = "" }
         )
     }
 }

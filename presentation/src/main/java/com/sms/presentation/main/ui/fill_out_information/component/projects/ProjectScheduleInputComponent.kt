@@ -68,15 +68,6 @@ fun ProjectScheduleInputComponent(
                     }
                 }
             }
-            SMSTheme { colors, typography ->
-                Text(
-                    text = "프로젝트 진행 기간을 입력해 주세요.",
-                    style = typography.caption1,
-                    color = colors.ERROR,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-            }
-
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 SmsCheckBox(checked = isProjectProgress, onClick = onProgressButtonClick)
                 SMSTheme { colors, typography ->
