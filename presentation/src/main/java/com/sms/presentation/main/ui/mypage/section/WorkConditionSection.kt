@@ -20,7 +20,7 @@ fun WorkConditionSection(
     onValueChange: (index: Int, item: String) -> Unit,
     onClickOpenButton: () -> Unit,
     onClickAddButton: () -> Unit,
-    onClickRemoveButton: (String) -> Unit,
+    onClickRemoveButton: (Int) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -47,6 +47,6 @@ private fun WorkConditionSectionPre() {
         wantPay = "2000",
         wantWorkForm = "정규직",
         onClickOpenButton = {},
-        onValueChange = { index, item -> },
+        onValueChange = { _, _ -> },
         onClickAddButton = {}) {}
 }
