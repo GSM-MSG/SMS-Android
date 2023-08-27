@@ -1,7 +1,6 @@
 package com.msg.sms.data.remote.dto.user.response
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.domain.model.user.response.LinkModel
 import com.msg.sms.domain.model.user.response.ProjectModel
 
 data class ProjectResponse(
@@ -14,7 +13,7 @@ data class ProjectResponse(
     @SerializedName("description")
     val description: String,
     @SerializedName("links")
-    val links: LinkModel,
+    val links: List<LinkResponse>,
     @SerializedName("techStacks")
     val techStacks: List<String>,
     @SerializedName("myActivity")
@@ -27,11 +26,11 @@ fun ProjectResponse.toProjectModel(): ProjectModel {
     return ProjectModel(
         name = this.name,
         icon = this.icon,
-        previewImages = previewImages,
-        description = description,
-        links = links,
-        techStacks = techStacks,
-        myActivity = myActivity,
+        previewImages = this.previewImages,
+        description = this.description,
+        links = this.links.map { it.toLinkModel() },
+        techStacks = this.techStacks,
+        myActivity = this.myActivity,
         inProgress = this.inProgress.toProgressModel()
     )
 }
