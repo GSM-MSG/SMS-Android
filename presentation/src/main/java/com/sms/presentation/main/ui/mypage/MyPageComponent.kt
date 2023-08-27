@@ -249,7 +249,10 @@ fun MyPageComponent(
                                 )
                             },
                             onRemoveProjectImage = {
-                                onProjectValueChange(index, itemData.copy(projectImage = it))
+                                onProjectValueChange(
+                                    index,
+                                    itemData.copy(projectImage = it)
+                                )
                             },
                             onRemoveProjectDetailStack = { onRemoveProjectDetailStack(index, it) },
                             onAddBitmap = { onAddBitmapPreview(index, it) },
