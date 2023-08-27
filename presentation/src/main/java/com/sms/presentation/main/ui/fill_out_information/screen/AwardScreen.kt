@@ -117,11 +117,7 @@ fun AwardScreen(
                 onPreviousButtonClick = onPreviousButtonClick,
                 onCompleteButtonClick = {
                     lifecycleScope.launch {
-                        viewModel.imageUpload(
-                            enteredProfileData.profileImageUri.toMultipartBody(
-                                context
-                            )!!
-                        ) { url ->
+                        viewModel.imageUpload(enteredProfileData.profileImageUri.toMultipartBody(context)!!) { url ->
                             profileUrl = url
                         }
 
@@ -223,7 +219,7 @@ suspend fun enterStudentInformation(
             }
 
             is Event.BadRequest -> {
-                dialog(true, "실패", "배드 리퀘스가")
+                dialog(true, "실패", "배드 리퀘스트 발생")
             }
 
             is Event.Conflict -> {
