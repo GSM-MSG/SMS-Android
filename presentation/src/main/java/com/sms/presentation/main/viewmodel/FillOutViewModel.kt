@@ -41,9 +41,6 @@ class FillOutViewModel @Inject constructor(
         MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
     val imageUploadResponse = _imageUploadResponse.asStateFlow()
 
-    private val _fileUploadCompleted = MutableStateFlow(false)
-    val fileUploadCompleted = _fileUploadCompleted.asStateFlow()
-
     private val major = mutableStateOf("")
     private val enteredMajor = mutableStateOf("")
     private val techStacks = mutableStateListOf<String>()
@@ -60,8 +57,6 @@ class FillOutViewModel @Inject constructor(
     private val foreignLanguages =
         mutableStateListOf(ForeignLanguageInfo(languageCertificateName = "", score = ""))
     private val projects = mutableStateListOf(ProjectInfo(isToggleOpen = true))
-    private lateinit var profileImageUrl: String
-
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(
             profileImageUri = profileImageUri.value,
@@ -163,14 +158,6 @@ class FillOutViewModel @Inject constructor(
         this.foreignLanguages.addAll(foreignLanguages.filter { !this.foreignLanguages.contains(it) })
     }
 
-    fun getProfileImageUrl(): String {
-        return profileImageUrl
-    }
-
-    fun setProfileImageUrl(profileImageUrl: String) {
-        this.profileImageUrl = profileImageUrl
-    }
-
     fun getMajorList() {
         viewModelScope.launch {
             getMajorListUseCase().onSuccess {
@@ -231,22 +218,17 @@ class FillOutViewModel @Inject constructor(
         }
     }
 
-    fun imageUpload(file: MultipartBody.Part) = viewModelScope.launch {
+    fun imageUpload(file: MultipartBody.Part, onSuccess: (url: String) -> Unit) = viewModelScope.launch {
         imageUploadUseCase(
             file = file
         ).onSuccess {
             it.catch { remoteError ->
                 _imageUploadResponse.value = remoteError.errorHandling()
             }.collect { response ->
-                _imageUploadResponse.value = Event.Success(data = response)
+                onSuccess(response.fileUrl)
             }
         }.onFailure { error ->
             _imageUploadResponse.value = error.errorHandling()
         }
-    }
-
-    fun specifyWhenCompleteFileUpload() {
-        _fileUploadCompleted.value =
-            _imageUploadResponse.value is Event.Success
     }
 }

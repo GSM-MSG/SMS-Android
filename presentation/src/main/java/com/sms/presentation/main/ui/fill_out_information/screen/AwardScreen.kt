@@ -1,7 +1,10 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.content.Intent
-import androidx.compose.foundation.layout.*
+import android.util.Log
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
@@ -20,8 +23,7 @@ import com.sms.presentation.main.ui.fill_out_information.component.award.AwardBo
 import com.sms.presentation.main.ui.fill_out_information.component.award.AwardComponent
 import com.sms.presentation.main.ui.fill_out_information.data.AwardData
 import com.sms.presentation.main.ui.main.MainActivity
-import com.sms.presentation.main.ui.util.isEmailRegularExpression
-import com.sms.presentation.main.ui.util.isUrlRegularExpression
+import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.CoroutineScope
@@ -45,6 +47,9 @@ fun AwardScreen(
     val enteredCertificateData = viewModel.getEnteredCertification()
     val enteredForeignLanguagesData = viewModel.getEnteredForeignLanguagesInformation()
     val enteredProjectsData = viewModel.getEnteredProjectsInformation()
+    var profileUrl = ""
+    val projectsIcons = mutableMapOf<Int, String>()
+    val projectsPreviews = mutableMapOf<Int, List<String>>()
 
     val awardList = remember {
         mutableStateListOf(AwardData("", "", "", isToggleOpen = true))
@@ -89,66 +94,86 @@ fun AwardScreen(
             AwardBottomButtonComponent(
                 onPreviousButtonClick = onPreviousButtonClick,
                 onCompleteButtonClick = {
-                    viewModel.enterStudentInformation(
-                        major = if (enteredProfileData.major == "직접입력") enteredProfileData.enteredMajor else enteredProfileData.major,
-                        techStack = enteredProfileData.techStack.map { it.trim() },
-                        profileImgUrl = viewModel.getProfileImageUrl(),
-                        introduce = enteredProfileData.introduce,
-                        portfolioUrl = enteredProfileData.portfolioUrl,
-                        contactEmail = enteredProfileData.contactEmail,
-                        formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
-                        gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
-                        salary = enteredWorkConditionData.salary.toInt(),
-                        region = enteredWorkConditionData.regions,
-                        languageCertificate = enteredForeignLanguagesData.foreignLanguages.map {
-                            CertificateInformationModel(
-                                languageCertificateName = it.languageCertificateName,
-                                score = it.score
-                            )
-                        },
-                        militaryService = enteredMilitaryServiceData.militaryService.toEnum(),
-                        certificate = enteredCertificateData.certifications,
-                        projects = enteredProjectsData.projects.map {
-                            ProjectModel(
-                                name = it.name,
-                                icon = "",
-                                previewImages = emptyList(),
-                                description = it.description,
-                                links = it.relatedLinkList.map { relatedLink ->
-                                    ProjectRelatedLinkModel(
-                                        name = relatedLink.first,
-                                        url = relatedLink.second
-                                    )
-                                },
-                                techStacks = it.technologyOfUse,
-                                myActivity = it.keyTask,
-                                inProgress = ProjectDateModel(
-                                    start = it.startDate,
-                                    end = it.endDate
-                                )
-                            )
-                        },
-                        award = awardList.map {
-                            PrizeModel(
-                                name = it.name,
-                                type = it.type,
-                                date = it.date
-                            )
+                    lifecycleScope.launch {
+                        viewModel.imageUpload(enteredProfileData.profileImageUri.toMultipartBody(context)!!) { url ->
+                            profileUrl = url
                         }
-                    )
+
+                        enteredProjectsData.projects.forEachIndexed { index, projectInfo ->
+                            viewModel.imageUpload(projectInfo.icon.toMultipartBody(context)!!) { url ->
+                                projectsIcons[index] = url
+                            }
+
+                            projectInfo.preview.forEach {
+                                val urlList = arrayListOf<String>()
+
+                                viewModel.imageUpload(it.toMultipartBody(context)!!) { url ->
+                                    urlList.add(url)
+                                    projectsPreviews[index] = urlList
+                                }
+                            }
+                            if (index == enteredProjectsData.projects.lastIndex) {
+                                viewModel.enterStudentInformation(
+                                    major = if (enteredProfileData.major == "직접입력") enteredProfileData.enteredMajor else enteredProfileData.major,
+                                    techStack = enteredProfileData.techStack.map { it.trim() },
+                                    profileImgUrl = profileUrl,
+                                    introduce = enteredProfileData.introduce,
+                                    portfolioUrl = enteredProfileData.portfolioUrl,
+                                    contactEmail = enteredProfileData.contactEmail,
+                                    formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
+                                    gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
+                                    salary = enteredWorkConditionData.salary.toInt(),
+                                    region = enteredWorkConditionData.regions,
+                                    languageCertificate = enteredForeignLanguagesData.foreignLanguages.map {
+                                        CertificateInformationModel(
+                                            languageCertificateName = it.languageCertificateName,
+                                            score = it.score
+                                        )
+                                    },
+                                    militaryService = enteredMilitaryServiceData.militaryService.toEnum(),
+                                    certificate = enteredCertificateData.certifications,
+                                    projects = enteredProjectsData.projects.mapIndexed { idx, data ->
+                                        ProjectModel(
+                                            name = data.name,
+                                            icon = projectsIcons[idx] ?: "",
+                                            previewImages = projectsPreviews[idx] ?: emptyList(),
+                                            description = data.description,
+                                            links = data.relatedLinkList.map { relatedLink ->
+                                                ProjectRelatedLinkModel(
+                                                    name = relatedLink.first,
+                                                    url = relatedLink.second
+                                                )
+                                            },
+                                            techStacks = data.technologyOfUse,
+                                            myActivity = data.keyTask,
+                                            inProgress = ProjectDateModel(
+                                                start = data.startDate,
+                                                end = data.endDate
+                                            )
+                                        )
+                                    },
+                                    award = awardList.map {
+                                        PrizeModel(
+                                            name = it.name,
+                                            type = it.type,
+                                            date = it.date
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                    }
 
                     lifecycleScope.launch {
                         enterStudentInformation(
                             viewModel = viewModel,
                             onSuccess = {
-                                context.startActivity(
-                                    Intent(
-                                        context,
-                                        MainActivity::class.java
-                                    )
-                                )
+                                context.startActivity(Intent(context, MainActivity::class.java))
                                 context.finish()
                             },
+                            dialog = { visible, title, text ->
+                                Log.d("ddd", "$visible, $title, $text")
+                            }
                         )
                     }
                 }
@@ -157,56 +182,29 @@ fun AwardScreen(
     }
 }
 
-suspend fun imageFileUpload(
-    viewModel: FillOutViewModel,
-    onSuccess: (url: String) -> Unit,
-    onFailure: () -> Unit
-) {
-    viewModel.imageUploadResponse.collect { response ->
-        viewModel.specifyWhenCompleteFileUpload()
-        when (response) {
-            is Event.Success -> {
-                onSuccess(response.data!!.fileUrl)
-            }
-            is Event.Unauthorized -> {}
-            is Event.BadRequest -> {}
-            is Event.Loading -> {}
-            else -> {}
-        }
-    }
-}
-
 suspend fun enterStudentInformation(
     viewModel: FillOutViewModel,
+    dialog: (visible: Boolean, title: String, text: String) -> Unit,
     onSuccess: () -> Unit,
 ) {
     viewModel.enterInformationResponse.collect { response ->
         when (response) {
             is Event.Success -> {
-                //dialog(true, "성공", "정보기입을 완료했습니다.")
+                dialog(true, "성공", "정보기입을 완료하였습니다.")
                 onSuccess()
             }
 
             is Event.BadRequest -> {
-                if (!viewModel.getEnteredProfileInformation().contactEmail.isEmailRegularExpression()) {
-//                    dialog(true, "에러", "이메일 형식이 맞지 않습니다. \n수정하시겠습니까?")
-//                    onDialogButtonClick()
-                } else if (!viewModel.getEnteredProfileInformation().portfolioUrl.isUrlRegularExpression()) {
-//                    dialog(true, "에러", "포트폴리오 Url이 형식에 맞지 않습니다. \n수정하시겠습니까?")
-//                    onDialogButtonClick()
-                } else {
-//                    dialog(true, "에러", "이메일 형식또는 url형식이 맞지 않습니다. \n수정하시겠습니까?")
-//                    onDialogButtonClick()
-                }
+                dialog(true, "실패", "400")
             }
 
             is Event.Conflict -> {
-                //dialog(true, "에러", "이미 존재하는 유저 입니다.")
+                dialog(true, "실패", "이미 존재하는 유저 입니다.")
             }
 
             is Event.Loading -> {}
             else -> {
-                //dialog(true, "에러", "알 수 없는 오류 발생")
+                dialog(true, "실패", "알 수 없는 에러.")
             }
         }
     }
