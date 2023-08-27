@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,7 +34,9 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 private enum class BottomSheetValues {
     PhotoPicker,
@@ -74,6 +77,7 @@ class FillOutInformationActivity : BaseActivity() {
         }
 
         setContent {
+            val focusManager = LocalFocusManager.current
             val scope = rememberCoroutineScope()
             val navController = rememberNavController()
             val bottomSheetState =
@@ -90,6 +94,9 @@ class FillOutInformationActivity : BaseActivity() {
             val snackBarVisible = remember {
                 mutableStateOf(false)
             }
+            val snackBarText = remember {
+                mutableStateOf("")
+            }
             val projectIndex = remember {
                 mutableStateOf(0)
             }
@@ -100,12 +107,15 @@ class FillOutInformationActivity : BaseActivity() {
             val projectList = remember {
                 mutableStateListOf(*enteredProjectsData.toTypedArray())
             }
+            val profileData = remember {
+                mutableStateOf(enteredProfileData)
+            }
             val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
 
             //DetailStacks
             val profileDetailTechStack = remember {
                 mutableStateListOf(
-                    *(enteredProfileData.techStack.split(",").filter { it != "" }).toTypedArray()
+                    *(enteredProfileData.techStack.filter { it != "" }).toTypedArray()
                 )
             }
             val projectsDetailTechStack = remember {
@@ -188,7 +198,12 @@ class FillOutInformationActivity : BaseActivity() {
 
                             MilitarySelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                militaryServiceList = listOf("병특 희망", "희망하지 않음", "상관없음", "해당 사항 없음"),
+                                militaryServiceList = listOf(
+                                    "병특 희망",
+                                    "희망하지 않음",
+                                    "상관없음",
+                                    "해당 사항 없음"
+                                ),
                                 selectedMilitaryService = if (selectedMilitaryService.value == "") militaryServiceData.militaryService else selectedMilitaryService.value,
                                 onSelectedMilitaryServiceChange = {
                                     selectedMilitaryService.value = it
@@ -205,26 +220,18 @@ class FillOutInformationActivity : BaseActivity() {
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
                                             if (endDate.isEmpty()) {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(startDate = date)
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
                                             } else {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
-
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
                                             }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
                                             if (startDate.isEmpty()) {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(endDate = date)
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
                                             } else {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
-
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
                                             }
                                         }
                                         !isProjectDate.value -> {
@@ -251,7 +258,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = FillOutPage.Projects.value
+                                startDestination = FillOutPage.Profile.value
                             ) {
                                 composable(FillOutPage.Profile.value) {
                                     currentRoute.value = FillOutPage.Profile.value
@@ -259,6 +266,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     ProfileScreen(
                                         navController = navController,
                                         viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
+                                        data = profileData.value,
                                         detailStacks = profileDetailTechStack,
                                         profileImageUri = profileImageUri.value,
                                         selectedMajor = selectedMajor.value,
@@ -276,14 +284,17 @@ class FillOutInformationActivity : BaseActivity() {
                                         onDialogDissmissButtonClick = {
                                             isImageExtensionInCorrect.value = false
                                         },
-                                        onProfileTechStackValueChanged = { stack ->
-                                            profileDetailTechStack.removeAll(
-                                                profileDetailTechStack.filter {
-                                                    !stack.contains(it)
-                                                })
-                                            profileDetailTechStack.addAll(stack.filter {
-                                                !profileDetailTechStack.contains(it)
-                                            })
+                                        onSnackBarVisibleChanged = { text ->
+                                            scope.launch {
+                                                snackBarVisible.value = true
+                                                snackBarText.value = text
+                                                delay(1.5.seconds)
+                                                focusManager.clearFocus()
+                                                snackBarVisible.value = false
+                                            }
+                                        },
+                                        onProjectValueChanged = {
+                                            profileData.value = it
                                         }
                                     )
                                 }
@@ -379,13 +390,22 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onDetailStackSearchBarClick = { index ->
                                             projectIndex.value = index
-                                            detailStackSearchLocation.value = DetailSearchLocation.Projects
+                                            detailStackSearchLocation.value =
+                                                DetailSearchLocation.Projects
                                             navController.navigate("Search")
                                         },
                                         onProjectItemToggleIsOpenValueChanged = { index, visible ->
                                             projectList[index] = projectList[index].copy(isToggleOpen = visible)
                                         },
-                                        onSnackBarVisibleChanged = { snackBarVisible.value = true },
+                                        onSnackBarVisibleChanged = { text ->
+                                            scope.launch {
+                                                snackBarVisible.value = true
+                                                snackBarText.value = text
+                                                delay(1.5.seconds)
+                                                focusManager.clearFocus()
+                                                snackBarVisible.value = false
+                                            }
+                                        },
                                         onProjectNameValueChanged = { index, name ->
                                             projectList[index] = projectList[index].copy(name = name)
                                         },
@@ -444,9 +464,10 @@ class FillOutInformationActivity : BaseActivity() {
                                     ) { stack ->
                                         when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> {
-                                                profileDetailTechStack.removeAll(profileDetailTechStack.filter {
-                                                    !stack.contains(it)
-                                                })
+                                                profileDetailTechStack.removeAll(
+                                                    profileDetailTechStack.filter {
+                                                        !stack.contains(it)
+                                                    })
                                                 profileDetailTechStack.addAll(stack.filter {
                                                     !profileDetailTechStack.contains(it)
                                                 })
@@ -461,7 +482,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                         }
                         SmsSnackBar(
-                            text = "이미지는 최대 4장까지만 추가 할 수 있어요.",
+                            text = snackBarText.value,
                             visible = snackBarVisible.value,
                             leftIcon = { ExclamationMarkIcon() },
                             onClick = { snackBarVisible.value = false },

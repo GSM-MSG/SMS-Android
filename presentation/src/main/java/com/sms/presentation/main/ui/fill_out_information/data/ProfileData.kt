@@ -9,5 +9,5 @@ data class ProfileData(
     val enteredMajor: String,
     val major: String,
     val portfolioUrl: String,
-    val techStack: String
+    val techStack: List<String>
 )

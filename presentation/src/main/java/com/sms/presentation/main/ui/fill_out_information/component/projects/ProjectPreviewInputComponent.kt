@@ -31,7 +31,7 @@ import com.msg.sms.design.util.AddGrayBody1Title
 @Composable
 fun ProjectPreviewInputComponent(
     previewUriList: List<Uri>,
-    onSnackBarVisibleChanged: () -> Unit,
+    onSnackBarVisibleChanged: (text: String) -> Unit,
     onValueChanged: (value: List<Uri>) -> Unit
 ) {
     val previews = remember {
@@ -43,7 +43,7 @@ fun ProjectPreviewInputComponent(
             if (uris.isNotEmpty()) {
                 if ((previews.size + uris.size) <= 4) {
                     previews.addAll(uris)
-                } else onSnackBarVisibleChanged()
+                } else onSnackBarVisibleChanged("이미지는 최대 4장까지만 추가 할 수 있어요.")
             }
         }
 
@@ -52,7 +52,7 @@ fun ProjectPreviewInputComponent(
     ) { isGranted ->
         if (isGranted) {
             if (previews.size == 4) {
-                onSnackBarVisibleChanged()
+                onSnackBarVisibleChanged("이미지는 최대 4장까지만 추가 할 수 있어요.")
             } else {
                 multipleSelectGalleryLauncher.launch("image/*")
             }

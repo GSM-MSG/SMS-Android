@@ -18,8 +18,8 @@ fun ProjectsComponent(
     data: ProjectInfo,
     detailStacks: List<String>,
     onCancelButtonClick: () -> Unit,
-    onSnackBarVisibleChanged: () -> Unit,
     onDetailStackSearchBarClick: () -> Unit,
+    onDateBottomSheetOpenButtonClick: (isStartDate: Boolean) -> Unit,
     onProjectNameValueChanged: (name: String) -> Unit,
     onProjectIconValueChanged: (icon: Uri) -> Unit,
     onProjectPreviewsValueChanged: (previews: List<Uri>) -> Unit,
@@ -28,7 +28,7 @@ fun ProjectsComponent(
     onProjectKeyTaskValueChanged: (keyTask: String) -> Unit,
     onProjectRelatedLinksValueChanged: (links: List<Pair<String, String>>) -> Unit,
     onProjectItemToggleIsOpenValueChanged: (visible: Boolean) -> Unit,
-    onDateBottomSheetOpenButtonClick: (isStartDate: Boolean) -> Unit,
+    onSnackBarVisibleChanged: (text: String) -> Unit
 ) {
     val isProjectProgress = remember {
         mutableStateOf(false)
