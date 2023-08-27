@@ -26,7 +26,9 @@ fun ProjectNameInputComponent(
                 name.value = it
                 onValueChange(it)
             },
-            onClickButton = { name.value = "" }
+            onClickButton = { name.value = "" },
+            errorText = "프로젝트 이름을 입력해 주세요.",
+            isError = true
         )
     }
 }

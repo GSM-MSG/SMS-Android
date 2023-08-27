@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.DetailTechStackItem
+import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.util.AddGrayBody1Title
 import com.sms.presentation.main.ui.mypage.component.profile.DisplaySearchBar
 
@@ -33,6 +35,14 @@ fun ProjectTechStackInputComponent(
                         }
                     }
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            SMSTheme { colors, typography ->
+                Text(
+                    text = "사용 기술을 추가해 주세요.",
+                    style = typography.caption1,
+                    color = colors.ERROR
+                )
+            }
             LazyHorizontalStaggeredGrid(
                 modifier = Modifier
                     .fillMaxWidth()
