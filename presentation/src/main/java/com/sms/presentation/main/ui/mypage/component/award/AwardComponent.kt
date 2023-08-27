@@ -9,11 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.divider.SmsDivider
-import com.sms.presentation.main.ui.mypage.state.ExpandableAwardDate
+import com.sms.presentation.main.ui.detail.data.AwardData
 
 @Composable
 fun AwardComponent(
-    awardData: ExpandableAwardDate,
+    awardData: AwardData,
     onNameValueChange: (value: String) -> Unit,
     onTypeValueChange: (value: String) -> Unit,
     onDateValueChange: (value: String) -> Unit,
@@ -40,11 +40,10 @@ fun AwardComponent(
 @Composable
 private fun AwardComponentPre() {
     AwardComponent(
-        ExpandableAwardDate(
+        AwardData(
             title = "수상 1",
             organization = "",
             date = "",
-            isExpand = true
         ),
         onNameValueChange = {},
         onTypeValueChange = {},
