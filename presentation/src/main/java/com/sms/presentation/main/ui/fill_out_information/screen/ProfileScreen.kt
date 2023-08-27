@@ -33,11 +33,7 @@ fun ProfileScreen(
     onMajorBottomSheetOpenButtonClick: () -> Unit,
     onDialogDissmissButtonClick: () -> Unit,
     onSnackBarVisibleChanged: (text: String) -> Unit,
-    onProfileTechStackValueChanged: (list: List<String>) -> Unit,
-    onIntroduceValueChanged: (value: String) -> Unit,
-    onPortfolioUrlValueChanged: (value: String) -> Unit,
-    onContactEmailValueChanged: (value: String) -> Unit,
-    onEnteringMajorValueChanged: (value: String) -> Unit
+    onProjectValueChanged: (data: ProfileData) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val isRequired = remember {
@@ -102,11 +98,7 @@ fun ProfileScreen(
                 onPhotoPickBottomSheetOpenButtonClick = onPhotoPickBottomSheetOpenButtonClick,
                 onMajorBottomSheetOpenButtonClick = onMajorBottomSheetOpenButtonClick,
                 isRequired = { result -> isRequired.value = result },
-                onProfileTechStackValueChanged = onProfileTechStackValueChanged,
-                onEnteringMajorValueChanged = onEnteringMajorValueChanged,
-                onIntroduceValueChanged = onIntroduceValueChanged,
-                onContactEmailValueChanged = onContactEmailValueChanged,
-                onPortFolioUrlValueChanged = onPortfolioUrlValueChanged,
+                onProfileValueChanged = onProjectValueChanged
             )
             Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.height(32.dp))
@@ -121,7 +113,7 @@ fun ProfileScreen(
                     if (data.contactEmail.isEmailRegularExpression() && data.portfolioUrl.isUrlRegularExpression()) {
                         viewModel.setEnteredProfileInformation(
                             major = selectedMajor,
-                            techStack = detailStacks.joinToString(", "),
+                            techStack = detailStacks,
                             profileImgUri = profileImageUri,
                             introduce = data.introduce,
                             contactEmail = data.contactEmail,

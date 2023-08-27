@@ -115,7 +115,7 @@ class FillOutInformationActivity : BaseActivity() {
             //DetailStacks
             val profileDetailTechStack = remember {
                 mutableStateListOf(
-                    *(enteredProfileData.techStack.split(",").filter { it != "" }).toTypedArray()
+                    *(enteredProfileData.techStack.filter { it != "" }).toTypedArray()
                 )
             }
             val projectsDetailTechStack = remember {
@@ -312,14 +312,6 @@ class FillOutInformationActivity : BaseActivity() {
                                         onDialogDissmissButtonClick = {
                                             isImageExtensionInCorrect.value = false
                                         },
-                                        onProfileTechStackValueChanged = { stack ->
-                                            profileDetailTechStack.removeAll(profileDetailTechStack.filter {
-                                                !stack.contains(it)
-                                            })
-                                            profileDetailTechStack.addAll(stack.filter {
-                                                !profileDetailTechStack.contains(it)
-                                            })
-                                        },
                                         onSnackBarVisibleChanged = { text ->
                                             scope.launch {
                                                 snackBarVisible.value = true
@@ -329,17 +321,8 @@ class FillOutInformationActivity : BaseActivity() {
                                                 snackBarVisible.value = false
                                             }
                                         },
-                                        onIntroduceValueChanged = { introduce ->
-                                            profileData.value = profileData.value.copy(introduce = introduce)
-                                        },
-                                        onPortfolioUrlValueChanged = { portfolio ->
-                                            profileData.value = profileData.value.copy(portfolioUrl = portfolio)
-                                        },
-                                        onContactEmailValueChanged = { email ->
-                                            profileData.value = profileData.value.copy(contactEmail = email)
-                                        },
-                                        onEnteringMajorValueChanged = { enteredMajar ->
-                                            profileData.value = profileData.value.copy(enteredMajor = enteredMajar)
+                                        onProjectValueChanged = {
+                                            profileData.value = it
                                         }
                                     )
                                 }

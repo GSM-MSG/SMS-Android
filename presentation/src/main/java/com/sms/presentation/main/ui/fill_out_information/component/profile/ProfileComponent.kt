@@ -39,11 +39,7 @@ fun ProfileComponent(
     onMajorBottomSheetOpenButtonClick: () -> Unit,
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
     isRequired: (Boolean) -> Unit,
-    onEnteringMajorValueChanged: (enteredMajor: String) -> Unit,
-    onProfileTechStackValueChanged: (list: List<String>) -> Unit,
-    onIntroduceValueChanged: (introduce: String) -> Unit,
-    onContactEmailValueChanged: (email: String) -> Unit,
-    onPortFolioUrlValueChanged: (portfolio: String) -> Unit
+    onProfileValueChanged: (data: ProfileData) -> Unit
 ) {
     SMSTheme { _, typography ->
         val context = LocalContext.current as FillOutInformationActivity
@@ -93,8 +89,10 @@ fun ProfileComponent(
                 placeHolder = "1줄 자기소개 입력",
                 modifier = Modifier.fillMaxWidth(),
                 setText = data.introduce,
-                onValueChange = onIntroduceValueChanged,
-                onClickButton = { onIntroduceValueChanged("") }
+                onValueChange = { introduce ->
+                    onProfileValueChanged(data.copy(introduce = introduce))
+                },
+                onClickButton = { onProfileValueChanged(data.copy(introduce = "")) }
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "이메일", style = typography.body2)
@@ -103,8 +101,10 @@ fun ProfileComponent(
                 placeHolder = "공개용 이메일 입력",
                 modifier = Modifier.fillMaxWidth(),
                 setText = data.contactEmail,
-                onValueChange = onContactEmailValueChanged,
-                onClickButton = { onContactEmailValueChanged("") }
+                onValueChange = { email ->
+                    onProfileValueChanged(data.copy(contactEmail = email))
+                },
+                onClickButton = { onProfileValueChanged(data.copy(contactEmail = "")) }
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "분야", style = typography.body2)
@@ -119,8 +119,8 @@ fun ProfileComponent(
                     context.hideKeyboard()
                 },
                 setChangeText = if (selectedMajor == "직접입력") enteredMajor else selectedMajor
-            ) {
-                onEnteringMajorValueChanged(it)
+            ) { enteredMajor ->
+                onProfileValueChanged(data.copy(enteredMajor = enteredMajor))
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "포트폴리오 URL", style = typography.body2)
@@ -129,14 +129,18 @@ fun ProfileComponent(
                 placeHolder = "https://",
                 modifier = Modifier.fillMaxWidth(),
                 setText = data.portfolioUrl,
-                onValueChange = onPortFolioUrlValueChanged,
-                onClickButton = { onPortFolioUrlValueChanged("") }
+                onValueChange = { portfolio ->
+                    onProfileValueChanged(data.copy(portfolioUrl = portfolio))
+                },
+                onClickButton = { onProfileValueChanged(data.copy(portfolioUrl = "")) }
             )
             Spacer(modifier = Modifier.height(24.dp))
             ProfileTechStackInputComponent(
                 techStack = detailStacks,
                 onClick = changeView,
-                onProfileTechStackValueChanged = onProfileTechStackValueChanged
+                onProfileTechStackValueChanged = { techStacks ->
+                    onProfileValueChanged(data.copy(techStack = techStacks))
+                }
             )
         }
     }
@@ -147,19 +151,15 @@ fun ProfileComponent(
 fun ProfileComponentPre() {
     ProfileComponent(
         selectedMajor = "FrontEnd",
-        data = ProfileData(Uri.EMPTY, "", "", "", "", "", ""),
+        data = ProfileData(Uri.EMPTY, "", "", "", "", "", emptyList()),
         isRequired = {},
         detailStacks = listOf("a", "b", "c"),
         profileImageUri = Uri.EMPTY,
         isReadOnly = true,
         changeView = {},
-        onEnteringMajorValueChanged = {},
         enteredMajor = "",
         onMajorBottomSheetOpenButtonClick = {},
         onPhotoPickBottomSheetOpenButtonClick = {},
-        onProfileTechStackValueChanged = {},
-        onIntroduceValueChanged = {},
-        onContactEmailValueChanged = {},
-        onPortFolioUrlValueChanged = {}
+        onProfileValueChanged = {}
     )
 }
