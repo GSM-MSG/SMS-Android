@@ -21,6 +21,8 @@ import androidx.navigation.compose.rememberNavController
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.design.theme.SMSTheme
+import com.msg.sms.domain.exception.BadRequestException
+import com.msg.sms.domain.model.student.request.*
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.fill_out_information.component.FillOutInformationTopBarComponent
@@ -455,6 +457,16 @@ class FillOutInformationActivity : BaseActivity() {
                                             awardData.removeAt(index)
                                         },
                                         onCompleteButtonClick = {
+                                            lateinit var profileImageUrl: String
+                                            lateinit var projectsIconUrlList: List<String>
+                                            lateinit var projectPreviewUrlList: List<List<String>>
+                                            val enteredWorkConditionData = fillOutViewModel.getEnteredWorkConditionInformation()
+                                            val enteredSchoolLifeData = fillOutViewModel.getEnteredSchoolLifeInformation()
+                                            val enteredCertificateData = fillOutViewModel.getEnteredCertification()
+                                            val enteredMilitaryData = fillOutViewModel.getEnteredMilitaryServiceInformation()
+                                            val enteredLaunguageData = fillOutViewModel.getEnteredForeignLanguagesInformation()
+                                            val enteredAwardsData = fillOutViewModel.getEnteredAwardsInformation()
+
                                             fillOutViewModel.setEnteredAwardsInformation(
                                                 awardData.filter { award ->
                                                     award.name.isNotEmpty() ||
@@ -462,6 +474,75 @@ class FillOutInformationActivity : BaseActivity() {
                                                     award.date.isNotEmpty()
                                                 }
                                             )
+
+                                            try {
+                                                fillOutViewModel.profileImageUpload(this@FillOutInformationActivity) { profileImageUrl = it }
+                                                fillOutViewModel.projectsIconUpload(this@FillOutInformationActivity) { projectsIconUrlList = it }
+                                                fillOutViewModel.projectsPreview(this@FillOutInformationActivity) { projectPreviewUrlList = it }
+                                            } catch (e: RuntimeException) {
+                                                when(e) {
+                                                    is BadRequestException -> {
+
+                                                    }
+                                                    else -> {
+
+                                                    }
+                                                }
+                                            }
+
+                                            lifecycleScope.launch {
+                                                fillOutViewModel.imageUploadComplete.collect { complete ->
+                                                    if (complete) {
+                                                        fillOutViewModel.enterStudentInformation(
+                                                            major = enteredProfileData.major,
+                                                            techStack = enteredProfileData.techStack,
+                                                            profileImgUrl = profileImageUrl,
+                                                            introduce = enteredProfileData.introduce,
+                                                            portfolioUrl = enteredProfileData.portfolioUrl,
+                                                            contactEmail = enteredProfileData.contactEmail,
+                                                            formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
+                                                            salary = enteredWorkConditionData.salary.toInt(),
+                                                            region = enteredWorkConditionData.regions,
+                                                            gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
+                                                            certificate = enteredCertificateData.certifications,
+                                                            militaryService = enteredMilitaryData.militaryService.toEnum(),
+                                                            languageCertificate = enteredLaunguageData.foreignLanguages.map {
+                                                                CertificateInformationModel(
+                                                                    languageCertificateName = it.languageCertificateName,
+                                                                    score = it.score
+                                                                )
+                                                            },
+                                                            projects = enteredProjectsData.mapIndexed { index, item ->
+                                                                ProjectModel(
+                                                                    name = item.name,
+                                                                    icon = projectsIconUrlList[index],
+                                                                    previewImages = projectPreviewUrlList[index],
+                                                                    description = item.description,
+                                                                    links = item.relatedLinkList.map {
+                                                                        ProjectRelatedLinkModel(
+                                                                            name = it.first,
+                                                                            url = it.second
+                                                                        )
+                                                                    },
+                                                                    techStacks = item.technologyOfUse,
+                                                                    myActivity = item.keyTask,
+                                                                    inProgress = ProjectDateModel(
+                                                                        item.startDate,
+                                                                        item.endDate
+                                                                    )
+                                                                )
+                                                            },
+                                                            award = enteredAwardsData.map {
+                                                                PrizeModel(
+                                                                    name = it.name,
+                                                                    date = it.date,
+                                                                    type = it.type
+                                                                )
+                                                            }
+                                                        )
+                                                    }
+                                                }
+                                            }
                                         },
                                         onAwardValueChanged = { index, award ->
                                             awardData[index] = award
@@ -510,6 +591,20 @@ class FillOutInformationActivity : BaseActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun String.toEnum(): String {
+        return when (this) {
+            "정규직" -> "FULL_TIME"
+            "비정규직" -> "TEMPORARY"
+            "계약직" -> "CONSTRACT"
+            "인턴" -> "INTERN"
+            "병특 희망" -> "HOPE"
+            "희망하지 않음" -> "NOT_HOPE"
+            "상관없음" -> "NO_MATTER"
+            "해당 사항 없음" -> "NONE"
+            else -> ""
         }
     }
 
