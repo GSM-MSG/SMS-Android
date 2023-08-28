@@ -117,8 +117,7 @@ class FillOutInformationActivity : BaseActivity() {
             val enteredWorkConditionData = fillOutViewModel.getEnteredWorkConditionInformation()
             val enteredMilitaryData = fillOutViewModel.getEnteredMilitaryServiceInformation()
             val enteredCertificateData = fillOutViewModel.getEnteredCertification().certifications
-            val enteredForeignLanguagesData =
-                fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
+            val enteredForeignLanguagesData = fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
             val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
 
             //data
@@ -140,7 +139,9 @@ class FillOutInformationActivity : BaseActivity() {
                 )
             }
             val projectsDetailTechStack = remember {
-                mutableStateListOf(*enteredProjectsData.map { it.technologyOfUse }.toTypedArray())
+                mutableStateListOf(
+                    *enteredProjectsData.map { it.technologyOfUse }.toTypedArray()
+                )
             }
 
             //PhotoPickBottomSheet
@@ -249,20 +250,14 @@ class FillOutInformationActivity : BaseActivity() {
                             )
                         }
                         BottomSheetValues.WorkingForm -> {
-                            val workConditionData =
-                                fillOutViewModel.getEnteredWorkConditionInformation()
-
                             MajorSelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
                                 majorList = listOf("정규직", "비정규직", "계약직", "인턴"),
-                                selectedMajor = if (selectedWorkingCondition.value == "") workConditionData.formOfEmployment else selectedWorkingCondition.value,
+                                selectedMajor = if (selectedWorkingCondition.value == "") enteredWorkConditionData.formOfEmployment else selectedWorkingCondition.value,
                                 onSelectedMajhorChange = { selectedWorkingCondition.value = it }
                             )
                         }
                         BottomSheetValues.Military -> {
-                            val militaryServiceData =
-                                fillOutViewModel.getEnteredMilitaryServiceInformation()
-
                             MilitarySelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
                                 militaryServiceList = listOf(
@@ -271,7 +266,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     "상관없음",
                                     "해당 사항 없음"
                                 ),
-                                selectedMilitaryService = if (selectedMilitaryService.value == "") militaryServiceData.militaryService else selectedMilitaryService.value,
+                                selectedMilitaryService = if (selectedMilitaryService.value == "") enteredMilitaryData.militaryService else selectedMilitaryService.value,
                                 onSelectedMilitaryServiceChange = {
                                     selectedMilitaryService.value = it
                                 },
@@ -287,44 +282,18 @@ class FillOutInformationActivity : BaseActivity() {
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
                                             if (endDate.isEmpty()) {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(startDate = date)
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
                                             } else {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
                                             }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
                                             if (startDate.isEmpty()) {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(endDate = date)
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
                                             } else {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
                                             }
                                         }
                                         !isProjectDate.value -> {
@@ -457,17 +426,14 @@ class FillOutInformationActivity : BaseActivity() {
                                             fillOutViewModel.setEnteredProjectsInformation(
                                                 projectList.filter { project ->
                                                     project.name.isNotEmpty() ||
-                                                            project.icon != Uri.EMPTY ||
-                                                            project.preview.isNotEmpty() ||
-                                                            project.technologyOfUse.isNotEmpty() ||
-                                                            project.description.isNotEmpty() ||
-                                                            project.keyTask.isNotEmpty() ||
-                                                            project.endDate.isNotEmpty() ||
-                                                            project.startDate.isNotEmpty() ||
-                                                            project.relatedLinkList.first() != Pair(
-                                                        "",
-                                                        ""
-                                                    )
+                                                    project.icon != Uri.EMPTY ||
+                                                    project.preview.isNotEmpty() ||
+                                                    project.technologyOfUse.isNotEmpty() ||
+                                                    project.description.isNotEmpty() ||
+                                                    project.keyTask.isNotEmpty() ||
+                                                    project.endDate.isNotEmpty() ||
+                                                    project.startDate.isNotEmpty() ||
+                                                    project.relatedLinkList.first() != Pair("", "")
                                                 }
                                             )
                                             //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
@@ -486,13 +452,11 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onDetailStackSearchBarClick = { index ->
                                             projectIndex.value = index
-                                            detailStackSearchLocation.value =
-                                                DetailSearchLocation.Projects
+                                            detailStackSearchLocation.value = DetailSearchLocation.Projects
                                             navController.navigate("Search")
                                         },
                                         onProjectItemToggleIsOpenValueChanged = { index, visible ->
-                                            projectList[index] =
-                                                projectList[index].copy(isToggleOpen = visible)
+                                            projectList[index] = projectList[index].copy(isToggleOpen = visible)
                                         },
                                         onSnackBarVisibleChanged = { text ->
                                             scope.launch {
@@ -504,31 +468,25 @@ class FillOutInformationActivity : BaseActivity() {
                                             }
                                         },
                                         onProjectNameValueChanged = { index, name ->
-                                            projectList[index] =
-                                                projectList[index].copy(name = name)
+                                            projectList[index] = projectList[index].copy(name = name)
                                         },
                                         onProjectIconValueChanged = { index, icon ->
-                                            projectList[index] =
-                                                projectList[index].copy(icon = icon)
+                                            projectList[index] = projectList[index].copy(icon = icon)
                                         },
                                         onProjectPreviewsValueChanged = { index, previews ->
-                                            projectList[index] =
-                                                projectList[index].copy(preview = previews)
+                                            projectList[index] = projectList[index].copy(preview = previews)
                                         },
                                         onProjectTechStackValueChanged = { index, list ->
                                             projectsDetailTechStack[index] = list
                                         },
                                         onProjectDescriptionValueChanged = { index, description ->
-                                            projectList[index] =
-                                                projectList[index].copy(description = description)
+                                            projectList[index] = projectList[index].copy(description = description)
                                         },
                                         onProjectKeyTaskValueChanged = { index, keytask ->
-                                            projectList[index] =
-                                                projectList[index].copy(keyTask = keytask)
+                                            projectList[index] = projectList[index].copy(keyTask = keytask)
                                         },
                                         onProjectRelatedLinksValueChanged = { index, links ->
-                                            projectList[index] =
-                                                projectList[index].copy(relatedLinkList = links)
+                                            projectList[index] = projectList[index].copy(relatedLinkList = links)
                                         }
                                     )
                                 }
@@ -626,6 +584,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                 }
                                             }
 
+                                            //정보기입 예외처리
                                             lifecycleScope.launch {
                                                 enteredStudentInfomationResponse(
                                                     viewModel = fillOutViewModel,
@@ -669,10 +628,9 @@ class FillOutInformationActivity : BaseActivity() {
                                     ) { stack ->
                                         when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> {
-                                                profileDetailTechStack.removeAll(
-                                                    profileDetailTechStack.filter {
-                                                        !stack.contains(it)
-                                                    })
+                                                profileDetailTechStack.removeAll(profileDetailTechStack.filter {
+                                                    !stack.contains(it)
+                                                })
                                                 profileDetailTechStack.addAll(stack.filter {
                                                     !profileDetailTechStack.contains(it)
                                                 })
