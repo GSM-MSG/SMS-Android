@@ -11,8 +11,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
@@ -26,22 +24,21 @@ import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
-fun ProjectIconComponent(projectIcon: String) {
-    val imageUri = remember {
-        mutableStateOf<Uri>(Uri.EMPTY)
-    }
+fun ProjectIconComponent(projectIcon: String, bitmap: Bitmap?, setBitmap: (value: Bitmap) -> Unit) {
     val context = LocalContext.current
-    val bitmap = remember {
-        mutableStateOf<Bitmap?>(null)
-    }
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                imageUri.value = uri
+                if (Build.VERSION.SDK_INT < 28) {
+                    setBitmap(MediaStore.Images.Media.getBitmap(context.contentResolver, uri))
+                } else {
+                    val source = ImageDecoder.createSource(context.contentResolver, uri)
+                    setBitmap(ImageDecoder.decodeBitmap(source))
+                }
             }
         }
     AddGrayBody1Title(titleText = "아이콘") {
-        if (imageUri.value == Uri.EMPTY) {
+        if (bitmap == null) {
             if (projectIcon == "") {
                 Image(
                     modifier = Modifier
@@ -68,13 +65,6 @@ fun ProjectIconComponent(projectIcon: String) {
                 )
             }
         } else {
-            if (Build.VERSION.SDK_INT < 28) {
-                bitmap.value =
-                    MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri.value)
-            } else {
-                val source = ImageDecoder.createSource(context.contentResolver, imageUri.value)
-                bitmap.value = ImageDecoder.decodeBitmap(source)
-            }
             Image(
                 modifier = Modifier
                     .size(108.dp)
@@ -82,7 +72,7 @@ fun ProjectIconComponent(projectIcon: String) {
                     .smsClickable {
                         launcher.launch("image/*")
                     },
-                bitmap = bitmap.value!!.asImageBitmap(),
+                bitmap = bitmap.asImageBitmap(),
                 contentScale = ContentScale.Crop,
                 contentDescription = "프로젝트 아이콘"
             )
@@ -93,5 +83,8 @@ fun ProjectIconComponent(projectIcon: String) {
 @Preview
 @Composable
 private fun ProjectIconComponentPre() {
-    ProjectIconComponent(projectIcon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4")
+    ProjectIconComponent(
+        projectIcon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
+        bitmap = null,
+        setBitmap = {})
 }

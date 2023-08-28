@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,6 +53,8 @@ fun MyPageComponent(
     bitmapPreviews: List<List<Bitmap>>,
     selectedTechList: List<String>,
     selectedTechListOnProject: List<ProjectTechStack>,
+    iconBitmaps: List<Bitmap?>,
+    setBitmap: (index: Int, element: Bitmap) -> Unit,
     onAddProject: () -> Unit,
     onAddAward: () -> Unit,
     onAddRegion: () -> Unit,
@@ -75,7 +79,11 @@ fun MyPageComponent(
     onProjectSearchBar: (index: Int) -> Unit,
     onAwardValueChange: (index: Int, value: AwardData) -> Unit,
     onMyPageSearchBar: () -> Unit,
+    onSaveButtonClick: () -> Unit,
 ) {
+    val isButtonClicked = remember {
+        mutableStateOf(false)
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -280,7 +288,9 @@ fun MyPageComponent(
                                     index,
                                     it
                                 )
-                            }
+                            },
+                            setBitmap = { setBitmap(index, it) },
+                            bitmap = iconBitmaps[index]
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
@@ -352,10 +362,13 @@ fun MyPageComponent(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(horizontal = 20.dp),
-            visibility = true
-        ) {
-            // TODO(LeeHyeonbin): 수정된 것들 저장하는 기능 만들기
-        }
+            visibility = true,
+            enabled = !isButtonClicked.value,
+            onClickSaveButton = {
+                isButtonClicked.value = true
+                onSaveButtonClick()
+            }
+        )
     }
 }
 
@@ -433,6 +446,9 @@ private fun MyPageComponentPre() {
         onAwardValueChange = { _, _ -> },
         onAddBitmapPreview = { _, _ -> },
         onRemoveAward = {},
-        onEnteredMajorValue = {}
+        onEnteredMajorValue = {},
+        onSaveButtonClick = {},
+        iconBitmaps = listOf(),
+        setBitmap = { _, _ -> }
     )
 }

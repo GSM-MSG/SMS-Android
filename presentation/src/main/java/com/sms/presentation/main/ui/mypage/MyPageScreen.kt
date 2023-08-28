@@ -51,6 +51,8 @@ fun MyPageScreen(
     majorList: List<String>,
     selectedTechList: List<String>,
     selectedTechListOnProject: List<ProjectTechStack>,
+    bitmapIcons: List<Bitmap?>,
+    setBitmap: (index: Int, element: Bitmap) -> Unit,
     isExpandedProject: List<Boolean>,
     isExpandedAward: List<Boolean>,
     onExpandProjectClick: (index: Int) -> Unit,
@@ -71,6 +73,7 @@ fun MyPageScreen(
     onRemoveProjectDetailStack: (index: Int, value: String) -> Unit,
     onProjectValueChange: (index: Int, data: ProjectData) -> Unit,
     onAwardValueChange: (index: Int, award: AwardData) -> Unit,
+    onSaveButtonClick: () -> Unit,
 ) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -87,6 +90,10 @@ fun MyPageScreen(
 
     val dialogVisibility = remember {
         mutableStateOf(false)
+    }
+
+    if (viewModel.isProfileChanged.value && viewModel.isProjectIconChanged.value && viewModel.isProjectPreviewChanged.value) {
+        viewModel.putChangeProfile()
     }
 
     if (dialogVisibility.value) {
@@ -229,7 +236,10 @@ fun MyPageScreen(
             },
             onProjectValueChange = onProjectValueChange,
             onAwardValueChange = onAwardValueChange,
-            onProfileValueChange = onProfileValueChange
+            onProfileValueChange = onProfileValueChange,
+            onSaveButtonClick = onSaveButtonClick,
+            iconBitmaps = bitmapIcons,
+            setBitmap = setBitmap
         )
     }
 }
@@ -304,6 +314,9 @@ private fun MyPageScreenPre() {
         onExpandAwardClick = {},
         onExpandProjectClick = {},
         onRemoveAward = {},
-        viewModel = viewModel()
+        viewModel = viewModel(),
+        onSaveButtonClick = {},
+        bitmapIcons = listOf(),
+        setBitmap = { _, _ -> }
     )
 }

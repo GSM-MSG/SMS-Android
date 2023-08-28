@@ -281,7 +281,21 @@ class MainActivity : BaseActivity() {
                                     },
                                     onProfileValueChange = {
                                         myProfileViewModel.onProfileValueChange(myProfile = it)
-                                    }
+                                    },
+                                    onSaveButtonClick = {
+                                        myProfileViewModel.onChangeProfileChange(myProfileViewModel.myProfileData.value.profileImageBitmap)
+                                        myProfileViewModel.onChangeProjectIcon(myProfileViewModel.bitmapIcons.value)
+                                        myProfileViewModel.onChangeProjectPreviews(
+                                            myProfileViewModel.bitmapPreviews.value
+                                        )
+                                    },
+                                    setBitmap = { index, element ->
+                                        myProfileViewModel.onChangeProjectIcon(
+                                            index = index,
+                                            value = element
+                                        )
+                                    },
+                                    bitmapIcons = myProfileViewModel.bitmapIcons.value
                                 )
                             }
                         }

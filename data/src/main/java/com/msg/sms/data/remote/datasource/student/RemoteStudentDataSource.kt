@@ -1,6 +1,7 @@
 package com.msg.sms.data.remote.datasource.student
 
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
+import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
 import com.msg.sms.data.remote.dto.student.response.GetStudentForAnonymousResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentForStudentResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentForTeacherResponse
@@ -34,4 +35,6 @@ interface RemoteStudentDataSource {
     suspend fun getUserDetailForAnonymous(uuid: UUID): Flow<GetStudentForAnonymousResponse>
 
     suspend fun getUserDetailForTeacher(uuid: UUID): Flow<GetStudentForTeacherResponse>
+
+    suspend fun putChangedProfile(body: PutChangedProfileRequest): Flow<Unit>
 }

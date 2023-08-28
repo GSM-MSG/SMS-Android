@@ -1,7 +1,13 @@
 package com.msg.sms.data.repository
 
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSource
-import com.msg.sms.data.remote.dto.student.request.*
+import com.msg.sms.data.remote.dto.student.request.CertificateData
+import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
+import com.msg.sms.data.remote.dto.student.request.PrizeData
+import com.msg.sms.data.remote.dto.student.request.ProjectData
+import com.msg.sms.data.remote.dto.student.request.ProjectDateData
+import com.msg.sms.data.remote.dto.student.request.ProjectRelatedLinkData
+import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
 import com.msg.sms.data.remote.dto.student.response.toGetStudentForAnonymous
 import com.msg.sms.data.remote.dto.student.response.toGetStudentForStudent
 import com.msg.sms.data.remote.dto.student.response.toGetStudentForTeacher
@@ -11,10 +17,11 @@ import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
 import com.msg.sms.domain.model.student.response.GetStudentForStudent
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 import com.msg.sms.domain.model.student.response.StudentListModel
+import com.msg.sms.domain.model.user.response.MyProfileModel
 import com.msg.sms.domain.repository.StudentRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 class StudentRepositoryImpl @Inject constructor(
@@ -119,5 +126,52 @@ class StudentRepositoryImpl @Inject constructor(
 
     override suspend fun getUserDetailForTeacher(uuid: UUID): Flow<GetStudentForTeacher> {
         return dataSource.getUserDetailForTeacher(uuid = uuid).map { it.toGetStudentForTeacher() }
+    }
+
+    override suspend fun putChangedProfile(profile: MyProfileModel): Flow<Unit> {
+        return dataSource.putChangedProfile(
+            body = PutChangedProfileRequest(
+                major = profile.major,
+                techStacks = profile.techStacks,
+                profileImgUrl = profile.profileImg,
+                introduce = profile.introduce,
+                portfolioUrl = profile.portfolioUrl,
+                contactEmail = profile.contactEmail,
+                formOfEmployment = profile.formOfEmployment,
+                gsmAuthenticationScore = profile.gsmAuthenticationScore,
+                salary = profile.salary,
+                regions = profile.regions,
+                languageCertificates = profile.languageCertificates.map {
+                    CertificateData(
+                        languageCertificateName = it.languageCertificateName,
+                        score = it.score
+                    )
+                },
+                militaryService = profile.militaryService,
+                certificates = profile.certificates,
+                projects = profile.projects.map {
+                    ProjectData(
+                        name = it.name,
+                        icon = it.icon,
+                        previewImages = it.previewImages,
+                        description = it.description,
+                        links = it.links.map { link ->
+                            ProjectRelatedLinkData(
+                                name = link.name,
+                                url = link.url
+                            )
+                        }, techStacks = it.techStacks,
+                        myActivity = it.myActivity,
+                        inProgress = ProjectDateData(
+                            start = it.inProgress.start,
+                            end = it.inProgress.end
+                        )
+                    )
+                },
+                prizes = profile.prizes.map {
+                    PrizeData(name = it.name, type = it.type, date = it.date)
+                },
+            )
+        )
     }
 }

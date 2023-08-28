@@ -1,18 +1,26 @@
 package com.sms.presentation.main.viewmodel
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.user.response.LanguageCertificateModel
+import com.msg.sms.domain.model.user.response.LinkModel
 import com.msg.sms.domain.model.user.response.MyProfileModel
+import com.msg.sms.domain.model.user.response.PrizeModel
+import com.msg.sms.domain.model.user.response.ProgressModel
+import com.msg.sms.domain.model.user.response.ProjectModel
+import com.msg.sms.domain.usecase.fileupload.ImageUploadUseCase
+import com.msg.sms.domain.usecase.student.PutChangedProfileUseCase
 import com.msg.sms.domain.usecase.user.GetMyProfileUseCase
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 import com.sms.presentation.main.ui.mypage.state.MyProfileData
+import com.sms.presentation.main.ui.util.createFileFromBitmap
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,14 +28,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 @HiltViewModel
 class MyProfileViewModel @Inject constructor(
     private val getMyProfileUseCase: GetMyProfileUseCase,
+    private val imageUploadUseCase: ImageUploadUseCase,
+    private val putChangedProfileUseCase: PutChangedProfileUseCase,
 ) : ViewModel() {
     private val _getProfileResponse = MutableStateFlow<Event<MyProfileModel>>(Event.Loading)
     val getProfileResponse = _getProfileResponse.asStateFlow()
+
+    private val _putChangedProfileResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
+    val puChangedProfileResponse = _putChangedProfileResponse.asStateFlow()
 
     private val _myProfileData = mutableStateOf(
         MyProfileData(
@@ -71,6 +85,22 @@ class MyProfileViewModel @Inject constructor(
     private val _bitmapPreviews = mutableStateOf<List<List<Bitmap>>>(listOf())
     val bitmapPreviews: State<List<List<Bitmap>>> = _bitmapPreviews
 
+    private val _bitmapIcons = mutableStateOf<List<Bitmap?>>(listOf())
+    val bitmapIcons: State<List<Bitmap?>> = _bitmapIcons
+
+    private val _iconChangeCount = mutableStateOf(0)
+
+    private val _previewChangeCount = mutableStateOf(0)
+
+    private val _isProfileChanged = mutableStateOf(false)
+    val isProfileChanged: State<Boolean> = _isProfileChanged
+
+    private val _isProjectIconChanged = mutableStateOf(false)
+    val isProjectIconChanged: State<Boolean> = _isProjectIconChanged
+
+    private val _isProjectPreviewsChanged = mutableStateOf(false)
+    val isProjectPreviewChanged: State<Boolean> = _isProjectPreviewsChanged
+
     fun removeTechStack(techStack: String) {
         _techStacks.value = _techStacks.value.minus(techStack)
     }
@@ -85,6 +115,45 @@ class MyProfileViewModel @Inject constructor(
                 )
             } else
                 item
+        }
+    }
+
+    fun onChangeProjectIcon(index: Int, value: Bitmap) {
+        val bitmapIconList = _bitmapIcons.value.toMutableList()
+        bitmapIconList[index] = value
+        _bitmapIcons.value = bitmapIconList
+    }
+
+    fun onChangeProfileChange(bitmap: Bitmap?) {
+        if (bitmap == null) {
+            _isProfileChanged.value = true
+        } else {
+            changeBitmapToUrl(bitmap, typeOfRequest = 0)
+        }
+    }
+
+    fun onChangeProjectIcon(bitmaps: List<Bitmap?>) {
+        if (bitmaps.isEmpty()) _isProjectIconChanged.value = true
+        else {
+            bitmaps.forEachIndexed { index, bitmap ->
+                if (bitmap != null) {
+                    changeBitmapToUrl(bitmap, typeOfRequest = 1, projectIndex = index)
+                }
+            }
+        }
+    }
+
+    fun onChangeProjectPreviews(bitmaps: List<List<Bitmap?>>) {
+        if (bitmaps.sumOf { it.size } != 0) {
+            bitmaps.forEachIndexed { projectIndex, projectPreviews ->
+                projectPreviews.forEach { bitmap ->
+                    if (bitmap != null) {
+                        changeBitmapToUrl(bitmap, typeOfRequest = 2, projectIndex = projectIndex)
+                    }
+                }
+            }
+        } else {
+            _isProjectPreviewsChanged.value = true
         }
     }
 
@@ -134,6 +203,7 @@ class MyProfileViewModel @Inject constructor(
     private fun setProjectData(data: MyProfileModel) {
         _isExpandedProject.value = data.projects.map { true }
         setBitmapProjectPromotions(data = data)
+        setProjectIcon(data = data)
         _projects.value = data.projects.map { project ->
             ProjectData(
                 name = project.name,
@@ -229,6 +299,10 @@ class MyProfileViewModel @Inject constructor(
         _isExpandedAward.value = expandAwardList
     }
 
+    private fun setProjectIcon(data: MyProfileModel) {
+        _bitmapIcons.value = data.projects.map { null }
+    }
+
     private fun setProfileData(data: MyProfileModel) {
         _myProfileData.value = MyProfileData(
             name = data.name,
@@ -299,6 +373,68 @@ class MyProfileViewModel @Inject constructor(
         _awards.value = awards
     }
 
+    @SuppressLint("SimpleDateFormat")
+    // typeOfRequest: 0 -> profile image, 1 -> project icon, 2 -> project image
+    fun changeBitmapToUrl(
+        bitmap: Bitmap,
+        typeOfRequest: Int,
+        projectIndex: Int = 0,
+    ) = viewModelScope.launch {
+        imageUploadUseCase(
+            file = bitmap.createFileFromBitmap(
+                name = "file",
+                fileName = "SMS-${SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())}.jpg"
+            )
+        ).onSuccess {
+            it.catch { remoteError ->
+//                remoteError.errorHandling()
+            }.collect { response ->
+                when (typeOfRequest) {
+                    0 -> updateProfileImage(url = response.fileUrl)
+                    1 -> appendProjectIcon(projectIndex = projectIndex, url = response.fileUrl)
+                    2 -> appendProjectPromotion(projectIndex = projectIndex, url = response.fileUrl)
+                }
+            }
+        }.onFailure {
+//            it.errorHandling()
+        }
+    }
+
+    private fun updateProfileImage(url: String) {
+        _myProfileData.value = _myProfileData.value.copy(profileImg = url)
+        _isProfileChanged.value = true
+    }
+
+    private fun appendProjectIcon(projectIndex: Int, url: String) {
+        if (_bitmapIcons.value.isEmpty()) {
+            _isProjectIconChanged.value = true
+        } else {
+            val changedData = _projects.value[projectIndex].copy(icon = url)
+            _projects.value =
+                _projects.value.mapIndexed { index, projectData -> if (index == projectIndex) changedData else projectData }
+            _iconChangeCount.value = _iconChangeCount.value + 1
+            if (bitmapIcons.value.size == _iconChangeCount.value) {
+                _isProjectIconChanged.value = true
+            }
+        }
+    }
+
+    private fun appendProjectPromotion(projectIndex: Int, url: String) {
+        if (bitmapPreviews.value.sumOf { it.size } == 0) {
+            _isProjectPreviewsChanged.value = true
+        } else {
+            val projectPromotions = _projects.value[projectIndex].projectImage.toMutableList()
+            projectPromotions.add(url)
+            val changedData = _projects.value[projectIndex].copy(projectImage = projectPromotions)
+            _projects.value =
+                _projects.value.mapIndexed { index, projectData -> if (index == projectIndex) changedData else projectData }
+            _previewChangeCount.value = _previewChangeCount.value + 1
+            if (bitmapPreviews.value.sumOf { it.size } == _previewChangeCount.value) {
+                _isProjectPreviewsChanged.value = true
+            }
+        }
+    }
+
     fun getMyProfile() = viewModelScope.launch {
         getMyProfileUseCase().onSuccess {
             it.catch { remoteError ->
@@ -306,7 +442,6 @@ class MyProfileViewModel @Inject constructor(
             }.collect { response ->
                 _getProfileResponse.value = Event.Success(data = response)
                 setMyProfileData(data = response)
-                _getProfileResponse.value = Event.Loading
             }
         }.onFailure {
             _getProfileResponse.value = it.errorHandling()
@@ -315,5 +450,70 @@ class MyProfileViewModel @Inject constructor(
 
     fun onProfileValueChange(myProfile: MyProfileData) {
         _myProfileData.value = myProfile
+    }
+
+    private fun putChangedProfile(changedProfile: MyProfileModel) = viewModelScope.launch {
+        putChangedProfileUseCase(profile = changedProfile).onSuccess {
+            it.catch { remoteError ->
+                _putChangedProfileResponse.value = remoteError.errorHandling()
+            }.collect {
+                _putChangedProfileResponse.value = Event.Success()
+            }
+        }.onFailure {
+            _putChangedProfileResponse.value = it.errorHandling()
+        }
+    }
+
+    fun putChangeProfile() {
+        val myProfile = myProfileData.value
+        putChangedProfile(
+            MyProfileModel(
+                name = myProfile.name,
+                introduce = myProfile.introduce,
+                portfolioUrl = myProfile.portfolioUrl,
+                grade = myProfile.grade,
+                classNum = myProfile.classNum,
+                number = myProfile.number,
+                department = myProfile.department,
+                major = myProfile.major,
+                certificates = myProfile.certificates,
+                contactEmail = myProfile.contactEmail,
+                gsmAuthenticationScore = myProfile.gsmAuthenticationScore,
+                formOfEmployment = myProfile.formOfEmployment,
+                regions = myProfile.regions,
+                militaryService = myProfile.militaryService,
+                salary = myProfile.salary,
+                languageCertificates = myProfile.languageCertificates,
+                prizes = awards.value.map {
+                    PrizeModel(
+                        name = it.title,
+                        type = it.organization,
+                        date = it.date
+                    )
+                },
+                techStacks = techStacks.value,
+                profileImg = myProfile.profileImg,
+                projects = projects.value.map {
+                    ProjectModel(
+                        name = it.name,
+                        icon = it.icon,
+                        previewImages = it.projectImage,
+                        description = it.description,
+                        links = it.relatedLinks.map { link ->
+                            LinkModel(
+                                name = link.name,
+                                url = link.link
+                            )
+                        },
+                        techStacks = it.techStacks,
+                        myActivity = it.keyTask,
+                        inProgress = ProgressModel(
+                            start = it.activityDuration.start,
+                            end = it.activityDuration.end
+                        )
+                    )
+                }
+            )
+        )
     }
 }

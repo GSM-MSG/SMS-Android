@@ -13,13 +13,15 @@ import com.msg.sms.design.component.button.SmsRoundedButton
 fun SaveButtonComponent(
     modifier: Modifier = Modifier,
     visibility: Boolean,
+    enabled: Boolean = true,
     onClickSaveButton: () -> Unit,
 ) {
     AnimatedVisibility(modifier = modifier.padding(bottom = 20.dp), visible = visibility) {
         SmsRoundedButton(
             modifier = Modifier.fillMaxWidth(),
             text = "저장",
-            onClick = onClickSaveButton
+            onClick = onClickSaveButton,
+            enabled = enabled
         )
     }
 }
