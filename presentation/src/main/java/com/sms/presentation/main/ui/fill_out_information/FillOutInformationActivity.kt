@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -35,6 +36,9 @@ import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.P
 import com.sms.presentation.main.ui.fill_out_information.data.AwardData
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 import com.sms.presentation.main.ui.fill_out_information.screen.*
+import com.sms.presentation.main.ui.login.LoginActivity
+import com.sms.presentation.main.ui.main.MainActivity
+import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -72,6 +76,7 @@ enum class FillOutPage(val value: String) {
 class FillOutInformationActivity : BaseActivity() {
     private val fillOutViewModel by viewModels<FillOutViewModel>()
     private val searchDetailStackViewModel by viewModels<SearchDetailStackViewModel>()
+    private val authViewModel by viewModels<AuthViewModel>()
     private val searchDetailStack = mutableStateOf(listOf<String>())
 
     @OptIn(ExperimentalMaterialApi::class)
@@ -112,7 +117,8 @@ class FillOutInformationActivity : BaseActivity() {
             val enteredWorkConditionData = fillOutViewModel.getEnteredWorkConditionInformation()
             val enteredMilitaryData = fillOutViewModel.getEnteredMilitaryServiceInformation()
             val enteredCertificateData = fillOutViewModel.getEnteredCertification().certifications
-            val enteredForeignLanguagesData = fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
+            val enteredForeignLanguagesData =
+                fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
             val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
 
             //data
@@ -187,6 +193,9 @@ class FillOutInformationActivity : BaseActivity() {
             val loadingModalState = remember {
                 mutableStateOf(false)
             }
+            val isUnauthorized = remember {
+                mutableStateOf(false)
+            }
 
             if (loadingModalState.value) {
                 Dialog(onDismissRequest = { }) {
@@ -201,7 +210,19 @@ class FillOutInformationActivity : BaseActivity() {
                     outLineButtonText = "취소",
                     importantButtonText = "확인",
                     outlineButtonOnClick = { dialogVisible.value = false },
-                    importantButtonOnClick = { dialogVisible.value = false }
+                    importantButtonOnClick = {
+                        dialogVisible.value = false
+                        if (isUnauthorized.value) {
+                            authViewModel.deleteToken()
+                            startActivity(
+                                Intent(
+                                    this@FillOutInformationActivity,
+                                    LoginActivity::class.java
+                                )
+                            )
+                            finish()
+                        }
+                    }
                 )
             }
 
@@ -266,44 +287,18 @@ class FillOutInformationActivity : BaseActivity() {
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
                                             if (endDate.isEmpty()) {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(startDate = date)
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
                                             } else {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
                                             }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
                                             if (startDate.isEmpty()) {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(endDate = date)
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
                                             } else {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
                                             }
                                         }
                                         !isProjectDate.value -> {
@@ -467,7 +462,8 @@ class FillOutInformationActivity : BaseActivity() {
                                             navController.navigate("Search")
                                         },
                                         onProjectItemToggleIsOpenValueChanged = { index, visible ->
-                                            projectList[index] = projectList[index].copy(isToggleOpen = visible)
+                                            projectList[index] =
+                                                projectList[index].copy(isToggleOpen = visible)
                                         },
                                         onSnackBarVisibleChanged = { text ->
                                             scope.launch {
@@ -598,6 +594,28 @@ class FillOutInformationActivity : BaseActivity() {
                                                     }
                                                 }
                                             }
+
+                                            lifecycleScope.launch {
+                                                enteredStudentInfomationResponse(
+                                                    viewModel = fillOutViewModel,
+                                                    onSuccess = {
+                                                        loadingModalState.value = false
+                                                        startActivity(
+                                                            Intent(
+                                                                this@FillOutInformationActivity,
+                                                                MainActivity::class.java
+                                                            )
+                                                        )
+                                                        finish()
+                                                    },
+                                                    error = { errorMsg, unauthorized ->
+                                                        dialogVisible.value = true
+                                                        isUnauthorized.value = unauthorized
+                                                        dialogTitle.value = "실패"
+                                                        dialogText.value = errorMsg
+                                                    }
+                                                )
+                                            }
                                         },
                                         onAwardValueChanged = { index, award ->
                                             awardData[index] = award
@@ -661,6 +679,32 @@ class FillOutInformationActivity : BaseActivity() {
             "상관없음" -> "NO_MATTER"
             "해당 사항 없음" -> "NONE"
             else -> ""
+        }
+    }
+
+    private suspend fun enteredStudentInfomationResponse(
+        viewModel: FillOutViewModel,
+        onSuccess: () -> Unit,
+        error: (errorMsg: String, isUnauthorized: Boolean) -> Unit,
+    ) {
+        viewModel.enterInformationResponse.collect { response ->
+            when (response) {
+                is Event.Success -> {
+                    onSuccess()
+                }
+                is Event.Unauthorized -> {
+                    error("토큰이 만료되었습니다, 다시 로그인 하시겠습니까?", true)
+                }
+                is Event.Conflict -> {
+                    error("이미 존재하는 유저입니다.", false)
+                }
+                is Event.Server -> {
+                    error("서버 에러 발생, 개발자에게 문의해주세요.", false)
+                }
+                else -> {
+                    error("알 수 없는 에러 발생, 개발자에게 문의해주세요.", false)
+                }
+            }
         }
     }
 
