@@ -46,6 +46,17 @@ class FillOutViewModel @Inject constructor(
     private val _imageUploadComplete = MutableStateFlow(false)
     val imageUploadComplete = _imageUploadComplete.asStateFlow()
 
+    private val _profileImageUploadResponse = MutableStateFlow<Event<String>>(Event.Loading)
+    val profileImageUploadResponse = _profileImageUploadResponse.asStateFlow()
+
+    private val _projectsIconImageUploadResponse =
+        MutableStateFlow<Event<List<String>>>(Event.Loading)
+    val projectsIconImageUploadResponse = _projectsIconImageUploadResponse.asStateFlow()
+
+    private val _projectsPreviewImagesUploadResponse =
+        MutableStateFlow<Event<List<List<String>>>>(Event.Loading)
+    val projectsPreviewImagesUploadResponse = _projectsPreviewImagesUploadResponse.asStateFlow()
+
     private val major = mutableStateOf("")
     private val enteredMajor = mutableStateOf("")
     private val techStacks = mutableStateListOf<String>()
@@ -63,10 +74,6 @@ class FillOutViewModel @Inject constructor(
         mutableStateListOf(ForeignLanguageInfo(languageCertificateName = "", score = ""))
     private val projects = mutableStateListOf(ProjectInfo(isToggleOpen = true))
     private val awards = mutableStateListOf<AwardData>()
-
-    private var profileImageUploadComplete = false
-    private var projectsIconImageUploadComplete = false
-    private var projectsPreviewImageUploadComplete = false
 
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(
@@ -169,10 +176,6 @@ class FillOutViewModel @Inject constructor(
         this.foreignLanguages.addAll(foreignLanguages.filter { !this.foreignLanguages.contains(it) })
     }
 
-    fun getEnteredAwardsInformation(): List<AwardData> {
-        return awards
-    }
-
     fun setEnteredAwardsInformation(
         awards: List<AwardData>
     ) {
@@ -197,7 +200,7 @@ class FillOutViewModel @Inject constructor(
     fun enterStudentInformation(
         major: String,
         techStack: List<String>,
-            profileImgUrl: String,
+        profileImgUrl: String,
         introduce: String,
         portfolioUrl: String,
         contactEmail: String,
@@ -258,27 +261,20 @@ class FillOutViewModel @Inject constructor(
         }
     }
 
-    fun profileImageUpload(
-        context: Context,
-        onSuccess: (url: String) -> Unit
-    ) = viewModelScope.launch {
+    fun profileImageUpload(context: Context) = viewModelScope.launch {
         val request = async { imageUpload(profileImageUri.value.toMultipartBody(context)!!) }
 
         when (request.await()) {
             is Event.Success -> {
-                profileImageUploadComplete = true
+                _profileImageUploadResponse.value = Event.Success(data = request.await().data!!)
                 setImageCompleteResponseInfo()
-                onSuccess(request.await().data!!)
             }
             is Event.BadRequest -> throw BadRequestException("프로필 이미지의 형식이 맞지 않습니다.")
             else -> throw UnKnownException("알 수 없는 에러 발생")
         }
     }
 
-    fun projectsIconUpload(
-        context: Context,
-        onSuccess: (iconList: List<String>) -> Unit
-    ) = viewModelScope.launch {
+    fun projectsIconUpload(context: Context) = viewModelScope.launch {
         val urlList = Array(projects.size) { "" }
 
         projects.forEachIndexed { index, projectInfo ->
@@ -291,17 +287,13 @@ class FillOutViewModel @Inject constructor(
             }
 
             if (index == projects.lastIndex) {
-                projectsIconImageUploadComplete = true
+                _projectsIconImageUploadResponse.value = Event.Success(data = urlList.toList())
                 setImageCompleteResponseInfo()
-                onSuccess(urlList.toList())
             }
         }
     }
 
-    fun projectsPreview(
-        context: Context,
-        onSuccess: (previewList: List<List<String>>) -> Unit
-    ) = viewModelScope.launch {
+    fun projectsPreview(context: Context) = viewModelScope.launch {
         val previewList = Array(projects.size) { Array(projects[it].preview.size) { "" } }
 
         projects.forEachIndexed { projectIndex, projectInfo ->
@@ -309,21 +301,25 @@ class FillOutViewModel @Inject constructor(
                 val request = async { imageUpload(preview.toMultipartBody(context)!!) }
 
                 when (request.await()) {
-                    is Event.Success -> previewList[projectIndex][previewIndex] = request.await().data!!
+                    is Event.Success -> previewList[projectIndex][previewIndex] =
+                        request.await().data!!
                     is Event.BadRequest -> throw BadRequestException("${projectIndex + 1}번째 프로젝트의 ${previewIndex + 1}번째 프리뷰 이미지의 형식이 맞지 않습니다.")
                     else -> throw UnKnownException("알 수 없는 에러 발생")
                 }
             }
 
             if (projectIndex == projects.lastIndex) {
-                projectsPreviewImageUploadComplete = true
+                _projectsPreviewImagesUploadResponse.value =
+                    Event.Success(data = previewList.toList().map { it.toList() })
                 setImageCompleteResponseInfo()
-                onSuccess(previewList.toList().map { it.toList() })
             }
         }
     }
 
     private fun setImageCompleteResponseInfo() {
-        _imageUploadComplete.value = profileImageUploadComplete && projectsIconImageUploadComplete && projectsPreviewImageUploadComplete
+        _imageUploadComplete.value =
+            _profileImageUploadResponse.value is Event.Success &&
+            _projectsIconImageUploadResponse.value is Event.Success &&
+            _projectsPreviewImagesUploadResponse.value is Event.Success
     }
 }

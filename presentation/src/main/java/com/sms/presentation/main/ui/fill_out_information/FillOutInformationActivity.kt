@@ -106,9 +106,16 @@ class FillOutInformationActivity : BaseActivity() {
                 mutableStateOf(0)
             }
 
-            //data
+            //enteredData
             val enteredProfileData = fillOutViewModel.getEnteredProfileInformation()
+            val enteredSchoolLifeData = fillOutViewModel.getEnteredSchoolLifeInformation()
+            val enteredWorkConditionData = fillOutViewModel.getEnteredWorkConditionInformation()
+            val enteredMilitaryData = fillOutViewModel.getEnteredMilitaryServiceInformation()
+            val enteredCertificateData = fillOutViewModel.getEnteredCertification().certifications
+            val enteredForeignLanguagesData = fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
             val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
+
+            //data
             val profileData = remember {
                 mutableStateOf(enteredProfileData)
             }
@@ -518,16 +525,6 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onCompleteButtonClick = {
                                             loadingModalState.value = true
-                                            lateinit var profileImageUrl: String
-                                            lateinit var projectsIconUrlList: List<String>
-                                            lateinit var projectPreviewUrlList: List<List<String>>
-                                            val enteredWorkConditionData = fillOutViewModel.getEnteredWorkConditionInformation()
-                                            val enteredSchoolLifeData = fillOutViewModel.getEnteredSchoolLifeInformation()
-                                            val enteredCertificateData = fillOutViewModel.getEnteredCertification()
-                                            val enteredMilitaryData = fillOutViewModel.getEnteredMilitaryServiceInformation()
-                                            val enteredLaunguageData = fillOutViewModel.getEnteredForeignLanguagesInformation()
-                                            val enteredAwardsData = fillOutViewModel.getEnteredAwardsInformation()
-
                                             fillOutViewModel.setEnteredAwardsInformation(
                                                 awardData.filter { award ->
                                                     award.name.isNotEmpty() ||
@@ -536,29 +533,25 @@ class FillOutInformationActivity : BaseActivity() {
                                                 }
                                             )
 
+                                            //이미지 업로드 요청
                                             try {
-                                                fillOutViewModel.profileImageUpload(this@FillOutInformationActivity) {
-                                                    profileImageUrl = it
-                                                }
-                                                fillOutViewModel.projectsIconUpload(this@FillOutInformationActivity) {
-                                                    projectsIconUrlList = it
-                                                }
-                                                fillOutViewModel.projectsPreview(this@FillOutInformationActivity) {
-                                                    projectPreviewUrlList = it
-                                                }
+                                                fillOutViewModel.profileImageUpload(this@FillOutInformationActivity)
+                                                fillOutViewModel.projectsIconUpload(this@FillOutInformationActivity)
+                                                fillOutViewModel.projectsPreview(this@FillOutInformationActivity)
                                             } catch (e: RuntimeException) {
                                                 dialogVisible.value = true
                                                 dialogTitle.value = "실패"
                                                 dialogText.value = e.message ?: "알 수 없는 에러"
                                             }
 
+                                            //학생 정보 기입 요청
                                             lifecycleScope.launch {
                                                 fillOutViewModel.imageUploadComplete.collect { complete ->
                                                     if (complete) {
                                                         fillOutViewModel.enterStudentInformation(
                                                             major = enteredProfileData.major,
                                                             techStack = enteredProfileData.techStack,
-                                                            profileImgUrl = profileImageUrl,
+                                                            profileImgUrl = fillOutViewModel.profileImageUploadResponse.value.data!!,
                                                             introduce = enteredProfileData.introduce,
                                                             portfolioUrl = enteredProfileData.portfolioUrl,
                                                             contactEmail = enteredProfileData.contactEmail,
@@ -566,9 +559,9 @@ class FillOutInformationActivity : BaseActivity() {
                                                             salary = enteredWorkConditionData.salary.toInt(),
                                                             region = enteredWorkConditionData.regions,
                                                             gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
-                                                            certificate = enteredCertificateData.certifications,
+                                                            certificate = enteredCertificateData,
                                                             militaryService = enteredMilitaryData.militaryService.toEnum(),
-                                                            languageCertificate = enteredLaunguageData.foreignLanguages.map {
+                                                            languageCertificate = enteredForeignLanguagesData.map {
                                                                 CertificateInformationModel(
                                                                     languageCertificateName = it.languageCertificateName,
                                                                     score = it.score
@@ -577,8 +570,8 @@ class FillOutInformationActivity : BaseActivity() {
                                                             projects = enteredProjectsData.mapIndexed { index, item ->
                                                                 ProjectModel(
                                                                     name = item.name,
-                                                                    icon = projectsIconUrlList[index],
-                                                                    previewImages = projectPreviewUrlList[index],
+                                                                    icon = fillOutViewModel.projectsIconImageUploadResponse.value.data!![index],
+                                                                    previewImages = fillOutViewModel.projectsPreviewImagesUploadResponse.value.data!![index],
                                                                     description = item.description,
                                                                     links = item.relatedLinkList.map {
                                                                         ProjectRelatedLinkModel(
@@ -594,7 +587,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                                     )
                                                                 )
                                                             },
-                                                            award = enteredAwardsData.map {
+                                                            award = awardData.map {
                                                                 PrizeModel(
                                                                     name = it.name,
                                                                     date = it.date,
