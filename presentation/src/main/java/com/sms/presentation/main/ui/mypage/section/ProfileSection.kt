@@ -14,6 +14,8 @@ import com.sms.presentation.main.ui.mypage.component.profile.MajorComponent
 import com.sms.presentation.main.ui.mypage.component.profile.PicturePickerComponent
 import com.sms.presentation.main.ui.mypage.component.profile.PortfolioComponent
 import com.sms.presentation.main.ui.mypage.component.profile.SelfIntroduceComponent
+import com.sms.presentation.main.ui.mypage.state.FormOfEmployment
+import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData
 
 @Composable
@@ -76,9 +78,9 @@ private fun ProfileSectionPre() {
             profileImg = "",
             contactEmail = "",
             gsmAuthenticationScore = 0,
-            formOfEmployment = "",
+            formOfEmployment = FormOfEmployment.NOT_SELECT,
             regions = listOf(),
-            militaryService = "",
+            militaryService = MilitaryService.NOT_SELECT,
             salary = 0,
             languageCertificates = listOf(),
             certificates = listOf(),

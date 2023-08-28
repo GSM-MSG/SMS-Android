@@ -19,6 +19,8 @@ import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.sms.presentation.main.ui.mypage.state.FormOfEmployment
+import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData
 import com.sms.presentation.main.ui.util.createFileFromBitmap
 import com.sms.presentation.main.viewmodel.util.Event
@@ -56,9 +58,9 @@ class MyProfileViewModel @Inject constructor(
             profileImg = "",
             contactEmail = "",
             gsmAuthenticationScore = 0,
-            formOfEmployment = "",
+            formOfEmployment = FormOfEmployment.NOT_SELECT,
             regions = listOf(),
-            militaryService = "",
+            militaryService = MilitaryService.NOT_SELECT,
             salary = 0,
             languageCertificates = listOf(),
             certificates = listOf(),
@@ -316,9 +318,9 @@ class MyProfileViewModel @Inject constructor(
             profileImg = data.profileImg,
             contactEmail = data.contactEmail,
             gsmAuthenticationScore = data.gsmAuthenticationScore,
-            formOfEmployment = data.formOfEmployment,
+            formOfEmployment = FormOfEmployment.valueOf(data.formOfEmployment),
             regions = data.regions,
-            militaryService = data.militaryService,
+            militaryService = MilitaryService.valueOf(data.militaryService),
             salary = data.salary,
             languageCertificates = data.languageCertificates,
             certificates = data.certificates,
@@ -479,9 +481,9 @@ class MyProfileViewModel @Inject constructor(
                 certificates = myProfile.certificates,
                 contactEmail = myProfile.contactEmail,
                 gsmAuthenticationScore = myProfile.gsmAuthenticationScore,
-                formOfEmployment = myProfile.formOfEmployment,
+                formOfEmployment = myProfile.formOfEmployment.name,
                 regions = myProfile.regions,
-                militaryService = myProfile.militaryService,
+                militaryService = myProfile.militaryService.name,
                 salary = myProfile.salary,
                 languageCertificates = myProfile.languageCertificates,
                 prizes = awards.value.map {

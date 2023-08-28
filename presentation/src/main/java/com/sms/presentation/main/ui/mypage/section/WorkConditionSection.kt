@@ -11,12 +11,13 @@ import androidx.compose.ui.unit.dp
 import com.sms.presentation.main.ui.mypage.component.work.WantPayComponent
 import com.sms.presentation.main.ui.mypage.component.work.WantWorkFormComponent
 import com.sms.presentation.main.ui.mypage.component.work.WorkLocationComponent
+import com.sms.presentation.main.ui.mypage.state.FormOfEmployment
 
 @Composable
 fun WorkConditionSection(
     wantWorkingAreas: List<String>,
     wantPay: String,
-    wantWorkForm: String,
+    wantWorkForm: FormOfEmployment,
     onValueChange: (index: Int, item: String) -> Unit,
     onClickOpenButton: () -> Unit,
     onClickAddButton: () -> Unit,
@@ -28,7 +29,7 @@ fun WorkConditionSection(
             .padding(top = 24.dp, bottom = 20.dp, start = 20.dp, end = 20.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        WantWorkFormComponent(setText = wantWorkForm, onClickOpenButton = onClickOpenButton)
+        WantWorkFormComponent(setText = wantWorkForm.text, onClickOpenButton = onClickOpenButton)
         WantPayComponent(wantPay = wantPay)
         WorkLocationComponent(
             workLocationsList = wantWorkingAreas,
@@ -45,7 +46,7 @@ private fun WorkConditionSectionPre() {
     WorkConditionSection(
         listOf("베이징", "도쿄", "서울"),
         wantPay = "2000",
-        wantWorkForm = "정규직",
+        wantWorkForm = FormOfEmployment.FULL_TIME,
         onClickOpenButton = {},
         onValueChange = { _, _ -> },
         onClickAddButton = {}) {}

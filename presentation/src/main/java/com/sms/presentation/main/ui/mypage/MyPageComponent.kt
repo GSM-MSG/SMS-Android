@@ -39,6 +39,8 @@ import com.sms.presentation.main.ui.mypage.section.ProjectsSection
 import com.sms.presentation.main.ui.mypage.section.SchoolLifeSection
 import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
 import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.sms.presentation.main.ui.mypage.state.FormOfEmployment
+import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 
@@ -153,7 +155,7 @@ fun MyPageComponent(
             }
             item {
                 MilitaryServiceSection(
-                    setMilitary = myProfileData.militaryService,
+                    setMilitary = myProfileData.militaryService.text,
                     onClickMilitaryOpenButton = onClickMilitaryOpenButton
                 )
                 SmsSpacer()
@@ -388,9 +390,9 @@ private fun MyPageComponentPre() {
             profileImg = "",
             contactEmail = "",
             gsmAuthenticationScore = 0,
-            formOfEmployment = "",
+            formOfEmployment = FormOfEmployment.NOT_SELECT,
             regions = listOf(),
-            militaryService = "",
+            militaryService = MilitaryService.NOT_SELECT,
             salary = 0,
             languageCertificates = listOf(),
             certificates = listOf(),

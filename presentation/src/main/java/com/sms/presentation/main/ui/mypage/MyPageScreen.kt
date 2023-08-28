@@ -21,8 +21,12 @@ import com.msg.sms.design.component.selector.MajorSelector
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
+import com.sms.presentation.main.ui.mypage.component.military.MilitaryBottomSheet
+import com.sms.presentation.main.ui.mypage.component.work.WorkingConditionBottomSheet
 import com.sms.presentation.main.ui.mypage.modal.MyPageBottomSheet
 import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.sms.presentation.main.ui.mypage.state.FormOfEmployment
+import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 import com.sms.presentation.main.viewmodel.MyProfileViewModel
@@ -139,11 +143,16 @@ fun MyPageScreen(
                 }
 
                 BottomSheetValues.WorkingForm -> {
-                    SelectorBottomSheet(
-                        itemChange = { onProfileValueChange(myProfileData.copy(formOfEmployment = it)) },
-                        list = listOf("정규직", "비정규직", "계약직", "인턴"),
+                    WorkingConditionBottomSheet(
+                        list = listOf(
+                            FormOfEmployment.FULL_TIME,
+                            FormOfEmployment.TEMPORARY,
+                            FormOfEmployment.CONTRACT,
+                            FormOfEmployment.INTERN
+                        ),
+                        itemChange = { onProfileValueChange(myProfileData.copy(formOfEmployment = FormOfEmployment.valueOf(it))) },
                         bottomSheetState = bottomSheetState,
-                        selected = myProfileData.formOfEmployment,
+                        selected = myProfileData.formOfEmployment.name,
                     )
                 }
 
@@ -166,11 +175,16 @@ fun MyPageScreen(
                 }
 
                 BottomSheetValues.Military -> {
-                    SelectorBottomSheet(
-                        itemChange = { onProfileValueChange(myProfileData.copy(militaryService = it)) },
-                        list = listOf("병특 희망", "희망 하지 않음", "상관 없음", "해당 사항 없음"),
+                    MilitaryBottomSheet(
+                        list = listOf(
+                            MilitaryService.HOPE,
+                            MilitaryService.NOT_HOPE,
+                            MilitaryService.NO_MATTER,
+                            MilitaryService.NONE
+                        ),
+                        itemChange = { onProfileValueChange(myProfileData.copy(militaryService = MilitaryService.valueOf(it))) },
                         bottomSheetState = bottomSheetState,
-                        selected = myProfileData.militaryService,
+                        selected = myProfileData.militaryService.name,
                     )
                 }
             }
@@ -260,9 +274,9 @@ private fun MyPageScreenPre() {
             profileImg = "",
             contactEmail = "",
             gsmAuthenticationScore = 0,
-            formOfEmployment = "",
+            formOfEmployment = FormOfEmployment.FULL_TIME,
             regions = listOf(),
-            militaryService = "",
+            militaryService = MilitaryService.NOT_SELECT,
             salary = 0,
             languageCertificates = listOf(),
             certificates = listOf(),
