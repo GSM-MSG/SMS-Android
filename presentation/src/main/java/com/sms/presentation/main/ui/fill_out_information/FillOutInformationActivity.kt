@@ -13,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.msg.sms.design.component.SmsDialog
+import com.msg.sms.design.component.lottie.SmsLoadingLottie
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.design.theme.SMSTheme
@@ -174,6 +176,15 @@ class FillOutInformationActivity : BaseActivity() {
             }
             val dialogText = remember {
                 mutableStateOf("")
+            }
+            val loadingModalState = remember {
+                mutableStateOf(false)
+            }
+
+            if (loadingModalState.value) {
+                Dialog(onDismissRequest = { }) {
+                    SmsLoadingLottie(modifier = Modifier.size(80.dp))
+                }
             }
 
             if (dialogVisible.value) {
@@ -506,6 +517,7 @@ class FillOutInformationActivity : BaseActivity() {
                                             awardData.removeAt(index)
                                         },
                                         onCompleteButtonClick = {
+                                            loadingModalState.value = true
                                             lateinit var profileImageUrl: String
                                             lateinit var projectsIconUrlList: List<String>
                                             lateinit var projectPreviewUrlList: List<List<String>>
