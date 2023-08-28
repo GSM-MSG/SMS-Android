@@ -18,10 +18,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.domain.exception.BadRequestException
 import com.msg.sms.domain.model.student.request.*
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
@@ -165,6 +165,28 @@ class FillOutInformationActivity : BaseActivity() {
                 mutableStateMapOf<Int, String>()
             }
 
+            //Dialog
+            val dialogVisible = remember {
+                mutableStateOf(false)
+            }
+            val dialogTitle = remember {
+                mutableStateOf("")
+            }
+            val dialogText = remember {
+                mutableStateOf("")
+            }
+
+            if (dialogVisible.value) {
+                SmsDialog(
+                    title = dialogTitle.value,
+                    msg = dialogText.value,
+                    outLineButtonText = "취소",
+                    importantButtonText = "확인",
+                    outlineButtonOnClick = { dialogVisible.value = false },
+                    importantButtonOnClick = { dialogVisible.value = false }
+                )
+            }
+
             ModalBottomSheetLayout(
                 sheetContent = {
                     when (bottomSheetValues.value) {
@@ -226,18 +248,44 @@ class FillOutInformationActivity : BaseActivity() {
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
                                             if (endDate.isEmpty()) {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(startDate = date)
                                             } else {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        startDate = minOf(
+                                                            endDate,
+                                                            date
+                                                        )
+                                                    )
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        endDate = maxOf(
+                                                            endDate,
+                                                            date
+                                                        )
+                                                    )
                                             }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
                                             if (startDate.isEmpty()) {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(endDate = date)
                                             } else {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        startDate = minOf(
+                                                            startDate,
+                                                            date
+                                                        )
+                                                    )
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        endDate = maxOf(
+                                                            startDate,
+                                                            date
+                                                        )
+                                                    )
                                             }
                                         }
                                         !isProjectDate.value -> {
@@ -396,7 +444,8 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onDetailStackSearchBarClick = { index ->
                                             projectIndex.value = index
-                                            detailStackSearchLocation.value = DetailSearchLocation.Projects
+                                            detailStackSearchLocation.value =
+                                                DetailSearchLocation.Projects
                                             navController.navigate("Search")
                                         },
                                         onProjectItemToggleIsOpenValueChanged = { index, visible ->
@@ -476,18 +525,19 @@ class FillOutInformationActivity : BaseActivity() {
                                             )
 
                                             try {
-                                                fillOutViewModel.profileImageUpload(this@FillOutInformationActivity) { profileImageUrl = it }
-                                                fillOutViewModel.projectsIconUpload(this@FillOutInformationActivity) { projectsIconUrlList = it }
-                                                fillOutViewModel.projectsPreview(this@FillOutInformationActivity) { projectPreviewUrlList = it }
-                                            } catch (e: RuntimeException) {
-                                                when(e) {
-                                                    is BadRequestException -> {
-
-                                                    }
-                                                    else -> {
-
-                                                    }
+                                                fillOutViewModel.profileImageUpload(this@FillOutInformationActivity) {
+                                                    profileImageUrl = it
                                                 }
+                                                fillOutViewModel.projectsIconUpload(this@FillOutInformationActivity) {
+                                                    projectsIconUrlList = it
+                                                }
+                                                fillOutViewModel.projectsPreview(this@FillOutInformationActivity) {
+                                                    projectPreviewUrlList = it
+                                                }
+                                            } catch (e: RuntimeException) {
+                                                dialogVisible.value = true
+                                                dialogTitle.value = "실패"
+                                                dialogText.value = e.message ?: "알 수 없는 에러"
                                             }
 
                                             lifecycleScope.launch {
@@ -565,9 +615,10 @@ class FillOutInformationActivity : BaseActivity() {
                                     ) { stack ->
                                         when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> {
-                                                profileDetailTechStack.removeAll(profileDetailTechStack.filter {
-                                                    !stack.contains(it)
-                                                })
+                                                profileDetailTechStack.removeAll(
+                                                    profileDetailTechStack.filter {
+                                                        !stack.contains(it)
+                                                    })
                                                 profileDetailTechStack.addAll(stack.filter {
                                                     !profileDetailTechStack.contains(it)
                                                 })

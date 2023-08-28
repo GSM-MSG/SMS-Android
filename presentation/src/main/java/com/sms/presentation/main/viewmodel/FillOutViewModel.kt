@@ -197,7 +197,7 @@ class FillOutViewModel @Inject constructor(
     fun enterStudentInformation(
         major: String,
         techStack: List<String>,
-        profileImgUrl: String,
+            profileImgUrl: String,
         introduce: String,
         portfolioUrl: String,
         contactEmail: String,
