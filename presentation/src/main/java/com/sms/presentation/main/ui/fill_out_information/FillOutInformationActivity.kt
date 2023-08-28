@@ -103,13 +103,13 @@ class FillOutInformationActivity : BaseActivity() {
             }
 
             //data
-            val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
             val enteredProfileData = fillOutViewModel.getEnteredProfileInformation()
-            val projectList = remember {
-                mutableStateListOf(*enteredProjectsData.toTypedArray())
-            }
+            val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
             val profileData = remember {
                 mutableStateOf(enteredProfileData)
+            }
+            val projectList = remember {
+                mutableStateListOf(*enteredProjectsData.toTypedArray())
             }
             val awardData = remember {
                 mutableStateListOf(AwardData(isToggleOpen = true))
@@ -224,44 +224,18 @@ class FillOutInformationActivity : BaseActivity() {
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
                                             if (endDate.isEmpty()) {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(startDate = date)
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
                                             } else {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
                                             }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
                                             if (startDate.isEmpty()) {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(endDate = date)
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
                                             } else {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
+                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
                                             }
                                         }
                                         !isProjectDate.value -> {
@@ -481,7 +455,13 @@ class FillOutInformationActivity : BaseActivity() {
                                             awardData.removeAt(index)
                                         },
                                         onCompleteButtonClick = {
-
+                                            fillOutViewModel.setEnteredAwardsInformation(
+                                                awardData.filter { award ->
+                                                    award.name.isNotEmpty() ||
+                                                    award.type.isNotEmpty() ||
+                                                    award.date.isNotEmpty()
+                                                }
+                                            )
                                         },
                                         onAwardValueChanged = { index, award ->
                                             awardData[index] = award
@@ -504,10 +484,9 @@ class FillOutInformationActivity : BaseActivity() {
                                     ) { stack ->
                                         when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> {
-                                                profileDetailTechStack.removeAll(
-                                                    profileDetailTechStack.filter {
-                                                        !stack.contains(it)
-                                                    })
+                                                profileDetailTechStack.removeAll(profileDetailTechStack.filter {
+                                                    !stack.contains(it)
+                                                })
                                                 profileDetailTechStack.addAll(stack.filter {
                                                     !profileDetailTechStack.contains(it)
                                                 })

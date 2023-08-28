@@ -59,6 +59,8 @@ class FillOutViewModel @Inject constructor(
     private val foreignLanguages =
         mutableStateListOf(ForeignLanguageInfo(languageCertificateName = "", score = ""))
     private val projects = mutableStateListOf(ProjectInfo(isToggleOpen = true))
+    private val awards = mutableStateListOf<AwardData>()
+
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(
             profileImageUri = profileImageUri.value,
@@ -159,6 +161,12 @@ class FillOutViewModel @Inject constructor(
         this.foreignLanguages.removeAll { !foreignLanguages.contains(it) }
         this.foreignLanguages.addAll(foreignLanguages.filter { !this.foreignLanguages.contains(it) })
     }
+    fun setEnteredAwardsInformation(
+        awards: List<AwardData>
+    ) {
+        this.awards.removeAll { !awards.contains(it) }
+        this.awards.addAll(awards.filter { !this.awards.contains(it) })
+    }
 
     fun getMajorList() {
         viewModelScope.launch {
@@ -226,7 +234,7 @@ class FillOutViewModel @Inject constructor(
                 imageUploadUseCase(
                     file = file
                 ).onSuccess {
-                    it.catch {remoteError ->
+                    it.catch { remoteError ->
                         continuation.resume(remoteError.errorHandling())
                     }.collect { response ->
                         continuation.resume(Event.Success(data = response.fileUrl))
