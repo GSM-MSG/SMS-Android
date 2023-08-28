@@ -28,6 +28,7 @@ import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
@@ -117,21 +118,70 @@ fun AwardScreen(
                 onPreviousButtonClick = onPreviousButtonClick,
                 onCompleteButtonClick = {
                     lifecycleScope.launch {
-                        viewModel.imageUpload(enteredProfileData.profileImageUri.toMultipartBody(context)!!) { url ->
-                            profileUrl = url
+                        val profileImageUpload = async {
+                            viewModel.imageUpload(
+                                enteredProfileData.profileImageUri.toMultipartBody(context)!!
+                            )
+                        }
+
+                        when (profileImageUpload.await()) {
+                            is Event.Success -> {
+                                profileUrl = profileImageUpload.await().data!!
+                            }
+                            is Event.BadRequest -> {
+                                dialogVisile.value = true
+                                dialogTitle.value = "실패"
+                                dialogText.value = "프로필 이미지의 확장자가 형식과 맞지 않습니다."
+                            }
+                            else -> {
+
+                            }
                         }
 
                         enteredProjectsData.projects.forEachIndexed { index, projectInfo ->
-                            viewModel.imageUpload(projectInfo.icon.toMultipartBody(context)!!) { url ->
-                                projectsIcons[index] = url
+                            val projectIcon = async {
+                                viewModel.imageUpload(
+                                    projectInfo.icon.toMultipartBody(context)!!
+                                )
                             }
 
-                            projectInfo.preview.forEach {
+                            when (projectIcon.await()) {
+                                is Event.Success -> {
+                                    projectsIcons[index] = projectIcon.await().data!!
+                                }
+                                is Event.BadRequest -> {
+                                    dialogVisile.value = true
+                                    dialogTitle.value = "실패"
+                                    dialogText.value =
+                                        "${enteredProjectsData.projects[index].name}프로젝트의 아이콘이 확장자가 형식과 맞지 않습니다."
+                                }
+                                else -> {
+
+                                }
+                            }
+
+                            projectInfo.preview.forEachIndexed { previewIndex, uri ->
                                 val urlList = arrayListOf<String>()
 
-                                viewModel.imageUpload(it.toMultipartBody(context)!!) { url ->
-                                    urlList.add(url)
-                                    projectsPreviews[index] = urlList
+                                val projectPreview = async {
+                                    viewModel.imageUpload(
+                                        uri.toMultipartBody(context)!!
+                                    )
+                                }
+
+                                when (projectPreview.await()) {
+                                    is Event.Success -> {
+                                        urlList.add(projectPreview.await().data!!)
+                                    }
+                                    is Event.BadRequest -> {
+                                        dialogVisile.value = true
+                                        dialogTitle.value = "실패"
+                                        dialogText.value =
+                                            "${enteredProjectsData.projects[index].name}프로젝트의 ${previewIndex}번째 프리뷰 이미지가확장자가 형식과 맞지 않습니다."
+                                    }
+                                    else -> {
+
+                                    }
                                 }
                             }
                             if (index == enteredProjectsData.projects.lastIndex) {

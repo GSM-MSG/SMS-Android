@@ -24,6 +24,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 class FillOutViewModel @Inject constructor(
@@ -218,17 +220,21 @@ class FillOutViewModel @Inject constructor(
         }
     }
 
-    fun imageUpload(file: MultipartBody.Part, onSuccess: (url: String) -> Unit) = viewModelScope.launch {
-        imageUploadUseCase(
-            file = file
-        ).onSuccess {
-            it.catch { remoteError ->
-                _imageUploadResponse.value = remoteError.errorHandling()
-            }.collect { response ->
-                onSuccess(response.fileUrl)
+    suspend fun imageUpload(file: MultipartBody.Part): Event<String> {
+        return suspendCoroutine { continuation ->
+            viewModelScope.launch {
+                imageUploadUseCase(
+                    file = file
+                ).onSuccess {
+                    it.catch {remoteError ->
+                        continuation.resume(remoteError.errorHandling())
+                    }.collect { response ->
+                        continuation.resume(Event.Success(data = response.fileUrl))
+                    }
+                }.onFailure { error ->
+                    continuation.resume(error.errorHandling())
+                }
             }
-        }.onFailure { error ->
-            _imageUploadResponse.value = error.errorHandling()
         }
     }
 }
