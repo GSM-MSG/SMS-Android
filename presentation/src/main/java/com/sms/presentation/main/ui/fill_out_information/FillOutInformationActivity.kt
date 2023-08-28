@@ -287,18 +287,44 @@ class FillOutInformationActivity : BaseActivity() {
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
                                             if (endDate.isEmpty()) {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(startDate = date)
                                             } else {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        startDate = minOf(
+                                                            endDate,
+                                                            date
+                                                        )
+                                                    )
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        endDate = maxOf(
+                                                            endDate,
+                                                            date
+                                                        )
+                                                    )
                                             }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
                                             if (startDate.isEmpty()) {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(endDate = date)
                                             } else {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        startDate = minOf(
+                                                            startDate,
+                                                            date
+                                                        )
+                                                    )
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        endDate = maxOf(
+                                                            startDate,
+                                                            date
+                                                        )
+                                                    )
                                             }
                                         }
                                         !isProjectDate.value -> {
@@ -431,14 +457,17 @@ class FillOutInformationActivity : BaseActivity() {
                                             fillOutViewModel.setEnteredProjectsInformation(
                                                 projectList.filter { project ->
                                                     project.name.isNotEmpty() ||
-                                                    project.icon != Uri.EMPTY ||
-                                                    project.preview.isNotEmpty() ||
-                                                    project.technologyOfUse.isNotEmpty() ||
-                                                    project.description.isNotEmpty() ||
-                                                    project.keyTask.isNotEmpty() ||
-                                                    project.endDate.isNotEmpty() ||
-                                                    project.startDate.isNotEmpty() ||
-                                                    project.relatedLinkList.first() != Pair("", "")
+                                                            project.icon != Uri.EMPTY ||
+                                                            project.preview.isNotEmpty() ||
+                                                            project.technologyOfUse.isNotEmpty() ||
+                                                            project.description.isNotEmpty() ||
+                                                            project.keyTask.isNotEmpty() ||
+                                                            project.endDate.isNotEmpty() ||
+                                                            project.startDate.isNotEmpty() ||
+                                                            project.relatedLinkList.first() != Pair(
+                                                        "",
+                                                        ""
+                                                    )
                                                 }
                                             )
                                             //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
@@ -475,25 +504,31 @@ class FillOutInformationActivity : BaseActivity() {
                                             }
                                         },
                                         onProjectNameValueChanged = { index, name ->
-                                            projectList[index] = projectList[index].copy(name = name)
+                                            projectList[index] =
+                                                projectList[index].copy(name = name)
                                         },
                                         onProjectIconValueChanged = { index, icon ->
-                                            projectList[index] = projectList[index].copy(icon = icon)
+                                            projectList[index] =
+                                                projectList[index].copy(icon = icon)
                                         },
                                         onProjectPreviewsValueChanged = { index, previews ->
-                                            projectList[index] = projectList[index].copy(preview = previews)
+                                            projectList[index] =
+                                                projectList[index].copy(preview = previews)
                                         },
                                         onProjectTechStackValueChanged = { index, list ->
                                             projectsDetailTechStack[index] = list
                                         },
                                         onProjectDescriptionValueChanged = { index, description ->
-                                            projectList[index] = projectList[index].copy(description = description)
+                                            projectList[index] =
+                                                projectList[index].copy(description = description)
                                         },
                                         onProjectKeyTaskValueChanged = { index, keytask ->
-                                            projectList[index] = projectList[index].copy(keyTask = keytask)
+                                            projectList[index] =
+                                                projectList[index].copy(keyTask = keytask)
                                         },
                                         onProjectRelatedLinksValueChanged = { index, links ->
-                                            projectList[index] = projectList[index].copy(relatedLinkList = links)
+                                            projectList[index] =
+                                                projectList[index].copy(relatedLinkList = links)
                                         }
                                     )
                                 }
@@ -529,69 +564,65 @@ class FillOutInformationActivity : BaseActivity() {
                                                 }
                                             )
 
-                                            //이미지 업로드 요청
-                                            try {
-                                                fillOutViewModel.profileImageUpload(this@FillOutInformationActivity)
-                                                fillOutViewModel.projectsIconUpload(this@FillOutInformationActivity)
-                                                fillOutViewModel.projectsPreview(this@FillOutInformationActivity)
-                                            } catch (e: RuntimeException) {
-                                                dialogVisible.value = true
-                                                dialogTitle.value = "실패"
-                                                dialogText.value = e.message ?: "알 수 없는 에러"
-                                            }
-
-                                            //학생 정보 기입 요청
+                                            //이미지 업로드 & 정보기입 요청
                                             lifecycleScope.launch {
-                                                fillOutViewModel.imageUploadComplete.collect { complete ->
-                                                    if (complete) {
-                                                        fillOutViewModel.enterStudentInformation(
-                                                            major = enteredProfileData.major,
-                                                            techStack = enteredProfileData.techStack,
-                                                            profileImgUrl = fillOutViewModel.profileImageUploadResponse.value.data!!,
-                                                            introduce = enteredProfileData.introduce,
-                                                            portfolioUrl = enteredProfileData.portfolioUrl,
-                                                            contactEmail = enteredProfileData.contactEmail,
-                                                            formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
-                                                            salary = enteredWorkConditionData.salary.toInt(),
-                                                            region = enteredWorkConditionData.regions,
-                                                            gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
-                                                            certificate = enteredCertificateData,
-                                                            militaryService = enteredMilitaryData.militaryService.toEnum(),
-                                                            languageCertificate = enteredForeignLanguagesData.map {
-                                                                CertificateInformationModel(
-                                                                    languageCertificateName = it.languageCertificateName,
-                                                                    score = it.score
-                                                                )
-                                                            },
-                                                            projects = enteredProjectsData.mapIndexed { index, item ->
-                                                                ProjectModel(
-                                                                    name = item.name,
-                                                                    icon = fillOutViewModel.projectsIconImageUploadResponse.value.data!![index],
-                                                                    previewImages = fillOutViewModel.projectsPreviewImagesUploadResponse.value.data!![index],
-                                                                    description = item.description,
-                                                                    links = item.relatedLinkList.map {
-                                                                        ProjectRelatedLinkModel(
-                                                                            name = it.first,
-                                                                            url = it.second
-                                                                        )
-                                                                    },
-                                                                    techStacks = item.technologyOfUse,
-                                                                    myActivity = item.keyTask,
-                                                                    inProgress = ProjectDateModel(
-                                                                        item.startDate,
-                                                                        item.endDate
+                                                try {
+                                                    fillOutViewModel.imageUpload(
+                                                        context = this@FillOutInformationActivity,
+                                                        onComplete = { profileImage, projectsIcon, projectsPreviews ->
+                                                            fillOutViewModel.enterStudentInformation(
+                                                                major = enteredProfileData.major,
+                                                                techStack = enteredProfileData.techStack,
+                                                                profileImgUrl = profileImage,
+                                                                introduce = enteredProfileData.introduce,
+                                                                portfolioUrl = enteredProfileData.portfolioUrl,
+                                                                contactEmail = enteredProfileData.contactEmail,
+                                                                formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
+                                                                salary = enteredWorkConditionData.salary.toInt(),
+                                                                region = enteredWorkConditionData.regions,
+                                                                gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
+                                                                certificate = enteredCertificateData,
+                                                                militaryService = enteredMilitaryData.militaryService.toEnum(),
+                                                                languageCertificate = enteredForeignLanguagesData.map {
+                                                                    CertificateInformationModel(
+                                                                        languageCertificateName = it.languageCertificateName,
+                                                                        score = it.score
                                                                     )
-                                                                )
-                                                            },
-                                                            award = awardData.map {
-                                                                PrizeModel(
-                                                                    name = it.name,
-                                                                    date = it.date,
-                                                                    type = it.type
-                                                                )
-                                                            }
-                                                        )
-                                                    }
+                                                                },
+                                                                projects = enteredProjectsData.mapIndexed { index, item ->
+                                                                    ProjectModel(
+                                                                        name = item.name,
+                                                                        icon = projectsIcon[index],
+                                                                        previewImages = projectsPreviews[index],
+                                                                        description = item.description,
+                                                                        links = item.relatedLinkList.map {
+                                                                            ProjectRelatedLinkModel(
+                                                                                name = it.first,
+                                                                                url = it.second
+                                                                            )
+                                                                        },
+                                                                        techStacks = item.technologyOfUse,
+                                                                        myActivity = item.keyTask,
+                                                                        inProgress = ProjectDateModel(
+                                                                            item.startDate,
+                                                                            item.endDate
+                                                                        )
+                                                                    )
+                                                                },
+                                                                award = awardData.map {
+                                                                    PrizeModel(
+                                                                        name = it.name,
+                                                                        date = it.date,
+                                                                        type = it.type
+                                                                    )
+                                                                }
+                                                            )
+                                                        }
+                                                    )
+                                                } catch (e: RuntimeException) {
+                                                    dialogVisible.value = true
+                                                    dialogTitle.value = "실패"
+                                                    dialogText.value = e.message ?: "알 수 없는 에러가 발생, 개발자에게 문의해주세요"
                                                 }
                                             }
 
