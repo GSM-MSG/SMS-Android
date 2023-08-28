@@ -701,6 +701,7 @@ class FillOutInformationActivity : BaseActivity() {
                 is Event.Server -> {
                     error("서버 에러 발생, 개발자에게 문의해주세요.", false)
                 }
+                is Event.Loading -> {}
                 else -> {
                     error("알 수 없는 에러 발생, 개발자에게 문의해주세요.", false)
                 }
