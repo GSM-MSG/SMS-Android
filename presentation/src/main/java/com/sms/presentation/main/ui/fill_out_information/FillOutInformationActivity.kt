@@ -578,6 +578,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                         }
                                                     )
                                                 } catch (e: RuntimeException) {
+                                                    loadingModalState.value = false
                                                     dialogVisible.value = true
                                                     dialogTitle.value = "실패"
                                                     dialogText.value = e.message ?: "알 수 없는 에러가 발생, 개발자에게 문의해주세요"
@@ -599,6 +600,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                         finish()
                                                     },
                                                     error = { errorMsg, unauthorized ->
+                                                        loadingModalState.value = false
                                                         dialogVisible.value = true
                                                         isUnauthorized.value = unauthorized
                                                         dialogTitle.value = "실패"
