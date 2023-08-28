@@ -12,12 +12,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
-import com.msg.sms.design.component.lottie.SmsLoadingLottie
 import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.TrashCanIcon
@@ -48,14 +46,6 @@ fun ForeignLanguageComponent(
         }
         val onClick = remember {
             mutableStateOf({})
-        }
-        val loadingModalState = remember {
-            mutableStateOf(false)
-        }
-        if (loadingModalState.value) {
-            Dialog(onDismissRequest = { }) {
-                SmsLoadingLottie(modifier = Modifier.size(80.dp))
-            }
         }
 
         if (dialogState.value) {

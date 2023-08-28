@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
@@ -14,9 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListAddButton
+import com.msg.sms.design.component.lottie.SmsLoadingLottie
 import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.domain.model.student.request.*
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
@@ -66,6 +69,9 @@ fun AwardScreen(
     val dialogText = remember {
         mutableStateOf("")
     }
+    val loadingModalState = remember {
+        mutableStateOf(false)
+    }
 
     if (dialogVisile.value) {
         SmsDialog(
@@ -76,6 +82,12 @@ fun AwardScreen(
             outlineButtonOnClick = { dialogVisile.value = false },
             importantButtonOnClick = { dialogVisile.value = false }
         )
+    }
+
+    if (loadingModalState.value) {
+        Dialog(onDismissRequest = { }) {
+            SmsLoadingLottie(modifier = Modifier.size(80.dp))
+        }
     }
 
     LazyColumn {
@@ -117,6 +129,7 @@ fun AwardScreen(
             AwardBottomButtonComponent(
                 onPreviousButtonClick = onPreviousButtonClick,
                 onCompleteButtonClick = {
+                    loadingModalState.value = true
                     lifecycleScope.launch {
                         val profileImageUpload = async {
                             viewModel.imageUpload(
@@ -240,6 +253,7 @@ fun AwardScreen(
                         enterStudentInformation(
                             viewModel = viewModel,
                             onSuccess = {
+                                loadingModalState.value = false
                                 context.startActivity(Intent(context, MainActivity::class.java))
                                 context.finish()
                             },
@@ -264,7 +278,6 @@ suspend fun enterStudentInformation(
     viewModel.enterInformationResponse.collect { response ->
         when (response) {
             is Event.Success -> {
-                dialog(true, "성공", "정보기입을 완료하였습니다.")
                 onSuccess()
             }
 
