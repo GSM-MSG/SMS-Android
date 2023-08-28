@@ -18,8 +18,7 @@ import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 fun ProjectComponent(
     data: ProjectData,
     techStacks: ProjectTechStack,
-    onNameValueChange: (value: String) -> Unit,
-    onKeyTaskValueChange: (value: String) -> Unit,
+    onProjectValueChange: (value: ProjectData) -> Unit,
     onLinkNameChanged: (index: Int, value: String) -> Unit,
     onLinkChanged: (index: Int, value: String) -> Unit,
     onAddLinkButton: () -> Unit,
@@ -39,7 +38,7 @@ fun ProjectComponent(
     ) {
         ProjectNameComponent(
             name = data.name,
-            onValueChange = onNameValueChange
+            onValueChange = { onProjectValueChange(data.copy(name = it)) }
         )
         ProjectIconComponent(projectIcon = data.icon)
         ProjectPreviewComponent(
@@ -54,7 +53,12 @@ fun ProjectComponent(
             onRemoveButton = onRemoveProjectDetailStack,
             onClickSearchBar = onClickSearchBar
         )
-        ProjectKeyTaskComponent(data.keyTask, onValueChange = onKeyTaskValueChange)
+        ProjectDescriptionComponent(
+            projectDescription = data.description,
+            onValueChange = { onProjectValueChange(data.copy(description = it)) })
+        ProjectKeyTaskComponent(
+            keyTask = data.keyTask,
+            onValueChange = { onProjectValueChange(data.copy(keyTask = it)) })
         ProjectScheduleComponent()
         ProjectRelatedLinksComponent(
             relatedLinks = data.relatedLinks,
@@ -87,10 +91,9 @@ private fun ProjectComponentPre() {
                 RelatedLinksData("GitHujb", "https://youyu.com"),
                 RelatedLinksData("X", "https://asdgasgw.com")
             ),
-            techStacks = listOf()
+            techStacks = listOf(),
+            description = ""
         ),
-        onNameValueChange = {},
-        onKeyTaskValueChange = {},
         enteredList = listOf(),
         onRemoveProjectImageButton = {},
         onRemoveBitmapButton = {},
@@ -102,5 +105,6 @@ private fun ProjectComponentPre() {
         onClickSearchBar = {},
         onLinkNameChanged = { _, _ -> },
         techStacks = ProjectTechStack(listOf("Github", "Git", "Kotlin", "Android Studio")),
+        onProjectValueChange = {}
     )
 }

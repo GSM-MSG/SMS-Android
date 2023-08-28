@@ -152,7 +152,9 @@ class MyProfileViewModel @Inject constructor(
                         name = link.name,
                         link = link.url
                     )
-                })
+                },
+                description = project.description
+            )
         }
     }
 
@@ -275,7 +277,8 @@ class MyProfileViewModel @Inject constructor(
                 icon = "",
                 techStacks = listOf(),
                 keyTask = "",
-                relatedLinks = listOf()
+                relatedLinks = listOf(),
+                description = ""
             )
         )
         _projects.value = projects

@@ -126,7 +126,8 @@ private fun ProjectComponentPre() {
                 RelatedLinksData("Youtube", "https://dolmc.com"),
                 RelatedLinksData("GitHujb", "https://youyu.com"),
                 RelatedLinksData("X", "https://asdgasgw.com")
-            )
+            ),
+            description = ""
         )
     )
 }

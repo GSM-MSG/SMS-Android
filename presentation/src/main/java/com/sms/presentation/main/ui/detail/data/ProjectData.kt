@@ -7,6 +7,7 @@ data class ProjectData(
     val activityDuration: ActivityDuration,
     val projectImage: List<String>,
     val icon: String,
+    val description: String,
     val techStacks: List<String>,
     val keyTask: String,
     val relatedLinks: List<RelatedLinksData>
