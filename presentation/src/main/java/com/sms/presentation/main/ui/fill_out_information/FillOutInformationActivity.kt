@@ -28,6 +28,7 @@ import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.D
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MajorSelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MilitarySelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.PhotoPickBottomSheet
+import com.sms.presentation.main.ui.fill_out_information.data.AwardData
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
@@ -109,6 +110,9 @@ class FillOutInformationActivity : BaseActivity() {
             }
             val profileData = remember {
                 mutableStateOf(enteredProfileData)
+            }
+            val awardData = remember {
+                mutableStateListOf(AwardData(isToggleOpen = true))
             }
             val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
 
@@ -220,18 +224,44 @@ class FillOutInformationActivity : BaseActivity() {
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
                                             if (endDate.isEmpty()) {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(startDate = date)
                                             } else {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        startDate = minOf(
+                                                            endDate,
+                                                            date
+                                                        )
+                                                    )
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        endDate = maxOf(
+                                                            endDate,
+                                                            date
+                                                        )
+                                                    )
                                             }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
                                             if (startDate.isEmpty()) {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(endDate = date)
                                             } else {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        startDate = minOf(
+                                                            startDate,
+                                                            date
+                                                        )
+                                                    )
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        endDate = maxOf(
+                                                            startDate,
+                                                            date
+                                                        )
+                                                    )
                                             }
                                         }
                                         !isProjectDate.value -> {
@@ -390,8 +420,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onDetailStackSearchBarClick = { index ->
                                             projectIndex.value = index
-                                            detailStackSearchLocation.value =
-                                                DetailSearchLocation.Projects
+                                            detailStackSearchLocation.value = DetailSearchLocation.Projects
                                             navController.navigate("Search")
                                         },
                                         onProjectItemToggleIsOpenValueChanged = { index, visible ->
@@ -433,9 +462,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     currentRoute.value = FillOutPage.Award.value
                                     setSoftInputMode("PAN")
                                     AwardScreen(
-                                        navController = navController,
-                                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        lifecycleScope = lifecycleScope,
+                                        data = awardData,
                                         awardDateMap = awardDateMap,
                                         onDateBottomSheetOpenButtonClick = { index ->
                                             awardIndex.value = index
@@ -446,6 +473,18 @@ class FillOutInformationActivity : BaseActivity() {
                                         onPreviousButtonClick = {
                                             awardDateMap.clear()
                                             navController.popBackStack()
+                                        },
+                                        onAddButtonClick = {
+                                            awardData.add(AwardData())
+                                        },
+                                        onCancelButtonClick = { index ->
+                                            awardData.removeAt(index)
+                                        },
+                                        onCompleteButtonClick = {
+
+                                        },
+                                        onAwardValueChanged = { index, award ->
+                                            awardData[index] = award
                                         }
                                     )
                                 }
