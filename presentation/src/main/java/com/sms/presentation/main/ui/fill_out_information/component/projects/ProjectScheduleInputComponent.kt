@@ -22,6 +22,7 @@ fun ProjectScheduleInputComponent(
     startDateText: String,
     endDateText: String,
     isProjectProgress: Boolean,
+    isProjectDateEmpty: Boolean,
     onStartDateCalendarClick: () -> Unit,
     onEndDateCalendarClick: () -> Unit,
     onProgressButtonClick: () -> Unit

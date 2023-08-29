@@ -25,6 +25,7 @@ import com.msg.sms.design.util.AddGrayBody1Title
 @Composable
 fun ProjectIconInputComponent(
     iconImageUri: Uri,
+    isIconEmpty: Boolean,
     onValueChanged: (value: Uri) -> Unit
 ) {
     val permission =

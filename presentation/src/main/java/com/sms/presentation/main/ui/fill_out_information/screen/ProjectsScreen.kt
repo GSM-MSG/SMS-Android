@@ -73,6 +73,11 @@ fun ProjectsScreen(
             ProjectsComponent(
                 data = item,
                 detailStacks = if (detailStacks[index].size > 20) detailStacks[index].subList(0, 20) else detailStacks[index],
+                isNameEmpty = true,
+                isIconEmpty = true,
+                isTechStackEmpty = true,
+                isDescriptionEmpty = true,
+                isProjectDateEmpty = true,
                 onCancelButtonClick = { onCancelButtonClick(index) },
                 onDetailStackSearchBarClick = { onDetailStackSearchBarClick(index) },
                 onProjectNameValueChanged = { name ->

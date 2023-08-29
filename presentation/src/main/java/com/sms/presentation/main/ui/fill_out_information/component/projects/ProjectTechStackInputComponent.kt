@@ -19,6 +19,7 @@ import com.sms.presentation.main.ui.mypage.component.profile.DisplaySearchBar
 @Composable
 fun ProjectTechStackInputComponent(
     techStack: List<String>,
+    isTechStackEmpty: Boolean,
     onClick: () -> Unit,
     onProjectTechStackValueChanged: (value: List<String>) -> Unit,
 ) {
@@ -35,7 +36,7 @@ fun ProjectTechStackInputComponent(
                         }
                     }
             )
-            if (true) {
+            if (isTechStackEmpty) {
                 SMSTheme { colors, typography ->
                     Text(
                         text = "사용 기술을 추가해 주세요.",

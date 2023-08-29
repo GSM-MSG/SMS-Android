@@ -11,6 +11,7 @@ import com.msg.sms.design.util.AddGrayBody1Title
 @Composable
 fun ProjectNameInputComponent(
     projectName: String,
+    isNameEmpty: Boolean,
     onValueChange: (String) -> Unit,
 ) {
     val name = remember {
@@ -28,7 +29,7 @@ fun ProjectNameInputComponent(
             },
             onClickButton = { name.value = "" },
             errorText = "프로젝트 이름을 입력해 주세요.",
-            isError = true
+            isError = isNameEmpty
         )
     }
 }
