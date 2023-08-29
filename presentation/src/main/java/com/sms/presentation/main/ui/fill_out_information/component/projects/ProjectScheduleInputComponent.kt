@@ -70,7 +70,7 @@ fun ProjectScheduleInputComponent(
                 }
             }
             SMSTheme { colors, typography ->
-                if (true) {
+                if (isProjectDateEmpty) {
                     Text(
                         text = "프로젝트 진행 기간을 입력해 주세요.",
                         style = typography.caption1,

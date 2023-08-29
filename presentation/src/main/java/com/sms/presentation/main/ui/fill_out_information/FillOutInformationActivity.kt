@@ -258,7 +258,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = FillOutPage.Profile.value
+                                startDestination = FillOutPage.Projects.value
                             ) {
                                 composable(FillOutPage.Profile.value) {
                                     currentRoute.value = FillOutPage.Profile.value
@@ -361,21 +361,23 @@ class FillOutInformationActivity : BaseActivity() {
                                             projectsDetailTechStack.add(emptyList())
                                         },
                                         onNextButtonClick = {
-                                            fillOutViewModel.setEnteredProjectsInformation(
-                                                projectList.filter { project ->
-                                                    project.name.isNotEmpty() ||
-                                                    project.icon != Uri.EMPTY ||
-                                                    project.preview.isNotEmpty() ||
-                                                    project.technologyOfUse.isNotEmpty() ||
-                                                    project.description.isNotEmpty() ||
-                                                    project.keyTask.isNotEmpty() ||
-                                                    project.endDate.isNotEmpty() ||
-                                                    project.startDate.isNotEmpty() ||
-                                                    project.relatedLinkList.first() != Pair("", "")
-                                                }
-                                            )
-                                            //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
-                                            navController.navigate("Award")
+                                            if (it) {
+                                                fillOutViewModel.setEnteredProjectsInformation(
+                                                    projectList.filter { project ->
+                                                        project.name.isNotEmpty() ||
+                                                        project.icon != Uri.EMPTY ||
+                                                        project.preview.isNotEmpty() ||
+                                                        project.technologyOfUse.isNotEmpty() ||
+                                                        project.description.isNotEmpty() ||
+                                                        project.keyTask.isNotEmpty() ||
+                                                        project.endDate.isNotEmpty() ||
+                                                        project.startDate.isNotEmpty() ||
+                                                        project.relatedLinkList.first() != Pair("", "")
+                                                    }
+                                                )
+                                                //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
+                                                navController.navigate("Award")
+                                            }
                                         },
                                         onCancelButtonClick = { index ->
                                             projectList.removeAt(index)

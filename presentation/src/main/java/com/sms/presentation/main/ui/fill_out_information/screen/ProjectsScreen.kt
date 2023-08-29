@@ -4,10 +4,7 @@ import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,7 +25,7 @@ fun ProjectsScreen(
     projects: List<ProjectInfo>,
     detailStacks: List<List<String>>,
     onAddButtonClick: () -> Unit,
-    onNextButtonClick: () -> Unit,
+    onNextButtonClick: (isProjectsRegularExpression: Boolean) -> Unit,
     onCancelButtonClick: (index: Int) -> Unit,
     onDateBottomSheetOpenButtonClick: (index: Int, isStartDate: Boolean) -> Unit,
     onDetailStackSearchBarClick: (index: Int) -> Unit,
@@ -46,6 +43,10 @@ fun ProjectsScreen(
     val isImageExtensionInCorrect = remember {
         mutableStateOf(false)
     }
+    val onButtonClick = remember {
+        mutableStateOf(false)
+    }
+
 
     if (isImageExtensionInCorrect.value) {
         SmsDialog(
@@ -70,14 +71,38 @@ fun ProjectsScreen(
                 }
             }
 
+            val isNameEmpty = remember {
+                mutableStateOf(false)
+            }
+            val isIconEmpty = remember {
+                mutableStateOf(false)
+            }
+            val isTechStackEmpty = remember {
+                mutableStateOf(false)
+            }
+            val isDescriptionEmpty = remember {
+                mutableStateOf(false)
+            }
+            val isProjectDateEmpty = remember {
+                mutableStateOf(false)
+            }
+
+            if (onButtonClick.value) {
+                isNameEmpty.value = item.name.isEmpty()
+                isIconEmpty.value = item.icon == Uri.EMPTY
+                isTechStackEmpty.value = item.technologyOfUse.isEmpty()
+                isDescriptionEmpty.value = item.description.isEmpty()
+                isProjectDateEmpty.value = item.startDate.isEmpty() || item.endDate.isEmpty()
+            }
+
             ProjectsComponent(
                 data = item,
                 detailStacks = if (detailStacks[index].size > 20) detailStacks[index].subList(0, 20) else detailStacks[index],
-                isNameEmpty = true,
-                isIconEmpty = true,
-                isTechStackEmpty = true,
-                isDescriptionEmpty = true,
-                isProjectDateEmpty = true,
+                isNameEmpty = isNameEmpty.value,
+                isIconEmpty = isIconEmpty.value,
+                isTechStackEmpty = isTechStackEmpty.value,
+                isDescriptionEmpty = isDescriptionEmpty.value,
+                isProjectDateEmpty = isProjectDateEmpty.value,
                 onCancelButtonClick = { onCancelButtonClick(index) },
                 onDetailStackSearchBarClick = { onDetailStackSearchBarClick(index) },
                 onProjectNameValueChanged = { name ->
@@ -133,7 +158,10 @@ fun ProjectsScreen(
         item {
             ProjectsBottomButtonComponent(
                 onPreviousButtonClick = { navController.popBackStack() },
-                onNextButtonClick = onNextButtonClick
+                onNextButtonClick = {
+                    onNextButtonClick(true)
+                    onButtonClick.value = true
+                }
             )
             Spacer(modifier = Modifier.height(48.dp))
         }

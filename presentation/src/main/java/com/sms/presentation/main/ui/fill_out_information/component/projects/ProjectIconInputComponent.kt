@@ -63,7 +63,7 @@ fun ProjectIconInputComponent(
                     ) {
                         GalleryIcon(modifier = Modifier.align(Alignment.Center))
                     }
-                    if (true) {
+                    if (isIconEmpty) {
                         Text(
                             text = "프로젝트 아이콘을 선택해 주세요",
                             style = typography.caption1,
