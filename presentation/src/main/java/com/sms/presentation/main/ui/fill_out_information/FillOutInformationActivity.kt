@@ -527,13 +527,14 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onDetailStackSearchBarClick = { index ->
                                             projectIndex.value = index
-                                            detailStackSearchLocation.value =
-                                                DetailSearchLocation.Projects
+                                            detailStackSearchLocation.value = DetailSearchLocation.Projects
                                             navController.navigate("Search")
                                         },
                                         onProjectItemToggleIsOpenValueChanged = { index, visible ->
-                                            projectList[index] =
-                                                projectList[index].copy(isToggleOpen = visible)
+                                            projectList[index] = projectList[index].copy(isToggleOpen = visible)
+                                        },
+                                        onProjectProgressValueChanged = { index, isProgress ->
+                                            projectList[index] = projectList[index].copy(isProjectProgress = isProgress)
                                         },
                                         onSnackBarVisibleChanged = { text ->
                                             scope.launch {
@@ -545,31 +546,25 @@ class FillOutInformationActivity : BaseActivity() {
                                             }
                                         },
                                         onProjectNameValueChanged = { index, name ->
-                                            projectList[index] =
-                                                projectList[index].copy(name = name)
+                                            projectList[index] = projectList[index].copy(name = name)
                                         },
                                         onProjectIconValueChanged = { index, icon ->
-                                            projectList[index] =
-                                                projectList[index].copy(icon = icon)
+                                            projectList[index] = projectList[index].copy(icon = icon)
                                         },
                                         onProjectPreviewsValueChanged = { index, previews ->
-                                            projectList[index] =
-                                                projectList[index].copy(preview = previews)
+                                            projectList[index] = projectList[index].copy(preview = previews)
                                         },
                                         onProjectTechStackValueChanged = { index, list ->
                                             projectsDetailTechStack[index] = list
                                         },
                                         onProjectDescriptionValueChanged = { index, description ->
-                                            projectList[index] =
-                                                projectList[index].copy(description = description)
+                                            projectList[index] = projectList[index].copy(description = description)
                                         },
                                         onProjectKeyTaskValueChanged = { index, keytask ->
-                                            projectList[index] =
-                                                projectList[index].copy(keyTask = keytask)
+                                            projectList[index] = projectList[index].copy(keyTask = keytask)
                                         },
                                         onProjectRelatedLinksValueChanged = { index, links ->
-                                            projectList[index] =
-                                                projectList[index].copy(relatedLinkList = links)
+                                            projectList[index] = projectList[index].copy(relatedLinkList = links)
                                         }
                                     )
                                 }
@@ -669,7 +664,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                                 myActivity = item.keyTask,
                                                                 inProgress = ProjectDateModel(
                                                                     item.startDate,
-                                                                    item.endDate
+                                                                    if (item.isProjectProgress) null else item.endDate
                                                                 )
                                                             )
                                                         },

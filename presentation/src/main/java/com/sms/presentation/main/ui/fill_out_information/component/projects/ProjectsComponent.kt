@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.toggle.ToggleComponent
@@ -26,6 +24,7 @@ fun ProjectsComponent(
     onCancelButtonClick: () -> Unit,
     onDetailStackSearchBarClick: () -> Unit,
     onDateBottomSheetOpenButtonClick: (isStartDate: Boolean) -> Unit,
+    onProjectProgressValueChanged: (isProgress: Boolean) -> Unit,
     onProjectNameValueChanged: (name: String) -> Unit,
     onProjectIconValueChanged: (icon: Uri) -> Unit,
     onProjectPreviewsValueChanged: (previews: List<Uri>) -> Unit,
@@ -36,10 +35,6 @@ fun ProjectsComponent(
     onProjectItemToggleIsOpenValueChanged: (visible: Boolean) -> Unit,
     onSnackBarVisibleChanged: (text: String) -> Unit
 ) {
-    val isProjectProgress = remember {
-        mutableStateOf(false)
-    }
-
     ToggleComponent(
         modifier = Modifier
             .fillMaxWidth()
@@ -86,13 +81,13 @@ fun ProjectsComponent(
             ProjectScheduleInputComponent(
                 startDateText = data.startDate,
                 endDateText = data.endDate,
-                isProjectProgress = isProjectProgress.value,
+                isProjectProgress = data.isProjectProgress,
                 isStartDateEmpty = isStartDateEmpty,
                 isEndDateEmpty = isEndDateEmpty,
                 onStartDateCalendarClick = { onDateBottomSheetOpenButtonClick(true) },
                 onEndDateCalendarClick = { onDateBottomSheetOpenButtonClick(false) },
                 onProgressButtonClick = {
-                    isProjectProgress.value = !isProjectProgress.value
+                    onProjectProgressValueChanged(!data.isProjectProgress)
                 }
             )
             ProjectRelatedLinksInputComponent(
