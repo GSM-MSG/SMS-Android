@@ -8,8 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.msg.sms.domain.exception.BadRequestException
-import com.msg.sms.domain.exception.UnKnownException
 import com.msg.sms.domain.model.major.MajorListModel
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
@@ -27,10 +25,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import okhttp3.MultipartBody
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 class FillOutViewModel @Inject constructor(
@@ -44,14 +39,14 @@ class FillOutViewModel @Inject constructor(
     private val _getMajorListResponse = MutableStateFlow<Event<MajorListModel>>(Event.Loading)
     val getMajorListResponse = _getMajorListResponse.asStateFlow()
 
-    private val _profileImageUploadResponse = mutableStateOf("")
-    val profileImageUploadResponse = _profileImageUploadResponse
+    private val _profileImageUploadResponse = MutableStateFlow<Event<String>>(Event.Loading)
+    val profileImageUploadResponse = _profileImageUploadResponse.asStateFlow()
 
-    private val _projectIconImageUploadResponse = mutableStateListOf<String>()
-    val projectIconImageUploadResponse = _projectIconImageUploadResponse
+    private val _projectIconImageUploadResponse = MutableStateFlow<Event<List<String>>>(Event.Loading)
+    val projectIconImageUploadResponse = _projectIconImageUploadResponse.asStateFlow()
 
-    private val _projectPreviewsImageUploadResponse = mutableStateListOf<List<String>>()
-    val projectPreviewsImageUploadResponse = _projectPreviewsImageUploadResponse
+    private val _projectPreviewsImageUploadResponse = MutableStateFlow<Event<List<List<String>>>>(Event.Loading)
+    val projectPreviewsImageUploadResponse = _projectPreviewsImageUploadResponse.asStateFlow()
 
     private val _onImageUploadComplete = MutableLiveData(false)
     val onImageUploadComplete: LiveData<Boolean> = _onImageUploadComplete
@@ -242,95 +237,69 @@ class FillOutViewModel @Inject constructor(
         }
     }
 
-    private suspend fun imageUpload(file: MultipartBody.Part): Event<String> {
-        return suspendCoroutine { continuation ->
-            viewModelScope.launch {
-                imageUploadUseCase(
-                    file = file
-                ).onSuccess {
-                    it.catch { remoteError ->
-                        continuation.resume(remoteError.errorHandling())
-                    }.collect { response ->
-                        continuation.resume(Event.Success(data = response.fileUrl))
-                    }
-                }.onFailure { error ->
-                    continuation.resume(error.errorHandling())
+    fun profileImageUploadAsync(profileImage: Uri, context: Context) = viewModelScope.async {
+        imageUploadUseCase(
+            file = profileImage.toMultipartBody(context)!!
+        ).onSuccess {
+            it.catch { remoteError ->
+                _profileImageUploadResponse.value = remoteError.errorHandling()
+                this@async.cancel()
+            }.collect { response ->
+                _profileImageUploadResponse.value = Event.Success(data = response.fileUrl)
+            }
+        }.onFailure { error ->
+            _profileImageUploadResponse.value = error.errorHandling()
+            this@async.cancel()
+        }
+    }
+
+    fun projectsIconUploadAsync(projectsIcon: List<Uri>, context: Context) = viewModelScope.async {
+        val iconUrlList = Array(projects.size) { "" }
+
+        projectsIcon.forEachIndexed { index, uri ->
+            imageUploadUseCase(
+                file = uri.toMultipartBody(context)!!
+            ).onSuccess {
+                it.catch { remoteError ->
+                    _projectIconImageUploadResponse.value = remoteError.errorHandling()
+                    this@async.cancel()
+                }.collect { response ->
+                    iconUrlList[index] = response.fileUrl
                 }
-            }
-        }
-    }
-
-    private suspend fun profileImageUploadAsync(context: Context) = viewModelScope.async {
-        val request = async { imageUpload(profileImageUri.value.toMultipartBody(context)!!) }
-
-        when (request.await()) {
-            is Event.Success -> {
-                _profileImageUploadResponse.value = request.await().data!!
-            }
-            is Event.BadRequest -> throw BadRequestException("프로필 이미지의 형식이 맞지 않습니다.")
-            else -> throw UnKnownException("알 수 없는 에러 발생, 개발자에게 문의해주세요.")
-        }
-    }
-
-    private suspend fun projectsIconUploadAsync(context: Context) = viewModelScope.async {
-        val urlList = Array(projects.size) { "" }
-
-        projects.forEachIndexed { index, projectInfo ->
-            val request = async { imageUpload(projectInfo.icon.toMultipartBody(context)!!) }
-
-            when (request.await()) {
-                is Event.Success -> urlList[index] = request.await().data!!
-                is Event.BadRequest -> throw BadRequestException("${index + 1}번째 프로젝트의 아이콘 형식이 맞지 않습니다.")
-                else -> throw UnKnownException("알 수 없는 에러 발생, 개발자에게 문의해주세요.")
+            }.onFailure { error ->
+                _projectIconImageUploadResponse.value = error.errorHandling()
+                this@async.cancel()
             }
 
             if (index == projects.lastIndex) {
-                _projectIconImageUploadResponse.removeAll { !urlList.contains(it) }
-                _projectIconImageUploadResponse.addAll(
-                    urlList.filter {
-                        !_projectIconImageUploadResponse.contains(it)
-                    }
-                )
+                _projectIconImageUploadResponse.value = Event.Success(data = iconUrlList.toList())
             }
         }
     }
 
-    private suspend fun projectsPreviewAsync(context: Context) = viewModelScope.async {
-        val previewList = Array(projects.size) { Array(projects[it].preview.size) { "" } }
+    fun projectsPreviewAsync(projectsPreviews: List<List<Uri>>, context: Context) = viewModelScope.async {
+        val previewUrlList = Array(projects.size) { Array(projects[it].preview.size) { "" } }
 
-        projects.forEachIndexed { projectIndex, projectInfo ->
-            projectInfo.preview.forEachIndexed { previewIndex, preview ->
-                val request = async { imageUpload(preview.toMultipartBody(context)!!) }
-
-                when (request.await()) {
-                    is Event.Success -> previewList[projectIndex][previewIndex] =
-                        request.await().data!!
-                    is Event.BadRequest -> throw BadRequestException("${projectIndex + 1}번째 프로젝트의 ${previewIndex + 1}번째 프리뷰 이미지의 형식이 맞지 않습니다.")
-                    else -> throw UnKnownException("알 수 없는 에러 발생, 개발자에게 문의해주세요.")
+        projectsPreviews.forEachIndexed { projectIndex, previews ->
+            previews.forEachIndexed { index, uri ->
+                imageUploadUseCase(
+                    file = uri.toMultipartBody(context)!!
+                ).onSuccess {
+                    it.catch { remoteError ->
+                        _projectPreviewsImageUploadResponse.value = remoteError.errorHandling()
+                        this@async.cancel()
+                    }.collect { response ->
+                        previewUrlList[projectIndex][index] = response.fileUrl
+                    }
+                }.onFailure { error ->
+                    _projectPreviewsImageUploadResponse.value = error.errorHandling()
+                    this@async.cancel()
                 }
             }
 
             if (projectIndex == projects.lastIndex) {
-                _projectPreviewsImageUploadResponse.clear()
-                _projectPreviewsImageUploadResponse.addAll(previewList.toList().map { it.toList() })
+                _projectPreviewsImageUploadResponse.value = Event.Success(previewUrlList.toList().map { it.toList() })
             }
         }
-    }
-
-    fun imageUpload(
-        context: Context,
-        onComplete: (profileImage: String, projectsIcon: List<String>, projectsPreviews: List<List<String>>) -> Unit
-    ) = viewModelScope.launch {
-        val profileImageDeferred = profileImageUploadAsync(context)
-        val projectsIconDeferred = projectsIconUploadAsync(context)
-        val projectsPreviewDeferred = projectsPreviewAsync(context)
-
-        awaitAll(profileImageDeferred, projectsIconDeferred, projectsPreviewDeferred)
-
-        onComplete(
-            _profileImageUploadResponse.value,
-            _projectIconImageUploadResponse.toList(),
-            _projectPreviewsImageUploadResponse.toList().map { it.toList() }
-        )
     }
 }

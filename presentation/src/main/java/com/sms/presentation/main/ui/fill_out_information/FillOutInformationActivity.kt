@@ -43,6 +43,7 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
@@ -117,7 +118,8 @@ class FillOutInformationActivity : BaseActivity() {
             val enteredWorkConditionData = fillOutViewModel.getEnteredWorkConditionInformation()
             val enteredMilitaryData = fillOutViewModel.getEnteredMilitaryServiceInformation()
             val enteredCertificateData = fillOutViewModel.getEnteredCertification().certifications
-            val enteredForeignLanguagesData = fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
+            val enteredForeignLanguagesData =
+                fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
             val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
 
             //data
@@ -282,18 +284,44 @@ class FillOutInformationActivity : BaseActivity() {
                                     when {
                                         isProjectDate.value && isProjectStartDate.value -> {
                                             if (endDate.isEmpty()) {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = date)
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(startDate = date)
                                             } else {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(endDate, date))
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(endDate, date))
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        startDate = minOf(
+                                                            endDate,
+                                                            date
+                                                        )
+                                                    )
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        endDate = maxOf(
+                                                            endDate,
+                                                            date
+                                                        )
+                                                    )
                                             }
                                         }
                                         isProjectDate.value && !isProjectStartDate.value -> {
                                             if (startDate.isEmpty()) {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = date)
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(endDate = date)
                                             } else {
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(startDate = minOf(startDate, date))
-                                                projectList[projectIndex.value] = projectList[projectIndex.value].copy(endDate = maxOf(startDate, date))
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        startDate = minOf(
+                                                            startDate,
+                                                            date
+                                                        )
+                                                    )
+                                                projectList[projectIndex.value] =
+                                                    projectList[projectIndex.value].copy(
+                                                        endDate = maxOf(
+                                                            startDate,
+                                                            date
+                                                        )
+                                                    )
                                             }
                                         }
                                         !isProjectDate.value -> {
@@ -426,14 +454,17 @@ class FillOutInformationActivity : BaseActivity() {
                                             fillOutViewModel.setEnteredProjectsInformation(
                                                 projectList.filter { project ->
                                                     project.name.isNotEmpty() ||
-                                                    project.icon != Uri.EMPTY ||
-                                                    project.preview.isNotEmpty() ||
-                                                    project.technologyOfUse.isNotEmpty() ||
-                                                    project.description.isNotEmpty() ||
-                                                    project.keyTask.isNotEmpty() ||
-                                                    project.endDate.isNotEmpty() ||
-                                                    project.startDate.isNotEmpty() ||
-                                                    project.relatedLinkList.first() != Pair("", "")
+                                                            project.icon != Uri.EMPTY ||
+                                                            project.preview.isNotEmpty() ||
+                                                            project.technologyOfUse.isNotEmpty() ||
+                                                            project.description.isNotEmpty() ||
+                                                            project.keyTask.isNotEmpty() ||
+                                                            project.endDate.isNotEmpty() ||
+                                                            project.startDate.isNotEmpty() ||
+                                                            project.relatedLinkList.first() != Pair(
+                                                        "",
+                                                        ""
+                                                    )
                                                 }
                                             )
                                             //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
@@ -452,11 +483,13 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onDetailStackSearchBarClick = { index ->
                                             projectIndex.value = index
-                                            detailStackSearchLocation.value = DetailSearchLocation.Projects
+                                            detailStackSearchLocation.value =
+                                                DetailSearchLocation.Projects
                                             navController.navigate("Search")
                                         },
                                         onProjectItemToggleIsOpenValueChanged = { index, visible ->
-                                            projectList[index] = projectList[index].copy(isToggleOpen = visible)
+                                            projectList[index] =
+                                                projectList[index].copy(isToggleOpen = visible)
                                         },
                                         onSnackBarVisibleChanged = { text ->
                                             scope.launch {
@@ -468,25 +501,31 @@ class FillOutInformationActivity : BaseActivity() {
                                             }
                                         },
                                         onProjectNameValueChanged = { index, name ->
-                                            projectList[index] = projectList[index].copy(name = name)
+                                            projectList[index] =
+                                                projectList[index].copy(name = name)
                                         },
                                         onProjectIconValueChanged = { index, icon ->
-                                            projectList[index] = projectList[index].copy(icon = icon)
+                                            projectList[index] =
+                                                projectList[index].copy(icon = icon)
                                         },
                                         onProjectPreviewsValueChanged = { index, previews ->
-                                            projectList[index] = projectList[index].copy(preview = previews)
+                                            projectList[index] =
+                                                projectList[index].copy(preview = previews)
                                         },
                                         onProjectTechStackValueChanged = { index, list ->
                                             projectsDetailTechStack[index] = list
                                         },
                                         onProjectDescriptionValueChanged = { index, description ->
-                                            projectList[index] = projectList[index].copy(description = description)
+                                            projectList[index] =
+                                                projectList[index].copy(description = description)
                                         },
                                         onProjectKeyTaskValueChanged = { index, keytask ->
-                                            projectList[index] = projectList[index].copy(keyTask = keytask)
+                                            projectList[index] =
+                                                projectList[index].copy(keyTask = keytask)
                                         },
                                         onProjectRelatedLinksValueChanged = { index, links ->
-                                            projectList[index] = projectList[index].copy(relatedLinkList = links)
+                                            projectList[index] =
+                                                projectList[index].copy(relatedLinkList = links)
                                         }
                                     )
                                 }
@@ -517,75 +556,91 @@ class FillOutInformationActivity : BaseActivity() {
                                             fillOutViewModel.setEnteredAwardsInformation(
                                                 awardData.filter { award ->
                                                     award.name.isNotEmpty() ||
-                                                    award.type.isNotEmpty() ||
-                                                    award.date.isNotEmpty()
+                                                            award.type.isNotEmpty() ||
+                                                            award.date.isNotEmpty()
                                                 }
                                             )
 
                                             //이미지 업로드 & 정보기입 요청
                                             lifecycleScope.launch {
-                                                try {
-                                                    fillOutViewModel.imageUpload(
-                                                        context = this@FillOutInformationActivity,
-                                                        onComplete = { profileImage, projectsIcon, projectsPreviews ->
-                                                            fillOutViewModel.enterStudentInformation(
-                                                                major = enteredProfileData.major,
-                                                                techStack = enteredProfileData.techStack,
-                                                                profileImgUrl = profileImage,
-                                                                introduce = enteredProfileData.introduce,
-                                                                portfolioUrl = enteredProfileData.portfolioUrl,
-                                                                contactEmail = enteredProfileData.contactEmail,
-                                                                formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
-                                                                salary = enteredWorkConditionData.salary.toInt(),
-                                                                region = enteredWorkConditionData.regions,
-                                                                gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
-                                                                certificate = enteredCertificateData,
-                                                                militaryService = enteredMilitaryData.militaryService.toEnum(),
-                                                                languageCertificate = enteredForeignLanguagesData.map {
-                                                                    CertificateInformationModel(
-                                                                        languageCertificateName = it.languageCertificateName,
-                                                                        score = it.score
+                                                val profileImageUpload =
+                                                    fillOutViewModel.profileImageUploadAsync(
+                                                        profileImageUri.value,
+                                                        this@FillOutInformationActivity
+                                                    )
+                                                val projectIconsImageUpload =
+                                                    fillOutViewModel.projectsIconUploadAsync(
+                                                        enteredProjectsData.map { it.icon },
+                                                        this@FillOutInformationActivity
+                                                    )
+                                                val projectsPreviewsImageUpload =
+                                                    fillOutViewModel.projectsPreviewAsync(
+                                                        enteredProjectsData.map { it.preview },
+                                                        this@FillOutInformationActivity
+                                                    )
+
+                                                awaitAll(
+                                                    profileImageUpload,
+                                                    projectIconsImageUpload,
+                                                    projectsPreviewsImageUpload
+                                                )
+
+                                                if (
+                                                    fillOutViewModel.profileImageUploadResponse.value is Event.Success &&
+                                                    fillOutViewModel.projectIconImageUploadResponse.value is Event.Success &&
+                                                    fillOutViewModel.projectPreviewsImageUploadResponse.value is Event.Success
+                                                ) {
+                                                    fillOutViewModel.enterStudentInformation(
+                                                        major = enteredProfileData.major,
+                                                        techStack = enteredProfileData.techStack,
+                                                        profileImgUrl = fillOutViewModel.profileImageUploadResponse.value.data!!,
+                                                        introduce = enteredProfileData.introduce,
+                                                        portfolioUrl = enteredProfileData.portfolioUrl,
+                                                        contactEmail = enteredProfileData.contactEmail,
+                                                        formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
+                                                        salary = enteredWorkConditionData.salary.toInt(),
+                                                        region = enteredWorkConditionData.regions,
+                                                        gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
+                                                        certificate = enteredCertificateData,
+                                                        militaryService = enteredMilitaryData.militaryService.toEnum(),
+                                                        languageCertificate = enteredForeignLanguagesData.map {
+                                                            CertificateInformationModel(
+                                                                languageCertificateName = it.languageCertificateName,
+                                                                score = it.score
+                                                            )
+                                                        },
+                                                        projects = enteredProjectsData.mapIndexed { index, item ->
+                                                            ProjectModel(
+                                                                name = item.name,
+                                                                icon = fillOutViewModel.projectIconImageUploadResponse.value.data!![index],
+                                                                previewImages = fillOutViewModel.projectPreviewsImageUploadResponse.value.data!![index],
+                                                                description = item.description,
+                                                                links = item.relatedLinkList.map {
+                                                                    ProjectRelatedLinkModel(
+                                                                        name = it.first,
+                                                                        url = it.second
                                                                     )
                                                                 },
-                                                                projects = enteredProjectsData.mapIndexed { index, item ->
-                                                                    ProjectModel(
-                                                                        name = item.name,
-                                                                        icon = projectsIcon[index],
-                                                                        previewImages = projectsPreviews[index],
-                                                                        description = item.description,
-                                                                        links = item.relatedLinkList.map {
-                                                                            ProjectRelatedLinkModel(
-                                                                                name = it.first,
-                                                                                url = it.second
-                                                                            )
-                                                                        },
-                                                                        techStacks = item.technologyOfUse,
-                                                                        myActivity = item.keyTask,
-                                                                        inProgress = ProjectDateModel(
-                                                                            item.startDate,
-                                                                            item.endDate
-                                                                        )
-                                                                    )
-                                                                },
-                                                                award = awardData.map {
-                                                                    PrizeModel(
-                                                                        name = it.name,
-                                                                        date = it.date,
-                                                                        type = it.type
-                                                                    )
-                                                                }
+                                                                techStacks = item.technologyOfUse,
+                                                                myActivity = item.keyTask,
+                                                                inProgress = ProjectDateModel(
+                                                                    item.startDate,
+                                                                    item.endDate
+                                                                )
+                                                            )
+                                                        },
+                                                        award = awardData.map {
+                                                            PrizeModel(
+                                                                name = it.name,
+                                                                date = it.date,
+                                                                type = it.type
                                                             )
                                                         }
                                                     )
-                                                } catch (e: RuntimeException) {
-                                                    loadingModalState.value = false
-                                                    dialogVisible.value = true
-                                                    dialogTitle.value = "실패"
-                                                    dialogText.value = e.message ?: "알 수 없는 에러가 발생, 개발자에게 문의해주세요"
                                                 }
                                             }
 
-                                            //정보기입 예외처리
+                                            //예외처리
                                             lifecycleScope.launch {
                                                 enteredStudentInfomationResponse(
                                                     viewModel = fillOutViewModel,
@@ -607,6 +662,21 @@ class FillOutInformationActivity : BaseActivity() {
                                                         dialogText.value = errorMsg
                                                     }
                                                 )
+                                                profileImageUploadResponse(fillOutViewModel) { errorMsg ->
+                                                    dialogVisible.value = true
+                                                    dialogText.value = "실패"
+                                                    dialogText.value = errorMsg
+                                                }
+                                                projectsIconImageUploadResponse(fillOutViewModel) { errorMsg ->
+                                                    dialogVisible.value = true
+                                                    dialogText.value = "실패"
+                                                    dialogText.value = errorMsg
+                                                }
+                                                projectsPreviewsImageUploadResponse(fillOutViewModel) { errorMsg ->
+                                                    dialogVisible.value = true
+                                                    dialogText.value = "실패"
+                                                    dialogText.value = errorMsg
+                                                }
                                             }
                                         },
                                         onAwardValueChanged = { index, award ->
@@ -630,9 +700,10 @@ class FillOutInformationActivity : BaseActivity() {
                                     ) { stack ->
                                         when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> {
-                                                profileDetailTechStack.removeAll(profileDetailTechStack.filter {
-                                                    !stack.contains(it)
-                                                })
+                                                profileDetailTechStack.removeAll(
+                                                    profileDetailTechStack.filter {
+                                                        !stack.contains(it)
+                                                    })
                                                 profileDetailTechStack.addAll(stack.filter {
                                                     !profileDetailTechStack.contains(it)
                                                 })
@@ -696,6 +767,48 @@ class FillOutInformationActivity : BaseActivity() {
                 else -> {
                     error("알 수 없는 에러 발생, 개발자에게 문의해주세요.", false)
                 }
+            }
+        }
+    }
+
+    private suspend fun profileImageUploadResponse(
+        viewModel: FillOutViewModel,
+        error: (errorMsg: String) -> Unit
+    ) {
+        viewModel.profileImageUploadResponse.collect { response ->
+            when(response) {
+                is Event.Success, Event.Loading -> {}
+                is Event.BadRequest -> { error("이미지 업로드 실패, 개발자에게 문의해주세요.") }
+                is Event.Server -> { error("서버 에러 발생, 개발자에게 문의해 주세요.") }
+                else -> { error("알 수 없는 에러 발생, 개발자에게 문의해 주세요.") }
+            }
+        }
+    }
+
+    private suspend fun projectsIconImageUploadResponse(
+        viewModel: FillOutViewModel,
+        error: (errorMsg: String) -> Unit
+    ) {
+        viewModel.projectIconImageUploadResponse.collect { response ->
+            when(response) {
+                is Event.Success, Event.Loading -> {}
+                is Event.BadRequest -> { error("이미지 업로드 실패, 개발자에게 문의해주세요.") }
+                is Event.Server -> { error("서버 에러 발생, 개발자에게 문의해 주세요.") }
+                else -> { error("알 수 없는 에러 발생, 개발자에게 문의해 주세요.") }
+            }
+        }
+    }
+
+    private suspend fun projectsPreviewsImageUploadResponse(
+        viewModel: FillOutViewModel,
+        error: (errorMsg: String) -> Unit
+    ) {
+        viewModel.projectPreviewsImageUploadResponse.collect { response ->
+            when(response) {
+                is Event.Success, Event.Loading -> {}
+                is Event.BadRequest -> { error("이미지 업로드 실패, 개발자에게 문의해주세요.") }
+                is Event.Server -> { error("서버 에러 발생, 개발자에게 문의해 주세요.") }
+                else -> { error("알 수 없는 에러 발생, 개발자에게 문의해 주세요.") }
             }
         }
     }
