@@ -136,8 +136,9 @@ class MyProfileViewModel @Inject constructor(
     }
 
     fun onChangeProjectIcon(bitmaps: List<Bitmap?>) {
-        if (bitmaps.isEmpty()) _isProjectIconChanged.value = true
-        else {
+        if (bitmaps.filterNotNull().isEmpty()) {
+            _isProjectIconChanged.value = true
+        } else {
             bitmaps.forEachIndexed { index, bitmap ->
                 if (bitmap != null) {
                     changeBitmapToUrl(bitmap, typeOfRequest = 1, projectIndex = index)
