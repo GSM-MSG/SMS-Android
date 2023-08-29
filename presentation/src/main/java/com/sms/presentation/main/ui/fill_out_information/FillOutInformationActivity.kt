@@ -18,13 +18,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.msg.sms.design.component.bottomsheet.DatePickerBottomSheet
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.fill_out_information.component.FillOutInformationTopBarComponent
-import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.DatePickerBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MajorSelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MilitarySelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.PhotoPickBottomSheet
