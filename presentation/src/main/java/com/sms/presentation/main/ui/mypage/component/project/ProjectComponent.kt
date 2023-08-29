@@ -24,6 +24,9 @@ fun ProjectComponent(
     onLinkChanged: (index: Int, value: String) -> Unit,
     onAddLinkButton: () -> Unit,
     onClickSearchBar: () -> Unit,
+    onOpenStart: () -> Unit,
+    onOpenEnd: () -> Unit,
+    onChangeProgressState: () -> Unit,
     onRemoveProjectImageButton: (list: List<String>) -> Unit,
     onRemoveBitmapButton: (index: Int) -> Unit,
     onRemoveProjectDetailStack: (value: String) -> Unit,
@@ -61,7 +64,12 @@ fun ProjectComponent(
         ProjectKeyTaskComponent(
             keyTask = data.keyTask,
             onValueChange = { onProjectValueChange(data.copy(keyTask = it)) })
-        ProjectScheduleComponent()
+        ProjectScheduleComponent(
+            progress = data.activityDuration,
+            onChangeProgressState = onChangeProgressState,
+            onOpenStart = onOpenStart,
+            onOpenEnd = onOpenEnd
+        )
         ProjectRelatedLinksComponent(
             relatedLinks = data.relatedLinks,
             onClick = onRemoveRelatedLInk,
@@ -109,6 +117,9 @@ private fun ProjectComponentPre() {
         techStacks = ProjectTechStack(listOf("Github", "Git", "Kotlin", "Android Studio")),
         onProjectValueChange = {},
         setBitmap = {},
-        bitmap = null
+        bitmap = null,
+        onOpenStart = {},
+        onOpenEnd = {},
+        onChangeProgressState = {}
     )
 }

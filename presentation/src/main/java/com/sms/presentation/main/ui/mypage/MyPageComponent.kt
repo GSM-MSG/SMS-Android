@@ -62,12 +62,16 @@ fun MyPageComponent(
     onAddRegion: () -> Unit,
     onAddCertificate: () -> Unit,
     onAddForeignLanguage: () -> Unit,
+    onOpenStart: (index: Int) -> Unit,
+    onOpenEnd: (index: Int) -> Unit,
+    onChangeProgressState: (index: Int) -> Unit,
     onEnteredMajorValue: (value: String) -> Unit,
     onProfileValueChange: (value: MyProfileData) -> Unit,
     onClickMilitaryOpenButton: () -> Unit,
     onClickOpenWorkForm: () -> Unit,
     onClickTopLeftButton: () -> Unit,
     onClickTopRightButton: () -> Unit,
+    onOpenNumberPicker: (index: Int) -> Unit,
     onClickMajorButton: () -> Unit,
     onExpandProjectClick: (index: Int) -> Unit,
     onExpandAwardClick: (index: Int) -> Unit,
@@ -292,7 +296,10 @@ fun MyPageComponent(
                                 )
                             },
                             setBitmap = { setBitmap(index, it) },
-                            bitmap = iconBitmaps[index]
+                            bitmap = iconBitmaps[index],
+                            onOpenStart = { onOpenStart(index) },
+                            onOpenEnd = { onOpenEnd(index) },
+                            onChangeProgressState = { onChangeProgressState(index) }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
@@ -339,7 +346,7 @@ fun MyPageComponent(
                             onDateValueChange = {
                                 onAwardValueChange(index, awards[index].copy(date = it))
                             },
-                            onClickCalendar = { /*(Todo): kimhs - 넘버핔커 열어줘요*/ }
+                            onClickCalendar = { onOpenNumberPicker(index) }
                         )
                         SmsSpacer()
                     }
@@ -451,6 +458,10 @@ private fun MyPageComponentPre() {
         onEnteredMajorValue = {},
         onSaveButtonClick = {},
         iconBitmaps = listOf(),
-        setBitmap = { _, _ -> }
+        setBitmap = { _, _ -> },
+        onOpenNumberPicker = {},
+        onOpenEnd = {},
+        onOpenStart = {},
+        onChangeProgressState = {}
     )
 }

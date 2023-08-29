@@ -22,6 +22,7 @@ import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 import com.sms.presentation.main.ui.mypage.state.FormOfEmployment
 import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData
+import com.sms.presentation.main.ui.util.createCurrentTime
 import com.sms.presentation.main.ui.util.createFileFromBitmap
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
@@ -211,8 +212,8 @@ class MyProfileViewModel @Inject constructor(
                 name = project.name,
                 activityDuration = project.inProgress.let { activityDuration ->
                     ActivityDuration(
-                        start = activityDuration.start,
-                        end = activityDuration.end
+                        start = activityDuration.start.replace("-", "."),
+                        end = activityDuration.end?.replace("-", ".")
                     )
                 },
                 projectImage = project.previewImages,
@@ -233,7 +234,13 @@ class MyProfileViewModel @Inject constructor(
     private fun setAwardData(data: MyProfileModel) {
         _isExpandedAward.value = data.prizes.map { true }
         _awards.value =
-            data.prizes.map { AwardData(title = it.name, organization = it.type, date = it.date) }
+            data.prizes.map {
+                AwardData(
+                    title = it.name,
+                    organization = it.type,
+                    date = it.date.replace("-", ".")
+                )
+            }
     }
 
     private fun setTechStack(data: MyProfileModel) {
@@ -280,6 +287,10 @@ class MyProfileViewModel @Inject constructor(
         val projectList = projects.value.toMutableList()
         projectList.removeAt(index = index)
         _projects.value = projectList
+        //
+        val bitmapIcons = bitmapIcons.value.toMutableList()
+        bitmapIcons.removeAt(index = index)
+        _bitmapIcons.value = bitmapIcons
         //
         val bitmapPreviews = bitmapPreviews.value.toMutableList()
         bitmapPreviews.removeAt(index = index)
@@ -344,11 +355,17 @@ class MyProfileViewModel @Inject constructor(
         bitmapProjectPromotionList.add(listOf())
         _bitmapPreviews.value = bitmapProjectPromotionList
         //
+        val bitmapIconList = bitmapIcons.value.toMutableList()
+        bitmapIconList.add(null)
+        _bitmapIcons.value = bitmapIconList
         val projects = _projects.value.toMutableList()
         projects.add(
             ProjectData(
                 name = "프로젝트 ${_projects.value.size + 1}",
-                activityDuration = ActivityDuration(start = "", end = ""),
+                activityDuration = ActivityDuration(
+                    start = createCurrentTime("yyyy.MM"),
+                    end = createCurrentTime("yyyy.MM")
+                ),
                 projectImage = listOf(),
                 icon = "",
                 techStacks = listOf(),

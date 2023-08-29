@@ -20,6 +20,7 @@ import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.main.screen.MainScreen
 import com.sms.presentation.main.ui.mypage.MyPageScreen
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
+import com.sms.presentation.main.ui.util.createCurrentTime
 import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.MyProfileViewModel
@@ -295,7 +296,40 @@ class MainActivity : BaseActivity() {
                                             value = element
                                         )
                                     },
-                                    bitmapIcons = myProfileViewModel.bitmapIcons.value
+                                    bitmapIcons = myProfileViewModel.bitmapIcons.value,
+                                    onChangeProjectDateValue = { index, value, isStart ->
+                                        val activityDuration =
+                                            myProfileViewModel.projects.value[index].activityDuration
+                                        myProfileViewModel.onChangeProjectValue(
+                                            index = index,
+                                            value = myProfileViewModel.projects.value[index].copy(
+                                                activityDuration = if (isStart) activityDuration.copy(
+                                                    start = value
+                                                ) else activityDuration.copy(end = value)
+                                            )
+                                        )
+                                    },
+                                    onChangeAwardDateValue = { index, value ->
+                                        myProfileViewModel.onChangeAwardValue(
+                                            awardIndex = index,
+                                            award = myProfileViewModel.awards.value[index].copy(date = value)
+                                        )
+                                    },
+                                    onChangeProgressState = {
+                                        val activityDuration =
+                                            myProfileViewModel.projects.value[it].activityDuration
+                                        val isProgress = activityDuration.end == null
+                                        myProfileViewModel.onChangeProjectValue(
+                                            index = it,
+                                            value = myProfileViewModel.projects.value[it].copy(
+                                                activityDuration = if (isProgress) {
+                                                    activityDuration.copy(end = createCurrentTime("yyyy.MM"))
+                                                } else {
+                                                    activityDuration.copy(end = null)
+                                                }
+                                            )
+                                        )
+                                    }
                                 )
                             }
                         }

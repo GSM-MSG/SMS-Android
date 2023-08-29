@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.mypage
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
@@ -11,12 +12,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
+import com.msg.sms.design.component.picker.SmsDatePicker
 import com.msg.sms.design.component.selector.MajorSelector
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
@@ -36,7 +39,9 @@ private enum class BottomSheetValues {
     Major,
     MyPage,
     WorkingForm,
-    Military
+    Military,
+    ProjectPicker,
+    AwardPicker
 }
 
 private enum class ModalValue {
@@ -61,10 +66,13 @@ fun MyPageScreen(
     isExpandedAward: List<Boolean>,
     onExpandProjectClick: (index: Int) -> Unit,
     onExpandAwardClick: (index: Int) -> Unit,
+    onChangeProgressState: (index: Int) -> Unit,
     onWithdrawal: () -> Unit,
     onLogout: () -> Unit,
     onAddProject: () -> Unit,
     onAddAward: () -> Unit,
+    onChangeProjectDateValue: (index: Int, value: String, isStart: Boolean) -> Unit,
+    onChangeAwardDateValue: (index: Int, value: String) -> Unit,
     onClickSearchBar: () -> Unit,
     onClickBackButton: () -> Unit,
     onClickProjectSearchBar: (itemIndex: Int) -> Unit,
@@ -90,6 +98,18 @@ fun MyPageScreen(
 
     val dialogState = remember {
         mutableStateOf(ModalValue.Logout)
+    }
+
+    val projectIndex = remember {
+        mutableStateOf(0)
+    }
+
+    val awardIndex = remember {
+        mutableStateOf(0)
+    }
+
+    val isStartProject = remember {
+        mutableStateOf(true)
     }
 
     val dialogVisibility = remember {
@@ -150,7 +170,15 @@ fun MyPageScreen(
                             FormOfEmployment.CONTRACT,
                             FormOfEmployment.INTERN
                         ),
-                        itemChange = { onProfileValueChange(myProfileData.copy(formOfEmployment = FormOfEmployment.valueOf(it))) },
+                        itemChange = {
+                            onProfileValueChange(
+                                myProfileData.copy(
+                                    formOfEmployment = FormOfEmployment.valueOf(
+                                        it
+                                    )
+                                )
+                            )
+                        },
                         bottomSheetState = bottomSheetState,
                         selected = myProfileData.formOfEmployment.name,
                     )
@@ -182,10 +210,57 @@ fun MyPageScreen(
                             MilitaryService.NO_MATTER,
                             MilitaryService.NONE
                         ),
-                        itemChange = { onProfileValueChange(myProfileData.copy(militaryService = MilitaryService.valueOf(it))) },
+                        itemChange = {
+                            onProfileValueChange(
+                                myProfileData.copy(
+                                    militaryService = MilitaryService.valueOf(
+                                        it
+                                    )
+                                )
+                            )
+                        },
                         bottomSheetState = bottomSheetState,
                         selected = myProfileData.militaryService.name,
                     )
+                }
+
+                BottomSheetValues.ProjectPicker -> {
+                    val activityDuration =
+                        viewModel.projects.value[projectIndex.value].activityDuration
+                    val date = if (isStartProject.value) {
+                        activityDuration.start
+                    } else {
+                        activityDuration.end
+                    }
+                    SmsDatePicker(modifier = Modifier.height(163.dp),
+                        onYearValueChange = {
+                        onChangeProjectDateValue(
+                            projectIndex.value,
+                            date!!.replaceBefore('.', it),
+                            isStartProject.value
+                        )
+                    }, onMonthValueChange = {
+                        onChangeProjectDateValue(
+                            projectIndex.value,
+                            date!!.replaceAfter('.', it),
+                            isStartProject.value
+                        )
+                    })
+                }
+
+                BottomSheetValues.AwardPicker -> {
+                    SmsDatePicker(modifier = Modifier.height(163.dp),
+                        onYearValueChange = {
+                        onChangeAwardDateValue(
+                            awardIndex.value,
+                            viewModel.awards.value[awardIndex.value].date.replaceBefore('.', it)
+                        )
+                    }, onMonthValueChange = {
+                        onChangeAwardDateValue(
+                            awardIndex.value,
+                            viewModel.awards.value[awardIndex.value].date.replaceBefore('.', it)
+                        )
+                    })
                 }
             }
         },
@@ -237,6 +312,32 @@ fun MyPageScreen(
                     bottomSheetState.show()
                 }
             },
+            onOpenNumberPicker = {
+                coroutineScope.launch {
+                    awardIndex.value = it
+                    bottomSheetValues.value = BottomSheetValues.AwardPicker
+                    keyboardController!!.hide()
+                    bottomSheetState.show()
+                }
+            },
+            onOpenStart = {
+                coroutineScope.launch {
+                    isStartProject.value = true
+                    projectIndex.value = it
+                    bottomSheetValues.value = BottomSheetValues.ProjectPicker
+                    keyboardController!!.hide()
+                    bottomSheetState.show()
+                }
+            },
+            onOpenEnd = {
+                coroutineScope.launch {
+                    isStartProject.value = false
+                    projectIndex.value = it
+                    bottomSheetValues.value = BottomSheetValues.ProjectPicker
+                    keyboardController!!.hide()
+                    bottomSheetState.show()
+                }
+            },
             onEnteredMajorValue = { viewModel.onEnteredMajorValue(it) },
             onMyPageSearchBar = onClickSearchBar,
             onProjectSearchBar = onClickProjectSearchBar,
@@ -253,7 +354,8 @@ fun MyPageScreen(
             onProfileValueChange = onProfileValueChange,
             onSaveButtonClick = onSaveButtonClick,
             iconBitmaps = bitmapIcons,
-            setBitmap = setBitmap
+            setBitmap = setBitmap,
+            onChangeProgressState = onChangeProgressState
         )
     }
 }
@@ -331,6 +433,9 @@ private fun MyPageScreenPre() {
         viewModel = viewModel(),
         onSaveButtonClick = {},
         bitmapIcons = listOf(),
-        setBitmap = { _, _ -> }
+        setBitmap = { _, _ -> },
+        onChangeAwardDateValue = { _, _ -> },
+        onChangeProjectDateValue = { _, _, _ -> },
+        onChangeProgressState = {}
     )
 }
