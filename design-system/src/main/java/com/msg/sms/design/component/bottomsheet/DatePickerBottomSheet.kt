@@ -21,8 +21,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun DatePickerBottomSheet(
     bottomSheetState: ModalBottomSheetState,
-    selectedYear: String,
-    selectedMonth: String,
     onDateValueChanged: (date: String) -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -69,9 +67,7 @@ fun DatePickerBottomSheet(
                     .height(163.dp)
                     .padding(horizontal = 30.dp),
                 onYearValueChange = { year.value = it },
-                onMonthValueChange = { month.value = it },
-                selectedYear = selectedYear,
-                selectedMonth = selectedMonth
+                onMonthValueChange = { month.value = it }
             )
         }
     }

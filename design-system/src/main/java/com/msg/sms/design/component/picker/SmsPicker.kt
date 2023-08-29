@@ -23,7 +23,6 @@ import kotlinx.coroutines.delay
 @Composable
 fun SmsPicker(
     modifier: Modifier = Modifier,
-    selectedItem: String,
     itemList: List<String> = emptyList(),
     itemRange: Iterable<Int> = emptyList(),
     onSelectedItemChange: (value: String) -> Unit
@@ -43,13 +42,6 @@ fun SmsPicker(
         onSelectedItemChange(pickedItem.value)
 
         debounce.cancel()
-    }
-
-    LaunchedEffect("ScrollToSelectedItem") {
-        listState.scrollToItem(
-            if (itemList.isNotEmpty()) itemList.indexOf(selectedItem)
-            else itemRange.indexOf(selectedItem.toInt())
-        )
     }
 
     SMSTheme { colors, typography ->
@@ -108,7 +100,6 @@ fun SmsPickerPre() {
             "2016",
             "2017",
             "2018"
-        ),
-        selectedItem = ""
+        )
     ) {}
 }
