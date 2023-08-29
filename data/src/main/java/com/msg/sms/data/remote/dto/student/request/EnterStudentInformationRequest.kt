@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class EnterStudentInformationRequest(
     @SerializedName("major")
     val major: String,
-    @SerializedName("techStack")
+    @SerializedName("techStacks")
     val techStacks: List<String>,
     @SerializedName("profileImgUrl")
     val profileImgUrl: String,
@@ -21,16 +21,16 @@ data class EnterStudentInformationRequest(
     val gsmAuthenticationScore: Int,
     @SerializedName("salary")
     val salary: Int,
-    @SerializedName("region")
+    @SerializedName("regions")
     val regions: List<String>,
-    @SerializedName("languageCertificate")
+    @SerializedName("languageCertificates")
     val languageCertificates: List<CertificateData>,
     @SerializedName("militaryService")
     val militaryService: String,
-    @SerializedName("certificate")
+    @SerializedName("certificates")
     val certificates: List<String>,
     @SerializedName("projects")
     val projects: List<ProjectData>,
-    @SerializedName("prize")
+    @SerializedName("prizes")
     val prizes: List<PrizeData>
 )
