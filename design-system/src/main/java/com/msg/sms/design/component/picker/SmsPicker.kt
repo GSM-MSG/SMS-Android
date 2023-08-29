@@ -28,18 +28,18 @@ fun SmsPicker(
     onSelectedItemChange: (value: String) -> Unit
 ) {
     val listState = rememberLazyListState()
-    val selectedItem = remember {
+    val pickedItem = remember {
         mutableStateOf("")
     }
     val baseLine = remember {
         mutableStateOf(0f)
     }
 
-    LaunchedEffect(selectedItem.value) {
+    LaunchedEffect(pickedItem.value) {
         val debounce = Job()
 
         delay(300L)
-        onSelectedItemChange(selectedItem.value)
+        onSelectedItemChange(pickedItem.value)
 
         debounce.cancel()
     }
@@ -62,7 +62,7 @@ fun SmsPicker(
                 }
 
                 if (isSelected.value) {
-                    selectedItem.value = item
+                    pickedItem.value = item
                 }
 
                 Box(
@@ -100,6 +100,6 @@ fun SmsPickerPre() {
             "2016",
             "2017",
             "2018"
-        ),
+        )
     ) {}
 }

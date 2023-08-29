@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.fill_out_information.component.bottomsheet
+package com.msg.sms.design.component.bottomsheet
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
@@ -32,7 +32,11 @@ fun DatePickerBottomSheet(
     }
 
     SMSTheme { colors, typography ->
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.padding(end = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
             Box(
                 Modifier
                     .fillMaxWidth()
@@ -57,16 +61,14 @@ fun DatePickerBottomSheet(
                         }
                 )
             }
-            Spacer(modifier = Modifier.height(16.dp))
             SmsDatePicker(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(162.dp)
+                    .height(163.dp)
                     .padding(horizontal = 30.dp),
                 onYearValueChange = { year.value = it },
                 onMonthValueChange = { month.value = it }
             )
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

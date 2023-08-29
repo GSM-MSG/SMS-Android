@@ -20,8 +20,7 @@ fun AwardComponent(
     data: AwardData,
     onCancelButtonClick: () -> Unit,
     onDateBottomSheetOpenButtonClick: () -> Unit,
-    onNameValueChange: (value: String) -> Unit,
-    onTypeValueChange: (value: String) -> Unit,
+    onAwardValueChanged: (award: AwardData) -> Unit
 ) {
     val context = LocalContext.current as FillOutInformationActivity
     val contentVisible = remember {
@@ -47,15 +46,19 @@ fun AwardComponent(
                 title = "이름",
                 placeHolder = "수상 내역 이름 입력",
                 text = data.name,
-                onButtonClick = { onNameValueChange("") },
-                onValueChange = onNameValueChange
+                onButtonClick = { onAwardValueChanged(data.copy(name = "")) },
+                onValueChange = { name ->
+                    onAwardValueChanged(data.copy(name = name))
+                }
             )
             AwardNameInputComponent(
                 title = "종류",
                 placeHolder = "수상 종류입력",
                 text = data.type,
-                onButtonClick = { onTypeValueChange("") },
-                onValueChange = onTypeValueChange
+                onButtonClick = { onAwardValueChanged(data.copy(type = "")) },
+                onValueChange = { type ->
+                    onAwardValueChanged(data.copy(type = type))
+                }
             )
             AwardDateBarComponent(
                 date = data.date,
