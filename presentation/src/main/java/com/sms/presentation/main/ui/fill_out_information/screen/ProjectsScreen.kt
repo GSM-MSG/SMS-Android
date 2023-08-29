@@ -16,6 +16,7 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsBottomButtonComponent
 import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsComponent
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
+import com.sms.presentation.main.ui.fill_out_information.data.ProjectRequiredDataInfo
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isImageExtensionCorrect
 
@@ -24,8 +25,9 @@ fun ProjectsScreen(
     navController: NavController,
     projects: List<ProjectInfo>,
     detailStacks: List<List<String>>,
+    projectRequiredDataInfoList: List<ProjectRequiredDataInfo>,
     onAddButtonClick: () -> Unit,
-    onNextButtonClick: (isProjectsRegularExpression: Boolean) -> Unit,
+    onNextButtonClick: () -> Unit,
     onCancelButtonClick: (index: Int) -> Unit,
     onDateBottomSheetOpenButtonClick: (index: Int, isStartDate: Boolean) -> Unit,
     onDetailStackSearchBarClick: (index: Int) -> Unit,
@@ -43,10 +45,6 @@ fun ProjectsScreen(
     val isImageExtensionInCorrect = remember {
         mutableStateOf(false)
     }
-    val onButtonClick = remember {
-        mutableStateOf(false)
-    }
-
 
     if (isImageExtensionInCorrect.value) {
         SmsDialog(
@@ -71,39 +69,18 @@ fun ProjectsScreen(
                 }
             }
 
-            val isNameEmpty = remember {
-                mutableStateOf(false)
-            }
-            val isIconEmpty = remember {
-                mutableStateOf(false)
-            }
-            val isTechStackEmpty = remember {
-                mutableStateOf(false)
-            }
-            val isDescriptionEmpty = remember {
-                mutableStateOf(false)
-            }
-            val isProjectDateEmpty = remember {
-                mutableStateOf(false)
-            }
-
-            if (onButtonClick.value) {
-                isNameEmpty.value = item.name.isEmpty()
-                isIconEmpty.value = item.icon == Uri.EMPTY
-                isTechStackEmpty.value = item.technologyOfUse.isEmpty()
-                isDescriptionEmpty.value = item.description.isEmpty()
-                isProjectDateEmpty.value = item.startDate.isEmpty() || item.endDate.isEmpty()
-            }
-
             ProjectsComponent(
                 data = item,
                 detailStacks = if (detailStacks[index].size > 20) detailStacks[index].subList(0, 20) else detailStacks[index],
-                isNameEmpty = isNameEmpty.value,
-                isIconEmpty = isIconEmpty.value,
-                isTechStackEmpty = isTechStackEmpty.value,
-                isDescriptionEmpty = isDescriptionEmpty.value,
-                isProjectDateEmpty = isProjectDateEmpty.value,
-                onCancelButtonClick = { onCancelButtonClick(index) },
+                isNameEmpty = projectRequiredDataInfoList[index].isNameEmpty,
+                isIconEmpty = projectRequiredDataInfoList[index].isIconEmpty,
+                isTechStackEmpty = projectRequiredDataInfoList[index].isTechStackEmpty,
+                isDescriptionEmpty = projectRequiredDataInfoList[index].isDescriptionEmpty,
+                isStartDateEmpty = projectRequiredDataInfoList[index].isStartDateEmpty,
+                isEndDateEmpty = projectRequiredDataInfoList[index].isEndDateEmpty,
+                onCancelButtonClick = {
+                    onCancelButtonClick(index)
+                },
                 onDetailStackSearchBarClick = { onDetailStackSearchBarClick(index) },
                 onProjectNameValueChanged = { name ->
                     onProjectNameValueChanged(index, name)
@@ -117,7 +94,12 @@ fun ProjectsScreen(
                     }
                 },
                 onProjectPreviewsValueChanged = { previews ->
-                    if (previews.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
+                    if (previews.all { uri ->
+                            getFileNameFromUri(
+                                context,
+                                uri
+                            )?.isImageExtensionCorrect() == true
+                        }) {
                         isImageExtensionInCorrect.value = false
                         onProjectPreviewsValueChanged(index, previews)
                     } else {
@@ -159,8 +141,7 @@ fun ProjectsScreen(
             ProjectsBottomButtonComponent(
                 onPreviousButtonClick = { navController.popBackStack() },
                 onNextButtonClick = {
-                    onNextButtonClick(true)
-                    onButtonClick.value = true
+                    onNextButtonClick()
                 }
             )
             Spacer(modifier = Modifier.height(48.dp))

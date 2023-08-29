@@ -58,6 +58,8 @@ class FillOutViewModel @Inject constructor(
     private val projects = mutableStateListOf(ProjectInfo(isToggleOpen = true))
     private lateinit var profileImageUrl: String
 
+    val projectsRequiredInfoData = mutableStateListOf(ProjectRequiredDataInfo())
+
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(
             profileImageUri = profileImageUri.value,

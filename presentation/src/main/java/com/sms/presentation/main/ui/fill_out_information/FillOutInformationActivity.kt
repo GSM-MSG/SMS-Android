@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -29,6 +30,7 @@ import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.M
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.MilitarySelectorBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.PhotoPickBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
+import com.sms.presentation.main.ui.fill_out_information.data.ProjectRequiredDataInfo
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
@@ -356,12 +358,35 @@ class FillOutInformationActivity : BaseActivity() {
                                         navController = navController,
                                         projects = projectList,
                                         detailStacks = projectsDetailTechStack,
+                                        projectRequiredDataInfoList = fillOutViewModel.projectsRequiredInfoData,
                                         onAddButtonClick = {
-                                            projectList.add(ProjectInfo())
+                                            fillOutViewModel.projectsRequiredInfoData.add(ProjectRequiredDataInfo())
                                             projectsDetailTechStack.add(emptyList())
+                                            projectList.add(ProjectInfo())
                                         },
                                         onNextButtonClick = {
-                                            if (it) {
+                                            projectList.forEachIndexed { index, projectInfo ->
+                                                fillOutViewModel.projectsRequiredInfoData[index] =
+                                                    ProjectRequiredDataInfo(
+                                                        isNameEmpty = projectInfo.name.isEmpty(),
+                                                        isIconEmpty = projectInfo.icon == Uri.EMPTY,
+                                                        isTechStackEmpty = projectInfo.technologyOfUse.isEmpty(),
+                                                        isDescriptionEmpty = projectInfo.description.isEmpty(),
+                                                        isStartDateEmpty = projectInfo.startDate.isEmpty(),
+                                                        isEndDateEmpty = projectInfo.endDate.isEmpty()
+                                                    )
+                                            }
+
+                                            if (
+                                                fillOutViewModel.projectsRequiredInfoData.all {
+                                                    !it.isNameEmpty &&
+                                                    !it.isIconEmpty &&
+                                                    !it.isDescriptionEmpty &&
+                                                    !it.isTechStackEmpty &&
+                                                    !it.isStartDateEmpty &&
+                                                    !it.isEndDateEmpty
+                                                }
+                                            ) {
                                                 fillOutViewModel.setEnteredProjectsInformation(
                                                     projectList.filter { project ->
                                                         project.name.isNotEmpty() ||
@@ -375,13 +400,14 @@ class FillOutInformationActivity : BaseActivity() {
                                                         project.relatedLinkList.first() != Pair("", "")
                                                     }
                                                 )
-                                                //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
                                                 navController.navigate("Award")
                                             }
+                                            //TODO kimhyunseung - 뷰모델로 데이터 이전 후 에러에 따라 프로젝트 포커스 해주는 기능 추가
                                         },
                                         onCancelButtonClick = { index ->
-                                            projectList.removeAt(index)
+                                            fillOutViewModel.projectsRequiredInfoData.removeAt(index)
                                             projectsDetailTechStack.removeAt(index)
+                                            projectList.removeAt(index)
                                         },
                                         onDateBottomSheetOpenButtonClick = { index, isStartDate ->
                                             bottomSheetValues.value = BottomSheetValues.Date
@@ -397,7 +423,8 @@ class FillOutInformationActivity : BaseActivity() {
                                             navController.navigate("Search")
                                         },
                                         onProjectItemToggleIsOpenValueChanged = { index, visible ->
-                                            projectList[index] = projectList[index].copy(isToggleOpen = visible)
+                                            projectList[index] =
+                                                projectList[index].copy(isToggleOpen = visible)
                                         },
                                         onSnackBarVisibleChanged = { text ->
                                             scope.launch {
@@ -409,25 +436,31 @@ class FillOutInformationActivity : BaseActivity() {
                                             }
                                         },
                                         onProjectNameValueChanged = { index, name ->
-                                            projectList[index] = projectList[index].copy(name = name)
+                                            projectList[index] =
+                                                projectList[index].copy(name = name)
                                         },
                                         onProjectIconValueChanged = { index, icon ->
-                                            projectList[index] = projectList[index].copy(icon = icon)
+                                            projectList[index] =
+                                                projectList[index].copy(icon = icon)
                                         },
                                         onProjectPreviewsValueChanged = { index, previews ->
-                                            projectList[index] = projectList[index].copy(preview = previews)
+                                            projectList[index] =
+                                                projectList[index].copy(preview = previews)
                                         },
                                         onProjectTechStackValueChanged = { index, list ->
                                             projectsDetailTechStack[index] = list
                                         },
                                         onProjectDescriptionValueChanged = { index, description ->
-                                            projectList[index] = projectList[index].copy(description = description)
+                                            projectList[index] =
+                                                projectList[index].copy(description = description)
                                         },
                                         onProjectKeyTaskValueChanged = { index, keytask ->
-                                            projectList[index] = projectList[index].copy(keyTask = keytask)
+                                            projectList[index] =
+                                                projectList[index].copy(keyTask = keytask)
                                         },
                                         onProjectRelatedLinksValueChanged = { index, links ->
-                                            projectList[index] = projectList[index].copy(relatedLinkList = links)
+                                            projectList[index] =
+                                                projectList[index].copy(relatedLinkList = links)
                                         }
                                     )
                                 }
@@ -475,6 +508,10 @@ class FillOutInformationActivity : BaseActivity() {
                                                 })
                                             }
                                             DetailSearchLocation.Projects -> {
+                                                Log.d(
+                                                    "detailStack - 추가 후",
+                                                    projectsDetailTechStack.joinToString()
+                                                )
                                                 projectsDetailTechStack[projectIndex.value] = stack
                                             }
                                         }

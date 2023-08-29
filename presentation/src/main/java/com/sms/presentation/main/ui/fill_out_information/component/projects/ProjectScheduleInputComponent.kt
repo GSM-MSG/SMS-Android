@@ -22,7 +22,8 @@ fun ProjectScheduleInputComponent(
     startDateText: String,
     endDateText: String,
     isProjectProgress: Boolean,
-    isProjectDateEmpty: Boolean,
+    isStartDateEmpty: Boolean,
+    isEndDateEmpty: Boolean,
     onStartDateCalendarClick: () -> Unit,
     onEndDateCalendarClick: () -> Unit,
     onProgressButtonClick: () -> Unit
@@ -70,7 +71,7 @@ fun ProjectScheduleInputComponent(
                 }
             }
             SMSTheme { colors, typography ->
-                if (isProjectDateEmpty) {
+                if (if (isProjectProgress) isStartDateEmpty else isStartDateEmpty || isEndDateEmpty) {
                     Text(
                         text = "프로젝트 진행 기간을 입력해 주세요.",
                         style = typography.caption1,
