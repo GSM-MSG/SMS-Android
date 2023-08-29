@@ -17,6 +17,12 @@ import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
 fun ProjectsComponent(
     data: ProjectInfo,
     detailStacks: List<String>,
+    isNameEmpty: Boolean,
+    isIconEmpty: Boolean,
+    isTechStackEmpty: Boolean,
+    isDescriptionEmpty: Boolean,
+    isStartDateEmpty: Boolean,
+    isEndDateEmpty: Boolean,
     onCancelButtonClick: () -> Unit,
     onDetailStackSearchBarClick: () -> Unit,
     onDateBottomSheetOpenButtonClick: (isStartDate: Boolean) -> Unit,
@@ -49,10 +55,12 @@ fun ProjectsComponent(
         ) {
             ProjectNameInputComponent(
                 projectName = data.name,
+                isNameEmpty = isNameEmpty,
                 onValueChange = onProjectNameValueChanged
             )
             ProjectIconInputComponent(
                 iconImageUri = data.icon,
+                isIconEmpty = isIconEmpty,
                 onValueChanged = onProjectIconValueChanged
             )
             ProjectPreviewInputComponent(
@@ -62,11 +70,13 @@ fun ProjectsComponent(
             )
             ProjectTechStackInputComponent(
                 techStack = detailStacks,
+                isTechStackEmpty = isTechStackEmpty,
                 onClick = onDetailStackSearchBarClick,
                 onProjectTechStackValueChanged = onProjectTechStackValueChanged
             )
             ProjectDescriptionInputComponent(
                 projectDescription = data.description,
+                isDescriptionEmpty = isDescriptionEmpty,
                 onValueChange = onProjectDescriptionValueChanged
             )
             ProjectKeyTaskInputComponent(
@@ -77,6 +87,8 @@ fun ProjectsComponent(
                 startDateText = data.startDate,
                 endDateText = data.endDate,
                 isProjectProgress = isProjectProgress.value,
+                isStartDateEmpty = isStartDateEmpty,
+                isEndDateEmpty = isEndDateEmpty,
                 onStartDateCalendarClick = { onDateBottomSheetOpenButtonClick(true) },
                 onEndDateCalendarClick = { onDateBottomSheetOpenButtonClick(false) },
                 onProgressButtonClick = {

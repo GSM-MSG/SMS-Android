@@ -2,6 +2,7 @@ package com.sms.presentation.main.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
@@ -42,10 +43,12 @@ class FillOutViewModel @Inject constructor(
     private val _profileImageUploadResponse = MutableStateFlow<Event<String>>(Event.Loading)
     val profileImageUploadResponse = _profileImageUploadResponse.asStateFlow()
 
-    private val _projectIconImageUploadResponse = MutableStateFlow<Event<List<String>>>(Event.Loading)
+    private val _projectIconImageUploadResponse =
+        MutableStateFlow<Event<List<String>>>(Event.Loading)
     val projectIconImageUploadResponse = _projectIconImageUploadResponse.asStateFlow()
 
-    private val _projectPreviewsImageUploadResponse = MutableStateFlow<Event<List<List<String>>>>(Event.Loading)
+    private val _projectPreviewsImageUploadResponse =
+        MutableStateFlow<Event<List<List<String>>>>(Event.Loading)
     val projectPreviewsImageUploadResponse = _projectPreviewsImageUploadResponse.asStateFlow()
 
     private val _onImageUploadComplete = MutableLiveData(false)
@@ -68,6 +71,9 @@ class FillOutViewModel @Inject constructor(
         mutableStateListOf(ForeignLanguageInfo(languageCertificateName = "", score = ""))
     private val projects = mutableStateListOf(ProjectInfo(isToggleOpen = true))
     private val awards = mutableStateListOf<AwardData>()
+
+    private val _projectsRequiredInfoData = mutableStateOf(listOf(ProjectRequiredDataInfo()))
+    val projectsRequiredInfoData: State<List<ProjectRequiredDataInfo>> = _projectsRequiredInfoData
 
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(
@@ -177,6 +183,31 @@ class FillOutViewModel @Inject constructor(
         this.awards.addAll(awards.filter { !this.awards.contains(it) })
     }
 
+    fun setProjectRequiredDataInformation(
+        index: Int,
+        data: ProjectRequiredDataInfo
+    ) {
+        val infoDataList = this._projectsRequiredInfoData.value.toMutableList()
+        infoDataList[index] = data
+        this._projectsRequiredInfoData.value = infoDataList
+    }
+
+    fun removeProjectRequiredDataInformation(
+        index: Int
+    ) {
+        val infoDataList = this._projectsRequiredInfoData.value.toMutableList()
+        infoDataList.removeAt(index)
+        this._projectsRequiredInfoData.value = infoDataList
+    }
+
+    fun addProjectRequiredDataInformaion(
+        data: ProjectRequiredDataInfo = ProjectRequiredDataInfo()
+    ) {
+        val infoDataList = this._projectsRequiredInfoData.value.toMutableList()
+        infoDataList.add(data)
+        this._projectsRequiredInfoData.value = infoDataList
+    }
+
     fun getMajorList() {
         viewModelScope.launch {
             getMajorListUseCase().onSuccess {
@@ -277,29 +308,31 @@ class FillOutViewModel @Inject constructor(
         }
     }
 
-    fun projectsPreviewAsync(projectsPreviews: List<List<Uri>>, context: Context) = viewModelScope.async {
-        val previewUrlList = Array(projects.size) { Array(projects[it].preview.size) { "" } }
+    fun projectsPreviewAsync(projectsPreviews: List<List<Uri>>, context: Context) =
+        viewModelScope.async {
+            val previewUrlList = Array(projects.size) { Array(projects[it].preview.size) { "" } }
 
-        projectsPreviews.forEachIndexed { projectIndex, previews ->
-            previews.forEachIndexed { index, uri ->
-                imageUploadUseCase(
-                    file = uri.toMultipartBody(context)!!
-                ).onSuccess {
-                    it.catch { remoteError ->
-                        _projectPreviewsImageUploadResponse.value = remoteError.errorHandling()
+            projectsPreviews.forEachIndexed { projectIndex, previews ->
+                previews.forEachIndexed { index, uri ->
+                    imageUploadUseCase(
+                        file = uri.toMultipartBody(context)!!
+                    ).onSuccess {
+                        it.catch { remoteError ->
+                            _projectPreviewsImageUploadResponse.value = remoteError.errorHandling()
+                            this@async.cancel()
+                        }.collect { response ->
+                            previewUrlList[projectIndex][index] = response.fileUrl
+                        }
+                    }.onFailure { error ->
+                        _projectPreviewsImageUploadResponse.value = error.errorHandling()
                         this@async.cancel()
-                    }.collect { response ->
-                        previewUrlList[projectIndex][index] = response.fileUrl
                     }
-                }.onFailure { error ->
-                    _projectPreviewsImageUploadResponse.value = error.errorHandling()
-                    this@async.cancel()
+                }
+
+                if (projectIndex == projects.lastIndex) {
+                    _projectPreviewsImageUploadResponse.value =
+                        Event.Success(previewUrlList.toList().map { it.toList() })
                 }
             }
-
-            if (projectIndex == projects.lastIndex) {
-                _projectPreviewsImageUploadResponse.value = Event.Success(previewUrlList.toList().map { it.toList() })
-            }
         }
-    }
 }

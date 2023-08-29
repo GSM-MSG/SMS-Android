@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -35,6 +36,7 @@ import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.M
 import com.sms.presentation.main.ui.fill_out_information.component.bottomsheet.PhotoPickBottomSheet
 import com.sms.presentation.main.ui.fill_out_information.data.AwardData
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
+import com.sms.presentation.main.ui.fill_out_information.data.ProjectRequiredDataInfo
 import com.sms.presentation.main.ui.fill_out_information.screen.*
 import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.main.MainActivity
@@ -91,6 +93,7 @@ class FillOutInformationActivity : BaseActivity() {
             val focusManager = LocalFocusManager.current
             val scope = rememberCoroutineScope()
             val navController = rememberNavController()
+            val projectListState = rememberLazyListState()
             val bottomSheetState =
                 rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
             val bottomSheetValues = remember {
@@ -444,35 +447,76 @@ class FillOutInformationActivity : BaseActivity() {
                                     setSoftInputMode("PAN")
                                     ProjectsScreen(
                                         navController = navController,
+                                        listState = projectListState,
                                         projects = projectList,
                                         detailStacks = projectsDetailTechStack,
+                                        projectRequiredDataInfoList = fillOutViewModel.projectsRequiredInfoData.value,
                                         onAddButtonClick = {
                                             projectList.add(ProjectInfo())
                                             projectsDetailTechStack.add(emptyList())
+                                            fillOutViewModel.addProjectRequiredDataInformaion()
                                         },
                                         onNextButtonClick = {
-                                            fillOutViewModel.setEnteredProjectsInformation(
-                                                projectList.filter { project ->
-                                                    project.name.isNotEmpty() ||
-                                                            project.icon != Uri.EMPTY ||
-                                                            project.preview.isNotEmpty() ||
-                                                            project.technologyOfUse.isNotEmpty() ||
-                                                            project.description.isNotEmpty() ||
-                                                            project.keyTask.isNotEmpty() ||
-                                                            project.endDate.isNotEmpty() ||
-                                                            project.startDate.isNotEmpty() ||
-                                                            project.relatedLinkList.first() != Pair(
-                                                        "",
-                                                        ""
+                                            projectList.forEachIndexed { index, projectInfo ->
+                                                fillOutViewModel.setProjectRequiredDataInformation(
+                                                    index = index,
+                                                    data = ProjectRequiredDataInfo(
+                                                        isNameEmpty = projectInfo.name.isEmpty(),
+                                                        isIconEmpty = projectInfo.icon == Uri.EMPTY,
+                                                        isTechStackEmpty = projectsDetailTechStack[index].isEmpty(),
+                                                        isDescriptionEmpty = projectInfo.description.isEmpty(),
+                                                        isStartDateEmpty = projectInfo.startDate.isEmpty(),
+                                                        isEndDateEmpty = projectInfo.endDate.isEmpty()
                                                     )
+                                                )
+                                            }
+
+                                            if (
+                                                fillOutViewModel.projectsRequiredInfoData.value.all {
+                                                    !it.isNameEmpty &&
+                                                    !it.isIconEmpty &&
+                                                    !it.isDescriptionEmpty &&
+                                                    !it.isTechStackEmpty &&
+                                                    !it.isStartDateEmpty &&
+                                                    !it.isEndDateEmpty
                                                 }
-                                            )
-                                            //TODO : Kimhyunseung - 이름, 아이콘, 설명, 작업, 기간 (필수 입력 요소들) 입력되어있는지 검사 로직 추가
-                                            navController.navigate("Award")
+                                            ) {
+                                                fillOutViewModel.setEnteredProjectsInformation(
+                                                    projectList.filter { project ->
+                                                        project.name.isNotEmpty() ||
+                                                        project.icon != Uri.EMPTY ||
+                                                        project.preview.isNotEmpty() ||
+                                                        project.technologyOfUse.isNotEmpty() ||
+                                                        project.description.isNotEmpty() ||
+                                                        project.keyTask.isNotEmpty() ||
+                                                        project.endDate.isNotEmpty() ||
+                                                        project.startDate.isNotEmpty() ||
+                                                        project.relatedLinkList.first() != Pair("", "")
+                                                    }
+                                                )
+                                                navController.navigate("Award")
+                                            } else {
+                                                fillOutViewModel.projectsRequiredInfoData.value.forEachIndexed { index, projectRequiredDataInfo ->
+                                                    if (
+                                                        projectRequiredDataInfo.isNameEmpty ||
+                                                        projectRequiredDataInfo.isIconEmpty ||
+                                                        projectRequiredDataInfo.isDescriptionEmpty ||
+                                                        projectRequiredDataInfo.isTechStackEmpty ||
+                                                        projectRequiredDataInfo.isStartDateEmpty ||
+                                                        projectRequiredDataInfo.isEndDateEmpty
+                                                    ) {
+                                                        scope.launch {
+                                                            projectListState.animateScrollToItem(index)
+                                                        }
+                                                        return@forEachIndexed
+                                                    }
+                                                }
+                                            }
                                         },
                                         onCancelButtonClick = { index ->
                                             projectList.removeAt(index)
                                             projectsDetailTechStack.removeAt(index)
+                                            fillOutViewModel.removeProjectRequiredDataInformation(index)
                                         },
                                         onDateBottomSheetOpenButtonClick = { index, isStartDate ->
                                             bottomSheetValues.value = BottomSheetValues.Date
@@ -556,8 +600,8 @@ class FillOutInformationActivity : BaseActivity() {
                                             fillOutViewModel.setEnteredAwardsInformation(
                                                 awardData.filter { award ->
                                                     award.name.isNotEmpty() ||
-                                                            award.type.isNotEmpty() ||
-                                                            award.date.isNotEmpty()
+                                                    award.type.isNotEmpty() ||
+                                                    award.date.isNotEmpty()
                                                 }
                                             )
 

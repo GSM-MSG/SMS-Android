@@ -22,6 +22,8 @@ fun ProjectScheduleInputComponent(
     startDateText: String,
     endDateText: String,
     isProjectProgress: Boolean,
+    isStartDateEmpty: Boolean,
+    isEndDateEmpty: Boolean,
     onStartDateCalendarClick: () -> Unit,
     onEndDateCalendarClick: () -> Unit,
     onProgressButtonClick: () -> Unit
@@ -68,9 +70,16 @@ fun ProjectScheduleInputComponent(
                     }
                 }
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                SmsCheckBox(checked = isProjectProgress, onClick = onProgressButtonClick)
-                SMSTheme { colors, typography ->
+            SMSTheme { colors, typography ->
+                if (if (isProjectProgress) isStartDateEmpty else isStartDateEmpty || isEndDateEmpty) {
+                    Text(
+                        text = "프로젝트 진행 기간을 입력해 주세요.",
+                        style = typography.caption1,
+                        color = colors.ERROR
+                    )
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    SmsCheckBox(checked = isProjectProgress, onClick = onProgressButtonClick)
                     Text(
                         text = "진행 중",
                         style = typography.body1,
