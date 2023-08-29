@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -92,6 +93,7 @@ class FillOutInformationActivity : BaseActivity() {
             val focusManager = LocalFocusManager.current
             val scope = rememberCoroutineScope()
             val navController = rememberNavController()
+            val projectListState = rememberLazyListState()
             val bottomSheetState =
                 rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
             val bottomSheetValues = remember {
@@ -445,6 +447,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     setSoftInputMode("PAN")
                                     ProjectsScreen(
                                         navController = navController,
+                                        listState = projectListState,
                                         projects = projectList,
                                         detailStacks = projectsDetailTechStack,
                                         projectRequiredDataInfoList = fillOutViewModel.projectsRequiredInfoData.value,
@@ -492,6 +495,22 @@ class FillOutInformationActivity : BaseActivity() {
                                                     }
                                                 )
                                                 navController.navigate("Award")
+                                            } else {
+                                                fillOutViewModel.projectsRequiredInfoData.value.forEachIndexed { index, projectRequiredDataInfo ->
+                                                    if (
+                                                        projectRequiredDataInfo.isNameEmpty ||
+                                                        projectRequiredDataInfo.isIconEmpty ||
+                                                        projectRequiredDataInfo.isDescriptionEmpty ||
+                                                        projectRequiredDataInfo.isTechStackEmpty ||
+                                                        projectRequiredDataInfo.isStartDateEmpty ||
+                                                        projectRequiredDataInfo.isEndDateEmpty
+                                                    ) {
+                                                        scope.launch {
+                                                            projectListState.animateScrollToItem(index)
+                                                        }
+                                                        return@forEachIndexed
+                                                    }
+                                                }
                                             }
                                         },
                                         onCancelButtonClick = { index ->

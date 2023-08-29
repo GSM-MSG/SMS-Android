@@ -3,6 +3,7 @@ package com.sms.presentation.main.ui.fill_out_information.screen
 import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,6 +24,7 @@ import com.sms.presentation.main.ui.util.isImageExtensionCorrect
 @Composable
 fun ProjectsScreen(
     navController: NavController,
+    listState: LazyListState,
     projects: List<ProjectInfo>,
     detailStacks: List<List<String>>,
     projectRequiredDataInfoList: List<ProjectRequiredDataInfo>,
@@ -58,7 +60,7 @@ fun ProjectsScreen(
         )
     }
 
-    LazyColumn {
+    LazyColumn(state = listState) {
         item {
             SmsSpacer()
         }
