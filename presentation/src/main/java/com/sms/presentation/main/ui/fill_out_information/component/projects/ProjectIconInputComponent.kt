@@ -7,9 +7,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,17 +49,26 @@ fun ProjectIconInputComponent(
         }
     }
 
-    SMSTheme { colors, _ ->
+    SMSTheme { colors, typography ->
         AddGrayBody1Title(titleText = "아이콘") {
             if (iconImageUri == Uri.EMPTY) {
-                Box(
-                    modifier = Modifier
-                        .size(108.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(colors.N10)
-                        .smsClickable { permissionLauncher.launch(permission) }
-                ) {
-                    GalleryIcon(modifier = Modifier.align(Alignment.Center))
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .size(108.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(colors.N10)
+                            .smsClickable { permissionLauncher.launch(permission) }
+                    ) {
+                        GalleryIcon(modifier = Modifier.align(Alignment.Center))
+                    }
+                    if (true) {
+                        Text(
+                            text = "프로젝트 아이콘을 선택해 주세요",
+                            style = typography.caption1,
+                            color = colors.ERROR
+                        )
+                    }
                 }
             } else {
                 Image(
