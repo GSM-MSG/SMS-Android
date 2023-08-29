@@ -6,5 +6,5 @@ data class ProjectDateData(
     @SerializedName("start")
     val start: String,
     @SerializedName("end")
-    val end: String
+    val end: String?
 )

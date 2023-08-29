@@ -12,6 +12,7 @@ data class ProjectInfo(
     val startDate: String = "",
     val endDate: String = "",
     val relatedLinkList: List<Pair<String, String>> = listOf(Pair("", "")),
+    val isProjectProgress: Boolean = false,
     val isToggleOpen: Boolean = false
 )
 

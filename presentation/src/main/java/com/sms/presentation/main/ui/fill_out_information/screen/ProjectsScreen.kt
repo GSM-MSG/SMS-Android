@@ -35,6 +35,7 @@ fun ProjectsScreen(
     onDetailStackSearchBarClick: (index: Int) -> Unit,
     onSnackBarVisibleChanged: (text: String) -> Unit,
     onProjectItemToggleIsOpenValueChanged: (index: Int, value: Boolean) -> Unit,
+    onProjectProgressValueChanged: (index: Int, value: Boolean) -> Unit,
     onProjectNameValueChanged: (index: Int, value: String) -> Unit,
     onProjectIconValueChanged: (index: Int, value: Uri) -> Unit,
     onProjectPreviewsValueChanged: (index: Int, value: List<Uri>) -> Unit,
@@ -96,12 +97,7 @@ fun ProjectsScreen(
                     }
                 },
                 onProjectPreviewsValueChanged = { previews ->
-                    if (previews.all { uri ->
-                            getFileNameFromUri(
-                                context,
-                                uri
-                            )?.isImageExtensionCorrect() == true
-                        }) {
+                    if (previews.all { uri -> getFileNameFromUri(context, uri)?.isImageExtensionCorrect() == true }) {
                         isImageExtensionInCorrect.value = false
                         onProjectPreviewsValueChanged(index, previews)
                     } else {
@@ -125,6 +121,9 @@ fun ProjectsScreen(
                 },
                 onProjectItemToggleIsOpenValueChanged = { visible ->
                     onProjectItemToggleIsOpenValueChanged(index, visible)
+                },
+                onProjectProgressValueChanged = { isProgress ->
+                    onProjectProgressValueChanged(index, isProgress)
                 },
                 onSnackBarVisibleChanged = onSnackBarVisibleChanged
             )
