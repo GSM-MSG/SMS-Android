@@ -102,6 +102,7 @@ class MainActivity : BaseActivity() {
                             composable(MainPage.Main.value) {
                                 MainScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
+                                    myProfileVIewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
                                     role = response.data!!,
                                     onFilterClick = { navController.navigate(MainPage.Filter.value) },
@@ -203,6 +204,7 @@ class MainActivity : BaseActivity() {
                                 MyPageScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     myProfileData = myProfileViewModel.myProfileData.value,
+                                    navController = navController,
                                     bitmapPreviews = myProfileViewModel.bitmapPreviews.value,
                                     projects = myProfileViewModel.projects.value,
                                     majorList = studentListViewModel.majorList,

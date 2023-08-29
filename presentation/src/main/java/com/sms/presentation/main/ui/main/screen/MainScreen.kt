@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListFloatingButton
+import com.msg.sms.design.component.snackbar.SmsSnackBar
+import com.msg.sms.design.icon.CheckedIcon
 import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
 import com.msg.sms.domain.model.student.response.GetStudentForStudent
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
@@ -21,15 +23,18 @@ import com.sms.presentation.main.ui.detail.StudentDetailScreen
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.ui.main.data.StudentDetailData
+import com.sms.presentation.main.viewmodel.MyProfileViewModel
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
+    myProfileVIewModel: MyProfileViewModel,
     viewModel: StudentListViewModel,
     lifecycleScope: CoroutineScope,
     role: String,
@@ -73,6 +78,10 @@ fun MainScreen(
         mutableStateOf("")
     }
 
+    val snackBarVisibility = remember {
+        mutableStateOf(false)
+    }
+
     viewModel.getStudentListRequest(1, 20)
 
     BackHandler {
@@ -82,6 +91,18 @@ fun MainScreen(
             }
         } else {
             onClickBackPressed()
+        }
+    }
+
+    val putProfileChange = myProfileVIewModel.putChangedProfileResponse.collectAsState()
+    if (putProfileChange.value is Event.Success) {
+        LaunchedEffect(putProfileChange.value) {
+            scope.launch {
+                snackBarVisibility.value = true
+                delay(3_000)
+                snackBarVisibility.value = false
+                myProfileVIewModel.changeProfileState()
+            }
         }
     }
 
@@ -114,7 +135,6 @@ fun MainScreen(
 
     LaunchedEffect("Pagination") {
         val response = viewModel.getStudentListResponse.value
-
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }.filter { it == listState.layoutInfo.totalItemsCount - 1 }
             .collect {
                 val isSuccess = response is Event.Success
@@ -158,151 +178,150 @@ fun MainScreen(
         },
         sheetState = bottomSheetState,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-        ) {
-            Box {
-                MainScreenTopBar(
-                    profileImageUrl = profileImageUrl.value,
-                    isScolled = isScrolled.value,
-                    filterButtonOnClick = onFilterClick,
-                    profileButtonOnClick = {
-                        when (role) {
-                            "ROLE_STUDENT" -> onProfileClick(role)
-                            "ROLE_TEACHER" -> {
-                                dialogTitle.value = "게스트모드 종료"
-                                dialogMsg.value = "정말로 게스트 모드를 종료하시겠습니까?"
-                                dialogOnClick.value = { onProfileClick(role) }
-                                dialogState.value = true
-                            }
+        Box {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+            ) {
+                Box {
+                    MainScreenTopBar(
+                        profileImageUrl = profileImageUrl.value,
+                        isScolled = isScrolled.value,
+                        filterButtonOnClick = onFilterClick,
+                        profileButtonOnClick = {
+                            when (role) {
+                                "ROLE_STUDENT" -> onProfileClick(role)
+                                "ROLE_TEACHER" -> {
+                                    dialogTitle.value = "게스트모드 종료"
+                                    dialogMsg.value = "정말로 게스트 모드를 종료하시겠습니까?"
+                                    dialogOnClick.value = { onProfileClick(role) }
+                                    dialogState.value = true
+                                }
 
-                            else -> {
-                                dialogTitle.value = "게스트모드 종료"
-                                dialogMsg.value = "정말로 게스트 모드를 종료하시겠습니까?"
-                                dialogOnClick.value = { onProfileClick(role) }
-                                dialogState.value = true
+                                else -> {
+                                    dialogTitle.value = "게스트모드 종료"
+                                    dialogMsg.value = "정말로 게스트 모드를 종료하시겠습니까?"
+                                    dialogOnClick.value = { onProfileClick(role) }
+                                    dialogState.value = true
+                                }
+                            }
+                        }
+                    )
+                }
+                Box(modifier = Modifier.fillMaxSize()) {
+                    StudentListComponent(
+                        listState = listState,
+                        progressState = progressState.value,
+                        studentList = studentList.value,
+                        listTotalSize = listTotalSize.value
+                    ) {
+                        lifecycleScope.launch {
+                            when (role) {
+                                "ROLE_TEACHER" -> {
+                                    viewModel.getStudentDetailForTeacher(it)
+                                    getStudentDetailForTeacher(
+                                        viewModel,
+                                        { state, title, msg ->
+                                            dialogState.value = state
+                                            dialogTitle.value = title
+                                            dialogMsg.value = msg
+                                        },
+                                        {
+                                            studentDetailData.value = StudentDetailData(
+                                                name = it.name,
+                                                introduce = it.introduce,
+                                                dreamBookFileUrl = it.dreamBookFileUrl!!,
+                                                portfolioUrl = it.portfolioUrl!!,
+                                                grade = it.grade,
+                                                classNum = it.classNum,
+                                                number = it.number,
+                                                department = it.department,
+                                                major = it.major,
+                                                profileImg = it.profileImg,
+                                                contactEmail = it.contactEmail,
+                                                gsmAuthenticationScore = it.gsmAuthenticationScore,
+                                                formOfEmployment = it.formOfEmployment,
+                                                regions = it.regions,
+                                                militaryService = it.militaryService,
+                                                salary = it.salary,
+                                                languageCertificates = it.languageCertificates,
+                                                certificates = it.certificates,
+                                                techStacks = it.techStacks
+                                            )
+                                            scope.launch {
+                                                bottomSheetState.show()
+                                            }
+                                        }
+                                    )
+                                }
+
+                                "ROLE_STUDENT" -> {
+                                    viewModel.getStudentDetailForStudent(it)
+                                    getStudentDetailForStudent(
+                                        viewModel,
+                                        { state, title, msg ->
+                                            dialogState.value = state
+                                            dialogTitle.value = title
+                                            dialogMsg.value = msg
+                                        },
+                                        {
+                                            studentDetailData.value = StudentDetailData(
+                                                name = it.name,
+                                                introduce = it.introduce,
+                                                grade = it.grade,
+                                                classNum = it.classNum,
+                                                number = it.number,
+                                                department = it.department,
+                                                major = it.major,
+                                                profileImg = it.profileImg,
+                                                techStacks = it.techStack
+                                            )
+                                            scope.launch {
+                                                bottomSheetState.show()
+                                            }
+                                        }
+                                    )
+                                }
+
+                                else -> {
+                                    viewModel.getStudentDetailForAnonymous(it)
+                                    getStudentDetailForAnonymous(
+                                        viewModel,
+                                        { state, title, msg ->
+                                            dialogState.value = state
+                                            dialogTitle.value = title
+                                            dialogMsg.value = msg
+                                        },
+                                        {
+                                            scope.launch {
+                                                bottomSheetState.show()
+                                            }
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
-                )
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(bottom = 32.dp, end = 20.dp)
+                    ) {
+                        ListFloatingButton(onClick = {
+                            scope.launch {
+                                listState.animateScrollToItem(0)
+                            }
+                        })
+                    }
+                }
             }
-            Box(modifier = Modifier.fillMaxSize()) {
-                StudentListComponent(
-                    listState = listState,
-                    progressState = progressState.value,
-                    studentList = studentList.value,
-                    listTotalSize = listTotalSize.value
-                ) {
-                    lifecycleScope.launch {
-                        when (role) {
-                            "ROLE_TEACHER" -> {
-                                viewModel.getStudentDetailForTeacher(it)
-                                getStudentDetailForTeacher(
-                                    viewModel,
-                                    { state, title, msg ->
-                                        dialogState.value = state
-                                        dialogTitle.value = title
-                                        dialogMsg.value = msg
-                                    },
-                                    {
-                                        studentDetailData.value = StudentDetailData(
-                                            name = it.name,
-                                            introduce = it.introduce,
-                                            dreamBookFileUrl = it.dreamBookFileUrl!!,
-                                            portfolioUrl = it.portfolioUrl!!,
-                                            grade = it.grade,
-                                            classNum = it.classNum,
-                                            number = it.number,
-                                            department = it.department,
-                                            major = it.major,
-                                            profileImg = it.profileImg,
-                                            contactEmail = it.contactEmail,
-                                            gsmAuthenticationScore = it.gsmAuthenticationScore,
-                                            formOfEmployment = it.formOfEmployment,
-                                            regions = it.regions,
-                                            militaryService = it.militaryService,
-                                            salary = it.salary,
-                                            languageCertificates = it.languageCertificates,
-                                            certificates = it.certificates,
-                                            techStacks = it.techStacks
-                                        )
-                                        scope.launch {
-                                            bottomSheetState.show()
-                                        }
-                                    }
-                                )
-                            }
-
-                            "ROLE_STUDENT" -> {
-                                viewModel.getStudentDetailForStudent(it)
-                                getStudentDetailForStudent(
-                                    viewModel,
-                                    { state, title, msg ->
-                                        dialogState.value = state
-                                        dialogTitle.value = title
-                                        dialogMsg.value = msg
-                                    },
-                                    {
-                                        studentDetailData.value = StudentDetailData(
-                                            name = it.name,
-                                            introduce = it.introduce,
-                                            grade = it.grade,
-                                            classNum = it.classNum,
-                                            number = it.number,
-                                            department = it.department,
-                                            major = it.major,
-                                            profileImg = it.profileImg,
-                                            techStacks = it.techStack
-                                        )
-                                        scope.launch {
-                                            bottomSheetState.show()
-                                        }
-                                    }
-                                )
-                            }
-
-                            else -> {
-                                viewModel.getStudentDetailForAnonymous(it)
-                                getStudentDetailForAnonymous(
-                                    viewModel,
-                                    { state, title, msg ->
-                                        dialogState.value = state
-                                        dialogTitle.value = title
-                                        dialogMsg.value = msg
-                                    },
-                                    {
-                                        // Todo(LeeHyeonbin): 디테일 페이지 API 수정하면서 여기 변경하기
-//                                        studentDetailData.value = StudentDetailData(
-//                                            name = it.name,
-//                                            introduce = it.introduce,
-//                                            major = it.major,
-//                                            profileImg = it.profileImg,
-//                                            techStacks = it.techStack,
-//                                            awardData = it.awardData,
-//                                            projectList = it.projectList
-//                                        )
-                                        scope.launch {
-                                            bottomSheetState.show()
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(bottom = 32.dp, end = 20.dp)
-                ) {
-                    ListFloatingButton(onClick = {
-                        scope.launch {
-                            listState.animateScrollToItem(0)
-                        }
-                    })
-                }
+            SmsSnackBar(
+                modifier = Modifier.align(Alignment.TopCenter),
+                text = "정보 기입이 완료되었습니다.",
+                visible = snackBarVisibility.value,
+                leftIcon = { CheckedIcon() }) {
+                snackBarVisibility.value = false
             }
         }
     }

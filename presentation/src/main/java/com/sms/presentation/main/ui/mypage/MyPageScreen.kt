@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.mypage
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
@@ -8,6 +9,8 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -17,6 +20,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.picker.SmsDatePicker
@@ -33,6 +38,7 @@ import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 import com.sms.presentation.main.viewmodel.MyProfileViewModel
+import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.launch
 
 private enum class BottomSheetValues {
@@ -54,6 +60,7 @@ private enum class ModalValue {
 fun MyPageScreen(
     viewModel: MyProfileViewModel,
     myProfileData: MyProfileData,
+    navController: NavController,
     bitmapPreviews: List<List<Bitmap>>,
     projects: List<ProjectData>,
     awards: List<AwardData>,
@@ -116,8 +123,17 @@ fun MyPageScreen(
         mutableStateOf(false)
     }
 
-    if (viewModel.isProfileChanged.value && viewModel.isProjectIconChanged.value && viewModel.isProjectPreviewChanged.value) {
-        viewModel.putChangeProfile()
+    val putProfileChange = viewModel.putChangedProfileResponse.collectAsState()
+    if (putProfileChange.value is Event.Success) {
+        LaunchedEffect(putProfileChange.value) {
+            navController.popBackStack()
+        }
+    }
+
+    LaunchedEffect(viewModel.isProfileChanged.value && viewModel.isProjectIconChanged.value && viewModel.isProjectPreviewChanged.value) {
+        if (viewModel.isProfileChanged.value && viewModel.isProjectIconChanged.value && viewModel.isProjectPreviewChanged.value) {
+            viewModel.putChangeProfile()
+        }
     }
 
     if (dialogVisibility.value) {
@@ -173,9 +189,7 @@ fun MyPageScreen(
                         itemChange = {
                             onProfileValueChange(
                                 myProfileData.copy(
-                                    formOfEmployment = FormOfEmployment.valueOf(
-                                        it
-                                    )
+                                    formOfEmployment = FormOfEmployment.valueOf(it)
                                 )
                             )
                         },
@@ -234,129 +248,131 @@ fun MyPageScreen(
                     }
                     SmsDatePicker(modifier = Modifier.height(163.dp),
                         onYearValueChange = {
-                        onChangeProjectDateValue(
-                            projectIndex.value,
-                            date!!.replaceBefore('.', it),
-                            isStartProject.value
-                        )
-                    }, onMonthValueChange = {
-                        onChangeProjectDateValue(
-                            projectIndex.value,
-                            date!!.replaceAfter('.', it),
-                            isStartProject.value
-                        )
-                    })
+                            onChangeProjectDateValue(
+                                projectIndex.value,
+                                date!!.replaceBefore('.', it),
+                                isStartProject.value
+                            )
+                        }, onMonthValueChange = {
+                            onChangeProjectDateValue(
+                                projectIndex.value,
+                                date!!.replaceAfter('.', it),
+                                isStartProject.value
+                            )
+                        })
                 }
 
                 BottomSheetValues.AwardPicker -> {
                     SmsDatePicker(modifier = Modifier.height(163.dp),
                         onYearValueChange = {
-                        onChangeAwardDateValue(
-                            awardIndex.value,
-                            viewModel.awards.value[awardIndex.value].date.replaceBefore('.', it)
-                        )
-                    }, onMonthValueChange = {
-                        onChangeAwardDateValue(
-                            awardIndex.value,
-                            viewModel.awards.value[awardIndex.value].date.replaceBefore('.', it)
-                        )
-                    })
+                            onChangeAwardDateValue(
+                                awardIndex.value,
+                                viewModel.awards.value[awardIndex.value].date.replaceBefore('.', it)
+                            )
+                        }, onMonthValueChange = {
+                            onChangeAwardDateValue(
+                                awardIndex.value,
+                                viewModel.awards.value[awardIndex.value].date.replaceBefore('.', it)
+                            )
+                        })
                 }
             }
         },
         sheetState = bottomSheetState,
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
     ) {
-        MyPageComponent(
-            myProfileData = myProfileData,
-            bitmapPreviews = bitmapPreviews,
-            projects = projects,
-            awards = awards,
-            isExpandedProject = isExpandedProject,
-            isExpandedAward = isExpandedAward,
-            selectedTechListOnProject = selectedTechListOnProject,
-            selectedTechList = selectedTechList,
-            onExpandProjectClick = onExpandProjectClick,
-            onExpandAwardClick = onExpandAwardClick,
-            onAddProject = onAddProject,
-            onAddAward = onAddAward,
-            onAddRegion = { viewModel.addRegion() },
-            onAddForeignLanguage = { viewModel.addForeignLanguage() },
-            onAddCertificate = { viewModel.addCertificate() },
-            onClickTopLeftButton = onClickBackButton,
-            onClickOpenWorkForm = {
-                coroutineScope.launch {
-                    bottomSheetValues.value = BottomSheetValues.WorkingForm
-                    keyboardController!!.hide()
-                    bottomSheetState.show()
-                }
-            },
-            onClickMilitaryOpenButton = {
-                coroutineScope.launch {
-                    bottomSheetValues.value = BottomSheetValues.Military
-                    keyboardController!!.hide()
-                    bottomSheetState.show()
-                }
-            },
-            onClickTopRightButton = {
-                coroutineScope.launch {
-                    bottomSheetValues.value = BottomSheetValues.MyPage
-                    keyboardController!!.hide()
-                    bottomSheetState.show()
-                }
-            },
-            onClickMajorButton = {
-                coroutineScope.launch {
-                    bottomSheetValues.value = BottomSheetValues.Major
-                    keyboardController!!.hide()
-                    bottomSheetState.show()
-                }
-            },
-            onOpenNumberPicker = {
-                coroutineScope.launch {
-                    awardIndex.value = it
-                    bottomSheetValues.value = BottomSheetValues.AwardPicker
-                    keyboardController!!.hide()
-                    bottomSheetState.show()
-                }
-            },
-            onOpenStart = {
-                coroutineScope.launch {
-                    isStartProject.value = true
-                    projectIndex.value = it
-                    bottomSheetValues.value = BottomSheetValues.ProjectPicker
-                    keyboardController!!.hide()
-                    bottomSheetState.show()
-                }
-            },
-            onOpenEnd = {
-                coroutineScope.launch {
-                    isStartProject.value = false
-                    projectIndex.value = it
-                    bottomSheetValues.value = BottomSheetValues.ProjectPicker
-                    keyboardController!!.hide()
-                    bottomSheetState.show()
-                }
-            },
-            onEnteredMajorValue = { viewModel.onEnteredMajorValue(it) },
-            onMyPageSearchBar = onClickSearchBar,
-            onProjectSearchBar = onClickProjectSearchBar,
-            onRemoveBitmapPreview = onRemoveBitmapPreview,
-            onAddBitmapPreview = onAddBitmapPreview,
-            onRemoveDetailStack = onRemoveDetailStack,
-            onRemoveProject = onRemoveProject,
-            onRemoveAward = onRemoveAward,
-            onRemoveProjectDetailStack = { index: Int, value: String ->
-                onRemoveProjectDetailStack(index, value)
-            },
-            onProjectValueChange = onProjectValueChange,
-            onAwardValueChange = onAwardValueChange,
-            onProfileValueChange = onProfileValueChange,
-            onSaveButtonClick = onSaveButtonClick,
-            iconBitmaps = bitmapIcons,
-            setBitmap = setBitmap,
-            onChangeProgressState = onChangeProgressState
-        )
+        Box {
+            MyPageComponent(
+                myProfileData = myProfileData,
+                bitmapPreviews = bitmapPreviews,
+                projects = projects,
+                awards = awards,
+                isExpandedProject = isExpandedProject,
+                isExpandedAward = isExpandedAward,
+                selectedTechListOnProject = selectedTechListOnProject,
+                selectedTechList = selectedTechList,
+                onExpandProjectClick = onExpandProjectClick,
+                onExpandAwardClick = onExpandAwardClick,
+                onAddProject = onAddProject,
+                onAddAward = onAddAward,
+                onAddRegion = { viewModel.addRegion() },
+                onAddForeignLanguage = { viewModel.addForeignLanguage() },
+                onAddCertificate = { viewModel.addCertificate() },
+                onClickTopLeftButton = onClickBackButton,
+                onClickOpenWorkForm = {
+                    coroutineScope.launch {
+                        bottomSheetValues.value = BottomSheetValues.WorkingForm
+                        keyboardController!!.hide()
+                        bottomSheetState.show()
+                    }
+                },
+                onClickMilitaryOpenButton = {
+                    coroutineScope.launch {
+                        bottomSheetValues.value = BottomSheetValues.Military
+                        keyboardController!!.hide()
+                        bottomSheetState.show()
+                    }
+                },
+                onClickTopRightButton = {
+                    coroutineScope.launch {
+                        bottomSheetValues.value = BottomSheetValues.MyPage
+                        keyboardController!!.hide()
+                        bottomSheetState.show()
+                    }
+                },
+                onClickMajorButton = {
+                    coroutineScope.launch {
+                        bottomSheetValues.value = BottomSheetValues.Major
+                        keyboardController!!.hide()
+                        bottomSheetState.show()
+                    }
+                },
+                onOpenNumberPicker = {
+                    coroutineScope.launch {
+                        awardIndex.value = it
+                        bottomSheetValues.value = BottomSheetValues.AwardPicker
+                        keyboardController!!.hide()
+                        bottomSheetState.show()
+                    }
+                },
+                onOpenStart = {
+                    coroutineScope.launch {
+                        isStartProject.value = true
+                        projectIndex.value = it
+                        bottomSheetValues.value = BottomSheetValues.ProjectPicker
+                        keyboardController!!.hide()
+                        bottomSheetState.show()
+                    }
+                },
+                onOpenEnd = {
+                    coroutineScope.launch {
+                        isStartProject.value = false
+                        projectIndex.value = it
+                        bottomSheetValues.value = BottomSheetValues.ProjectPicker
+                        keyboardController!!.hide()
+                        bottomSheetState.show()
+                    }
+                },
+                onEnteredMajorValue = { viewModel.onEnteredMajorValue(it) },
+                onMyPageSearchBar = onClickSearchBar,
+                onProjectSearchBar = onClickProjectSearchBar,
+                onRemoveBitmapPreview = onRemoveBitmapPreview,
+                onAddBitmapPreview = onAddBitmapPreview,
+                onRemoveDetailStack = onRemoveDetailStack,
+                onRemoveProject = onRemoveProject,
+                onRemoveAward = onRemoveAward,
+                onRemoveProjectDetailStack = { index: Int, value: String ->
+                    onRemoveProjectDetailStack(index, value)
+                },
+                onProjectValueChange = onProjectValueChange,
+                onAwardValueChange = onAwardValueChange,
+                onProfileValueChange = onProfileValueChange,
+                onSaveButtonClick = onSaveButtonClick,
+                iconBitmaps = bitmapIcons,
+                setBitmap = setBitmap,
+                onChangeProgressState = onChangeProgressState
+            )
+        }
     }
 }
 
@@ -436,6 +452,7 @@ private fun MyPageScreenPre() {
         setBitmap = { _, _ -> },
         onChangeAwardDateValue = { _, _ -> },
         onChangeProjectDateValue = { _, _, _ -> },
-        onChangeProgressState = {}
+        onChangeProgressState = {},
+        navController = rememberNavController()
     )
 }

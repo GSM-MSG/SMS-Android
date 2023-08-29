@@ -44,7 +44,7 @@ class MyProfileViewModel @Inject constructor(
     val getProfileResponse = _getProfileResponse.asStateFlow()
 
     private val _putChangedProfileResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
-    val puChangedProfileResponse = _putChangedProfileResponse.asStateFlow()
+    val putChangedProfileResponse = _putChangedProfileResponse.asStateFlow()
 
     private val _myProfileData = mutableStateOf(
         MyProfileData(
@@ -106,6 +106,10 @@ class MyProfileViewModel @Inject constructor(
 
     fun removeTechStack(techStack: String) {
         _techStacks.value = _techStacks.value.minus(techStack)
+    }
+
+    fun changeProfileState() {
+        _putChangedProfileResponse.value = Event.Loading
     }
 
     fun removeProjectTechStack(projectIndex: Int, techStack: String) {
@@ -387,7 +391,7 @@ class MyProfileViewModel @Inject constructor(
             AwardData(
                 title = "수상 ${_awards.value.size + 1}",
                 organization = "",
-                date = ""
+                date = createCurrentTime("yyyy.MM")
             )
         )
         _awards.value = awards
@@ -473,6 +477,9 @@ class MyProfileViewModel @Inject constructor(
     }
 
     private fun putChangedProfile(changedProfile: MyProfileModel) = viewModelScope.launch {
+        _isProfileChanged.value = false
+        _isProjectIconChanged.value = false
+        _isProjectPreviewsChanged.value = false
         putChangedProfileUseCase(profile = changedProfile).onSuccess {
             it.catch { remoteError ->
                 _putChangedProfileResponse.value = remoteError.errorHandling()
