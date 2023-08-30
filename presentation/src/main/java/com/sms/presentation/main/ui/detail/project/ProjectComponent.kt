@@ -1,9 +1,6 @@
 package com.sms.presentation.main.ui.detail.project
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -14,28 +11,42 @@ import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 
 @Composable
 fun ProjectComponent(data: ProjectData) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        ProjectInfoTopBar(
-            projectName = data.name,
-            projectIconUrl = data.icon,
-            projectDate = data.activityDuration
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        ProjectPreviewComponent(
-            projectName = data.name,
-            projectPreviewUrlList = data.projectImage
-        )
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+        Column {
+            ProjectInfoTopBar(
+                projectName = data.name,
+                projectIconUrl = data.icon,
+                projectDate = data.activityDuration
+            )
+            if (data.projectImage.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                ProjectPreviewComponent(
+                    projectName = data.name,
+                    projectPreviewUrlList = data.projectImage
+                )
+            }
+        }
         ProjectTechStacksComponent(
             techStackList = data.techStacks
         )
-        Spacer(modifier = Modifier.height(24.dp))
-        ProjectKeyTaskComponent(
-            keyTask = data.keyTask
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        ProjectRelatedLinksComponent(
-            links = data.relatedLinks
-        )
+        if (data.description.isNotEmpty()) {
+            ProjectDescriptionComponent(
+                description = data.description
+            )
+        }
+        if (data.keyTask.isNotEmpty()) {
+            ProjectKeyTaskComponent(
+                keyTask = data.keyTask
+            )
+        }
+        if (data.relatedLinks.isNotEmpty()) {
+            ProjectRelatedLinksComponent(
+                links = data.relatedLinks
+            )
+        }
     }
 }
 
