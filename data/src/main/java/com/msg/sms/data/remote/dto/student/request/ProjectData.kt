@@ -1,6 +1,8 @@
-package com.msg.sms.data.remote.dto.common
+package com.msg.sms.data.remote.dto.student.request
 
 import com.google.gson.annotations.SerializedName
+import com.msg.sms.data.remote.dto.common.ProjectDateData
+import com.msg.sms.data.remote.dto.common.ProjectRelatedLinkData
 
 data class ProjectData(
     @SerializedName("name")

@@ -1,9 +1,11 @@
 package com.msg.sms.data.remote.dto.student.response
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.data.remote.dto.common.ProjectData
+import com.msg.sms.data.remote.dto.student.request.ProjectData
 import com.msg.sms.data.remote.dto.common.ProjectDateData
-import com.msg.sms.data.remote.dto.student.request.CertificateData
+import com.msg.sms.data.remote.dto.common.CertificateData
+import com.msg.sms.data.remote.dto.common.toCertificateModel
+import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 
 data class GetStudentForTeacherResponse(
     @SerializedName("name")
@@ -47,7 +49,8 @@ data class GetStudentForTeacherResponse(
     @SerializedName("prize")
     val prize: List<ProjectDateData>,
 )
-//
+
+
 //fun GetStudentForTeacherResponse.toGetStudentForTeacher(): GetStudentForTeacher {
 //    return GetStudentForTeacher(
 //        name = name,
@@ -65,9 +68,8 @@ data class GetStudentForTeacherResponse(
 //        regions = regions,
 //        militaryService = militaryService,
 //        salary = salary,
-//        languageCertificates = languageCertificates.map { it.toCertificationModel() },
+//        languageCertificates = languageCertificates.map { it.toCertificateModel() },
 //        techStacks = techStacks,
 //        certificates = certificates
 //    )
 //}
-//

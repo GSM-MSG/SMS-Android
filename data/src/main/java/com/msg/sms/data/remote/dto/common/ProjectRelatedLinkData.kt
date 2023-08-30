@@ -1,6 +1,7 @@
 package com.msg.sms.data.remote.dto.common
 
 import com.google.gson.annotations.SerializedName
+import com.msg.sms.domain.model.student.request.ProjectRelatedLinkModel
 
 data class ProjectRelatedLinkData(
     @SerializedName("name")
@@ -8,3 +9,10 @@ data class ProjectRelatedLinkData(
     @SerializedName("url")
     val url: String
 )
+
+fun ProjectRelatedLinkData.toProjectRelatedLinkModel(): ProjectRelatedLinkModel {
+    return ProjectRelatedLinkModel(
+        name = this.name,
+        url = this.url
+    )
+}

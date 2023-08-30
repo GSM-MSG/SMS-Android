@@ -1,10 +1,10 @@
 package com.msg.sms.data.repository
 
 import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSource
-import com.msg.sms.data.remote.dto.student.request.CertificateData
+import com.msg.sms.data.remote.dto.common.CertificateData
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
 import com.msg.sms.data.remote.dto.common.PrizeData
-import com.msg.sms.data.remote.dto.common.ProjectData
+import com.msg.sms.data.remote.dto.student.request.ProjectData
 import com.msg.sms.data.remote.dto.common.ProjectDateData
 import com.msg.sms.data.remote.dto.common.ProjectRelatedLinkData
 import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
