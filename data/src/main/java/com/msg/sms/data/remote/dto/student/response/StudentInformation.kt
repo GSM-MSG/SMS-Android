@@ -7,11 +7,11 @@ import java.util.UUID
 data class StudentInformation(
     @SerializedName("id")
     val id: UUID,
-    @SerializedName("major")
+    @SerializedName("profileImgUrl")
     val profileImg: String,
     @SerializedName("name")
     val name: String,
-    @SerializedName("profileImg")
+    @SerializedName("major")
     val major: String,
     @SerializedName("techStacks")
     val techStack: List<String>,
