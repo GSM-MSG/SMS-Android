@@ -265,7 +265,7 @@ fun MainScreen(
                                                         relatedLinks = model.links.map { link ->
                                                             RelatedLinksData(link.name, link.url)
                                                         },
-                                                        techStacks = it.techStacks
+                                                        techStacks = model.techStacks
                                                     )
                                                 },
                                                 awardData = it.prizes.map { model ->
