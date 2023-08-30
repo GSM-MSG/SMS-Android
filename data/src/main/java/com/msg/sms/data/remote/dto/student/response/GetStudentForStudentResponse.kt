@@ -1,6 +1,8 @@
 package com.msg.sms.data.remote.dto.student.response
 
 import com.google.gson.annotations.SerializedName
+import com.msg.sms.data.remote.dto.student.request.PrizeData
+import com.msg.sms.data.remote.dto.student.request.ProjectData
 import com.msg.sms.domain.model.student.response.GetStudentForStudent
 
 data class GetStudentForStudentResponse(
@@ -18,10 +20,14 @@ data class GetStudentForStudentResponse(
     val department: String,
     @SerializedName("major")
     val major: String,
-    @SerializedName("profileImg")
+    @SerializedName("profileImgUrl")
     val profileImg: String,
-    @SerializedName("techStack")
+    @SerializedName("techStacks")
     val techStack: List<String>,
+    @SerializedName("projects")
+    val projects: List<ProjectData>,
+    @SerializedName("prizes")
+    val prizes: List<PrizeData>
 )
 
 fun GetStudentForStudentResponse.toGetStudentForStudent(): GetStudentForStudent {

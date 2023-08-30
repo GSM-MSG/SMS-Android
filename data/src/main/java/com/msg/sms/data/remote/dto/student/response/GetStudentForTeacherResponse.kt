@@ -1,6 +1,8 @@
 package com.msg.sms.data.remote.dto.student.response
 
 import com.google.gson.annotations.SerializedName
+import com.msg.sms.data.remote.dto.student.request.ProjectData
+import com.msg.sms.data.remote.dto.student.request.ProjectDateData
 import com.msg.sms.domain.model.student.response.CertificationModel
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 
@@ -9,8 +11,8 @@ data class GetStudentForTeacherResponse(
     val name: String,
     @SerializedName("introduce")
     val introduce: String,
-    @SerializedName("dreamBookFileUrl")
-    val dreamBookFileUrl: String,
+    @SerializedName("portfolioUrl")
+    val portfolioUrl: String,
     @SerializedName("grade")
     val grade: Int,
     @SerializedName("classNum")
@@ -21,10 +23,8 @@ data class GetStudentForTeacherResponse(
     val department: String,
     @SerializedName("major")
     val major: String,
-    @SerializedName("profileImg")
+    @SerializedName("profileImgUrl")
     val profileImg: String,
-    @SerializedName("portfolioUrl")
-    val portfolioUrl: String,
     @SerializedName("contactEmail")
     val contactEmail: String,
     @SerializedName("gsmAuthenticationScore")
@@ -43,37 +43,40 @@ data class GetStudentForTeacherResponse(
     val certificates: List<String>,
     @SerializedName("techStacks")
     val techStacks: List<String>,
+    @SerializedName("projects")
+    val projects: List<ProjectData>,
+    @SerializedName("prize")
+    val prize: List<ProjectDateData>,
 )
 
 data class CertificationResponse(
     val languageCertificateName: String,
     val score: String,
 )
-
-fun GetStudentForTeacherResponse.toGetStudentForTeacher(): GetStudentForTeacher {
-    return GetStudentForTeacher(
-        name = name,
-        introduce = introduce,
-        dreamBookFileUrl = dreamBookFileUrl,
-        profileImg = profileImg,
-        portfolioUrl = portfolioUrl,
-        grade = grade,
-        classNum = classNum,
-        number = number,
-        department = department,
-        major = major,
-        contactEmail = contactEmail,
-        gsmAuthenticationScore = gsmAuthenticationScore,
-        formOfEmployment = formOfEmployment,
-        regions = regions,
-        militaryService = militaryService,
-        salary = salary,
-        languageCertificates = languageCertificates.map { it.toCertificationModel() },
-        techStacks = techStacks,
-        certificates = certificates
-    )
-}
-
+//
+//fun GetStudentForTeacherResponse.toGetStudentForTeacher(): GetStudentForTeacher {
+//    return GetStudentForTeacher(
+//        name = name,
+//        introduce = introduce,
+//        profileImg = profileImg,
+//        portfolioUrl = portfolioUrl,
+//        grade = grade,
+//        classNum = classNum,
+//        number = number,
+//        department = department,
+//        major = major,
+//        contactEmail = contactEmail,
+//        gsmAuthenticationScore = gsmAuthenticationScore,
+//        formOfEmployment = formOfEmployment,
+//        regions = regions,
+//        militaryService = militaryService,
+//        salary = salary,
+//        languageCertificates = languageCertificates.map { it.toCertificationModel() },
+//        techStacks = techStacks,
+//        certificates = certificates
+//    )
+//}
+//
 fun CertificationResponse.toCertificationModel(): CertificationModel {
     return CertificationModel(languageCertificateName = languageCertificateName, score = score)
 }
