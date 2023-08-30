@@ -121,8 +121,7 @@ class FillOutInformationActivity : BaseActivity() {
             val enteredWorkConditionData = fillOutViewModel.getEnteredWorkConditionInformation()
             val enteredMilitaryData = fillOutViewModel.getEnteredMilitaryServiceInformation()
             val enteredCertificateData = fillOutViewModel.getEnteredCertification().certifications
-            val enteredForeignLanguagesData =
-                fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
+            val enteredForeignLanguagesData = fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
             val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
 
             //data
@@ -626,11 +625,13 @@ class FillOutInformationActivity : BaseActivity() {
 
                                                 if (
                                                     fillOutViewModel.profileImageUploadResponse.value is Event.Success &&
-                                                    fillOutViewModel.projectIconImageUploadResponse.value is Event.Success &&
-                                                    fillOutViewModel.projectPreviewsImageUploadResponse.value is Event.Success
+                                                    if (enteredProjectsData.isNotEmpty()) {
+                                                        fillOutViewModel.projectIconImageUploadResponse.value is Event.Success &&
+                                                        fillOutViewModel.projectPreviewsImageUploadResponse.value is Event.Success
+                                                    } else true
                                                 ) {
                                                     fillOutViewModel.enterStudentInformation(
-                                                        major = enteredProfileData.major,
+                                                        major = enteredProfileData.major.takeIf { it != "직접입력" } ?: enteredProfileData.enteredMajor,
                                                         techStack = enteredProfileData.techStack,
                                                         profileImgUrl = fillOutViewModel.profileImageUploadResponse.value.data!!,
                                                         introduce = enteredProfileData.introduce,
