@@ -1,26 +1,31 @@
 package com.sms.presentation.main.viewmodel
 
+import android.content.Context
 import android.net.Uri
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.msg.sms.domain.model.fileupload.response.FileUploadResponseModel
 import com.msg.sms.domain.model.major.MajorListModel
 import com.msg.sms.domain.model.student.request.CertificateInformationModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
+import com.msg.sms.domain.model.student.request.PrizeModel
+import com.msg.sms.domain.model.student.request.ProjectModel
 import com.msg.sms.domain.usecase.fileupload.ImageUploadUseCase
 import com.msg.sms.domain.usecase.major.GetMajorListUseCase
 import com.msg.sms.domain.usecase.student.EnterStudentInformationUseCase
 import com.sms.presentation.main.ui.fill_out_information.data.*
+import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,12 +40,19 @@ class FillOutViewModel @Inject constructor(
     private val _getMajorListResponse = MutableStateFlow<Event<MajorListModel>>(Event.Loading)
     val getMajorListResponse = _getMajorListResponse.asStateFlow()
 
-    private val _imageUploadResponse =
-        MutableStateFlow<Event<FileUploadResponseModel>>(Event.Loading)
-    val imageUploadResponse = _imageUploadResponse.asStateFlow()
+    private val _profileImageUploadResponse = MutableStateFlow<Event<String>>(Event.Loading)
+    val profileImageUploadResponse = _profileImageUploadResponse.asStateFlow()
 
-    private val _fileUploadCompleted = MutableStateFlow(false)
-    val fileUploadCompleted = _fileUploadCompleted.asStateFlow()
+    private val _projectIconImageUploadResponse =
+        MutableStateFlow<Event<List<String>>>(Event.Loading)
+    val projectIconImageUploadResponse = _projectIconImageUploadResponse.asStateFlow()
+
+    private val _projectPreviewsImageUploadResponse =
+        MutableStateFlow<Event<List<List<String>>>>(Event.Loading)
+    val projectPreviewsImageUploadResponse = _projectPreviewsImageUploadResponse.asStateFlow()
+
+    private val _onImageUploadComplete = MutableLiveData(false)
+    val onImageUploadComplete: LiveData<Boolean> = _onImageUploadComplete
 
     private val major = mutableStateOf("")
     private val enteredMajor = mutableStateOf("")
@@ -55,8 +67,13 @@ class FillOutViewModel @Inject constructor(
     private val regions = mutableStateListOf("")
     private val militaryService = mutableStateOf("")
     private val certificates = mutableStateListOf("")
+    private val foreignLanguages =
+        mutableStateListOf(ForeignLanguageInfo(languageCertificateName = "", score = ""))
     private val projects = mutableStateListOf(ProjectInfo(isToggleOpen = true))
-    private lateinit var profileImageUrl: String
+    private val awards = mutableStateListOf<AwardData>()
+
+    private val _projectsRequiredInfoData = mutableStateOf(listOf(ProjectRequiredDataInfo()))
+    val projectsRequiredInfoData: State<List<ProjectRequiredDataInfo>> = _projectsRequiredInfoData
 
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(
@@ -148,12 +165,47 @@ class FillOutViewModel @Inject constructor(
         this.projects.addAll(projects.filter { !this.projects.contains(it) })
     }
 
-    fun getProfileImageUrl(): String {
-        return profileImageUrl
+    fun getEnteredForeignLanguagesInformation(): ForeignLanguagesData {
+        return ForeignLanguagesData(foreignLanguages = foreignLanguages)
     }
 
-    fun setProfileImageUrl(profileImageUrl: String) {
-        this.profileImageUrl = profileImageUrl
+    fun setEnteredForeignLanguagesInformation(
+        foreignLanguages: List<ForeignLanguageInfo>
+    ) {
+        this.foreignLanguages.removeAll { !foreignLanguages.contains(it) }
+        this.foreignLanguages.addAll(foreignLanguages.filter { !this.foreignLanguages.contains(it) })
+    }
+
+    fun setEnteredAwardsInformation(
+        awards: List<AwardData>
+    ) {
+        this.awards.removeAll { !awards.contains(it) }
+        this.awards.addAll(awards.filter { !this.awards.contains(it) })
+    }
+
+    fun setProjectRequiredDataInformation(
+        index: Int,
+        data: ProjectRequiredDataInfo
+    ) {
+        val infoDataList = this._projectsRequiredInfoData.value.toMutableList()
+        infoDataList[index] = data
+        this._projectsRequiredInfoData.value = infoDataList
+    }
+
+    fun removeProjectRequiredDataInformation(
+        index: Int
+    ) {
+        val infoDataList = this._projectsRequiredInfoData.value.toMutableList()
+        infoDataList.removeAt(index)
+        this._projectsRequiredInfoData.value = infoDataList
+    }
+
+    fun addProjectRequiredDataInformaion(
+        data: ProjectRequiredDataInfo = ProjectRequiredDataInfo()
+    ) {
+        val infoDataList = this._projectsRequiredInfoData.value.toMutableList()
+        infoDataList.add(data)
+        this._projectsRequiredInfoData.value = infoDataList
     }
 
     fun getMajorList() {
@@ -184,6 +236,8 @@ class FillOutViewModel @Inject constructor(
         languageCertificate: List<CertificateInformationModel>,
         militaryService: String,
         certificate: List<String>,
+        projects: List<ProjectModel>,
+        award: List<PrizeModel>
     ) = viewModelScope.launch {
         enterStudentInformationUseCase(
             EnterStudentInformationModel(
@@ -200,8 +254,8 @@ class FillOutViewModel @Inject constructor(
                 languageCertificates = languageCertificate,
                 militaryService = militaryService,
                 certificates = certificate,
-                projects = emptyList(),
-                prizes = emptyList()
+                projects = projects,
+                prizes = award
             )
         ).onSuccess {
             it.catch { remoteError ->
@@ -214,22 +268,71 @@ class FillOutViewModel @Inject constructor(
         }
     }
 
-    fun imageUpload(file: MultipartBody.Part) = viewModelScope.launch {
+    fun profileImageUploadAsync(profileImage: Uri, context: Context) = viewModelScope.async {
         imageUploadUseCase(
-            file = file
+            file = profileImage.toMultipartBody(context)!!
         ).onSuccess {
             it.catch { remoteError ->
-                _imageUploadResponse.value = remoteError.errorHandling()
+                _profileImageUploadResponse.value = remoteError.errorHandling()
+                this@async.cancel()
             }.collect { response ->
-                _imageUploadResponse.value = Event.Success(data = response)
+                _profileImageUploadResponse.value = Event.Success(data = response.fileUrl)
             }
         }.onFailure { error ->
-            _imageUploadResponse.value = error.errorHandling()
+            _profileImageUploadResponse.value = error.errorHandling()
+            this@async.cancel()
         }
     }
 
-    fun specifyWhenCompleteFileUpload() {
-        _fileUploadCompleted.value =
-            _imageUploadResponse.value is Event.Success
+    fun projectsIconUploadAsync(projectsIcon: List<Uri>, context: Context) = viewModelScope.async {
+        val iconUrlList = Array(projects.size) { "" }
+
+        projectsIcon.forEachIndexed { index, uri ->
+            imageUploadUseCase(
+                file = uri.toMultipartBody(context)!!
+            ).onSuccess {
+                it.catch { remoteError ->
+                    _projectIconImageUploadResponse.value = remoteError.errorHandling()
+                    this@async.cancel()
+                }.collect { response ->
+                    iconUrlList[index] = response.fileUrl
+                }
+            }.onFailure { error ->
+                _projectIconImageUploadResponse.value = error.errorHandling()
+                this@async.cancel()
+            }
+
+            if (index == projects.lastIndex) {
+                _projectIconImageUploadResponse.value = Event.Success(data = iconUrlList.toList())
+            }
+        }
     }
+
+    fun projectsPreviewAsync(projectsPreviews: List<List<Uri>>, context: Context) =
+        viewModelScope.async {
+            val previewUrlList = Array(projects.size) { Array(projects[it].preview.size) { "" } }
+
+            projectsPreviews.forEachIndexed { projectIndex, previews ->
+                previews.forEachIndexed { index, uri ->
+                    imageUploadUseCase(
+                        file = uri.toMultipartBody(context)!!
+                    ).onSuccess {
+                        it.catch { remoteError ->
+                            _projectPreviewsImageUploadResponse.value = remoteError.errorHandling()
+                            this@async.cancel()
+                        }.collect { response ->
+                            previewUrlList[projectIndex][index] = response.fileUrl
+                        }
+                    }.onFailure { error ->
+                        _projectPreviewsImageUploadResponse.value = error.errorHandling()
+                        this@async.cancel()
+                    }
+                }
+
+                if (projectIndex == projects.lastIndex) {
+                    _projectPreviewsImageUploadResponse.value =
+                        Event.Success(previewUrlList.toList().map { it.toList() })
+                }
+            }
+        }
 }

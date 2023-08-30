@@ -11,6 +11,7 @@ import com.msg.sms.design.util.AddGrayBody1Title
 @Composable
 fun ProjectDescriptionInputComponent(
     projectDescription: String,
+    isDescriptionEmpty: Boolean,
     onValueChange: (String) -> Unit
 ) {
     val description = remember {
@@ -26,7 +27,9 @@ fun ProjectDescriptionInputComponent(
                 description.value = it
                 onValueChange(it)
             },
-            onClickButton = { description.value = "" }
+            onClickButton = { description.value = "" },
+            errorText = "프로젝트 내용을 입력해 주세요.",
+            isError = isDescriptionEmpty
         )
     }
 }

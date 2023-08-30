@@ -3,11 +3,9 @@ package com.sms.presentation.main.ui.fill_out_information.screen
 import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,14 +17,17 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsBottomButtonComponent
 import com.sms.presentation.main.ui.fill_out_information.component.projects.ProjectsComponent
 import com.sms.presentation.main.ui.fill_out_information.data.ProjectInfo
+import com.sms.presentation.main.ui.fill_out_information.data.ProjectRequiredDataInfo
 import com.sms.presentation.main.ui.util.getFileNameFromUri
 import com.sms.presentation.main.ui.util.isImageExtensionCorrect
 
 @Composable
 fun ProjectsScreen(
     navController: NavController,
+    listState: LazyListState,
     projects: List<ProjectInfo>,
     detailStacks: List<List<String>>,
+    projectRequiredDataInfoList: List<ProjectRequiredDataInfo>,
     onAddButtonClick: () -> Unit,
     onNextButtonClick: () -> Unit,
     onCancelButtonClick: (index: Int) -> Unit,
@@ -34,6 +35,7 @@ fun ProjectsScreen(
     onDetailStackSearchBarClick: (index: Int) -> Unit,
     onSnackBarVisibleChanged: (text: String) -> Unit,
     onProjectItemToggleIsOpenValueChanged: (index: Int, value: Boolean) -> Unit,
+    onProjectProgressValueChanged: (index: Int, value: Boolean) -> Unit,
     onProjectNameValueChanged: (index: Int, value: String) -> Unit,
     onProjectIconValueChanged: (index: Int, value: Uri) -> Unit,
     onProjectPreviewsValueChanged: (index: Int, value: List<Uri>) -> Unit,
@@ -59,7 +61,7 @@ fun ProjectsScreen(
         )
     }
 
-    LazyColumn {
+    LazyColumn(state = listState) {
         item {
             SmsSpacer()
         }
@@ -73,7 +75,15 @@ fun ProjectsScreen(
             ProjectsComponent(
                 data = item,
                 detailStacks = if (detailStacks[index].size > 20) detailStacks[index].subList(0, 20) else detailStacks[index],
-                onCancelButtonClick = { onCancelButtonClick(index) },
+                isNameEmpty = projectRequiredDataInfoList[index].isNameEmpty,
+                isIconEmpty = projectRequiredDataInfoList[index].isIconEmpty,
+                isTechStackEmpty = projectRequiredDataInfoList[index].isTechStackEmpty,
+                isDescriptionEmpty = projectRequiredDataInfoList[index].isDescriptionEmpty,
+                isStartDateEmpty = projectRequiredDataInfoList[index].isStartDateEmpty,
+                isEndDateEmpty = projectRequiredDataInfoList[index].isEndDateEmpty,
+                onCancelButtonClick = {
+                    onCancelButtonClick(index)
+                },
                 onDetailStackSearchBarClick = { onDetailStackSearchBarClick(index) },
                 onProjectNameValueChanged = { name ->
                     onProjectNameValueChanged(index, name)
@@ -112,6 +122,9 @@ fun ProjectsScreen(
                 onProjectItemToggleIsOpenValueChanged = { visible ->
                     onProjectItemToggleIsOpenValueChanged(index, visible)
                 },
+                onProjectProgressValueChanged = { isProgress ->
+                    onProjectProgressValueChanged(index, isProgress)
+                },
                 onSnackBarVisibleChanged = onSnackBarVisibleChanged
             )
         }
@@ -128,7 +141,9 @@ fun ProjectsScreen(
         item {
             ProjectsBottomButtonComponent(
                 onPreviousButtonClick = { navController.popBackStack() },
-                onNextButtonClick = onNextButtonClick
+                onNextButtonClick = {
+                    onNextButtonClick()
+                }
             )
             Spacer(modifier = Modifier.height(48.dp))
         }
