@@ -1,6 +1,10 @@
 package com.msg.sms.data.remote.dto.student.response
 
 import com.google.gson.annotations.SerializedName
+import com.msg.sms.data.remote.dto.common.PrizeData
+import com.msg.sms.data.remote.dto.common.ProjectData
+import com.msg.sms.data.remote.dto.common.toPrizeModel
+import com.msg.sms.data.remote.dto.common.toProjectModel
 import com.msg.sms.domain.model.student.response.GetStudentForAnonymousModel
 
 data class GetStudentForAnonymousResponse(
@@ -15,9 +19,9 @@ data class GetStudentForAnonymousResponse(
     @SerializedName("techStacks")
     val techStack: List<String>,
     @SerializedName("projects")
-    val projectList: List<String>,
+    val projectList: List<ProjectData>,
     @SerializedName("prizes")
-    val awardData: List<String>
+    val awardData: List<PrizeData>
 )
 
 fun GetStudentForAnonymousResponse.toGetStudentForAnonymousModel(): GetStudentForAnonymousModel {
@@ -27,7 +31,7 @@ fun GetStudentForAnonymousResponse.toGetStudentForAnonymousModel(): GetStudentFo
         major = major,
         profileImg = profileImg,
         techStack = techStack,
-        projectList = projectList,
-        awardData = awardData
+        projectList = projectList.map { it.toProjectModel() },
+        awardData = awardData.map { it.toPrizeModel() }
     )
 }

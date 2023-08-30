@@ -250,7 +250,31 @@ fun MainScreen(
                                                 salary = it.salary,
                                                 languageCertificates = it.languageCertificates,
                                                 certificates = it.certificates,
-                                                techStacks = it.techStacks
+                                                techStacks = it.techStacks,
+                                                projectList = it.projects.map { model ->
+                                                    ProjectData(
+                                                        name = model.name,
+                                                        activityDuration = ActivityDuration(
+                                                            model.inProgress.start,
+                                                            model.inProgress.end
+                                                        ),
+                                                        description = model.description,
+                                                        icon = model.icon,
+                                                        keyTask = model.myActivity,
+                                                        projectImage = model.previewImages,
+                                                        relatedLinks = model.links.map { link ->
+                                                            RelatedLinksData(link.name, link.url)
+                                                        },
+                                                        techStacks = it.techStacks
+                                                    )
+                                                },
+                                                awardData = it.prizes.map { model ->
+                                                    AwardData(
+                                                        title = model.name,
+                                                        organization = model.type,
+                                                        date = model.date
+                                                    )
+                                                }
                                             )
                                             scope.launch {
                                                 bottomSheetState.show()
@@ -280,18 +304,21 @@ fun MainScreen(
                                                 profileImg = it.profileImg,
                                                 techStacks = it.techStack,
                                                 projectList = it.projects.map { model ->
-                                                      ProjectData(
-                                                          name = model.name,
-                                                          activityDuration = ActivityDuration(model.inProgress.start, model.inProgress.end),
-                                                          description = model.description,
-                                                          icon = model.icon,
-                                                          keyTask = model.myActivity,
-                                                          projectImage = model.previewImages,
-                                                          relatedLinks = model.links.map { link ->
-                                                              RelatedLinksData(link.name, link.url)
-                                                          },
-                                                          techStacks = it.techStack
-                                                      )
+                                                    ProjectData(
+                                                        name = model.name,
+                                                        activityDuration = ActivityDuration(
+                                                            model.inProgress.start,
+                                                            model.inProgress.end
+                                                        ),
+                                                        description = model.description,
+                                                        icon = model.icon,
+                                                        keyTask = model.myActivity,
+                                                        projectImage = model.previewImages,
+                                                        relatedLinks = model.links.map { link ->
+                                                            RelatedLinksData(link.name, link.url)
+                                                        },
+                                                        techStacks = model.techStacks
+                                                    )
                                                 },
                                                 awardData = it.prizes.map { model ->
                                                     AwardData(
@@ -318,6 +345,36 @@ fun MainScreen(
                                             dialogMsg.value = msg
                                         },
                                         {
+                                            studentDetailData.value = StudentDetailData(
+                                                name = it.name,
+                                                introduce = it.introduce,
+                                                major = it.major,
+                                                techStacks = it.techStack,
+                                                awardData = it.awardData.map { prize ->
+                                                    AwardData(
+                                                        title = prize.name,
+                                                        date = prize.date,
+                                                        organization = prize.type
+                                                    )
+                                                },
+                                                projectList = it.projectList.map { model ->
+                                                    ProjectData(
+                                                        name = model.name,
+                                                        activityDuration = ActivityDuration(
+                                                            model.inProgress.start,
+                                                            model.inProgress.end
+                                                        ),
+                                                        description = model.description,
+                                                        icon = model.icon,
+                                                        keyTask = model.myActivity,
+                                                        projectImage = model.previewImages,
+                                                        relatedLinks = model.links.map { link ->
+                                                            RelatedLinksData(link.name, link.url)
+                                                        },
+                                                        techStacks = model.techStacks
+                                                    )
+                                                }
+                                            )
                                             scope.launch {
                                                 bottomSheetState.show()
                                             }

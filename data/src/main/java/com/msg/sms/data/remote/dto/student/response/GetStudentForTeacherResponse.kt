@@ -43,7 +43,7 @@ data class GetStudentForTeacherResponse(
     val techStacks: List<String>,
     @SerializedName("projects")
     val projects: List<ProjectData>,
-    @SerializedName("prize")
+    @SerializedName("prizes")
     val prize: List<PrizeData>,
 )
 
