@@ -127,6 +127,7 @@ class FillOutInformationActivity : BaseActivity() {
             val enteredCertificateData = fillOutViewModel.getEnteredCertification().certifications
             val enteredForeignLanguagesData = fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
             val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
+            val enteredAwardsData = fillOutViewModel.getEnteredAwardsInformation()
 
             //data
             val profileData = remember {
@@ -673,7 +674,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                                 )
                                                             )
                                                         },
-                                                        award = awardData.map {
+                                                        award = enteredAwardsData.map {
                                                             PrizeModel(
                                                                 name = it.name,
                                                                 date = it.date,

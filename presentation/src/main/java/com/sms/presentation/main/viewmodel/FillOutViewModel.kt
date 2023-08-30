@@ -176,6 +176,10 @@ class FillOutViewModel @Inject constructor(
         this.foreignLanguages.addAll(foreignLanguages.filter { !this.foreignLanguages.contains(it) })
     }
 
+    fun getEnteredAwardsInformation(): List<AwardData> {
+        return this.awards
+    }
+
     fun setEnteredAwardsInformation(
         awards: List<AwardData>
     ) {
