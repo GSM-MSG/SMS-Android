@@ -61,7 +61,7 @@ fun MainScreen(
         mutableStateOf(false)
     }
     val bottomSheetState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
 
     val dialogState = remember {
         mutableStateOf(false)
