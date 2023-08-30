@@ -1,6 +1,6 @@
 package com.sms.presentation.main.ui.main.data
 
-import com.msg.sms.domain.model.student.response.CertificationModel
+import com.msg.sms.domain.model.common.CertificateModel
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 
@@ -21,7 +21,7 @@ data class StudentDetailData(
     val regions: List<String> = listOf(),
     val militaryService: String = "",
     val salary: Int = 0,
-    val languageCertificates: List<CertificationModel> = listOf(),
+    val languageCertificates: List<CertificateModel> = listOf(),
     val certificates: List<String> = listOf(),
     val techStacks: List<String> = listOf(),
     val awardData: List<AwardData> = listOf(),

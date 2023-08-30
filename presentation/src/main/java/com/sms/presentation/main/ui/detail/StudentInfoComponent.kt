@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.divider.SmsDivider
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.domain.model.student.response.CertificationModel
+import com.msg.sms.domain.model.common.CertificateModel
 import com.sms.presentation.main.ui.fill_out_information.data.CertificationData
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 
@@ -24,7 +24,7 @@ fun StudentInfoComponent(
     militaryService: String,
     workConditionData: WorkConditionData,
     certificationData: CertificationData,
-    foreignLanguage: List<CertificationModel>,
+    foreignLanguage: List<CertificateModel>,
 ) {
     val titleTextModifier = Modifier
         .fillMaxWidth(0.4f)

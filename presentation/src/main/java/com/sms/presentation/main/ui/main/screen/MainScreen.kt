@@ -20,9 +20,13 @@ import com.msg.sms.domain.model.student.response.GetStudentForStudentModel
 import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
 import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
+import com.sms.presentation.main.ui.detail.data.AwardData
+import com.sms.presentation.main.ui.detail.data.ProjectData
+import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.ui.main.data.StudentDetailData
+import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 import com.sms.presentation.main.viewmodel.MyProfileViewModel
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -274,7 +278,28 @@ fun MainScreen(
                                                 department = it.department,
                                                 major = it.major,
                                                 profileImg = it.profileImg,
-                                                techStacks = it.techStack
+                                                techStacks = it.techStack,
+                                                projectList = it.projects.map { model ->
+                                                      ProjectData(
+                                                          name = model.name,
+                                                          activityDuration = ActivityDuration(model.inProgress.start, model.inProgress.end),
+                                                          description = model.description,
+                                                          icon = model.icon,
+                                                          keyTask = model.myActivity,
+                                                          projectImage = model.previewImages,
+                                                          relatedLinks = model.links.map { link ->
+                                                              RelatedLinksData(link.name, link.url)
+                                                          },
+                                                          techStacks = it.techStack
+                                                      )
+                                                },
+                                                awardData = it.prizes.map { model ->
+                                                    AwardData(
+                                                        title = model.name,
+                                                        organization = model.type,
+                                                        date = model.date
+                                                    )
+                                                }
                                             )
                                             scope.launch {
                                                 bottomSheetState.show()

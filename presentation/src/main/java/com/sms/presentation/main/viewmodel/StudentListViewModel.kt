@@ -1,5 +1,6 @@
 package com.sms.presentation.main.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -150,6 +151,7 @@ class StudentListViewModel @Inject constructor(
             it.catch { remoteError ->
                 _getStudentDetailForTeacherResponse.value = remoteError.errorHandling()
             }.collect { response ->
+                Log.d("dddd", response.toString())
                 _getStudentDetailForTeacherResponse.value = Event.Success(data = response)
             }
         }.onFailure { error ->
@@ -165,6 +167,7 @@ class StudentListViewModel @Inject constructor(
             it.catch { remoteError ->
                 _getStudentDetailForStudentResponse.value = remoteError.errorHandling()
             }.collect { response ->
+                Log.d("dddd", response.toString())
                 _getStudentDetailForStudentResponse.value = Event.Success(data = response)
             }
         }.onFailure { error ->

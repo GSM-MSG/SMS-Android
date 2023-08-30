@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.item.TechStackItem
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.domain.model.student.response.CertificationModel
+import com.msg.sms.domain.model.common.CertificateModel
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
@@ -62,7 +62,7 @@ fun StudentDetailComponent(
     salary: String,
     region: List<String>,
     certificationData: List<String>,
-    foreignLanguage: List<CertificationModel>,
+    foreignLanguage: List<CertificateModel>,
     isNotGuest: Boolean,
     isTeacher: Boolean,
     scrollState: ScrollState = rememberScrollState(),
@@ -166,8 +166,12 @@ fun StudentDetailComponent(
                         .fillMaxWidth()
                         .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
                 ) {
-                    AwardComponent(awardList = awardData)
-                    ProjectListComponent(projectList = projectList)
+                    if (awardData.isNotEmpty()) {
+                        AwardComponent(awardList = awardData)
+                    }
+                    if (projectList.isNotEmpty()) {
+                        ProjectListComponent(projectList = projectList)
+                    }
                     SmsRoundedButton(
                         text = "포트폴리오",
                         modifier = Modifier
