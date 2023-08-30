@@ -27,6 +27,10 @@ import com.msg.sms.design.component.lottie.SmsLoadingLottie
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.design.theme.SMSTheme
+import com.msg.sms.domain.model.common.CertificateModel
+import com.msg.sms.domain.model.common.PrizeModel
+import com.msg.sms.domain.model.common.ProjectDateModel
+import com.msg.sms.domain.model.common.ProjectRelatedLinkModel
 import com.msg.sms.domain.model.student.request.*
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
@@ -644,7 +648,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                         certificate = enteredCertificateData,
                                                         militaryService = enteredMilitaryData.militaryService.toEnum(),
                                                         languageCertificate = enteredForeignLanguagesData.map {
-                                                            CertificateInformationModel(
+                                                            CertificateModel(
                                                                 languageCertificateName = it.languageCertificateName,
                                                                 score = it.score
                                                             )

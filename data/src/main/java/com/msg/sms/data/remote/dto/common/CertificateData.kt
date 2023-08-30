@@ -1,7 +1,7 @@
 package com.msg.sms.data.remote.dto.common
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.domain.model.student.request.CertificateInformationModel
+import com.msg.sms.domain.model.common.CertificateModel
 
 data class CertificateData(
     @SerializedName("languageCertificateName")
@@ -10,8 +10,8 @@ data class CertificateData(
     val score: String
 )
 
-fun CertificateData.toCertificateModel(): CertificateInformationModel {
-    return CertificateInformationModel(
+fun CertificateData.toCertificateModel(): CertificateModel {
+    return CertificateModel(
         languageCertificateName = this.languageCertificateName,
         score = this.score
     )

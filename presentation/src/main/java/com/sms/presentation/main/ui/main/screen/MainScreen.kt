@@ -15,9 +15,9 @@ import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListFloatingButton
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.CheckedIcon
-import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
-import com.msg.sms.domain.model.student.response.GetStudentForStudent
-import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.msg.sms.domain.model.student.response.GetStudentForAnonymousModel
+import com.msg.sms.domain.model.student.response.GetStudentForStudentModel
+import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
 import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
@@ -231,7 +231,6 @@ fun MainScreen(
                                             studentDetailData.value = StudentDetailData(
                                                 name = it.name,
                                                 introduce = it.introduce,
-                                                dreamBookFileUrl = it.dreamBookFileUrl!!,
                                                 portfolioUrl = it.portfolioUrl!!,
                                                 grade = it.grade,
                                                 classNum = it.classNum,
@@ -353,7 +352,7 @@ suspend fun getStudentList(
 suspend fun getStudentDetailForTeacher(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForTeacher) -> Unit,
+    onSuccess: (GetStudentForTeacherModel) -> Unit,
 ) {
     viewModel.getStudentDetailForTeacherResponse.collect { response ->
         when (response) {
@@ -372,7 +371,7 @@ suspend fun getStudentDetailForTeacher(
 suspend fun getStudentDetailForStudent(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForStudent) -> Unit,
+    onSuccess: (GetStudentForStudentModel) -> Unit,
 ) {
     viewModel.getStudentDetailForStudentResponse.collect { response ->
         when (response) {
@@ -391,7 +390,7 @@ suspend fun getStudentDetailForStudent(
 suspend fun getStudentDetailForAnonymous(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForAnonymous) -> Unit,
+    onSuccess: (GetStudentForAnonymousModel) -> Unit,
 ) {
     viewModel.getStudentDetailForAnonymousResponse.collect { response ->
         when (response) {

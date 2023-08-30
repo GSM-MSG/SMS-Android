@@ -1,7 +1,7 @@
 package com.msg.sms.data.remote.dto.student.response
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
+import com.msg.sms.domain.model.student.response.GetStudentForAnonymousModel
 
 data class GetStudentForAnonymousResponse(
     @SerializedName("name")
@@ -20,8 +20,8 @@ data class GetStudentForAnonymousResponse(
     val awardData: List<String>
 )
 
-fun GetStudentForAnonymousResponse.toGetStudentForAnonymous(): GetStudentForAnonymous {
-    return GetStudentForAnonymous(
+fun GetStudentForAnonymousResponse.toGetStudentForAnonymousModel(): GetStudentForAnonymousModel {
+    return GetStudentForAnonymousModel(
         name = name,
         introduce = introduce,
         major = major,

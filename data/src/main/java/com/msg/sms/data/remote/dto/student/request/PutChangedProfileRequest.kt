@@ -3,6 +3,7 @@ package com.msg.sms.data.remote.dto.student.request
 import com.google.gson.annotations.SerializedName
 import com.msg.sms.data.remote.dto.common.CertificateData
 import com.msg.sms.data.remote.dto.common.PrizeData
+import com.msg.sms.data.remote.dto.common.ProjectData
 
 data class PutChangedProfileRequest(
     @SerializedName("major")

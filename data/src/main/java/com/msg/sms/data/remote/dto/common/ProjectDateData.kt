@@ -1,7 +1,7 @@
 package com.msg.sms.data.remote.dto.common
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.domain.model.student.request.ProjectDateModel
+import com.msg.sms.domain.model.common.ProjectDateModel
 
 data class ProjectDateData(
     @SerializedName("start")

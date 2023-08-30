@@ -1,5 +1,8 @@
 package com.msg.sms.domain.model.student.request
 
+import com.msg.sms.domain.model.common.ProjectDateModel
+import com.msg.sms.domain.model.common.ProjectRelatedLinkModel
+
 data class ProjectModel(
     val name: String,
     val icon: String,

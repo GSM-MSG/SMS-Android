@@ -4,18 +4,18 @@ import com.msg.sms.data.remote.datasource.student.RemoteStudentDataSource
 import com.msg.sms.data.remote.dto.common.CertificateData
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
 import com.msg.sms.data.remote.dto.common.PrizeData
-import com.msg.sms.data.remote.dto.student.request.ProjectData
+import com.msg.sms.data.remote.dto.common.ProjectData
 import com.msg.sms.data.remote.dto.common.ProjectDateData
 import com.msg.sms.data.remote.dto.common.ProjectRelatedLinkData
 import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
-import com.msg.sms.data.remote.dto.student.response.toGetStudentForAnonymous
-import com.msg.sms.data.remote.dto.student.response.toGetStudentForStudent
-import com.msg.sms.data.remote.dto.student.response.toGetStudentForTeacher
+import com.msg.sms.data.remote.dto.student.response.toGetStudentForAnonymousModel
+import com.msg.sms.data.remote.dto.student.response.toGetStudentForStudentModel
+import com.msg.sms.data.remote.dto.student.response.toGetStudentForTeacherModel
 import com.msg.sms.data.remote.dto.student.response.toStudentListModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
-import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
-import com.msg.sms.domain.model.student.response.GetStudentForStudent
-import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.msg.sms.domain.model.student.response.GetStudentForAnonymousModel
+import com.msg.sms.domain.model.student.response.GetStudentForStudentModel
+import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
 import com.msg.sms.domain.model.student.response.StudentListModel
 import com.msg.sms.domain.model.user.response.MyProfileModel
 import com.msg.sms.domain.repository.StudentRepository
@@ -115,17 +115,17 @@ class StudentRepositoryImpl @Inject constructor(
         ).map { it.toStudentListModel() }
     }
 
-    override suspend fun getUserDetailForStudent(uuid: UUID): Flow<GetStudentForStudent> {
-        return dataSource.getUserDetailForStudent(uuid = uuid).map { it.toGetStudentForStudent() }
+    override suspend fun getUserDetailForStudent(uuid: UUID): Flow<GetStudentForStudentModel> {
+        return dataSource.getUserDetailForStudent(uuid = uuid).map { it.toGetStudentForStudentModel() }
     }
 
-    override suspend fun getUserDetailForAnonymous(uuid: UUID): Flow<GetStudentForAnonymous> {
+    override suspend fun getUserDetailForAnonymous(uuid: UUID): Flow<GetStudentForAnonymousModel> {
         return dataSource.getUserDetailForAnonymous(uuid = uuid)
-            .map { it.toGetStudentForAnonymous() }
+            .map { it.toGetStudentForAnonymousModel() }
     }
 
-    override suspend fun getUserDetailForTeacher(uuid: UUID): Flow<GetStudentForTeacher> {
-        return dataSource.getUserDetailForTeacher(uuid = uuid).map { it.toGetStudentForTeacher() }
+    override suspend fun getUserDetailForTeacher(uuid: UUID): Flow<GetStudentForTeacherModel> {
+        return dataSource.getUserDetailForTeacher(uuid = uuid).map { it.toGetStudentForTeacherModel() }
     }
 
     override suspend fun putChangedProfile(profile: MyProfileModel): Flow<Unit> {

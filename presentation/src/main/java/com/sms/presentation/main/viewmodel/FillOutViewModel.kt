@@ -10,9 +10,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.major.MajorListModel
-import com.msg.sms.domain.model.student.request.CertificateInformationModel
+import com.msg.sms.domain.model.common.CertificateModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
-import com.msg.sms.domain.model.student.request.PrizeModel
+import com.msg.sms.domain.model.common.PrizeModel
 import com.msg.sms.domain.model.student.request.ProjectModel
 import com.msg.sms.domain.usecase.fileupload.ImageUploadUseCase
 import com.msg.sms.domain.usecase.major.GetMajorListUseCase
@@ -233,7 +233,7 @@ class FillOutViewModel @Inject constructor(
         gsmAuthenticationScore: Int,
         salary: Int,
         region: List<String>,
-        languageCertificate: List<CertificateInformationModel>,
+        languageCertificate: List<CertificateModel>,
         militaryService: String,
         certificate: List<String>,
         projects: List<ProjectModel>,

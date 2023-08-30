@@ -1,9 +1,12 @@
 package com.msg.sms.domain.model.student.response
 
-data class GetStudentForTeacher(
+import com.msg.sms.domain.model.common.CertificateModel
+import com.msg.sms.domain.model.common.PrizeModel
+import com.msg.sms.domain.model.student.request.ProjectModel
+
+data class GetStudentForTeacherModel(
     val name: String,
     val introduce: String,
-    val dreamBookFileUrl: String?,
     val portfolioUrl: String?,
     val grade: Int,
     val classNum: Int,
@@ -17,12 +20,9 @@ data class GetStudentForTeacher(
     val regions: List<String>,
     val militaryService: String,
     val salary: Int,
-    val languageCertificates: List<CertificationModel>,
+    val languageCertificates: List<CertificateModel>,
     val certificates: List<String>,
-    val techStacks: List<String>
-)
-
-data class CertificationModel(
-    val languageCertificateName: String,
-    val score: String
+    val techStacks: List<String>,
+    val projects: List<ProjectModel>,
+    val prizes: List<PrizeModel>
 )
