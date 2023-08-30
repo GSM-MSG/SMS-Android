@@ -1,6 +1,7 @@
 package com.msg.sms.data.remote.datasource.student
 
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
+import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
 import com.msg.sms.data.remote.dto.student.response.GetStudentForAnonymousResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentForStudentResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentForTeacherResponse
@@ -11,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 class RemoteStudentDataSourceImpl @Inject constructor(
@@ -75,10 +76,11 @@ class RemoteStudentDataSourceImpl @Inject constructor(
         return flow {
             emit(
                 SMSApiHandler<GetStudentForStudentResponse>().httpRequest {
-                service.getStudentForStudent(
-                    uuid = uuid
-                )
-            }.sendRequest())
+                    service.getStudentForStudent(
+                        uuid = uuid
+                    )
+                }.sendRequest()
+            )
         }
     }
 
@@ -86,10 +88,11 @@ class RemoteStudentDataSourceImpl @Inject constructor(
         return flow {
             emit(
                 SMSApiHandler<GetStudentForAnonymousResponse>().httpRequest {
-                service.getStudentForAnonymous(
-                    uuid = uuid
-                )
-            }.sendRequest())
+                    service.getStudentForAnonymous(
+                        uuid = uuid
+                    )
+                }.sendRequest()
+            )
         }
     }
 
@@ -97,10 +100,19 @@ class RemoteStudentDataSourceImpl @Inject constructor(
         return flow {
             emit(
                 SMSApiHandler<GetStudentForTeacherResponse>().httpRequest {
-                service.getStudentForTeacher(
-                    uuid = uuid
-                )
-            }.sendRequest())
+                    service.getStudentForTeacher(
+                        uuid = uuid
+                    )
+                }.sendRequest()
+            )
         }
+    }
+
+    override suspend fun putChangedProfile(body: PutChangedProfileRequest): Flow<Unit> {
+        return flow {
+            emit(SMSApiHandler<Unit>().httpRequest {
+                service.putChangedProfile(body = body)
+            }.sendRequest())
+        }.flowOn(Dispatchers.IO)
     }
 }

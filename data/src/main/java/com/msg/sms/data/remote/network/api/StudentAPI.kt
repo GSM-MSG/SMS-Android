@@ -1,6 +1,7 @@
 package com.msg.sms.data.remote.network.api
 
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
+import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
 import com.msg.sms.data.remote.dto.student.response.GetStudentForAnonymousResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentForStudentResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentForTeacherResponse
@@ -47,4 +48,9 @@ interface StudentAPI {
     suspend fun getStudentForTeacher(
         @Path("uuid") uuid: UUID,
     ): GetStudentForTeacherResponse
+
+    @PUT("student")
+    suspend fun putChangedProfile(
+        @Body body: PutChangedProfileRequest
+    )
 }

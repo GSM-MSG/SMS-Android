@@ -20,6 +20,7 @@ import com.sms.presentation.main.ui.login.LoginActivity
 import com.sms.presentation.main.ui.main.screen.MainScreen
 import com.sms.presentation.main.ui.mypage.MyPageScreen
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
+import com.sms.presentation.main.ui.util.createCurrentTime
 import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.MyProfileViewModel
@@ -101,6 +102,7 @@ class MainActivity : BaseActivity() {
                             composable(MainPage.Main.value) {
                                 MainScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
+                                    myProfileVIewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
                                     role = response.data!!,
                                     onFilterClick = { navController.navigate(MainPage.Filter.value) },
@@ -202,6 +204,7 @@ class MainActivity : BaseActivity() {
                                 MyPageScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     myProfileData = myProfileViewModel.myProfileData.value,
+                                    navController = navController,
                                     bitmapPreviews = myProfileViewModel.bitmapPreviews.value,
                                     projects = myProfileViewModel.projects.value,
                                     majorList = studentListViewModel.majorList,
@@ -281,6 +284,53 @@ class MainActivity : BaseActivity() {
                                     },
                                     onProfileValueChange = {
                                         myProfileViewModel.onProfileValueChange(myProfile = it)
+                                    },
+                                    onSaveButtonClick = {
+                                        myProfileViewModel.onChangeProfileChange(myProfileViewModel.myProfileData.value.profileImageBitmap)
+                                        myProfileViewModel.onChangeProjectIcon(myProfileViewModel.bitmapIcons.value)
+                                        myProfileViewModel.onChangeProjectPreviews(
+                                            myProfileViewModel.bitmapPreviews.value
+                                        )
+                                    },
+                                    setBitmap = { index, element ->
+                                        myProfileViewModel.onChangeProjectIcon(
+                                            index = index,
+                                            value = element
+                                        )
+                                    },
+                                    bitmapIcons = myProfileViewModel.bitmapIcons.value,
+                                    onChangeProjectDateValue = { index, value, isStart ->
+                                        val activityDuration =
+                                            myProfileViewModel.projects.value[index].activityDuration
+                                        myProfileViewModel.onChangeProjectValue(
+                                            index = index,
+                                            value = myProfileViewModel.projects.value[index].copy(
+                                                activityDuration = if (isStart) activityDuration.copy(
+                                                    start = value
+                                                ) else activityDuration.copy(end = value)
+                                            )
+                                        )
+                                    },
+                                    onChangeAwardDateValue = { index, value ->
+                                        myProfileViewModel.onChangeAwardValue(
+                                            awardIndex = index,
+                                            award = myProfileViewModel.awards.value[index].copy(date = value)
+                                        )
+                                    },
+                                    onChangeProgressState = {
+                                        val activityDuration =
+                                            myProfileViewModel.projects.value[it].activityDuration
+                                        val isProgress = activityDuration.end == null
+                                        myProfileViewModel.onChangeProjectValue(
+                                            index = it,
+                                            value = myProfileViewModel.projects.value[it].copy(
+                                                activityDuration = if (isProgress) {
+                                                    activityDuration.copy(end = createCurrentTime("yyyy.MM"))
+                                                } else {
+                                                    activityDuration.copy(end = null)
+                                                }
+                                            )
+                                        )
                                     }
                                 )
                             }

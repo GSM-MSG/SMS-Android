@@ -17,16 +17,21 @@ import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 @Composable
 fun ProjectComponent(
     data: ProjectData,
+    bitmap: Bitmap?,
     techStacks: ProjectTechStack,
     onProjectValueChange: (value: ProjectData) -> Unit,
     onLinkNameChanged: (index: Int, value: String) -> Unit,
     onLinkChanged: (index: Int, value: String) -> Unit,
     onAddLinkButton: () -> Unit,
     onClickSearchBar: () -> Unit,
+    onOpenStart: () -> Unit,
+    onOpenEnd: () -> Unit,
+    onChangeProgressState: () -> Unit,
     onRemoveProjectImageButton: (list: List<String>) -> Unit,
     onRemoveBitmapButton: (index: Int) -> Unit,
     onRemoveProjectDetailStack: (value: String) -> Unit,
     onRemoveRelatedLInk: (index: Int) -> Unit,
+    setBitmap: (value: Bitmap) -> Unit,
     enteredList: List<Bitmap>,
     onOpenGallery: () -> Unit,
 ) {
@@ -40,7 +45,7 @@ fun ProjectComponent(
             name = data.name,
             onValueChange = { onProjectValueChange(data.copy(name = it)) }
         )
-        ProjectIconComponent(projectIcon = data.icon)
+        ProjectIconComponent(projectIcon = data.icon, bitmap = bitmap, setBitmap = setBitmap)
         ProjectPreviewComponent(
             list = data.projectImage,
             enteredList = enteredList,
@@ -59,7 +64,12 @@ fun ProjectComponent(
         ProjectKeyTaskComponent(
             keyTask = data.keyTask,
             onValueChange = { onProjectValueChange(data.copy(keyTask = it)) })
-        ProjectScheduleComponent()
+        ProjectScheduleComponent(
+            progress = data.activityDuration,
+            onChangeProgressState = onChangeProgressState,
+            onOpenStart = onOpenStart,
+            onOpenEnd = onOpenEnd
+        )
         ProjectRelatedLinksComponent(
             relatedLinks = data.relatedLinks,
             onClick = onRemoveRelatedLInk,
@@ -105,6 +115,11 @@ private fun ProjectComponentPre() {
         onClickSearchBar = {},
         onLinkNameChanged = { _, _ -> },
         techStacks = ProjectTechStack(listOf("Github", "Git", "Kotlin", "Android Studio")),
-        onProjectValueChange = {}
+        onProjectValueChange = {},
+        setBitmap = {},
+        bitmap = null,
+        onOpenStart = {},
+        onOpenEnd = {},
+        onChangeProgressState = {}
     )
 }

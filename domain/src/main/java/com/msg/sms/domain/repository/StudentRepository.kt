@@ -5,6 +5,7 @@ import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
 import com.msg.sms.domain.model.student.response.GetStudentForStudent
 import com.msg.sms.domain.model.student.response.GetStudentForTeacher
 import com.msg.sms.domain.model.student.response.StudentListModel
+import com.msg.sms.domain.model.user.response.MyProfileModel
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
@@ -34,4 +35,6 @@ interface StudentRepository {
     suspend fun getUserDetailForAnonymous(uuid: UUID): Flow<GetStudentForAnonymous>
 
     suspend fun getUserDetailForTeacher(uuid: UUID): Flow<GetStudentForTeacher>
+
+    suspend fun putChangedProfile(profile: MyProfileModel): Flow<Unit>
 }

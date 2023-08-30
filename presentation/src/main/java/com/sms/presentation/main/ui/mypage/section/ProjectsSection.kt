@@ -27,7 +27,12 @@ fun ProjectsSection(
     onRemoveProjectImage: (list: List<String>) -> Unit,
     onAddBitmap: (list: List<Bitmap>) -> Unit,
     onAddLink: () -> Unit,
+    bitmap: Bitmap?,
+    setBitmap: (value: Bitmap) -> Unit,
     onClickSearchBar: () -> Unit,
+    onOpenStart: () -> Unit,
+    onOpenEnd: () -> Unit,
+    onChangeProgressState: () -> Unit,
     onRemoveBitmapButton: (itemIndex: Int) -> Unit,
     onRemoveProjectDetailStack: (value: String) -> Unit,
     onRemoveRelatedLink: (index: Int) -> Unit,
@@ -70,7 +75,12 @@ fun ProjectsSection(
         onRemoveProjectDetailStack = onRemoveProjectDetailStack,
         onRemoveRelatedLInk = onRemoveRelatedLink,
         onClickSearchBar = onClickSearchBar,
-        onProjectValueChange = onProjectValueChange
+        onProjectValueChange = onProjectValueChange,
+        bitmap = bitmap,
+        setBitmap = setBitmap,
+        onOpenEnd = onOpenEnd,
+        onOpenStart = onOpenStart,
+        onChangeProgressState = onChangeProgressState
     )
 }
 
@@ -108,6 +118,11 @@ private fun ProjectSectionPre() {
         onRemoveRelatedLink = {},
         onClickSearchBar = {},
         techStacks = ProjectTechStack(listOf()),
-        onProjectValueChange = {}
+        onProjectValueChange = {},
+        bitmap = null,
+        setBitmap = {},
+        onOpenEnd = {},
+        onOpenStart = {},
+        onChangeProgressState = {}
     )
 }

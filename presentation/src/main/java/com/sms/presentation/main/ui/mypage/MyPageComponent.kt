@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +39,8 @@ import com.sms.presentation.main.ui.mypage.section.ProjectsSection
 import com.sms.presentation.main.ui.mypage.section.SchoolLifeSection
 import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
 import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.sms.presentation.main.ui.mypage.state.FormOfEmployment
+import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 
@@ -51,17 +55,23 @@ fun MyPageComponent(
     bitmapPreviews: List<List<Bitmap>>,
     selectedTechList: List<String>,
     selectedTechListOnProject: List<ProjectTechStack>,
+    iconBitmaps: List<Bitmap?>,
+    setBitmap: (index: Int, element: Bitmap) -> Unit,
     onAddProject: () -> Unit,
     onAddAward: () -> Unit,
     onAddRegion: () -> Unit,
     onAddCertificate: () -> Unit,
     onAddForeignLanguage: () -> Unit,
+    onOpenStart: (index: Int) -> Unit,
+    onOpenEnd: (index: Int) -> Unit,
+    onChangeProgressState: (index: Int) -> Unit,
     onEnteredMajorValue: (value: String) -> Unit,
     onProfileValueChange: (value: MyProfileData) -> Unit,
     onClickMilitaryOpenButton: () -> Unit,
     onClickOpenWorkForm: () -> Unit,
     onClickTopLeftButton: () -> Unit,
     onClickTopRightButton: () -> Unit,
+    onOpenNumberPicker: (index: Int) -> Unit,
     onClickMajorButton: () -> Unit,
     onExpandProjectClick: (index: Int) -> Unit,
     onExpandAwardClick: (index: Int) -> Unit,
@@ -75,7 +85,11 @@ fun MyPageComponent(
     onProjectSearchBar: (index: Int) -> Unit,
     onAwardValueChange: (index: Int, value: AwardData) -> Unit,
     onMyPageSearchBar: () -> Unit,
+    onSaveButtonClick: () -> Unit,
 ) {
+    val isButtonClicked = remember {
+        mutableStateOf(false)
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -145,7 +159,7 @@ fun MyPageComponent(
             }
             item {
                 MilitaryServiceSection(
-                    setMilitary = myProfileData.militaryService,
+                    setMilitary = myProfileData.militaryService.text,
                     onClickMilitaryOpenButton = onClickMilitaryOpenButton
                 )
                 SmsSpacer()
@@ -280,7 +294,12 @@ fun MyPageComponent(
                                     index,
                                     it
                                 )
-                            }
+                            },
+                            setBitmap = { setBitmap(index, it) },
+                            bitmap = iconBitmaps[index],
+                            onOpenStart = { onOpenStart(index) },
+                            onOpenEnd = { onOpenEnd(index) },
+                            onChangeProgressState = { onChangeProgressState(index) }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
@@ -327,7 +346,7 @@ fun MyPageComponent(
                             onDateValueChange = {
                                 onAwardValueChange(index, awards[index].copy(date = it))
                             },
-                            onClickCalendar = { /*(Todo): kimhs - 넘버핔커 열어줘요*/ }
+                            onClickCalendar = { onOpenNumberPicker(index) }
                         )
                         SmsSpacer()
                     }
@@ -352,10 +371,13 @@ fun MyPageComponent(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(horizontal = 20.dp),
-            visibility = true
-        ) {
-            // TODO(LeeHyeonbin): 수정된 것들 저장하는 기능 만들기
-        }
+            visibility = true,
+            enabled = !isButtonClicked.value,
+            onClickSaveButton = {
+                isButtonClicked.value = true
+                onSaveButtonClick()
+            }
+        )
     }
 }
 
@@ -375,9 +397,9 @@ private fun MyPageComponentPre() {
             profileImg = "",
             contactEmail = "",
             gsmAuthenticationScore = 0,
-            formOfEmployment = "",
+            formOfEmployment = FormOfEmployment.NOT_SELECT,
             regions = listOf(),
-            militaryService = "",
+            militaryService = MilitaryService.NOT_SELECT,
             salary = 0,
             languageCertificates = listOf(),
             certificates = listOf(),
@@ -433,6 +455,13 @@ private fun MyPageComponentPre() {
         onAwardValueChange = { _, _ -> },
         onAddBitmapPreview = { _, _ -> },
         onRemoveAward = {},
-        onEnteredMajorValue = {}
+        onEnteredMajorValue = {},
+        onSaveButtonClick = {},
+        iconBitmaps = listOf(),
+        setBitmap = { _, _ -> },
+        onOpenNumberPicker = {},
+        onOpenEnd = {},
+        onOpenStart = {},
+        onChangeProgressState = {}
     )
 }
