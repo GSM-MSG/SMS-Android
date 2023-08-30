@@ -4,14 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -36,7 +29,6 @@ import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.detail.project.ProjectListComponent
-import com.sms.presentation.main.ui.fill_out_information.data.CertificationData
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 
@@ -157,7 +149,7 @@ fun StudentDetailComponent(
                             salary = salary,
                             regions = region
                         ),
-                        certificationData = CertificationData(certificationData),
+                        certificationData = certificationData,
                         foreignLanguage = foreignLanguage
                     )
                 }

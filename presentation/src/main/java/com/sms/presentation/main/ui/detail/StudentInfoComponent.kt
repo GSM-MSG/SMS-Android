@@ -2,9 +2,7 @@ package com.sms.presentation.main.ui.detail
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.divider.SmsDivider
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.common.CertificateModel
-import com.sms.presentation.main.ui.fill_out_information.data.CertificationData
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 
 @Composable
@@ -23,7 +20,7 @@ fun StudentInfoComponent(
     email: String,
     militaryService: String,
     workConditionData: WorkConditionData,
-    certificationData: CertificationData,
+    certificationData: List<String>,
     foreignLanguage: List<CertificateModel>,
 ) {
     val titleTextModifier = Modifier
@@ -36,10 +33,7 @@ fun StudentInfoComponent(
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
-        Spacer(modifier = Modifier.height(32.dp))
-
         SMSTheme { colors, typography ->
-
             val titleColor = colors.BLACK
             val contentColor = colors.N40
 
@@ -151,7 +145,7 @@ fun StudentInfoComponent(
                     }
                 }
             }
-            if (certificationData.certifications.isNotEmpty()) {
+            if (certificationData.isNotEmpty()) {
                 SmsDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Row(Modifier.fillMaxWidth()) {
                     Text(
@@ -161,7 +155,7 @@ fun StudentInfoComponent(
                         style = titleTypography
                     )
                     Column {
-                        certificationData.certifications.forEach {
+                        certificationData.forEach {
                             Text(
                                 text = it,
                                 modifier = contentTextModifier,
@@ -172,7 +166,6 @@ fun StudentInfoComponent(
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

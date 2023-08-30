@@ -1,10 +1,6 @@
 package com.sms.presentation.main.ui.detail.project
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -22,24 +18,27 @@ fun ProjectListComponent(
     projectList: List<ProjectData>,
 ) {
     SMSTheme { colors, typography ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding()
-                .heightIn(max = 10000.dp),
-            contentPadding = PaddingValues(bottom = 80.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp)
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
-                Text(
-                    text = "프로젝트",
-                    style = typography.title2,
-                    color = colors.BLACK,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            items(projectList.size) {
-                ProjectComponent(data = projectList[it])
+            Text(
+                text = "프로젝트",
+                style = typography.title2,
+                color = colors.BLACK,
+                fontWeight = FontWeight.Bold
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding()
+                    .heightIn(max = 10000.dp),
+                contentPadding = PaddingValues(bottom = 80.dp),
+                verticalArrangement = Arrangement.spacedBy(32.dp)
+            ) {
+                items(projectList.size) {
+                    ProjectComponent(data = projectList[it])
+                }
             }
         }
     }
