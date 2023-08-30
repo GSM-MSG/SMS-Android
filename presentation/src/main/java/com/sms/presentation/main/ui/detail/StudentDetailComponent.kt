@@ -4,14 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -31,12 +24,11 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.item.TechStackItem
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.domain.model.student.response.CertificationModel
+import com.msg.sms.domain.model.common.CertificateModel
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.detail.project.ProjectListComponent
-import com.sms.presentation.main.ui.fill_out_information.data.CertificationData
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 
@@ -62,7 +54,7 @@ fun StudentDetailComponent(
     salary: String,
     region: List<String>,
     certificationData: List<String>,
-    foreignLanguage: List<CertificationModel>,
+    foreignLanguage: List<CertificateModel>,
     isNotGuest: Boolean,
     isTeacher: Boolean,
     scrollState: ScrollState = rememberScrollState(),
@@ -157,17 +149,21 @@ fun StudentDetailComponent(
                             salary = salary,
                             regions = region
                         ),
-                        certificationData = CertificationData(certificationData),
+                        certificationData = certificationData,
                         foreignLanguage = foreignLanguage
                     )
                 }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
+                        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 40.dp)
                 ) {
-                    AwardComponent(awardList = awardData)
-                    ProjectListComponent(projectList = projectList)
+                    if (awardData.isNotEmpty()) {
+                        AwardComponent(awardList = awardData)
+                    }
+                    if (projectList.isNotEmpty()) {
+                        ProjectListComponent(projectList = projectList)
+                    }
                     SmsRoundedButton(
                         text = "포트폴리오",
                         modifier = Modifier

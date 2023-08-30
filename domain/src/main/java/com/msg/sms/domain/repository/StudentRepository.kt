@@ -1,9 +1,9 @@
 package com.msg.sms.domain.repository
 
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
-import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
-import com.msg.sms.domain.model.student.response.GetStudentForStudent
-import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.msg.sms.domain.model.student.response.GetStudentForAnonymousModel
+import com.msg.sms.domain.model.student.response.GetStudentForStudentModel
+import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
 import com.msg.sms.domain.model.student.response.StudentListModel
 import com.msg.sms.domain.model.user.response.MyProfileModel
 import kotlinx.coroutines.flow.Flow
@@ -30,11 +30,11 @@ interface StudentRepository {
         salarySort: String?
     ): Flow<StudentListModel>
 
-    suspend fun getUserDetailForStudent(uuid: UUID): Flow<GetStudentForStudent>
+    suspend fun getUserDetailForStudent(uuid: UUID): Flow<GetStudentForStudentModel>
 
-    suspend fun getUserDetailForAnonymous(uuid: UUID): Flow<GetStudentForAnonymous>
+    suspend fun getUserDetailForAnonymous(uuid: UUID): Flow<GetStudentForAnonymousModel>
 
-    suspend fun getUserDetailForTeacher(uuid: UUID): Flow<GetStudentForTeacher>
+    suspend fun getUserDetailForTeacher(uuid: UUID): Flow<GetStudentForTeacherModel>
 
     suspend fun putChangedProfile(profile: MyProfileModel): Flow<Unit>
 }

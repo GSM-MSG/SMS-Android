@@ -1,4 +1,4 @@
-package com.msg.sms.domain.model.student.request
+package com.msg.sms.domain.model.common
 
 data class ProjectRelatedLinkModel(
     val name: String,

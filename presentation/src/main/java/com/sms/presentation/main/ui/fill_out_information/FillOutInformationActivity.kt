@@ -27,6 +27,10 @@ import com.msg.sms.design.component.lottie.SmsLoadingLottie
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.design.theme.SMSTheme
+import com.msg.sms.domain.model.common.CertificateModel
+import com.msg.sms.domain.model.common.PrizeModel
+import com.msg.sms.domain.model.common.ProjectDateModel
+import com.msg.sms.domain.model.common.ProjectRelatedLinkModel
 import com.msg.sms.domain.model.student.request.*
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
@@ -123,6 +127,7 @@ class FillOutInformationActivity : BaseActivity() {
             val enteredCertificateData = fillOutViewModel.getEnteredCertification().certifications
             val enteredForeignLanguagesData = fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
             val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
+            val enteredAwardsData = fillOutViewModel.getEnteredAwardsInformation()
 
             //data
             val profileData = remember {
@@ -144,7 +149,7 @@ class FillOutInformationActivity : BaseActivity() {
             }
             val projectsDetailTechStack = remember {
                 mutableStateListOf(
-                    *enteredProjectsData.map { it.technologyOfUse }.toTypedArray()
+                    *projectList.map { it.technologyOfUse }.toTypedArray()
                 )
             }
 
@@ -465,7 +470,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                         isTechStackEmpty = projectsDetailTechStack[index].isEmpty(),
                                                         isDescriptionEmpty = projectInfo.description.isEmpty(),
                                                         isStartDateEmpty = projectInfo.startDate.isEmpty(),
-                                                        isEndDateEmpty = projectInfo.endDate.isEmpty()
+                                                        isEndDateEmpty = if(projectInfo.isProjectProgress) false else projectInfo.endDate.isEmpty()
                                                     )
                                                 )
                                             }
@@ -554,7 +559,7 @@ class FillOutInformationActivity : BaseActivity() {
                                             projectList[index] = projectList[index].copy(preview = previews)
                                         },
                                         onProjectTechStackValueChanged = { index, list ->
-                                            projectsDetailTechStack[index] = list
+                                            projectList[index] = projectList[index].copy(technologyOfUse = list)
                                         },
                                         onProjectDescriptionValueChanged = { index, description ->
                                             projectList[index] = projectList[index].copy(description = description)
@@ -644,7 +649,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                         certificate = enteredCertificateData,
                                                         militaryService = enteredMilitaryData.militaryService.toEnum(),
                                                         languageCertificate = enteredForeignLanguagesData.map {
-                                                            CertificateInformationModel(
+                                                            CertificateModel(
                                                                 languageCertificateName = it.languageCertificateName,
                                                                 score = it.score
                                                             )
@@ -669,7 +674,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                                 )
                                                             )
                                                         },
-                                                        award = awardData.map {
+                                                        award = enteredAwardsData.map {
                                                             PrizeModel(
                                                                 name = it.name,
                                                                 date = it.date,

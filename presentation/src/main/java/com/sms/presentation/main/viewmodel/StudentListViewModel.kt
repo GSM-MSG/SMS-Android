@@ -4,9 +4,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
-import com.msg.sms.domain.model.student.response.GetStudentForStudent
-import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.msg.sms.domain.model.student.response.GetStudentForAnonymousModel
+import com.msg.sms.domain.model.student.response.GetStudentForStudentModel
+import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
 import com.msg.sms.domain.model.student.response.StudentListModel
 import com.msg.sms.domain.model.user.response.ProfileImageModel
 import com.msg.sms.domain.usecase.auth.DeleteTokenUseCase
@@ -52,15 +52,15 @@ class StudentListViewModel @Inject constructor(
     val withdrawalResponse = _withdrawalResponse.asStateFlow()
 
     private val _getStudentDetailForTeacherResponse =
-        MutableStateFlow<Event<GetStudentForTeacher>>(Event.Loading)
+        MutableStateFlow<Event<GetStudentForTeacherModel>>(Event.Loading)
     val getStudentDetailForTeacherResponse = _getStudentDetailForTeacherResponse.asStateFlow()
 
     private val _getStudentDetailForStudentResponse =
-        MutableStateFlow<Event<GetStudentForStudent>>(Event.Loading)
+        MutableStateFlow<Event<GetStudentForStudentModel>>(Event.Loading)
     val getStudentDetailForStudentResponse = _getStudentDetailForStudentResponse.asStateFlow()
 
     private val _getStudentDetailForAnonymousResponse =
-        MutableStateFlow<Event<GetStudentForAnonymous>>(Event.Loading)
+        MutableStateFlow<Event<GetStudentForAnonymousModel>>(Event.Loading)
     val getStudentDetailForAnonymousResponse = _getStudentDetailForAnonymousResponse.asStateFlow()
 
     private val _getStudentProfileImageResponse =

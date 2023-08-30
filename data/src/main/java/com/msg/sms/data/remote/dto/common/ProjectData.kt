@@ -1,6 +1,7 @@
-package com.msg.sms.data.remote.dto.student.request
+package com.msg.sms.data.remote.dto.common
 
 import com.google.gson.annotations.SerializedName
+import com.msg.sms.domain.model.student.request.ProjectModel
 
 data class ProjectData(
     @SerializedName("name")
@@ -20,3 +21,16 @@ data class ProjectData(
     @SerializedName("inProgress")
     val inProgress: ProjectDateData
 )
+
+fun ProjectData.toProjectModel(): ProjectModel {
+    return ProjectModel(
+        name = this.name,
+        icon = this.icon,
+        previewImages = this.previewImages,
+        description = this.description,
+        links = this.links.map { it.toProjectRelatedLinkModel() },
+        techStacks = this.techStacks,
+        myActivity = this.myActivity,
+        inProgress = this.inProgress.toProjectDateModel(),
+    )
+}

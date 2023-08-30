@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.detail.link
+package com.sms.presentation.main.ui.detail.project
 
 import android.content.Context
 import android.content.Intent
@@ -29,7 +29,11 @@ import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 
 @Composable
-fun LinkComponent(context: Context = LocalContext.current, linksData: RelatedLinksData, getHeight: (height: Dp) -> Unit) {
+fun ProjectLinkComponent(
+    context: Context = LocalContext.current,
+    linksData: RelatedLinksData,
+    getHeight: (height: Dp) -> Unit
+) {
     SMSTheme { colors, typography ->
         Box(
             modifier = Modifier
@@ -79,7 +83,7 @@ fun LinkComponent(context: Context = LocalContext.current, linksData: RelatedLin
 @Preview
 @Composable
 private fun LinkComponentPre() {
-    LinkComponent(
+    ProjectLinkComponent(
         linksData = RelatedLinksData(name = "Youtube", link = "https://youtube.com"),
         getHeight = {})
 }
@@ -87,7 +91,7 @@ private fun LinkComponentPre() {
 @Preview
 @Composable
 private fun LongLinkComponentPre() {
-    LinkComponent(
+    ProjectLinkComponent(
         linksData = RelatedLinksData(
             name = "Youtube",
             link = "https://youtube.com/lkajsdlfjal;sdlfnaosdjfkasodfjkao;rigjasdg;ljaworgji"

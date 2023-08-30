@@ -23,6 +23,8 @@ fun ProjectTechStackInputComponent(
     onClick: () -> Unit,
     onProjectTechStackValueChanged: (value: List<String>) -> Unit,
 ) {
+    onProjectTechStackValueChanged(techStack)
+
     AddGrayBody1Title(titleText = "사용기술 (최대 20개)") {
         Column(
             modifier = Modifier.fillMaxWidth(),

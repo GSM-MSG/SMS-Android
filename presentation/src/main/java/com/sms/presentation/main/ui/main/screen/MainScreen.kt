@@ -15,14 +15,18 @@ import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListFloatingButton
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.CheckedIcon
-import com.msg.sms.domain.model.student.response.GetStudentForAnonymous
-import com.msg.sms.domain.model.student.response.GetStudentForStudent
-import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.msg.sms.domain.model.student.response.GetStudentForAnonymousModel
+import com.msg.sms.domain.model.student.response.GetStudentForStudentModel
+import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
 import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
+import com.sms.presentation.main.ui.detail.data.AwardData
+import com.sms.presentation.main.ui.detail.data.ProjectData
+import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.ui.main.data.StudentDetailData
+import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 import com.sms.presentation.main.viewmodel.MyProfileViewModel
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -231,7 +235,6 @@ fun MainScreen(
                                             studentDetailData.value = StudentDetailData(
                                                 name = it.name,
                                                 introduce = it.introduce,
-                                                dreamBookFileUrl = it.dreamBookFileUrl!!,
                                                 portfolioUrl = it.portfolioUrl!!,
                                                 grade = it.grade,
                                                 classNum = it.classNum,
@@ -247,7 +250,31 @@ fun MainScreen(
                                                 salary = it.salary,
                                                 languageCertificates = it.languageCertificates,
                                                 certificates = it.certificates,
-                                                techStacks = it.techStacks
+                                                techStacks = it.techStacks,
+                                                projectList = it.projects.map { model ->
+                                                    ProjectData(
+                                                        name = model.name,
+                                                        activityDuration = ActivityDuration(
+                                                            model.inProgress.start,
+                                                            model.inProgress.end
+                                                        ),
+                                                        description = model.description,
+                                                        icon = model.icon,
+                                                        keyTask = model.myActivity,
+                                                        projectImage = model.previewImages,
+                                                        relatedLinks = model.links.map { link ->
+                                                            RelatedLinksData(link.name, link.url)
+                                                        },
+                                                        techStacks = model.techStacks
+                                                    )
+                                                },
+                                                awardData = it.prizes.map { model ->
+                                                    AwardData(
+                                                        title = model.name,
+                                                        organization = model.type,
+                                                        date = model.date
+                                                    )
+                                                }
                                             )
                                             scope.launch {
                                                 bottomSheetState.show()
@@ -275,7 +302,31 @@ fun MainScreen(
                                                 department = it.department,
                                                 major = it.major,
                                                 profileImg = it.profileImg,
-                                                techStacks = it.techStack
+                                                techStacks = it.techStack,
+                                                projectList = it.projects.map { model ->
+                                                    ProjectData(
+                                                        name = model.name,
+                                                        activityDuration = ActivityDuration(
+                                                            model.inProgress.start,
+                                                            model.inProgress.end
+                                                        ),
+                                                        description = model.description,
+                                                        icon = model.icon,
+                                                        keyTask = model.myActivity,
+                                                        projectImage = model.previewImages,
+                                                        relatedLinks = model.links.map { link ->
+                                                            RelatedLinksData(link.name, link.url)
+                                                        },
+                                                        techStacks = model.techStacks
+                                                    )
+                                                },
+                                                awardData = it.prizes.map { model ->
+                                                    AwardData(
+                                                        title = model.name,
+                                                        organization = model.type,
+                                                        date = model.date
+                                                    )
+                                                }
                                             )
                                             scope.launch {
                                                 bottomSheetState.show()
@@ -294,6 +345,36 @@ fun MainScreen(
                                             dialogMsg.value = msg
                                         },
                                         {
+                                            studentDetailData.value = StudentDetailData(
+                                                name = it.name,
+                                                introduce = it.introduce,
+                                                major = it.major,
+                                                techStacks = it.techStack,
+                                                awardData = it.awardData.map { prize ->
+                                                    AwardData(
+                                                        title = prize.name,
+                                                        date = prize.date,
+                                                        organization = prize.type
+                                                    )
+                                                },
+                                                projectList = it.projectList.map { model ->
+                                                    ProjectData(
+                                                        name = model.name,
+                                                        activityDuration = ActivityDuration(
+                                                            model.inProgress.start,
+                                                            model.inProgress.end
+                                                        ),
+                                                        description = model.description,
+                                                        icon = model.icon,
+                                                        keyTask = model.myActivity,
+                                                        projectImage = model.previewImages,
+                                                        relatedLinks = model.links.map { link ->
+                                                            RelatedLinksData(link.name, link.url)
+                                                        },
+                                                        techStacks = model.techStacks
+                                                    )
+                                                }
+                                            )
                                             scope.launch {
                                                 bottomSheetState.show()
                                             }
@@ -353,7 +434,7 @@ suspend fun getStudentList(
 suspend fun getStudentDetailForTeacher(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForTeacher) -> Unit,
+    onSuccess: (GetStudentForTeacherModel) -> Unit,
 ) {
     viewModel.getStudentDetailForTeacherResponse.collect { response ->
         when (response) {
@@ -372,7 +453,7 @@ suspend fun getStudentDetailForTeacher(
 suspend fun getStudentDetailForStudent(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForStudent) -> Unit,
+    onSuccess: (GetStudentForStudentModel) -> Unit,
 ) {
     viewModel.getStudentDetailForStudentResponse.collect { response ->
         when (response) {
@@ -391,7 +472,7 @@ suspend fun getStudentDetailForStudent(
 suspend fun getStudentDetailForAnonymous(
     viewModel: StudentListViewModel,
     dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForAnonymous) -> Unit,
+    onSuccess: (GetStudentForAnonymousModel) -> Unit,
 ) {
     viewModel.getStudentDetailForAnonymousResponse.collect { response ->
         when (response) {
