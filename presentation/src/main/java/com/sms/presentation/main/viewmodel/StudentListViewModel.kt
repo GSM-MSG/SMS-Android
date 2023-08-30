@@ -99,10 +99,10 @@ class StudentListViewModel @Inject constructor(
             department = selectedDepartmentList.ifEmpty { null },
             stuNumSort = if (isSchoolNumberAscendingOrder.value) "ASCENDING" else "DESCENDING",
             formOfEmployment = selectedTypeOfEmploymentList.ifEmpty { null },
-            minGsmAuthenticationScore = gsmScoreSliderValues.value.start.toInt(),
-            maxGsmAuthenticationScore = gsmScoreSliderValues.value.endInclusive.toInt(),
-            minSalary = desiredAnnualSalarySliderValues.value.start.toInt(),
-            maxSalary = desiredAnnualSalarySliderValues.value.endInclusive.toInt(),
+            minGsmAuthenticationScore = gsmScoreSliderValues.value.start.toInt().takeIf { it != 0 },
+            maxGsmAuthenticationScore = gsmScoreSliderValues.value.endInclusive.toInt().takeIf { it != 990 },
+            minSalary = desiredAnnualSalarySliderValues.value.start.toInt().takeIf { it != 0 },
+            maxSalary = desiredAnnualSalarySliderValues.value.endInclusive.toInt().takeIf { it != 9999 },
             gsmAuthenticationScoreSort = if (isGsmScoreAscendingOrder.value) "ASCENDING" else "DESCENDING",
             salarySort = if (isDesiredAnnualSalaryAscendingOrder.value) "ASCENDING" else "DESCENDING"
         ).onSuccess {
