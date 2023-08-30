@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.detail.link
+package com.sms.presentation.main.ui.detail.project
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.heightIn
@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 
 @Composable
-fun RelatedLinksComponent(modifier: Modifier = Modifier, links: List<RelatedLinksData>) {
+fun ProjectRelatedLinksComponent(modifier: Modifier = Modifier, links: List<RelatedLinksData>) {
     val itemHeight = remember {
         mutableStateOf(0.dp)
     }
@@ -21,7 +21,7 @@ fun RelatedLinksComponent(modifier: Modifier = Modifier, links: List<RelatedLink
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(links.size) {
-            LinkComponent(
+            ProjectLinkComponent(
                 linksData = links[it],
                 getHeight = { height -> itemHeight.value = height })
         }
@@ -31,7 +31,7 @@ fun RelatedLinksComponent(modifier: Modifier = Modifier, links: List<RelatedLink
 @Preview
 @Composable
 fun RelatedLinksComponentPre() {
-    RelatedLinksComponent(
+    ProjectRelatedLinksComponent(
         links = listOf(
             RelatedLinksData("Youtube", "https://dolmc.com"),
             RelatedLinksData("GitHub", "https://youyu.com"),
