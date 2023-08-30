@@ -470,7 +470,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                         isTechStackEmpty = projectsDetailTechStack[index].isEmpty(),
                                                         isDescriptionEmpty = projectInfo.description.isEmpty(),
                                                         isStartDateEmpty = projectInfo.startDate.isEmpty(),
-                                                        isEndDateEmpty = projectInfo.endDate.isEmpty()
+                                                        isEndDateEmpty = if(projectInfo.isProjectProgress) false else projectInfo.endDate.isEmpty()
                                                     )
                                                 )
                                             }
