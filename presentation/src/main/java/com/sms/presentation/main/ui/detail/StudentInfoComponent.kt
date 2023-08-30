@@ -34,9 +34,7 @@ fun StudentInfoComponent(
         .padding(8.dp)
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 20.dp)
+        modifier = modifier.fillMaxWidth()
     ) {
         Spacer(modifier = Modifier.height(32.dp))
 
