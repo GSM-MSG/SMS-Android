@@ -148,7 +148,7 @@ class FillOutInformationActivity : BaseActivity() {
             }
             val projectsDetailTechStack = remember {
                 mutableStateListOf(
-                    *enteredProjectsData.map { it.technologyOfUse }.toTypedArray()
+                    *projectList.map { it.technologyOfUse }.toTypedArray()
                 )
             }
 
@@ -558,7 +558,7 @@ class FillOutInformationActivity : BaseActivity() {
                                             projectList[index] = projectList[index].copy(preview = previews)
                                         },
                                         onProjectTechStackValueChanged = { index, list ->
-                                            projectsDetailTechStack[index] = list
+                                            projectList[index] = projectList[index].copy(technologyOfUse = list)
                                         },
                                         onProjectDescriptionValueChanged = { index, description ->
                                             projectList[index] = projectList[index].copy(description = description)
