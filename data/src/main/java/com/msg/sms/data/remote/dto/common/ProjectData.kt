@@ -1,4 +1,4 @@
-package com.msg.sms.data.remote.dto.student.request
+package com.msg.sms.data.remote.dto.common
 
 import com.google.gson.annotations.SerializedName
 

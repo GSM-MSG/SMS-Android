@@ -1,8 +1,8 @@
 package com.msg.sms.data.remote.dto.student.response
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.data.remote.dto.student.request.PrizeData
-import com.msg.sms.data.remote.dto.student.request.ProjectData
+import com.msg.sms.data.remote.dto.common.PrizeData
+import com.msg.sms.data.remote.dto.common.ProjectData
 import com.msg.sms.domain.model.student.response.GetStudentForStudent
 
 data class GetStudentForStudentResponse(

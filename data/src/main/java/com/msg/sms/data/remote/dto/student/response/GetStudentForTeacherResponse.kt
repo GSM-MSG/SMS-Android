@@ -1,10 +1,9 @@
 package com.msg.sms.data.remote.dto.student.response
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.data.remote.dto.student.request.ProjectData
-import com.msg.sms.data.remote.dto.student.request.ProjectDateData
-import com.msg.sms.domain.model.student.response.CertificationModel
-import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.msg.sms.data.remote.dto.common.ProjectData
+import com.msg.sms.data.remote.dto.common.ProjectDateData
+import com.msg.sms.data.remote.dto.student.request.CertificateData
 
 data class GetStudentForTeacherResponse(
     @SerializedName("name")
@@ -38,7 +37,7 @@ data class GetStudentForTeacherResponse(
     @SerializedName("salary")
     val salary: Int,
     @SerializedName("languageCertificates")
-    val languageCertificates: List<CertificationResponse>,
+    val languageCertificates: List<CertificateData>,
     @SerializedName("certificates")
     val certificates: List<String>,
     @SerializedName("techStacks")
@@ -47,11 +46,6 @@ data class GetStudentForTeacherResponse(
     val projects: List<ProjectData>,
     @SerializedName("prize")
     val prize: List<ProjectDateData>,
-)
-
-data class CertificationResponse(
-    val languageCertificateName: String,
-    val score: String,
 )
 //
 //fun GetStudentForTeacherResponse.toGetStudentForTeacher(): GetStudentForTeacher {
@@ -77,6 +71,3 @@ data class CertificationResponse(
 //    )
 //}
 //
-fun CertificationResponse.toCertificationModel(): CertificationModel {
-    return CertificationModel(languageCertificateName = languageCertificateName, score = score)
-}
