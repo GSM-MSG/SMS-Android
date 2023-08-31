@@ -44,11 +44,11 @@ fun FilterScreen(
     selectedDepartmentList: List<String>,
     selectedMajorList: List<String>,
     selectedTypeOfEmploymentList: List<String>,
-    onGradeListValueChanged: (checked: Boolean, grade: String) -> Unit,
-    onClassListValueChanged: (checked: Boolean, `class`: String) -> Unit,
-    onDepartmentListValueChanged: (checked: Boolean, department: String) -> Unit,
-    onMajorListValueChanged: (checked: Boolean, major: String) -> Unit,
-    onTypeOfEmploymentListValueChanged: (checked: Boolean, typeOfEmployment: String) -> Unit,
+    onGradeListValueChanged: (gradeList: List<String>) -> Unit,
+    onClassListValueChanged: (classList: List<String>) -> Unit,
+    onDepartmentListValueChanged: (departmentList: List<String>) -> Unit,
+    onMajorListValueChanged: (mojorList: List<String>) -> Unit,
+    onTypeOfEmploymentListValueChanged: (typeOfEmploymentList: List<String>) -> Unit,
 ) {
     val scrollState = rememberScrollState()
 

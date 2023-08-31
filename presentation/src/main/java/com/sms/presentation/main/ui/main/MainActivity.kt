@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -174,30 +175,25 @@ class MainActivity : BaseActivity() {
                                     departmentList = studentListViewModel.departmentList.map { it.value },
                                     majorList = studentListViewModel.majorList,
                                     typeOfEmploymentList = studentListViewModel.typeOfEmploymentList.map { it.value },
-                                    selectedGradeList = studentListViewModel.selectedGradeList,
-                                    selectedClassList = studentListViewModel.selectedClassList,
-                                    selectedDepartmentList = studentListViewModel.selectedDepartmentList,
-                                    selectedMajorList = studentListViewModel.selectedMajorList,
-                                    selectedTypeOfEmploymentList = studentListViewModel.selectedTypeOfEmploymentList,
-                                    onGradeListValueChanged = { checked, grade ->
-                                        if (!checked) studentListViewModel.selectedGradeList.add(grade)
-                                        else studentListViewModel.selectedGradeList.remove(grade)
+                                    selectedGradeList = studentListViewModel.filterGradeList,
+                                    selectedClassList = studentListViewModel.filterClassList,
+                                    selectedDepartmentList = studentListViewModel.filterDepartmentList,
+                                    selectedMajorList = studentListViewModel.filterMajorList,
+                                    selectedTypeOfEmploymentList = studentListViewModel.filterTypeOfEmploymentList,
+                                    onGradeListValueChanged = { gradeList ->
+                                        studentListViewModel.selectedGradeList = gradeList.toMutableStateList()
                                     },
-                                    onClassListValueChanged = { checked, `class` ->
-                                        if (!checked) studentListViewModel.selectedClassList.add(`class`)
-                                        else studentListViewModel.selectedClassList.remove(`class`)
+                                    onClassListValueChanged = { classList ->
+                                        studentListViewModel.selectedClassList = classList.toMutableStateList()
                                     },
-                                    onDepartmentListValueChanged = { checked, department ->
-                                        if (!checked) studentListViewModel.selectedDepartmentList.add(department)
-                                        else studentListViewModel.selectedDepartmentList.remove(department)
+                                    onDepartmentListValueChanged = { departmentList ->
+                                        studentListViewModel.selectedDepartmentList = departmentList.toMutableStateList()
                                     },
-                                    onMajorListValueChanged = { checked, major ->
-                                        if (!checked) studentListViewModel.selectedMajorList.add(major)
-                                        else studentListViewModel.selectedMajorList.remove(major)
+                                    onMajorListValueChanged = { majorList ->
+                                        studentListViewModel.selectedMajorList = majorList.toMutableStateList()
                                     },
-                                    onTypeOfEmploymentListValueChanged = { checked, typeOfEmployment ->
-                                        if (!checked) studentListViewModel.selectedTypeOfEmploymentList.add(typeOfEmployment)
-                                        else studentListViewModel.selectedTypeOfEmploymentList.remove(typeOfEmployment)
+                                    onTypeOfEmploymentListValueChanged = { typeOfEmploymentList ->
+                                        studentListViewModel.selectedTypeOfEmploymentList = typeOfEmploymentList.toMutableStateList()
                                     }
                                 )
                             }

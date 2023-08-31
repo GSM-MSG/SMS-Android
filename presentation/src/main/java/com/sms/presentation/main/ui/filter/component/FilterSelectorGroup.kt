@@ -3,6 +3,8 @@ package com.sms.presentation.main.ui.filter.component
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -19,32 +21,63 @@ fun FilterSelectorGroup(
     selectedDepartmentList: List<String>,
     selectedMajorList: List<String>,
     selectedTypeOfEmploymentList: List<String>,
-    onGradeListValueChanged: (checked: Boolean, grade: String) -> Unit,
-    onClassListValueChanged: (checked: Boolean, `class`: String) -> Unit,
-    onDepartmentListValueChanged: (checked: Boolean, department: String) -> Unit,
-    onMajorListValueChanged: (checked: Boolean, major: String) -> Unit,
-    onTypeOfEmploymentListValueChanged: (checked: Boolean, typeOfEmployment: String) -> Unit,
+    onGradeListValueChanged: (gradeList: List<String>) -> Unit,
+    onClassListValueChanged: (classList: List<String>) -> Unit,
+    onDepartmentListValueChanged: (departmentList: List<String>) -> Unit,
+    onMajorListValueChanged: (mojorList: List<String>) -> Unit,
+    onTypeOfEmploymentListValueChanged: (typeOfEmploymentList: List<String>) -> Unit,
 ) {
+    val filterGradeList = remember {
+        mutableStateListOf(*selectedGradeList.toTypedArray())
+    }
+    val filterClassList = remember {
+        mutableStateListOf(*selectedClassList.toTypedArray())
+    }
+    val filterDepartmentList = remember {
+        mutableStateListOf(*selectedDepartmentList.toTypedArray())
+    }
+    val filterMajorList = remember {
+        mutableStateListOf(*selectedMajorList.toTypedArray())
+    }
+    val filterTypeOfEmploymentList = remember {
+        mutableStateListOf(*selectedTypeOfEmploymentList.toTypedArray())
+    }
+
+    onGradeListValueChanged(filterGradeList)
+    onClassListValueChanged(filterClassList)
+    onDepartmentListValueChanged(filterDepartmentList)
+    onMajorListValueChanged(filterMajorList)
+    onTypeOfEmploymentListValueChanged(filterTypeOfEmploymentList)
+
     if (role != "") {
         FilterSelectorComponent(
             title = "학년",
             itemList = gradeList,
-            selectedList = selectedGradeList,
-            onItemSelected = onGradeListValueChanged
+            selectedList = filterGradeList,
+            onItemSelected = { checked, value ->
+                if (!checked) filterGradeList.add(value)
+                else filterGradeList.remove(value)
+            }
         )
         Spacer(modifier = Modifier.height(40.dp))
         FilterSelectorComponent(
             title = "반",
             itemList = classList,
-            selectedList = selectedClassList,
-            onItemSelected = onClassListValueChanged
+            selectedList = filterClassList,
+            onItemSelected = { checked, value ->
+                if (!checked) filterClassList.add(value)
+                else filterClassList.remove(value)
+            }
         )
         Spacer(modifier = Modifier.height(40.dp))
         FilterSelectorComponent(
             title = "학과",
             itemList = departmentList,
-            selectedList = selectedDepartmentList,
-            onItemSelected = onDepartmentListValueChanged
+            selectedList = filterDepartmentList,
+            onItemSelected = { checked, value ->
+                if (!checked) filterDepartmentList.add(value)
+                else filterDepartmentList.remove(value)
+            }
         )
         Spacer(modifier = Modifier.height(40.dp))
     }
@@ -52,8 +85,11 @@ fun FilterSelectorGroup(
         FilterSelectorComponent(
             title = "분야",
             itemList = majorList,
-            selectedList = selectedMajorList,
-            onItemSelected = onMajorListValueChanged
+            selectedList = filterMajorList,
+            onItemSelected = { checked, value ->
+                if (!checked) filterMajorList.add(value)
+                else filterMajorList.remove(value)
+            }
         )
         Spacer(modifier = Modifier.height(40.dp))
     }
@@ -61,8 +97,11 @@ fun FilterSelectorGroup(
         FilterSelectorComponent(
             title = "희망 고용 형태",
             itemList = typeOfEmploymentList,
-            selectedList = selectedTypeOfEmploymentList,
-            onItemSelected = onTypeOfEmploymentListValueChanged
+            selectedList = filterTypeOfEmploymentList,
+            onItemSelected = { checked, value ->
+                if (!checked) filterTypeOfEmploymentList.add(value)
+                else filterTypeOfEmploymentList.remove(value)
+            }
         )
         Spacer(modifier = Modifier.height(40.dp))
     }
