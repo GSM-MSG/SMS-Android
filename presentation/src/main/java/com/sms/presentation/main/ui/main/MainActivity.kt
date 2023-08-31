@@ -86,9 +86,6 @@ class MainActivity : BaseActivity() {
                 if (response is Event.Success) {
                     setContent {
                         val navController = rememberNavController()
-                        val filterTechStack = remember {
-                            mutableStateListOf(*studentListViewModel.detailStackList.toTypedArray())
-                        }
                         val selectedTechStack = remember {
                             mutableStateOf(SelectedTechStack.Filter)
                         }
@@ -129,14 +126,8 @@ class MainActivity : BaseActivity() {
                                 FilterScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     role = response.data!!,
-                                    detailStacks = filterTechStack,
                                     onFilteringTechStackValueChanged = { list ->
-                                        filterTechStack.removeAll(filterTechStack.filter {
-                                            !list.contains(it)
-                                        })
-                                        filterTechStack.addAll(list.filter {
-                                            !filterTechStack.contains(it)
-                                        })
+                                        studentListViewModel.setSelectedDetailStackList(list)
                                     },
                                     onBackPressed = {
                                         navController.navigate(MainPage.Main.value) {
@@ -146,13 +137,17 @@ class MainActivity : BaseActivity() {
                                         }
                                     },
                                     onChangeToMainPage = {
-                                        studentListViewModel.detailStackList.removeAll(
-                                            studentListViewModel.detailStackList.filter {
-                                                !filterTechStack.contains(it)
-                                            })
-                                        studentListViewModel.detailStackList.addAll(filterTechStack.filter {
-                                            !studentListViewModel.detailStackList.contains(it)
-                                        })
+                                        studentListViewModel.setFilterGradeList(studentListViewModel.selectedGradeList)
+                                        studentListViewModel.setFilterClassList(studentListViewModel.selectedClassList)
+                                        studentListViewModel.setFilterDepartmentList(studentListViewModel.selectedDepartmentList)
+                                        studentListViewModel.setFilterMajorList(studentListViewModel.selectedMajorList)
+                                        studentListViewModel.setFilterTypeOfEmploymentList(studentListViewModel.selectedTypeOfEmploymentList)
+                                        studentListViewModel.setFilterGsmScoreSliderValues(studentListViewModel.selectedGsmScoreSliderValues.value)
+                                        studentListViewModel.setFilterDesiredAnnualSalarySliderValues(studentListViewModel.selectedDesiredAnnualSalarySliderValues.value)
+                                        studentListViewModel.setFilterSchoolNumberAscendingValue(studentListViewModel.selectedSchoolNumberAscendingOrder.value)
+                                        studentListViewModel.setFilterGsmScoreAscendingValue(studentListViewModel.selectedGsmScoreAscendingOrder.value)
+                                        studentListViewModel.setFilterDesiredAnnualSalaryAscendingValue(studentListViewModel.selectedDesiredAnnualSalaryAscendingOrder.value)
+                                        studentListViewModel.setFilterDetailStackList(studentListViewModel.selectedDetailStack)
 
                                         navController.navigate(MainPage.Main.value)
                                     },
@@ -160,6 +155,7 @@ class MainActivity : BaseActivity() {
                                         navController.navigate(MainPage.Search.value)
                                     },
                                     onRightButtonClick = {
+                                        studentListViewModel.setSelectedDetailStackList(studentListViewModel.filterDetailStackList)
                                         navController.navigate(MainPage.Main.value) {
                                             popUpTo(route = MainPage.Main.value) {
                                                 inclusive = false
@@ -167,9 +163,58 @@ class MainActivity : BaseActivity() {
                                         }
                                     },
                                     onLeftButtonClick = {
-                                        studentListViewModel.resetFilter()
-                                        filterTechStack.clear()
-                                    }
+                                        studentListViewModel.selectedDetailStack.clear()
+                                    },
+                                    //Selector
+                                    gradeList = studentListViewModel.gradeList.map { it.value },
+                                    classList = studentListViewModel.classList.map { it.value },
+                                    departmentList = studentListViewModel.departmentList.map { it.value },
+                                    majorList = studentListViewModel.majorList,
+                                    typeOfEmploymentList = studentListViewModel.typeOfEmploymentList.map { it.value },
+                                    selectedGradeList = studentListViewModel.filterGradeList,
+                                    selectedClassList = studentListViewModel.filterClassList,
+                                    selectedDepartmentList = studentListViewModel.filterDepartmentList,
+                                    selectedMajorList = studentListViewModel.filterMajorList,
+                                    selectedTypeOfEmploymentList = studentListViewModel.filterTypeOfEmploymentList,
+                                    onGradeListValueChanged = { gradeList ->
+                                        studentListViewModel.setSelectedGradeList(gradeList)
+                                    },
+                                    onClassListValueChanged = { classList ->
+                                        studentListViewModel.setSelectedClassList(classList)
+                                    },
+                                    onDepartmentListValueChanged = { departmentList ->
+                                        studentListViewModel.setSelectedDepartmentList(departmentList)
+                                    },
+                                    onMajorListValueChanged = { majorList ->
+                                        studentListViewModel.setSelectedMajorList(majorList)
+                                    },
+                                    onTypeOfEmploymentListValueChanged = { typeOfEmploymentList ->
+                                        studentListViewModel.setSelectedTypeOfEmploymentList(typeOfEmploymentList)
+                                    },
+                                    //Slider
+                                    selectedGsmScoreSliderValue = studentListViewModel.filterGsmScoreSliderValues.value,
+                                    selectedDesiredAnnualSalarySliderValue = studentListViewModel.filterDesiredAnnualSalarySliderValues.value,
+                                    onGsmScoreSliderValueChanged = { gsmScoreSliderValue ->
+                                        studentListViewModel.setSelectedGsmScoreSliderValues(gsmScoreSliderValue)
+                                    },
+                                    onDesiredAnnualSalarySliderValueChanged = { desiredAnnualSalarySliderValue ->
+                                        studentListViewModel.setSelectedDesiredAnnualSalarySliderValues(desiredAnnualSalarySliderValue)
+                                    },
+                                    //SelectionControl
+                                    selectedSchoolNumberAscendingValue = studentListViewModel.filterSchoolNumberAscendingOrder.value,
+                                    selectedGsmScoreAscendingValue = studentListViewModel.filterGsmScoreAscendingOrder.value,
+                                    selectedDesiredAnnualSalaryAscendingValue = studentListViewModel.filterDesiredAnnualSalaryAscendingOrder.value,
+                                    onSchoolNumberAscendingValueChanged = { schoolNumberAscendingValue ->
+                                        studentListViewModel.setSelectedSchoolNumberAscendingValue(schoolNumberAscendingValue)
+                                    },
+                                    onGsmScoreAscendingValueChanged = { gsmScoreAscendingValue ->
+                                        studentListViewModel.setSelectedGsmScoreAscendingValue(gsmScoreAscendingValue)
+                                    },
+                                    onDesiredAnnualSalaryAscendingValueChanged = { desiredAnnualSalaryAscendingValue ->
+                                        studentListViewModel.setSelectedDesiredAnnualSalaryAscendingValue(desiredAnnualSalaryAscendingValue)
+                                    },
+                                    //DetailStack
+                                    detailStacks = studentListViewModel.selectedDetailStack,
                                 )
                             }
                             composable(MainPage.Search.name) {
@@ -181,7 +226,7 @@ class MainActivity : BaseActivity() {
                                     },
                                     selectedStack = when (selectedTechStack.value) {
                                         SelectedTechStack.MyPage -> myProfileViewModel.techStacks.value
-                                        SelectedTechStack.Filter -> filterTechStack
+                                        SelectedTechStack.Filter -> studentListViewModel.selectedDetailStack
                                         SelectedTechStack.Project -> myProfileViewModel.projects.value[projectIndex.value].techStacks
                                     },
                                     detailStack = searchDetailStack.value,
@@ -200,12 +245,7 @@ class MainActivity : BaseActivity() {
                                         }
 
                                         SelectedTechStack.Filter -> {
-                                            filterTechStack.removeAll(filterTechStack.filter {
-                                                !list.contains(it)
-                                            })
-                                            filterTechStack.addAll(list.filter {
-                                                !filterTechStack.contains(it)
-                                            })
+                                            studentListViewModel.setSelectedDetailStackList(list)
                                         }
 
                                         SelectedTechStack.Project -> {

@@ -67,22 +67,69 @@ class StudentListViewModel @Inject constructor(
         MutableStateFlow<Event<ProfileImageModel>>(Event.Loading)
     val getStudentProfileImageResponse = _getStudentProfileImageResponse.asStateFlow()
 
+    //Filter - Selector
     var majorList = listOf<String>()
     val gradeList = listOf(FIRST_GRADE, SECOND_GRADE, THIRD_GRADE)
     val classList = listOf(FIRST, SECOND, THIRD, FOURTH)
     val departmentList = listOf(SW_DEVELOPMENT, SMART_IOT_DEVELOPMENT, AI_DEVELOPMENT)
     val typeOfEmploymentList = listOf(FULL_TIME, TEMPORARY, CONTRACT, INTERN)
+
+    var filterMajorList = mutableStateListOf<String>()
+        private set
+    var filterGradeList = mutableStateListOf<String>()
+        private set
+    var filterClassList = mutableStateListOf<String>()
+        private set
+    var filterDepartmentList = mutableStateListOf<String>()
+        private set
+    var filterTypeOfEmploymentList = mutableStateListOf<String>()
+        private set
+
     var selectedMajorList = mutableStateListOf<String>()
-    var selectedGradeList = mutableStateListOf<Int>()
-    var selectedClassList = mutableStateListOf<Int>()
+        private set
+    var selectedGradeList = mutableStateListOf<String>()
+        private set
+    var selectedClassList = mutableStateListOf<String>()
+        private set
     var selectedDepartmentList = mutableStateListOf<String>()
+        private set
     var selectedTypeOfEmploymentList = mutableStateListOf<String>()
-    var gsmScoreSliderValues = mutableStateOf(0f..990f)
-    var desiredAnnualSalarySliderValues = mutableStateOf(0f..9999f)
-    var isSchoolNumberAscendingOrder = mutableStateOf(true)
-    var isGsmScoreAscendingOrder = mutableStateOf(true)
-    var isDesiredAnnualSalaryAscendingOrder = mutableStateOf(true)
-    var detailStackList = mutableStateListOf<String>()
+        private set
+    //
+
+    //Filter - Slider
+    var filterGsmScoreSliderValues = mutableStateOf(0f..990f)
+        private set
+    var filterDesiredAnnualSalarySliderValues = mutableStateOf(0f..9999f)
+        private set
+
+    var selectedGsmScoreSliderValues = mutableStateOf(0f..990f)
+        private set
+    var selectedDesiredAnnualSalarySliderValues = mutableStateOf(0f..9999f)
+        private set
+    //
+
+    //Filter - SelectionControl
+    var filterSchoolNumberAscendingOrder = mutableStateOf(true)
+        private set
+    var filterGsmScoreAscendingOrder = mutableStateOf(true)
+        private set
+    var filterDesiredAnnualSalaryAscendingOrder = mutableStateOf(true)
+        private set
+
+    var selectedSchoolNumberAscendingOrder = mutableStateOf(true)
+        private set
+    var selectedGsmScoreAscendingOrder = mutableStateOf(true)
+        private set
+    var selectedDesiredAnnualSalaryAscendingOrder = mutableStateOf(true)
+        private set
+    //
+
+    //Filter - DetailStack
+    var filterDetailStackList = mutableStateListOf<String>()
+        private set
+    var selectedDetailStack = mutableStateListOf<String>()
+        private set
 
     fun getStudentListRequest(
         page: Int,
@@ -92,19 +139,23 @@ class StudentListViewModel @Inject constructor(
         getStudentListUseCase(
             page = page,
             size = size,
-            majors = selectedMajorList.ifEmpty { null },
-            techStacks = detailStackList.ifEmpty { null },
-            grade = selectedGradeList.ifEmpty { null },
-            classNum = selectedClassList.ifEmpty { null },
-            department = selectedDepartmentList.ifEmpty { null },
-            stuNumSort = if (isSchoolNumberAscendingOrder.value) "ASCENDING" else "DESCENDING",
-            formOfEmployment = selectedTypeOfEmploymentList.ifEmpty { null },
-            minGsmAuthenticationScore = gsmScoreSliderValues.value.start.toInt().takeIf { it != 0 },
-            maxGsmAuthenticationScore = gsmScoreSliderValues.value.endInclusive.toInt().takeIf { it != 990 },
-            minSalary = desiredAnnualSalarySliderValues.value.start.toInt().takeIf { it != 0 },
-            maxSalary = desiredAnnualSalarySliderValues.value.endInclusive.toInt().takeIf { it != 9999 },
-            gsmAuthenticationScoreSort = if (isGsmScoreAscendingOrder.value) "ASCENDING" else "DESCENDING",
-            salarySort = if (isDesiredAnnualSalaryAscendingOrder.value) "ASCENDING" else "DESCENDING"
+            majors = filterMajorList.ifEmpty { null },
+            techStacks = filterDetailStackList.ifEmpty { null },
+            grade = filterGradeList.map { it.replace("학년", "").toInt() }.ifEmpty { null },
+            classNum = filterClassList.map { it.replace("반", "").toInt() }.ifEmpty { null },
+            department = filterDepartmentList.ifEmpty { null },
+            stuNumSort = if (filterSchoolNumberAscendingOrder.value) "ASCENDING" else "DESCENDING",
+            formOfEmployment = this@StudentListViewModel.filterTypeOfEmploymentList.ifEmpty { null },
+            minGsmAuthenticationScore = filterGsmScoreSliderValues.value.start.toInt()
+                .takeIf { it != 0 },
+            maxGsmAuthenticationScore = filterGsmScoreSliderValues.value.endInclusive.toInt()
+                .takeIf { it != 990 },
+            minSalary = filterDesiredAnnualSalarySliderValues.value.start.toInt()
+                .takeIf { it != 0 },
+            maxSalary = filterDesiredAnnualSalarySliderValues.value.endInclusive.toInt()
+                .takeIf { it != 9999 },
+            gsmAuthenticationScoreSort = if (filterGsmScoreAscendingOrder.value) "ASCENDING" else "DESCENDING",
+            salarySort = if (filterDesiredAnnualSalaryAscendingOrder.value) "ASCENDING" else "DESCENDING"
         ).onSuccess {
             it.catch { remoteError ->
                 _getStudentListResponse.value = remoteError.errorHandling()
@@ -200,15 +251,164 @@ class StudentListViewModel @Inject constructor(
         }
     }
 
-    fun resetFilter() {
-        selectedMajorList.clear()
-        selectedGradeList.clear()
-        selectedClassList.clear()
-        selectedDepartmentList.clear()
-        selectedTypeOfEmploymentList.clear()
-        detailStackList.clear()
-        isSchoolNumberAscendingOrder.value = true
-        isGsmScoreAscendingOrder.value = true
-        isDesiredAnnualSalaryAscendingOrder.value = true
+    //Filter - Selector Setter (start)
+    fun setFilterGradeList(gradeList: List<String>) {
+        filterGradeList.removeAll(filterGradeList.filter {
+            !gradeList.contains(it)
+        })
+        filterGradeList.addAll(gradeList.filter {
+            !filterGradeList.contains(it)
+        })
     }
+
+    fun setFilterClassList(classList: List<String>) {
+        filterClassList.removeAll(filterClassList.filter {
+            !classList.contains(it)
+        })
+        filterClassList.addAll(classList.filter {
+            !filterClassList.contains(it)
+        })
+    }
+
+    fun setFilterDepartmentList(departmentList: List<String>) {
+        filterDepartmentList.removeAll(filterDepartmentList.filter {
+            !departmentList.contains(it)
+        })
+        filterDepartmentList.addAll(departmentList.filter {
+            !filterDepartmentList.contains(it)
+        })
+    }
+
+    fun setFilterMajorList(majorList: List<String>) {
+        filterMajorList.removeAll(filterMajorList.filter {
+            !majorList.contains(it)
+        })
+        filterMajorList.addAll(majorList.filter {
+            !filterMajorList.contains(it)
+        })
+    }
+
+    fun setFilterTypeOfEmploymentList(typeOfEmploymentList: List<String>) {
+        filterTypeOfEmploymentList.removeAll(filterTypeOfEmploymentList.filter {
+            !typeOfEmploymentList.contains(it)
+        })
+        filterTypeOfEmploymentList.addAll(typeOfEmploymentList.filter {
+            !filterTypeOfEmploymentList.contains(it)
+        })
+    }
+
+    fun setSelectedGradeList(gradeList: List<String>) {
+        selectedGradeList.removeAll(selectedGradeList.filter {
+            !gradeList.contains(it)
+        })
+        selectedGradeList.addAll(gradeList.filter {
+            !selectedGradeList.contains(it)
+        })
+    }
+
+    fun setSelectedClassList(classList: List<String>) {
+        selectedClassList.removeAll(selectedClassList.filter {
+            !classList.contains(it)
+        })
+        selectedClassList.addAll(classList.filter {
+            !selectedClassList.contains(it)
+        })
+    }
+
+    fun setSelectedDepartmentList(departmentList: List<String>) {
+        selectedDepartmentList.removeAll(selectedDepartmentList.filter {
+            !departmentList.contains(it)
+        })
+        selectedDepartmentList.addAll(departmentList.filter {
+            !selectedDepartmentList.contains(it)
+        })
+    }
+
+    fun setSelectedMajorList(majorList: List<String>) {
+        selectedMajorList.removeAll(selectedMajorList.filter {
+            !majorList.contains(it)
+        })
+        selectedMajorList.addAll(majorList.filter {
+            !selectedMajorList.contains(it)
+        })
+    }
+
+    fun setSelectedTypeOfEmploymentList(typeOfEmploymentList: List<String>) {
+        selectedTypeOfEmploymentList.removeAll(selectedTypeOfEmploymentList.filter {
+            !typeOfEmploymentList.contains(it)
+        })
+        selectedTypeOfEmploymentList.addAll(typeOfEmploymentList.filter {
+            !selectedTypeOfEmploymentList.contains(it)
+        })
+    }
+    //Filter - Selector Setter (end)
+
+    //Filter - Slider Setter (start)
+    fun setFilterGsmScoreSliderValues(gsmScoreSliderValue: ClosedFloatingPointRange<Float>) {
+        filterGsmScoreSliderValues.value = gsmScoreSliderValue
+    }
+
+    fun setFilterDesiredAnnualSalarySliderValues(desiredAnnualSalarySliderValues: ClosedFloatingPointRange<Float>) {
+        filterDesiredAnnualSalarySliderValues.value = desiredAnnualSalarySliderValues
+    }
+
+    fun setSelectedGsmScoreSliderValues(gsmScoreSliderValue: ClosedFloatingPointRange<Float>) {
+        selectedGsmScoreSliderValues.value = gsmScoreSliderValue
+    }
+
+    fun setSelectedDesiredAnnualSalarySliderValues(desiredAnnualSalarySliderValues: ClosedFloatingPointRange<Float>) {
+        selectedDesiredAnnualSalarySliderValues.value = desiredAnnualSalarySliderValues
+    }
+    //Filter - Slider Setter (end)
+
+    //Filter - SelectionControl Setter (start)
+    fun setFilterSchoolNumberAscendingValue(schoolNumberAscendingValue: Boolean) {
+        filterSchoolNumberAscendingOrder.value = schoolNumberAscendingValue
+    }
+
+    fun setFilterGsmScoreAscendingValue(gsmScoreAscendingValue: Boolean) {
+        filterGsmScoreAscendingOrder.value = gsmScoreAscendingValue
+    }
+
+    fun setFilterDesiredAnnualSalaryAscendingValue(desiredAnnualSalaryAscendingValue: Boolean) {
+        filterDesiredAnnualSalaryAscendingOrder.value = desiredAnnualSalaryAscendingValue
+    }
+
+    fun setSelectedSchoolNumberAscendingValue(schoolNumberAscendingValue: Boolean) {
+        selectedSchoolNumberAscendingOrder.value = schoolNumberAscendingValue
+    }
+
+    fun setSelectedGsmScoreAscendingValue(gsmScoreAscendingValue: Boolean) {
+        selectedGsmScoreAscendingOrder.value = gsmScoreAscendingValue
+    }
+
+    fun setSelectedDesiredAnnualSalaryAscendingValue(desiredAnnualSalaryAscendingValue: Boolean) {
+        selectedDesiredAnnualSalaryAscendingOrder.value = desiredAnnualSalaryAscendingValue
+    }
+    //Filter - SelectionControl Setter (end)
+
+    //Filter - DetailStack Setter (start)
+    fun setFilterDetailStackList(detailStacks: List<String>) {
+        filterDetailStackList.removeAll(filterDetailStackList.filter {
+            !detailStacks.contains(it)
+        })
+        filterDetailStackList.addAll(detailStacks.filter {
+            !filterDetailStackList.contains(it)
+        })
+    }
+
+    fun setSelectedDetailStackList(detailStacks: List<String>) {
+        selectedDetailStack.removeAll(selectedDetailStack.filter {
+            !detailStacks.contains(it)
+        })
+        selectedDetailStack.addAll(detailStacks.filter {
+            !selectedDetailStack.contains(it)
+        })
+    }
+    //Filter - DetailStack Setter (end)
+
+    fun resetFilterData() {
+
+    }
+
 }
