@@ -61,7 +61,7 @@ class MainActivity : BaseActivity() {
         lifecycleScope.launch {
             searchDetailStackViewModel.searchResultEvent.collect {
                 if (it is Event.Success) {
-                    searchDetailStack.value = it.data!!.techStack
+                    searchDetailStack.value = it.data!!.techStacks
                 }
             }
         }
