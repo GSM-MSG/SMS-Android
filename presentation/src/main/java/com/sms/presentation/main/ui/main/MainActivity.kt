@@ -163,7 +163,7 @@ class MainActivity : BaseActivity() {
                                         }
                                     },
                                     onLeftButtonClick = {
-                                        studentListViewModel.resetFilterData()
+                                        studentListViewModel.selectedDetailStack.clear()
                                     },
                                     //Selector
                                     gradeList = studentListViewModel.gradeList.map { it.value },

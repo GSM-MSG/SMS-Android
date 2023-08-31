@@ -112,6 +112,7 @@ fun FilterScreen(
                         selectorResetButtonClick.value = true
                         sliderResetButtonClick.value = true
                         selectionControlResetButtonClick.value = true
+                        onLeftButtonClick()
                     },
                     onClickRightButton = onRightButtonClick
                 )
