@@ -18,9 +18,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.domain.model.common.CertificateModel
+import com.sms.presentation.main.ui.detail.award.AwardComponent
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
+import com.sms.presentation.main.ui.detail.info.StudentInfoComponent
 import com.sms.presentation.main.ui.detail.profile.StudentProfileComponent
 import com.sms.presentation.main.ui.detail.project.ProjectListComponent
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData

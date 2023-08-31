@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.detail
+package com.sms.presentation.main.ui.detail.info
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text

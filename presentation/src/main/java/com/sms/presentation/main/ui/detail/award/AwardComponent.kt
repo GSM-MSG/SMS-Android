@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.detail
+package com.sms.presentation.main.ui.detail.award
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
