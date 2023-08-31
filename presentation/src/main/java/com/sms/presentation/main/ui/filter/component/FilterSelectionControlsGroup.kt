@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FilterSelectionControlsGroup(
     role: String,
+    resetButtonClick: Boolean,
+    onResetButtonClickValueChanged: (value: Boolean) -> Unit,
     selectedSchoolNumberAscendingValue: Boolean,
     selectedGsmScoreAscendingValue: Boolean,
     selectedDesiredAnnualSalaryAscendingValue: Boolean,
@@ -32,6 +34,12 @@ fun FilterSelectionControlsGroup(
     onGsmScoreAscendingValueChanged(gsmScoreAscending.value)
     onDesiredAnnualSalaryAscendingValueChanged(desiredAnnualSalaryAscending.value)
 
+    if (resetButtonClick) {
+        schoolNumberAscending.value = true
+        gsmScoreAscending.value = true
+        desiredAnnualSalaryAscending.value = true
+        onResetButtonClickValueChanged(false)
+    }
 
     if (role != "") {
         FilterSelectionControls(

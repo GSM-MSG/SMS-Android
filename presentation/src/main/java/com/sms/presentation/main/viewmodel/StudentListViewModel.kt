@@ -405,5 +405,10 @@ class StudentListViewModel @Inject constructor(
             !selectedDetailStack.contains(it)
         })
     }
+    //Filter - DetailStack Setter (end)
+
+    fun resetFilterData() {
+
+    }
 
 }

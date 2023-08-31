@@ -9,6 +9,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -63,6 +65,15 @@ fun FilterScreen(
     onDesiredAnnualSalaryAscendingValueChanged: (value: Boolean) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val selectorResetButtonClick = remember {
+        mutableStateOf(false)
+    }
+    val sliderResetButtonClick = remember {
+        mutableStateOf(false)
+    }
+    val selectionControlResetButtonClick = remember {
+        mutableStateOf(false)
+    }
 
     BackHandler {
         onBackPressed()
@@ -97,7 +108,11 @@ fun FilterScreen(
                         )
                     },
                     rightIcon = { DeleteButtonIcon() },
-                    onClickLeftButton = onLeftButtonClick,
+                    onClickLeftButton = {
+                        selectorResetButtonClick.value = true
+                        sliderResetButtonClick.value = true
+                        selectionControlResetButtonClick.value = true
+                    },
                     onClickRightButton = onRightButtonClick
                 )
                 Divider(thickness = 16.dp, color = colors.N10)
@@ -105,6 +120,10 @@ fun FilterScreen(
                 Column(modifier = Modifier.fillMaxSize()) {
                     FilterSelectorGroup(
                         role = role,
+                        resetButtonClick = selectorResetButtonClick.value,
+                        onResetButtonClickValueChanged = {
+                            selectorResetButtonClick.value = it
+                        },
                         gradeList = gradeList,
                         classList = classList,
                         departmentList = departmentList,
@@ -123,6 +142,10 @@ fun FilterScreen(
                     )
                     FilterSliderGroup(
                         role = role,
+                        resetButtonClick = sliderResetButtonClick.value,
+                        onResetButtonClickValueChanged = {
+                            sliderResetButtonClick.value = it
+                        },
                         selectedGsmScoreSliderValue = selectedGsmScoreSliderValue,
                         selectedDesiredAnnualSalarySliderValue = selectedDesiredAnnualSalarySliderValue,
                         onGsmScoreSliderValueChanged = onGsmScoreSliderValueChanged,
@@ -130,6 +153,10 @@ fun FilterScreen(
                     )
                     FilterSelectionControlsGroup(
                         role = role,
+                        resetButtonClick = selectionControlResetButtonClick.value,
+                        onResetButtonClickValueChanged = {
+                            selectionControlResetButtonClick.value = it
+                        },
                         selectedSchoolNumberAscendingValue = selectedSchoolNumberAscendingValue,
                         selectedGsmScoreAscendingValue = selectedGsmScoreAscendingValue,
                         selectedDesiredAnnualSalaryAscendingValue = selectedDesiredAnnualSalaryAscendingValue,

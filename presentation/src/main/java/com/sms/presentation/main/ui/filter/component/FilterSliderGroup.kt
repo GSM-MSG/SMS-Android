@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.filter.component
 
+import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -11,6 +12,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FilterSliderGroup(
     role: String,
+    resetButtonClick: Boolean,
+    onResetButtonClickValueChanged: (value: Boolean) -> Unit,
     selectedGsmScoreSliderValue: ClosedFloatingPointRange<Float>,
     selectedDesiredAnnualSalarySliderValue: ClosedFloatingPointRange<Float>,
     onGsmScoreSliderValueChanged: (value: ClosedFloatingPointRange<Float>) -> Unit,
@@ -25,6 +28,14 @@ fun FilterSliderGroup(
 
     onGsmScoreSliderValueChanged(gsmScoreSliderValue.value)
     onDesiredAnnualSalarySliderValueChanged(desiredAnnualSalarySliderValue.value)
+
+    if (resetButtonClick) {
+        gsmScoreSliderValue.value = 0f..990f
+        desiredAnnualSalarySliderValue.value = 0f..9999f
+        Log.d("dddd", gsmScoreSliderValue.value.toString())
+        Log.d("dddd", desiredAnnualSalarySliderValue.value.toString())
+        onResetButtonClickValueChanged(false)
+    }
 
     if (role == "ROLE_TEACHER") {
         FilterSliderComponent(

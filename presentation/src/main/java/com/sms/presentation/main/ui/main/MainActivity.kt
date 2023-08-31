@@ -86,9 +86,6 @@ class MainActivity : BaseActivity() {
                 if (response is Event.Success) {
                     setContent {
                         val navController = rememberNavController()
-                        val filterTechStack = remember {
-                            mutableStateListOf(*studentListViewModel.filterDetailStackList.toTypedArray())
-                        }
                         val selectedTechStack = remember {
                             mutableStateOf(SelectedTechStack.Filter)
                         }
@@ -166,7 +163,7 @@ class MainActivity : BaseActivity() {
                                         }
                                     },
                                     onLeftButtonClick = {
-                                        filterTechStack.clear()
+                                        studentListViewModel.resetFilterData()
                                     },
                                     //Selector
                                     gradeList = studentListViewModel.gradeList.map { it.value },

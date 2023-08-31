@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FilterSelectorGroup(
     role: String,
+    resetButtonClick: Boolean,
+    onResetButtonClickValueChanged: (value: Boolean) -> Unit,
     gradeList: List<String>,
     classList: List<String>,
     departmentList: List<String>,
@@ -41,6 +43,15 @@ fun FilterSelectorGroup(
     }
     val filterTypeOfEmploymentList = remember {
         mutableStateListOf(*selectedTypeOfEmploymentList.toTypedArray())
+    }
+
+    if (resetButtonClick) {
+        filterGradeList.clear()
+        filterClassList.clear()
+        filterDepartmentList.clear()
+        filterMajorList.clear()
+        filterTypeOfEmploymentList.clear()
+        onResetButtonClickValueChanged(false)
     }
 
     onGradeListValueChanged(filterGradeList)
