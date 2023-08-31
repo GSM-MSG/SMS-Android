@@ -72,17 +72,28 @@ class StudentListViewModel @Inject constructor(
     val classList = listOf(FIRST, SECOND, THIRD, FOURTH)
     val departmentList = listOf(SW_DEVELOPMENT, SMART_IOT_DEVELOPMENT, AI_DEVELOPMENT)
     val typeOfEmploymentList = listOf(FULL_TIME, TEMPORARY, CONTRACT, INTERN)
-    var selectedMajorList = mutableStateListOf<String>()
-    var selectedGradeList = mutableStateListOf<Int>()
-    var selectedClassList = mutableStateListOf<Int>()
-    var selectedDepartmentList = mutableStateListOf<String>()
-    var selectedTypeOfEmploymentList = mutableStateListOf<String>()
+    var filterMajorList = mutableStateListOf<String>()
+        private set
+    var filterGradeList = mutableStateListOf<String>()
+        private set
+    var filterClassList = mutableStateListOf<String>()
+        private set
+    var filterDepartmentList = mutableStateListOf<String>()
+        private set
+    var filterTypeOfEmploymentList = mutableStateListOf<String>()
+        private set
     var gsmScoreSliderValues = mutableStateOf(0f..990f)
     var desiredAnnualSalarySliderValues = mutableStateOf(0f..9999f)
     var isSchoolNumberAscendingOrder = mutableStateOf(true)
     var isGsmScoreAscendingOrder = mutableStateOf(true)
     var isDesiredAnnualSalaryAscendingOrder = mutableStateOf(true)
     var detailStackList = mutableStateListOf<String>()
+
+    var selectedMajorList = mutableStateListOf<String>()
+    var selectedGradeList = mutableStateListOf<String>()
+    var selectedClassList = mutableStateListOf<String>()
+    var selectedDepartmentList = mutableStateListOf<String>()
+    var selectedTypeOfEmploymentList = mutableStateListOf<String>()
 
     fun getStudentListRequest(
         page: Int,
@@ -92,17 +103,19 @@ class StudentListViewModel @Inject constructor(
         getStudentListUseCase(
             page = page,
             size = size,
-            majors = selectedMajorList.ifEmpty { null },
+            majors = filterMajorList.ifEmpty { null },
             techStacks = detailStackList.ifEmpty { null },
-            grade = selectedGradeList.ifEmpty { null },
-            classNum = selectedClassList.ifEmpty { null },
-            department = selectedDepartmentList.ifEmpty { null },
+            grade = filterGradeList.map { it.replace("학년","").toInt() }.ifEmpty { null },
+            classNum = filterClassList.map { it.replace("반","").toInt() }.ifEmpty { null },
+            department = filterDepartmentList.ifEmpty { null },
             stuNumSort = if (isSchoolNumberAscendingOrder.value) "ASCENDING" else "DESCENDING",
-            formOfEmployment = selectedTypeOfEmploymentList.ifEmpty { null },
+            formOfEmployment = this@StudentListViewModel.filterTypeOfEmploymentList.ifEmpty { null },
             minGsmAuthenticationScore = gsmScoreSliderValues.value.start.toInt().takeIf { it != 0 },
-            maxGsmAuthenticationScore = gsmScoreSliderValues.value.endInclusive.toInt().takeIf { it != 990 },
+            maxGsmAuthenticationScore = gsmScoreSliderValues.value.endInclusive.toInt()
+                .takeIf { it != 990 },
             minSalary = desiredAnnualSalarySliderValues.value.start.toInt().takeIf { it != 0 },
-            maxSalary = desiredAnnualSalarySliderValues.value.endInclusive.toInt().takeIf { it != 9999 },
+            maxSalary = desiredAnnualSalarySliderValues.value.endInclusive.toInt()
+                .takeIf { it != 9999 },
             gsmAuthenticationScoreSort = if (isGsmScoreAscendingOrder.value) "ASCENDING" else "DESCENDING",
             salarySort = if (isDesiredAnnualSalaryAscendingOrder.value) "ASCENDING" else "DESCENDING"
         ).onSuccess {
@@ -210,5 +223,41 @@ class StudentListViewModel @Inject constructor(
         isSchoolNumberAscendingOrder.value = true
         isGsmScoreAscendingOrder.value = true
         isDesiredAnnualSalaryAscendingOrder.value = true
+    }
+
+    fun setFilterGradeList(gradeList: List<String>) {
+        filterGradeList.clear()
+        filterGradeList.addAll(gradeList)
+    }
+
+    fun setFilterClassList(classList: List<String>) {
+        filterClassList.clear()
+        filterClassList.addAll(classList)
+    }
+
+    fun setFilterDepartmentList(departmentList: List<String>) {
+        filterDepartmentList.clear()
+        filterDepartmentList.addAll(departmentList)
+    }
+
+    fun setFilterMajorList(majorList: List<String>) {
+        filterMajorList.clear()
+        filterMajorList.addAll(majorList)
+    }
+
+    fun setFilterTypeOfEmploymentList(typeOfEmploymentList: List<String>) {
+        this.filterTypeOfEmploymentList.clear()
+        this.filterTypeOfEmploymentList.addAll(typeOfEmploymentList)
+    }
+
+
+    fun setFilterDetailStackList(detailStacks: List<String>) {
+        detailStackList.removeAll(
+            detailStackList.filter {
+                !detailStacks.contains(it)
+            })
+        detailStackList.addAll(detailStacks.filter {
+            !detailStackList.contains(it)
+        })
     }
 }

@@ -5,62 +5,65 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sms.presentation.main.viewmodel.StudentListViewModel
 
 @Composable
 fun FilterSelectorGroup(
     role: String,
-    viewModel: StudentListViewModel
+    gradeList: List<String>,
+    classList: List<String>,
+    departmentList: List<String>,
+    majorList: List<String>,
+    typeOfEmploymentList: List<String>,
+    selectedGradeList: List<String>,
+    selectedClassList: List<String>,
+    selectedDepartmentList: List<String>,
+    selectedMajorList: List<String>,
+    selectedTypeOfEmploymentList: List<String>,
+    onGradeListValueChanged: (checked: Boolean, grade: String) -> Unit,
+    onClassListValueChanged: (checked: Boolean, `class`: String) -> Unit,
+    onDepartmentListValueChanged: (checked: Boolean, department: String) -> Unit,
+    onMajorListValueChanged: (checked: Boolean, major: String) -> Unit,
+    onTypeOfEmploymentListValueChanged: (checked: Boolean, typeOfEmployment: String) -> Unit,
 ) {
     if (role != "") {
         FilterSelectorComponent(
             title = "학년",
-            itemList = viewModel.gradeList,
-            selectedList = viewModel.selectedGradeList.map { it.toString() }
-        ) { checked, text ->
-            if (!checked) viewModel.selectedGradeList.add(text.toInt())
-            else viewModel.selectedGradeList.remove(text.toInt())
-        }
+            itemList = gradeList,
+            selectedList = selectedGradeList,
+            onItemSelected = onGradeListValueChanged
+        )
         Spacer(modifier = Modifier.height(40.dp))
         FilterSelectorComponent(
             title = "반",
-            itemList = viewModel.classList,
-            selectedList = viewModel.selectedClassList.map { it.toString() }
-        ) { checked, text ->
-            if (!checked) viewModel.selectedClassList.add(text.toInt())
-            else viewModel.selectedClassList.remove(text.toInt())
-        }
+            itemList = classList,
+            selectedList = selectedClassList,
+            onItemSelected = onClassListValueChanged
+        )
         Spacer(modifier = Modifier.height(40.dp))
         FilterSelectorComponent(
             title = "학과",
-            itemList = viewModel.departmentList,
-            selectedList = viewModel.selectedDepartmentList
-        ) { checked, text ->
-            if (!checked) viewModel.selectedDepartmentList.add(text)
-            else viewModel.selectedDepartmentList.remove(text)
-        }
+            itemList = departmentList,
+            selectedList = selectedDepartmentList,
+            onItemSelected = onDepartmentListValueChanged
+        )
         Spacer(modifier = Modifier.height(40.dp))
     }
-    if (viewModel.majorList.isNotEmpty()) {
+    if (majorList.isNotEmpty()) {
         FilterSelectorComponent(
             title = "분야",
-            itemList = viewModel.majorList,
-            selectedList = viewModel.selectedMajorList
-        ) { checked, text ->
-            if (!checked) viewModel.selectedMajorList.add(text)
-            else viewModel.selectedMajorList.remove(text)
-        }
+            itemList = majorList,
+            selectedList = selectedMajorList,
+            onItemSelected = onMajorListValueChanged
+        )
         Spacer(modifier = Modifier.height(40.dp))
     }
     if (role == "ROLE_TEACHER") {
         FilterSelectorComponent(
             title = "희망 고용 형태",
-            itemList = viewModel.typeOfEmploymentList,
-            selectedList = viewModel.selectedTypeOfEmploymentList
-        ) { checked, text ->
-            if (!checked) viewModel.selectedTypeOfEmploymentList.add(text)
-            else viewModel.selectedTypeOfEmploymentList.remove(text)
-        }
+            itemList = typeOfEmploymentList,
+            selectedList = selectedTypeOfEmploymentList,
+            onItemSelected = onTypeOfEmploymentListValueChanged
+        )
         Spacer(modifier = Modifier.height(40.dp))
     }
 }

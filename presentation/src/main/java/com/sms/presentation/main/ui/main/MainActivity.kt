@@ -146,13 +146,12 @@ class MainActivity : BaseActivity() {
                                         }
                                     },
                                     onChangeToMainPage = {
-                                        studentListViewModel.detailStackList.removeAll(
-                                            studentListViewModel.detailStackList.filter {
-                                                !filterTechStack.contains(it)
-                                            })
-                                        studentListViewModel.detailStackList.addAll(filterTechStack.filter {
-                                            !studentListViewModel.detailStackList.contains(it)
-                                        })
+                                        studentListViewModel.setFilterGradeList(studentListViewModel.selectedGradeList)
+                                        studentListViewModel.setFilterClassList(studentListViewModel.selectedClassList)
+                                        studentListViewModel.setFilterDepartmentList(studentListViewModel.selectedDepartmentList)
+                                        studentListViewModel.setFilterMajorList(studentListViewModel.selectedMajorList)
+                                        studentListViewModel.setFilterTypeOfEmploymentList(studentListViewModel.selectedTypeOfEmploymentList)
+                                        studentListViewModel.setFilterDetailStackList(filterTechStack)
 
                                         navController.navigate(MainPage.Main.value)
                                     },
@@ -169,6 +168,36 @@ class MainActivity : BaseActivity() {
                                     onLeftButtonClick = {
                                         studentListViewModel.resetFilter()
                                         filterTechStack.clear()
+                                    },
+                                    gradeList = studentListViewModel.gradeList.map { it.value },
+                                    classList = studentListViewModel.classList.map { it.value },
+                                    departmentList = studentListViewModel.departmentList.map { it.value },
+                                    majorList = studentListViewModel.majorList,
+                                    typeOfEmploymentList = studentListViewModel.typeOfEmploymentList.map { it.value },
+                                    selectedGradeList = studentListViewModel.selectedGradeList,
+                                    selectedClassList = studentListViewModel.selectedClassList,
+                                    selectedDepartmentList = studentListViewModel.selectedDepartmentList,
+                                    selectedMajorList = studentListViewModel.selectedMajorList,
+                                    selectedTypeOfEmploymentList = studentListViewModel.selectedTypeOfEmploymentList,
+                                    onGradeListValueChanged = { checked, grade ->
+                                        if (!checked) studentListViewModel.selectedGradeList.add(grade)
+                                        else studentListViewModel.selectedGradeList.remove(grade)
+                                    },
+                                    onClassListValueChanged = { checked, `class` ->
+                                        if (!checked) studentListViewModel.selectedClassList.add(`class`)
+                                        else studentListViewModel.selectedClassList.remove(`class`)
+                                    },
+                                    onDepartmentListValueChanged = { checked, department ->
+                                        if (!checked) studentListViewModel.selectedDepartmentList.add(department)
+                                        else studentListViewModel.selectedDepartmentList.remove(department)
+                                    },
+                                    onMajorListValueChanged = { checked, major ->
+                                        if (!checked) studentListViewModel.selectedMajorList.add(major)
+                                        else studentListViewModel.selectedMajorList.remove(major)
+                                    },
+                                    onTypeOfEmploymentListValueChanged = { checked, typeOfEmployment ->
+                                        if (!checked) studentListViewModel.selectedTypeOfEmploymentList.add(typeOfEmployment)
+                                        else studentListViewModel.selectedTypeOfEmploymentList.remove(typeOfEmployment)
                                     }
                                 )
                             }

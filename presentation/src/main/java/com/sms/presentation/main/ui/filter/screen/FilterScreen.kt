@@ -2,11 +2,7 @@ package com.sms.presentation.main.ui.filter.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
@@ -20,7 +16,10 @@ import com.msg.sms.design.component.button.SmsBoxButton
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.filter.component.*
+import com.sms.presentation.main.ui.filter.component.FilterSearchTechStackComponent
+import com.sms.presentation.main.ui.filter.component.FilterSelectionControlsGroup
+import com.sms.presentation.main.ui.filter.component.FilterSelectorGroup
+import com.sms.presentation.main.ui.filter.component.FilterSliderGroup
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 
 @Composable
@@ -34,6 +33,22 @@ fun FilterScreen(
     onRightButtonClick: () -> Unit,
     onLeftButtonClick: () -> Unit,
     onFilteringTechStackValueChanged: (techStack: List<String>) -> Unit,
+    //Selector
+    gradeList: List<String>,
+    classList: List<String>,
+    departmentList: List<String>,
+    majorList: List<String>,
+    typeOfEmploymentList: List<String>,
+    selectedGradeList: List<String>,
+    selectedClassList: List<String>,
+    selectedDepartmentList: List<String>,
+    selectedMajorList: List<String>,
+    selectedTypeOfEmploymentList: List<String>,
+    onGradeListValueChanged: (checked: Boolean, grade: String) -> Unit,
+    onClassListValueChanged: (checked: Boolean, `class`: String) -> Unit,
+    onDepartmentListValueChanged: (checked: Boolean, department: String) -> Unit,
+    onMajorListValueChanged: (checked: Boolean, major: String) -> Unit,
+    onTypeOfEmploymentListValueChanged: (checked: Boolean, typeOfEmployment: String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -76,7 +91,24 @@ fun FilterScreen(
                 Divider(thickness = 16.dp, color = colors.N10)
                 Spacer(modifier = Modifier.height(20.dp))
                 Column(modifier = Modifier.fillMaxSize()) {
-                    FilterSelectorGroup(role = role, viewModel = viewModel)
+                    FilterSelectorGroup(
+                        role = role,
+                        gradeList = gradeList,
+                        classList = classList,
+                        departmentList = departmentList,
+                        majorList = majorList,
+                        typeOfEmploymentList = typeOfEmploymentList,
+                        selectedGradeList = selectedGradeList,
+                        selectedClassList = selectedClassList,
+                        selectedDepartmentList = selectedDepartmentList,
+                        selectedMajorList = selectedMajorList,
+                        selectedTypeOfEmploymentList = selectedTypeOfEmploymentList,
+                        onGradeListValueChanged = onGradeListValueChanged,
+                        onClassListValueChanged = onClassListValueChanged,
+                        onDepartmentListValueChanged = onDepartmentListValueChanged,
+                        onMajorListValueChanged = onMajorListValueChanged,
+                        onTypeOfEmploymentListValueChanged = onTypeOfEmploymentListValueChanged
+                    )
                     FilterSliderGroup(role = role, viewModel = viewModel)
                     FilterSelectionControlsGroup(role = role, viewModel = viewModel)
                     FilterSearchTechStackComponent(
