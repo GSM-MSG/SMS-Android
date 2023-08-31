@@ -82,7 +82,7 @@ class StudentListViewModel @Inject constructor(
     var isSchoolNumberAscendingOrder = mutableStateOf(true)
     var isGsmScoreAscendingOrder = mutableStateOf(true)
     var isDesiredAnnualSalaryAscendingOrder = mutableStateOf(true)
-    var detailStackList = mutableStateOf("")
+    var detailStackList = mutableStateListOf<String>()
 
     fun getStudentListRequest(
         page: Int,
@@ -93,7 +93,7 @@ class StudentListViewModel @Inject constructor(
             page = page,
             size = size,
             majors = selectedMajorList.ifEmpty { null },
-            techStacks = if (detailStackList.value.isNotBlank()) detailStackList.value.split(",") else null,
+            techStacks = detailStackList.ifEmpty { null },
             grade = selectedGradeList.ifEmpty { null },
             classNum = selectedClassList.ifEmpty { null },
             department = selectedDepartmentList.ifEmpty { null },
@@ -206,7 +206,7 @@ class StudentListViewModel @Inject constructor(
         selectedClassList.clear()
         selectedDepartmentList.clear()
         selectedTypeOfEmploymentList.clear()
-        detailStackList.value = ""
+        detailStackList.clear()
         isSchoolNumberAscendingOrder.value = true
         isGsmScoreAscendingOrder.value = true
         isDesiredAnnualSalaryAscendingOrder.value = true
