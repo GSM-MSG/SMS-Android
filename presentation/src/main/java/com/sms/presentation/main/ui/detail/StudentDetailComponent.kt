@@ -5,29 +5,23 @@ import android.net.Uri
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.SmsRoundedButton
-import com.msg.sms.design.component.item.TechStackItem
-import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.common.CertificateModel
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
+import com.sms.presentation.main.ui.detail.profile.StudentProfileComponent
 import com.sms.presentation.main.ui.detail.project.ProjectListComponent
 import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 import com.sms.presentation.main.ui.mypage.state.ActivityDuration
@@ -74,73 +68,26 @@ fun StudentDetailComponent(
         Box {
             Column(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .clip(RoundedCornerShape(topEnd = 24.dp, topStart = 24.dp))
                     .background(Color.White)
+                    .padding(horizontal = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(40.dp)
             ) {
-                val itemModifier = Modifier.padding(horizontal = 20.dp)
-
                 Spacer(modifier = Modifier.height(16.dp))
-
-                SMSTheme { colors, typography ->
-                    Text(
-                        text = major,
-                        style = typography.body1,
-                        color = colors.S2,
-                        fontWeight = FontWeight.Normal,
-                        modifier = itemModifier
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = name,
-                        style = typography.headline3,
-                        color = colors.BLACK,
-                        fontWeight = FontWeight.Bold,
-                        modifier = itemModifier
-                    )
-                    if (isNotGuest) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "${grade}학년 ${classNumber}반 ${schoolNumber}번 • $departments",
-                            style = typography.body2,
-                            color = colors.N40,
-                            modifier = itemModifier
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    LazyRow(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = itemModifier
-                    ) {
-                        items(techStack) {
-                            TechStackItem(techStack = it)
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Column(
-                        modifier = itemModifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(colors.N10)
-                    ) {
-                        Text(
-                            text = "자기소개",
-                            style = typography.caption2,
-                            color = colors.N40,
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = introduce,
-                            style = typography.body2,
-                            color = colors.BLACK,
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                        )
-                    }
-                }
+                StudentProfileComponent(
+                    major = major,
+                    name = name,
+                    isNotGuest = isNotGuest,
+                    techStack = techStack,
+                    grade = grade,
+                    classNumber = classNumber,
+                    schoolNumber = schoolNumber,
+                    departments = departments,
+                    introduce = introduce
+                )
                 if (isTeacher) {
                     StudentInfoComponent(
-                        modifier = itemModifier,
                         gsmAuthenticationScore = gsmAuthenticationScore,
                         email = email,
                         militaryService = militaryService,
@@ -156,7 +103,7 @@ fun StudentDetailComponent(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 40.dp)
+                        .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
                 ) {
                     if (awardData.isNotEmpty()) {
                         AwardComponent(awardList = awardData)
