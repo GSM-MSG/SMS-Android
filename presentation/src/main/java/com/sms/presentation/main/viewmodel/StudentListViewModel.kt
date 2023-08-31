@@ -67,11 +67,13 @@ class StudentListViewModel @Inject constructor(
         MutableStateFlow<Event<ProfileImageModel>>(Event.Loading)
     val getStudentProfileImageResponse = _getStudentProfileImageResponse.asStateFlow()
 
+    //FilterSelector Data
     var majorList = listOf<String>()
     val gradeList = listOf(FIRST_GRADE, SECOND_GRADE, THIRD_GRADE)
     val classList = listOf(FIRST, SECOND, THIRD, FOURTH)
     val departmentList = listOf(SW_DEVELOPMENT, SMART_IOT_DEVELOPMENT, AI_DEVELOPMENT)
     val typeOfEmploymentList = listOf(FULL_TIME, TEMPORARY, CONTRACT, INTERN)
+
     var filterMajorList = mutableStateListOf<String>()
         private set
     var filterGradeList = mutableStateListOf<String>()
@@ -105,8 +107,8 @@ class StudentListViewModel @Inject constructor(
             size = size,
             majors = filterMajorList.ifEmpty { null },
             techStacks = detailStackList.ifEmpty { null },
-            grade = filterGradeList.map { it.replace("학년","").toInt() }.ifEmpty { null },
-            classNum = filterClassList.map { it.replace("반","").toInt() }.ifEmpty { null },
+            grade = filterGradeList.map { it.replace("학년", "").toInt() }.ifEmpty { null },
+            classNum = filterClassList.map { it.replace("반", "").toInt() }.ifEmpty { null },
             department = filterDepartmentList.ifEmpty { null },
             stuNumSort = if (isSchoolNumberAscendingOrder.value) "ASCENDING" else "DESCENDING",
             formOfEmployment = this@StudentListViewModel.filterTypeOfEmploymentList.ifEmpty { null },
@@ -213,49 +215,56 @@ class StudentListViewModel @Inject constructor(
         }
     }
 
-    fun resetFilter() {
-        selectedMajorList.clear()
-        selectedGradeList.clear()
-        selectedClassList.clear()
-        selectedDepartmentList.clear()
-        selectedTypeOfEmploymentList.clear()
-        detailStackList.clear()
-        isSchoolNumberAscendingOrder.value = true
-        isGsmScoreAscendingOrder.value = true
-        isDesiredAnnualSalaryAscendingOrder.value = true
-    }
-
     fun setFilterGradeList(gradeList: List<String>) {
-        filterGradeList.clear()
-        filterGradeList.addAll(gradeList)
+        filterGradeList.removeAll(filterGradeList.filter {
+            !gradeList.contains(it)
+        })
+        filterGradeList.addAll(gradeList.filter {
+            !filterGradeList.contains(it)
+        })
     }
 
     fun setFilterClassList(classList: List<String>) {
-        filterClassList.clear()
-        filterClassList.addAll(classList)
+        filterClassList.removeAll(filterClassList.filter {
+            !classList.contains(it)
+        })
+        filterClassList.addAll(classList.filter {
+            !filterClassList.contains(it)
+        })
     }
 
     fun setFilterDepartmentList(departmentList: List<String>) {
-        filterDepartmentList.clear()
-        filterDepartmentList.addAll(departmentList)
+        filterDepartmentList.removeAll(filterDepartmentList.filter {
+            !departmentList.contains(it)
+        })
+        filterDepartmentList.addAll(departmentList.filter {
+            !filterDepartmentList.contains(it)
+        })
     }
 
     fun setFilterMajorList(majorList: List<String>) {
-        filterMajorList.clear()
-        filterMajorList.addAll(majorList)
+        filterMajorList.removeAll(filterMajorList.filter {
+            !majorList.contains(it)
+        })
+        filterMajorList.addAll(majorList.filter {
+            !filterMajorList.contains(it)
+        })
     }
 
     fun setFilterTypeOfEmploymentList(typeOfEmploymentList: List<String>) {
-        this.filterTypeOfEmploymentList.clear()
-        this.filterTypeOfEmploymentList.addAll(typeOfEmploymentList)
+        filterTypeOfEmploymentList.removeAll(filterTypeOfEmploymentList.filter {
+            !typeOfEmploymentList.contains(it)
+        })
+        filterTypeOfEmploymentList.addAll(typeOfEmploymentList.filter {
+            !filterTypeOfEmploymentList.contains(it)
+        })
     }
 
 
     fun setFilterDetailStackList(detailStacks: List<String>) {
-        detailStackList.removeAll(
-            detailStackList.filter {
-                !detailStacks.contains(it)
-            })
+        detailStackList.removeAll(detailStackList.filter {
+            !detailStacks.contains(it)
+        })
         detailStackList.addAll(detailStacks.filter {
             !detailStackList.contains(it)
         })
