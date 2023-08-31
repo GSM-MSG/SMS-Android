@@ -9,5 +9,5 @@ data class SearchingDetailStackResponse(
 )
 
 fun SearchingDetailStackResponse.toDetailStackListModel(): DetailStackListModel {
-    return DetailStackListModel(techStack = this.techStack)
+    return DetailStackListModel(techStacks = this.techStack)
 }

@@ -2,6 +2,7 @@ package com.sms.presentation.main.ui.fill_out_information
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -861,8 +862,8 @@ class FillOutInformationActivity : BaseActivity() {
     private suspend fun searchDetailStack() {
         searchDetailStackViewModel.searchResultEvent.collect {
             when (it) {
-                Event.Success<List<String>>() -> {
-                    searchDetailStack.value = it.data!!.techStack
+                is Event.Success -> {
+                    searchDetailStack.value = it.data!!.techStacks
                 }
 
                 else -> {}
