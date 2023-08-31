@@ -129,8 +129,14 @@ class MainActivity : BaseActivity() {
                                 FilterScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     role = response.data!!,
-                                    onRemoveFilterDetailStack = {
-
+                                    detailStacks = filterTechStack,
+                                    onFilteringTechStackValueChanged = { list ->
+                                        filterTechStack.removeAll(filterTechStack.filter {
+                                            !list.contains(it)
+                                        })
+                                        filterTechStack.addAll(list.filter {
+                                            !filterTechStack.contains(it)
+                                        })
                                     },
                                     onBackPressed = {
                                         navController.navigate(MainPage.Main.value) {

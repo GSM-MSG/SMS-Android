@@ -20,21 +20,19 @@ import com.msg.sms.design.component.button.SmsBoxButton
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.filter.component.FilterDetailStackSearchComponent
-import com.sms.presentation.main.ui.filter.component.FilterSelectionControlsGroup
-import com.sms.presentation.main.ui.filter.component.FilterSelectorGroup
-import com.sms.presentation.main.ui.filter.component.FilterSliderGroup
+import com.sms.presentation.main.ui.filter.component.*
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 
 @Composable
 fun FilterScreen(
     viewModel: StudentListViewModel,
     role: String,
+    detailStacks: List<String>,
     onBackPressed: () -> Unit,
     onChangeToMainPage: () -> Unit,
     onChangeToSearchPage: () -> Unit,
     onRightButtonClick: () -> Unit,
-    onRemoveFilterDetailStack: (value: String) -> Unit,
+    onFilteringTechStackValueChanged: (techStack: List<String>) -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
@@ -82,9 +80,10 @@ fun FilterScreen(
                     FilterSelectorGroup(role = role, viewModel = viewModel)
                     FilterSliderGroup(role = role, viewModel = viewModel)
                     FilterSelectionControlsGroup(role = role, viewModel = viewModel)
-                    FilterDetailStackSearchComponent(
-                        detailStack = viewModel.detailStackList.value,
-                        onClick = onChangeToSearchPage
+                    FilterSearchTechStackComponent(
+                        techStack = detailStacks,
+                        onClick = onChangeToSearchPage,
+                        onFilteringTechStackValueChanged = onFilteringTechStackValueChanged
                     )
                     Spacer(modifier = Modifier.height(it.calculateBottomPadding() + 64.dp))
                 }
