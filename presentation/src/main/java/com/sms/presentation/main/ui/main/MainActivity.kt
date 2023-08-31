@@ -87,7 +87,7 @@ class MainActivity : BaseActivity() {
                     setContent {
                         val navController = rememberNavController()
                         val filterTechStack = remember {
-                            mutableStateListOf("Android Studio", "Kotlin")
+                            mutableStateListOf(*studentListViewModel.detailStackList.toTypedArray())
                         }
                         val selectedTechStack = remember {
                             mutableStateOf(SelectedTechStack.Filter)
@@ -146,6 +146,14 @@ class MainActivity : BaseActivity() {
                                         }
                                     },
                                     onChangeToMainPage = {
+                                        studentListViewModel.detailStackList.removeAll(
+                                            studentListViewModel.detailStackList.filter {
+                                                !filterTechStack.contains(it)
+                                            })
+                                        studentListViewModel.detailStackList.addAll(filterTechStack.filter {
+                                            !studentListViewModel.detailStackList.contains(it)
+                                        })
+
                                         navController.navigate(MainPage.Main.value)
                                     },
                                     onChangeToSearchPage = {
@@ -157,6 +165,10 @@ class MainActivity : BaseActivity() {
                                                 inclusive = false
                                             }
                                         }
+                                    },
+                                    onLeftButtonClick = {
+                                        studentListViewModel.resetFilter()
+                                        filterTechStack.clear()
                                     }
                                 )
                             }

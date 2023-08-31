@@ -32,6 +32,7 @@ fun FilterScreen(
     onChangeToMainPage: () -> Unit,
     onChangeToSearchPage: () -> Unit,
     onRightButtonClick: () -> Unit,
+    onLeftButtonClick: () -> Unit,
     onFilteringTechStackValueChanged: (techStack: List<String>) -> Unit,
 ) {
     val scrollState = rememberScrollState()
@@ -69,9 +70,7 @@ fun FilterScreen(
                         )
                     },
                     rightIcon = { DeleteButtonIcon() },
-                    onClickLeftButton = {
-                        viewModel.resetFilter()
-                    },
+                    onClickLeftButton = onLeftButtonClick,
                     onClickRightButton = onRightButtonClick
                 )
                 Divider(thickness = 16.dp, color = colors.N10)
