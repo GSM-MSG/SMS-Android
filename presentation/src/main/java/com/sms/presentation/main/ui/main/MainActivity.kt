@@ -152,6 +152,8 @@ class MainActivity : BaseActivity() {
                                         studentListViewModel.setFilterMajorList(studentListViewModel.selectedMajorList)
                                         studentListViewModel.setFilterTypeOfEmploymentList(studentListViewModel.selectedTypeOfEmploymentList)
                                         studentListViewModel.setFilterDetailStackList(filterTechStack)
+                                        studentListViewModel.setFilterGsmScoreSliderValues(studentListViewModel.selectedGsmScoreSliderValues.value)
+                                        studentListViewModel.setFilterDesiredAnnualSalarySliderValues(studentListViewModel.selectedDesiredAnnualSalarySliderValues.value)
 
                                         navController.navigate(MainPage.Main.value)
                                     },
@@ -192,6 +194,14 @@ class MainActivity : BaseActivity() {
                                     },
                                     onTypeOfEmploymentListValueChanged = { typeOfEmploymentList ->
                                         studentListViewModel.setSelectedTypeOfEmploymentList(typeOfEmploymentList)
+                                    },
+                                    selectedGsmScoreSliderValue = studentListViewModel.filterGsmScoreSliderValues.value,
+                                    selectedDesiredAnnualSalarySliderValue = studentListViewModel.filterDesiredAnnualSalarySliderValues.value,
+                                    onGsmScoreSliderValueChanged = { gsmScoreSliderValue ->
+                                        studentListViewModel.setSelectedGsmScoreSliderValues(gsmScoreSliderValue)
+                                    },
+                                    onDesiredAnnualSalarySliderValueChanged = { desiredAnnualSalarySliderValue ->
+                                        studentListViewModel.setSelectedDesiredAnnualSalarySliderValues(desiredAnnualSalarySliderValue)
                                     }
                                 )
                             }

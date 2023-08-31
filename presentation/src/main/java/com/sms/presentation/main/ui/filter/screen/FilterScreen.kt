@@ -49,6 +49,11 @@ fun FilterScreen(
     onDepartmentListValueChanged: (departmentList: List<String>) -> Unit,
     onMajorListValueChanged: (mojorList: List<String>) -> Unit,
     onTypeOfEmploymentListValueChanged: (typeOfEmploymentList: List<String>) -> Unit,
+    //Slider
+    selectedGsmScoreSliderValue: ClosedFloatingPointRange<Float>,
+    selectedDesiredAnnualSalarySliderValue: ClosedFloatingPointRange<Float>,
+    onGsmScoreSliderValueChanged: (value: ClosedFloatingPointRange<Float>) -> Unit,
+    onDesiredAnnualSalarySliderValueChanged: (value: ClosedFloatingPointRange<Float>) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -109,7 +114,13 @@ fun FilterScreen(
                         onMajorListValueChanged = onMajorListValueChanged,
                         onTypeOfEmploymentListValueChanged = onTypeOfEmploymentListValueChanged
                     )
-                    FilterSliderGroup(role = role, viewModel = viewModel)
+                    FilterSliderGroup(
+                        role = role,
+                        selectedGsmScoreSliderValue = selectedGsmScoreSliderValue,
+                        selectedDesiredAnnualSalarySliderValue = selectedDesiredAnnualSalarySliderValue,
+                        onGsmScoreSliderValueChanged = onGsmScoreSliderValueChanged,
+                        onDesiredAnnualSalarySliderValueChanged = onDesiredAnnualSalarySliderValueChanged
+                    )
                     FilterSelectionControlsGroup(role = role, viewModel = viewModel)
                     FilterSearchTechStackComponent(
                         techStack = detailStacks,

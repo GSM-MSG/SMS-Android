@@ -3,26 +3,43 @@ package com.sms.presentation.main.ui.filter.component
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sms.presentation.main.viewmodel.StudentListViewModel
 
 @Composable
-fun FilterSliderGroup(role: String, viewModel: StudentListViewModel) {
+fun FilterSliderGroup(
+    role: String,
+    selectedGsmScoreSliderValue: ClosedFloatingPointRange<Float>,
+    selectedDesiredAnnualSalarySliderValue: ClosedFloatingPointRange<Float>,
+    onGsmScoreSliderValueChanged: (value: ClosedFloatingPointRange<Float>) -> Unit,
+    onDesiredAnnualSalarySliderValueChanged: (value: ClosedFloatingPointRange<Float>) -> Unit
+) {
+    val gsmScoreSliderValue = remember {
+        mutableStateOf(selectedGsmScoreSliderValue)
+    }
+    val desiredAnnualSalarySliderValue = remember {
+        mutableStateOf(selectedDesiredAnnualSalarySliderValue)
+    }
+
+    onGsmScoreSliderValueChanged(gsmScoreSliderValue.value)
+    onDesiredAnnualSalarySliderValueChanged(desiredAnnualSalarySliderValue.value)
+
     if (role == "ROLE_TEACHER") {
         FilterSliderComponent(
             title = "인증제 점수",
-            sliderValue = viewModel.gsmScoreSliderValues.value,
+            sliderValue = gsmScoreSliderValue.value,
             valueRange = 0f..990f,
-            onSliderValueChange = { viewModel.gsmScoreSliderValues.value = it },
-            startValue = viewModel.gsmScoreSliderValues.value.start.toInt().toString(),
-            endValue = viewModel.gsmScoreSliderValues.value.endInclusive.toInt().toString(),
+            onSliderValueChange = { gsmScoreSliderValue.value = it },
+            startValue = gsmScoreSliderValue.value.start.toInt().toString(),
+            endValue = gsmScoreSliderValue.value.endInclusive.toInt().toString(),
             onStartValueChange = {
                 val inputValue = if (it.isNotBlank()) it.toFloat() else 0f
-                val startValue = viewModel.gsmScoreSliderValues.value.start
-                val endValue = viewModel.gsmScoreSliderValues.value.endInclusive
+                val startValue = gsmScoreSliderValue.value.start
+                val endValue = gsmScoreSliderValue.value.endInclusive
 
-                viewModel.gsmScoreSliderValues.value = when (inputValue) {
+                gsmScoreSliderValue.value = when (inputValue) {
                     0f -> if (startValue.toInt() == 0) 0f else inputValue
                     in 0f..endValue -> if (startValue.toInt() == 0) it.replace(
                         "0",
@@ -34,10 +51,10 @@ fun FilterSliderGroup(role: String, viewModel: StudentListViewModel) {
             },
             onEndValueChange = {
                 val inputValue = it.toFloatOrNull() ?: 0f
-                val startValue = viewModel.gsmScoreSliderValues.value.start
-                val endValue = viewModel.gsmScoreSliderValues.value.endInclusive
+                val startValue = gsmScoreSliderValue.value.start
+                val endValue = gsmScoreSliderValue.value.endInclusive
 
-                viewModel.gsmScoreSliderValues.value = when {
+                gsmScoreSliderValue.value = when {
                     inputValue in startValue..990f -> {
                         val updatedStartValue = when {
                             inputValue == 0f && endValue.toInt() == 0 -> 0f
@@ -56,19 +73,17 @@ fun FilterSliderGroup(role: String, viewModel: StudentListViewModel) {
         FilterSliderComponent(
             title = "희망연봉",
             isHopeSalary = true,
-            sliderValue = viewModel.desiredAnnualSalarySliderValues.value,
+            sliderValue = desiredAnnualSalarySliderValue.value,
             valueRange = 0f..9999f,
-            onSliderValueChange = { viewModel.desiredAnnualSalarySliderValues.value = it },
-            startValue = viewModel.desiredAnnualSalarySliderValues.value.start.toInt()
-                .toString(),
-            endValue = viewModel.desiredAnnualSalarySliderValues.value.endInclusive.toInt()
-                .toString(),
+            onSliderValueChange = { desiredAnnualSalarySliderValue.value = it },
+            startValue = desiredAnnualSalarySliderValue.value.start.toInt().toString(),
+            endValue = desiredAnnualSalarySliderValue.value.endInclusive.toInt().toString(),
             onStartValueChange = {
                 val inputValue = if (it.isNotBlank()) it.toFloat() else 0f
-                val startValue = viewModel.desiredAnnualSalarySliderValues.value.start
-                val endValue = viewModel.desiredAnnualSalarySliderValues.value.endInclusive
+                val startValue = desiredAnnualSalarySliderValue.value.start
+                val endValue = desiredAnnualSalarySliderValue.value.endInclusive
 
-                viewModel.desiredAnnualSalarySliderValues.value = when (inputValue) {
+                desiredAnnualSalarySliderValue.value = when (inputValue) {
                     0f -> if (startValue.toInt() == 0) 0f else inputValue
                     in 0f..endValue -> if (startValue.toInt() == 0) it.replace(
                         "0",
@@ -80,10 +95,10 @@ fun FilterSliderGroup(role: String, viewModel: StudentListViewModel) {
             },
             onEndValueChange = {
                 val inputValue = it.toFloatOrNull() ?: 0f
-                val startValue = viewModel.desiredAnnualSalarySliderValues.value.start
-                val endValue = viewModel.desiredAnnualSalarySliderValues.value.endInclusive
+                val startValue = desiredAnnualSalarySliderValue.value.start
+                val endValue = desiredAnnualSalarySliderValue.value.endInclusive
 
-                viewModel.desiredAnnualSalarySliderValues.value = when {
+                desiredAnnualSalarySliderValue.value = when {
                     inputValue in startValue..9999f -> {
                         val updatedStartValue = when {
                             inputValue == 0f && endValue.toInt() == 0 -> 0f

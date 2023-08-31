@@ -85,8 +85,11 @@ class StudentListViewModel @Inject constructor(
     var filterTypeOfEmploymentList = mutableStateListOf<String>()
         private set
 
-    var gsmScoreSliderValues = mutableStateOf(0f..990f)
-    var desiredAnnualSalarySliderValues = mutableStateOf(0f..9999f)
+    var filterGsmScoreSliderValues = mutableStateOf(0f..990f)
+        private set
+    var filterDesiredAnnualSalarySliderValues = mutableStateOf(0f..9999f)
+        private set
+
     var isSchoolNumberAscendingOrder = mutableStateOf(true)
     var isGsmScoreAscendingOrder = mutableStateOf(true)
     var isDesiredAnnualSalaryAscendingOrder = mutableStateOf(true)
@@ -101,6 +104,11 @@ class StudentListViewModel @Inject constructor(
     var selectedDepartmentList = mutableStateListOf<String>()
         private set
     var selectedTypeOfEmploymentList = mutableStateListOf<String>()
+        private set
+
+    var selectedGsmScoreSliderValues = mutableStateOf(0f..990f)
+        private set
+    var selectedDesiredAnnualSalarySliderValues = mutableStateOf(0f..9999f)
         private set
 
     fun getStudentListRequest(
@@ -118,11 +126,13 @@ class StudentListViewModel @Inject constructor(
             department = filterDepartmentList.ifEmpty { null },
             stuNumSort = if (isSchoolNumberAscendingOrder.value) "ASCENDING" else "DESCENDING",
             formOfEmployment = this@StudentListViewModel.filterTypeOfEmploymentList.ifEmpty { null },
-            minGsmAuthenticationScore = gsmScoreSliderValues.value.start.toInt().takeIf { it != 0 },
-            maxGsmAuthenticationScore = gsmScoreSliderValues.value.endInclusive.toInt()
+            minGsmAuthenticationScore = filterGsmScoreSliderValues.value.start.toInt()
+                .takeIf { it != 0 },
+            maxGsmAuthenticationScore = filterGsmScoreSliderValues.value.endInclusive.toInt()
                 .takeIf { it != 990 },
-            minSalary = desiredAnnualSalarySliderValues.value.start.toInt().takeIf { it != 0 },
-            maxSalary = desiredAnnualSalarySliderValues.value.endInclusive.toInt()
+            minSalary = filterDesiredAnnualSalarySliderValues.value.start.toInt()
+                .takeIf { it != 0 },
+            maxSalary = filterDesiredAnnualSalarySliderValues.value.endInclusive.toInt()
                 .takeIf { it != 9999 },
             gsmAuthenticationScoreSort = if (isGsmScoreAscendingOrder.value) "ASCENDING" else "DESCENDING",
             salarySort = if (isDesiredAnnualSalaryAscendingOrder.value) "ASCENDING" else "DESCENDING"
@@ -319,5 +329,21 @@ class StudentListViewModel @Inject constructor(
         selectedTypeOfEmploymentList.addAll(typeOfEmploymentList.filter {
             !selectedTypeOfEmploymentList.contains(it)
         })
+    }
+
+    fun setFilterGsmScoreSliderValues(gsmScoreSliderValue: ClosedFloatingPointRange<Float>) {
+        filterGsmScoreSliderValues.value = gsmScoreSliderValue
+    }
+
+    fun setFilterDesiredAnnualSalarySliderValues(desiredAnnualSalarySliderValues: ClosedFloatingPointRange<Float>) {
+        filterDesiredAnnualSalarySliderValues.value = desiredAnnualSalarySliderValues
+    }
+
+    fun setSelectedGsmScoreSliderValues(gsmScoreSliderValue: ClosedFloatingPointRange<Float>) {
+        selectedGsmScoreSliderValues.value = gsmScoreSliderValue
+    }
+
+    fun setSelectedDesiredAnnualSalarySliderValues(desiredAnnualSalarySliderValues: ClosedFloatingPointRange<Float>) {
+        selectedDesiredAnnualSalarySliderValues.value = desiredAnnualSalarySliderValues
     }
 }
