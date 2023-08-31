@@ -6,7 +6,6 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -167,7 +166,6 @@ class MainActivity : BaseActivity() {
                                         }
                                     },
                                     onLeftButtonClick = {
-                                        studentListViewModel.resetFilter()
                                         filterTechStack.clear()
                                     },
                                     gradeList = studentListViewModel.gradeList.map { it.value },
@@ -181,19 +179,19 @@ class MainActivity : BaseActivity() {
                                     selectedMajorList = studentListViewModel.filterMajorList,
                                     selectedTypeOfEmploymentList = studentListViewModel.filterTypeOfEmploymentList,
                                     onGradeListValueChanged = { gradeList ->
-                                        studentListViewModel.selectedGradeList = gradeList.toMutableStateList()
+                                        studentListViewModel.setSelectedGradeList(gradeList)
                                     },
                                     onClassListValueChanged = { classList ->
-                                        studentListViewModel.selectedClassList = classList.toMutableStateList()
+                                        studentListViewModel.setSelectedClassList(classList)
                                     },
                                     onDepartmentListValueChanged = { departmentList ->
-                                        studentListViewModel.selectedDepartmentList = departmentList.toMutableStateList()
+                                        studentListViewModel.setSelectedDepartmentList(departmentList)
                                     },
                                     onMajorListValueChanged = { majorList ->
-                                        studentListViewModel.selectedMajorList = majorList.toMutableStateList()
+                                        studentListViewModel.setSelectedMajorList(majorList)
                                     },
                                     onTypeOfEmploymentListValueChanged = { typeOfEmploymentList ->
-                                        studentListViewModel.selectedTypeOfEmploymentList = typeOfEmploymentList.toMutableStateList()
+                                        studentListViewModel.setSelectedTypeOfEmploymentList(typeOfEmploymentList)
                                     }
                                 )
                             }

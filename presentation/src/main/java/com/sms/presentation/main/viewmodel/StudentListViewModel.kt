@@ -84,6 +84,7 @@ class StudentListViewModel @Inject constructor(
         private set
     var filterTypeOfEmploymentList = mutableStateListOf<String>()
         private set
+
     var gsmScoreSliderValues = mutableStateOf(0f..990f)
     var desiredAnnualSalarySliderValues = mutableStateOf(0f..9999f)
     var isSchoolNumberAscendingOrder = mutableStateOf(true)
@@ -92,10 +93,15 @@ class StudentListViewModel @Inject constructor(
     var detailStackList = mutableStateListOf<String>()
 
     var selectedMajorList = mutableStateListOf<String>()
+        private set
     var selectedGradeList = mutableStateListOf<String>()
+        private set
     var selectedClassList = mutableStateListOf<String>()
+        private set
     var selectedDepartmentList = mutableStateListOf<String>()
+        private set
     var selectedTypeOfEmploymentList = mutableStateListOf<String>()
+        private set
 
     fun getStudentListRequest(
         page: Int,
@@ -267,6 +273,51 @@ class StudentListViewModel @Inject constructor(
         })
         detailStackList.addAll(detailStacks.filter {
             !detailStackList.contains(it)
+        })
+    }
+
+    fun setSelectedGradeList(gradeList: List<String>) {
+        selectedGradeList.removeAll(selectedGradeList.filter {
+            !gradeList.contains(it)
+        })
+        selectedGradeList.addAll(gradeList.filter {
+            !selectedGradeList.contains(it)
+        })
+    }
+
+    fun setSelectedClassList(classList: List<String>) {
+        selectedClassList.removeAll(selectedClassList.filter {
+            !classList.contains(it)
+        })
+        selectedClassList.addAll(classList.filter {
+            !selectedClassList.contains(it)
+        })
+    }
+
+    fun setSelectedDepartmentList(departmentList: List<String>) {
+        selectedDepartmentList.removeAll(selectedDepartmentList.filter {
+            !departmentList.contains(it)
+        })
+        selectedDepartmentList.addAll(departmentList.filter {
+            !selectedDepartmentList.contains(it)
+        })
+    }
+
+    fun setSelectedMajorList(majorList: List<String>) {
+        selectedMajorList.removeAll(selectedMajorList.filter {
+            !majorList.contains(it)
+        })
+        selectedMajorList.addAll(majorList.filter {
+            !selectedMajorList.contains(it)
+        })
+    }
+
+    fun setSelectedTypeOfEmploymentList(typeOfEmploymentList: List<String>) {
+        selectedTypeOfEmploymentList.removeAll(selectedTypeOfEmploymentList.filter {
+            !typeOfEmploymentList.contains(it)
+        })
+        selectedTypeOfEmploymentList.addAll(typeOfEmploymentList.filter {
+            !selectedTypeOfEmploymentList.contains(it)
         })
     }
 }
