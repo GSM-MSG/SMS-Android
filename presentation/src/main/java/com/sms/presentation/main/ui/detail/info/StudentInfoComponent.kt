@@ -1,12 +1,10 @@
-package com.sms.presentation.main.ui.detail
+package com.sms.presentation.main.ui.detail.info
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.divider.SmsDivider
 import com.msg.sms.design.theme.SMSTheme
@@ -15,7 +13,7 @@ import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
 
 @Composable
 fun StudentInfoComponent(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     gsmAuthenticationScore: String,
     email: String,
     militaryService: String,
@@ -30,9 +28,7 @@ fun StudentInfoComponent(
         .fillMaxWidth(0.6f)
         .padding(8.dp)
 
-    Column(
-        modifier = modifier.fillMaxWidth()
-    ) {
+    Column(modifier = modifier.fillMaxWidth()) {
         SMSTheme { colors, typography ->
             val titleColor = colors.BLACK
             val contentColor = colors.N40
@@ -40,6 +36,13 @@ fun StudentInfoComponent(
             val titleTypography = typography.body1
             val contentTypography = typography.body2
 
+            Text(
+                text = "세부정보",
+                style = typography.title2,
+                color = colors.BLACK,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(16.dp))
             Row(Modifier.fillMaxWidth()) {
                 Text(
                     text = "이메일",
