@@ -154,6 +154,9 @@ class MainActivity : BaseActivity() {
                                         studentListViewModel.setFilterDetailStackList(filterTechStack)
                                         studentListViewModel.setFilterGsmScoreSliderValues(studentListViewModel.selectedGsmScoreSliderValues.value)
                                         studentListViewModel.setFilterDesiredAnnualSalarySliderValues(studentListViewModel.selectedDesiredAnnualSalarySliderValues.value)
+                                        studentListViewModel.setFilterSchoolNumberAscendingValue(studentListViewModel.selectedSchoolNumberAscendingOrder.value)
+                                        studentListViewModel.setFilterGsmScoreAscendingValue(studentListViewModel.selectedGsmScoreAscendingOrder.value)
+                                        studentListViewModel.setFilterDesiredAnnualSalaryAscendingValue(studentListViewModel.selectedDesiredAnnualSalaryAscendingOrder.value)
 
                                         navController.navigate(MainPage.Main.value)
                                     },
@@ -170,6 +173,7 @@ class MainActivity : BaseActivity() {
                                     onLeftButtonClick = {
                                         filterTechStack.clear()
                                     },
+                                    //Selector
                                     gradeList = studentListViewModel.gradeList.map { it.value },
                                     classList = studentListViewModel.classList.map { it.value },
                                     departmentList = studentListViewModel.departmentList.map { it.value },
@@ -195,6 +199,7 @@ class MainActivity : BaseActivity() {
                                     onTypeOfEmploymentListValueChanged = { typeOfEmploymentList ->
                                         studentListViewModel.setSelectedTypeOfEmploymentList(typeOfEmploymentList)
                                     },
+                                    //Slider
                                     selectedGsmScoreSliderValue = studentListViewModel.filterGsmScoreSliderValues.value,
                                     selectedDesiredAnnualSalarySliderValue = studentListViewModel.filterDesiredAnnualSalarySliderValues.value,
                                     onGsmScoreSliderValueChanged = { gsmScoreSliderValue ->
@@ -202,7 +207,20 @@ class MainActivity : BaseActivity() {
                                     },
                                     onDesiredAnnualSalarySliderValueChanged = { desiredAnnualSalarySliderValue ->
                                         studentListViewModel.setSelectedDesiredAnnualSalarySliderValues(desiredAnnualSalarySliderValue)
-                                    }
+                                    },
+                                    //SelectionControl
+                                    selectedSchoolNumberAscendingValue = studentListViewModel.filterSchoolNumberAscendingOrder.value,
+                                    selectedGsmScoreAscendingValue = studentListViewModel.filterGsmScoreAscendingOrder.value,
+                                    selectedDesiredAnnualSalaryAscendingValue = studentListViewModel.filterDesiredAnnualSalaryAscendingOrder.value,
+                                    onSchoolNumberAscendingValueChanged = { schoolNumberAscendingValue ->
+                                        studentListViewModel.setSelectedSchoolNumberAscendingValue(schoolNumberAscendingValue)
+                                    },
+                                    onGsmScoreAscendingValueChanged = { gsmScoreAscendingValue ->
+                                        studentListViewModel.setSelectedGsmScoreAscendingValue(gsmScoreAscendingValue)
+                                    },
+                                    onDesiredAnnualSalaryAscendingValueChanged = { desiredAnnualSalaryAscendingValue ->
+                                        studentListViewModel.setSelectedDesiredAnnualSalaryAscendingValue(desiredAnnualSalaryAscendingValue)
+                                    },
                                 )
                             }
                             composable(MainPage.Search.name) {

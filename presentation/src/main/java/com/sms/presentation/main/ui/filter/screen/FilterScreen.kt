@@ -53,7 +53,14 @@ fun FilterScreen(
     selectedGsmScoreSliderValue: ClosedFloatingPointRange<Float>,
     selectedDesiredAnnualSalarySliderValue: ClosedFloatingPointRange<Float>,
     onGsmScoreSliderValueChanged: (value: ClosedFloatingPointRange<Float>) -> Unit,
-    onDesiredAnnualSalarySliderValueChanged: (value: ClosedFloatingPointRange<Float>) -> Unit
+    onDesiredAnnualSalarySliderValueChanged: (value: ClosedFloatingPointRange<Float>) -> Unit,
+    //SelectionCtroll
+    selectedSchoolNumberAscendingValue: Boolean,
+    selectedGsmScoreAscendingValue: Boolean,
+    selectedDesiredAnnualSalaryAscendingValue: Boolean,
+    onSchoolNumberAscendingValueChanged: (value: Boolean) -> Unit,
+    onGsmScoreAscendingValueChanged: (value: Boolean) -> Unit,
+    onDesiredAnnualSalaryAscendingValueChanged: (value: Boolean) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -121,7 +128,15 @@ fun FilterScreen(
                         onGsmScoreSliderValueChanged = onGsmScoreSliderValueChanged,
                         onDesiredAnnualSalarySliderValueChanged = onDesiredAnnualSalarySliderValueChanged
                     )
-                    FilterSelectionControlsGroup(role = role, viewModel = viewModel)
+                    FilterSelectionControlsGroup(
+                        role = role,
+                        selectedSchoolNumberAscendingValue = selectedSchoolNumberAscendingValue,
+                        selectedGsmScoreAscendingValue = selectedGsmScoreAscendingValue,
+                        selectedDesiredAnnualSalaryAscendingValue = selectedDesiredAnnualSalaryAscendingValue,
+                        onSchoolNumberAscendingValueChanged = onSchoolNumberAscendingValueChanged,
+                        onGsmScoreAscendingValueChanged = onGsmScoreAscendingValueChanged,
+                        onDesiredAnnualSalaryAscendingValueChanged = onDesiredAnnualSalaryAscendingValueChanged
+                    )
                     FilterSearchTechStackComponent(
                         techStack = detailStacks,
                         onClick = onChangeToSearchPage,
