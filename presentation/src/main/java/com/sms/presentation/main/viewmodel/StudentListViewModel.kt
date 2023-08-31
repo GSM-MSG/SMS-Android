@@ -125,7 +125,11 @@ class StudentListViewModel @Inject constructor(
         private set
     //
 
-    var detailStackList = mutableStateListOf<String>()
+    //Filter - DetailStack
+    var filterDetailStackList = mutableStateListOf<String>()
+        private set
+    var selectedDetailStack = mutableStateListOf<String>()
+        private set
 
     fun getStudentListRequest(
         page: Int,
@@ -136,7 +140,7 @@ class StudentListViewModel @Inject constructor(
             page = page,
             size = size,
             majors = filterMajorList.ifEmpty { null },
-            techStacks = detailStackList.ifEmpty { null },
+            techStacks = filterDetailStackList.ifEmpty { null },
             grade = filterGradeList.map { it.replace("학년", "").toInt() }.ifEmpty { null },
             classNum = filterClassList.map { it.replace("반", "").toInt() }.ifEmpty { null },
             department = filterDepartmentList.ifEmpty { null },
@@ -293,16 +297,6 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-
-    fun setFilterDetailStackList(detailStacks: List<String>) {
-        detailStackList.removeAll(detailStackList.filter {
-            !detailStacks.contains(it)
-        })
-        detailStackList.addAll(detailStacks.filter {
-            !detailStackList.contains(it)
-        })
-    }
-
     fun setSelectedGradeList(gradeList: List<String>) {
         selectedGradeList.removeAll(selectedGradeList.filter {
             !gradeList.contains(it)
@@ -392,4 +386,24 @@ class StudentListViewModel @Inject constructor(
         selectedDesiredAnnualSalaryAscendingOrder.value = desiredAnnualSalaryAscendingValue
     }
     //Filter - SelectionControl Setter (end)
+
+    //Filter - DetailStack Setter (start)
+    fun setFilterDetailStackList(detailStacks: List<String>) {
+        filterDetailStackList.removeAll(filterDetailStackList.filter {
+            !detailStacks.contains(it)
+        })
+        filterDetailStackList.addAll(detailStacks.filter {
+            !filterDetailStackList.contains(it)
+        })
+    }
+
+    fun setSelectedDetailStackList(detailStacks: List<String>) {
+        selectedDetailStack.removeAll(selectedDetailStack.filter {
+            !detailStacks.contains(it)
+        })
+        selectedDetailStack.addAll(detailStacks.filter {
+            !selectedDetailStack.contains(it)
+        })
+    }
+
 }
