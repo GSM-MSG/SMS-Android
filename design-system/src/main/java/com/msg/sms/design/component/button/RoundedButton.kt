@@ -5,8 +5,10 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -28,7 +30,7 @@ fun SmsRoundedButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     state: ButtonState = ButtonState.Normal,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     SMSTheme { colors, typography ->
 
@@ -37,8 +39,9 @@ fun SmsRoundedButton(
 
         val backgroundFor: (buttonState: ButtonState) -> Color = {
             when (it) {
-                ButtonState.OutLine -> if(isPressed) colors.N10 else colors.WHITE
-                ButtonState.Normal -> if(isPressed) colors.P3 else colors.P2
+                ButtonState.OutLine -> if (isPressed) colors.N10 else colors.WHITE
+                ButtonState.Normal -> if (isPressed) colors.P3 else colors.P2
+                ButtonState.Error -> if(isPressed) colors.ERROR else colors.ERROR
             }
         }
 
@@ -46,16 +49,18 @@ fun SmsRoundedButton(
             when (it) {
                 ButtonState.OutLine -> colors.BLACK
                 ButtonState.Normal -> colors.WHITE
+                ButtonState.Error -> colors.WHITE
             }
         }
 
         Button(
+            contentPadding = PaddingValues(0.dp),
             modifier = modifier
                 .border(
                     width = 1.dp,
                     color =
                     if (state == ButtonState.OutLine)
-                        if(isPressed) colors.N30 else colors.N20
+                        if (isPressed) colors.N30 else colors.N20
                     else colors.WHITE.copy(
                         alpha = 0f
                     ),
@@ -71,9 +76,13 @@ fun SmsRoundedButton(
                 disabledBackgroundColor = colors.N20,
                 disabledContentColor = colors.N30
             )
-
         ) {
-            Text(text = text, style = typography.title2, fontWeight = FontWeight.Bold)
+            Text(
+                text = text,
+                style = typography.title2,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 13.5.dp)
+            )
         }
     }
 }
@@ -86,9 +95,8 @@ fun RoundedButtonPre() {
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         SmsRoundedButton(
-            text = "Text", modifier = Modifier
-                .width(200.dp)
-                .height(48.dp),
+            text = "Text",
+            modifier = Modifier.fillMaxWidth(),
             state = ButtonState.Normal
         ) {
 
@@ -96,9 +104,7 @@ fun RoundedButtonPre() {
 
         SmsRoundedButton(
             text = "Text",
-            modifier = Modifier
-                .width(200.dp)
-                .height(48.dp),
+            modifier = Modifier.fillMaxWidth(),
             state = ButtonState.OutLine
         ) {
 
@@ -106,9 +112,7 @@ fun RoundedButtonPre() {
 
         SmsRoundedButton(
             text = "Text",
-            modifier = Modifier
-                .width(200.dp)
-                .height(48.dp),
+            modifier = Modifier.fillMaxWidth(),
             enabled = false
         ) {
 

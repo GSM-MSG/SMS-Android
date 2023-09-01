@@ -1,6 +1,7 @@
 package com.msg.sms.data.remote.network.api
 
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
+import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
 import com.msg.sms.data.remote.dto.student.response.GetStudentForAnonymousResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentForStudentResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentForTeacherResponse
@@ -20,11 +21,11 @@ interface StudentAPI {
         @Query("size") size: Int,
         @Query("majors") majors: List<String>?,
         @Query("techStacks") techStacks: List<String>?,
-        @Query("grade") grade: Int?,
-        @Query("classNum") classNum: Int?,
+        @Query("grade") grade: List<Int>?,
+        @Query("classNum") classNum: List<Int>?,
         @Query("department") department: List<String>?,
         @Query("stuNumSort") stuNumSort: String?,
-        @Query("formOfEmployment") formOfEmployment: String?,
+        @Query("formOfEmployment") formOfEmployment: List<String>?,
         @Query("minGsmAuthenticationScore") minGsmAuthenticationScore: Int?,
         @Query("maxGsmAuthenticationScore") maxGsmAuthenticationScore: Int?,
         @Query("minSalary") minSalary: Int?,
@@ -47,4 +48,9 @@ interface StudentAPI {
     suspend fun getStudentForTeacher(
         @Path("uuid") uuid: UUID,
     ): GetStudentForTeacherResponse
+
+    @PUT("student")
+    suspend fun putChangedProfile(
+        @Body body: PutChangedProfileRequest
+    )
 }

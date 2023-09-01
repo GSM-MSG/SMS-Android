@@ -3,20 +3,52 @@ package com.sms.presentation.main.ui.filter.component
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sms.presentation.main.viewmodel.StudentListViewModel
 
 @Composable
-fun FilterSelectionControlsGroup(role: String, viewModel: StudentListViewModel) {
+fun FilterSelectionControlsGroup(
+    role: String,
+    resetButtonClick: Boolean,
+    onResetButtonClickValueChanged: (value: Boolean) -> Unit,
+    selectedSchoolNumberAscendingValue: Boolean,
+    selectedGsmScoreAscendingValue: Boolean,
+    selectedDesiredAnnualSalaryAscendingValue: Boolean,
+    onSchoolNumberAscendingValueChanged: (value: Boolean) -> Unit,
+    onGsmScoreAscendingValueChanged: (value: Boolean) -> Unit,
+    onDesiredAnnualSalaryAscendingValueChanged: (value: Boolean) -> Unit
+) {
+    val schoolNumberAscending = remember {
+        mutableStateOf(selectedSchoolNumberAscendingValue)
+    }
+    val gsmScoreAscending = remember {
+        mutableStateOf(selectedGsmScoreAscendingValue)
+    }
+    val desiredAnnualSalaryAscending = remember {
+        mutableStateOf(selectedDesiredAnnualSalaryAscendingValue)
+    }
+
+    onSchoolNumberAscendingValueChanged(schoolNumberAscending.value)
+    onGsmScoreAscendingValueChanged(gsmScoreAscending.value)
+    onDesiredAnnualSalaryAscendingValueChanged(desiredAnnualSalaryAscending.value)
+
+    if (resetButtonClick) {
+        schoolNumberAscending.value = true
+        gsmScoreAscending.value = true
+        desiredAnnualSalaryAscending.value = true
+        onResetButtonClickValueChanged(false)
+    }
+
     if (role != "") {
         FilterSelectionControls(
             title = "학번",
             firstSelectionName = "오름차순",
             secondSelectionName = "내림차순",
-            selectionValue = viewModel.isSchoolNumberAscendingOrder.value,
+            selectionValue = schoolNumberAscending.value,
             onSelectionClick = {
-                viewModel.isSchoolNumberAscendingOrder.value = it
+                schoolNumberAscending.value = it
             }
         )
         Spacer(modifier = Modifier.height(40.dp))
@@ -26,9 +58,9 @@ fun FilterSelectionControlsGroup(role: String, viewModel: StudentListViewModel) 
             title = "인증제 점수",
             firstSelectionName = "오름차순",
             secondSelectionName = "내림차순",
-            selectionValue = viewModel.isGsmScoreAscendingOrder.value,
+            selectionValue = gsmScoreAscending.value,
             onSelectionClick = {
-                viewModel.isGsmScoreAscendingOrder.value = it
+                gsmScoreAscending.value = it
             }
         )
         Spacer(modifier = Modifier.height(40.dp))
@@ -36,9 +68,9 @@ fun FilterSelectionControlsGroup(role: String, viewModel: StudentListViewModel) 
             title = "희망 연봉",
             firstSelectionName = "오름차순",
             secondSelectionName = "내림차순",
-            selectionValue = viewModel.isDesiredAnnualSalaryAscendingOrder.value,
+            selectionValue = desiredAnnualSalaryAscending.value,
             onSelectionClick = {
-                viewModel.isDesiredAnnualSalaryAscendingOrder.value = it
+                desiredAnnualSalaryAscending.value = it
             }
         )
         Spacer(modifier = Modifier.height(40.dp))

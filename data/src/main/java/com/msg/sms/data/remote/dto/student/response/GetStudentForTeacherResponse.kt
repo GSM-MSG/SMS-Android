@@ -1,16 +1,16 @@
 package com.msg.sms.data.remote.dto.student.response
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.domain.model.student.response.CertificationModel
-import com.msg.sms.domain.model.student.response.GetStudentForTeacher
+import com.msg.sms.data.remote.dto.common.*
+import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
 
 data class GetStudentForTeacherResponse(
     @SerializedName("name")
     val name: String,
     @SerializedName("introduce")
     val introduce: String,
-    @SerializedName("dreamBookFileUrl")
-    val dreamBookFileUrl: String,
+    @SerializedName("portfolioUrl")
+    val portfolioUrl: String,
     @SerializedName("grade")
     val grade: Int,
     @SerializedName("classNum")
@@ -21,10 +21,8 @@ data class GetStudentForTeacherResponse(
     val department: String,
     @SerializedName("major")
     val major: String,
-    @SerializedName("profileImg")
+    @SerializedName("profileImgUrl")
     val profileImg: String,
-    @SerializedName("portfolioUrl")
-    val portfolioUrl: String,
     @SerializedName("contactEmail")
     val contactEmail: String,
     @SerializedName("gsmAuthenticationScore")
@@ -38,42 +36,39 @@ data class GetStudentForTeacherResponse(
     @SerializedName("salary")
     val salary: Int,
     @SerializedName("languageCertificates")
-    val languageCertificates: List<CertificationResponse>,
+    val languageCertificates: List<CertificateData>,
     @SerializedName("certificates")
     val certificates: List<String>,
     @SerializedName("techStacks")
     val techStacks: List<String>,
+    @SerializedName("projects")
+    val projects: List<ProjectData>,
+    @SerializedName("prizes")
+    val prize: List<PrizeData>,
 )
 
-data class CertificationResponse(
-    val languageCertificateName: String,
-    val score: String,
-)
 
-fun GetStudentForTeacherResponse.toGetStudentForTeacher(): GetStudentForTeacher {
-    return GetStudentForTeacher(
-        name = name,
-        introduce = introduce,
-        dreamBookFileUrl = dreamBookFileUrl,
-        profileImg = profileImg,
-        portfolioUrl = portfolioUrl,
-        grade = grade,
-        classNum = classNum,
-        number = number,
-        department = department,
-        major = major,
-        contactEmail = contactEmail,
-        gsmAuthenticationScore = gsmAuthenticationScore,
-        formOfEmployment = formOfEmployment,
-        regions = regions,
-        militaryService = militaryService,
-        salary = salary,
-        languageCertificates = languageCertificates.map { it.toCertificationModel() },
-        techStacks = techStacks,
-        certificates = certificates
+fun GetStudentForTeacherResponse.toGetStudentForTeacherModel(): GetStudentForTeacherModel {
+    return GetStudentForTeacherModel(
+        name = this.name,
+        introduce = this.introduce,
+        profileImg = this.profileImg,
+        portfolioUrl = this.portfolioUrl,
+        grade = this.grade,
+        classNum = this.classNum,
+        number = this.number,
+        department = this.department,
+        major = this.major,
+        contactEmail = this.contactEmail,
+        gsmAuthenticationScore = this.gsmAuthenticationScore,
+        formOfEmployment = this.formOfEmployment,
+        regions = this.regions,
+        militaryService = this.militaryService,
+        salary = this.salary,
+        languageCertificates = this.languageCertificates.map { it.toCertificateModel() },
+        techStacks = this.techStacks,
+        certificates = this.certificates,
+        projects = this.projects.map { it.toProjectModel() },
+        prizes = this.prize.map { it.toPrizeModel() }
     )
-}
-
-fun CertificationResponse.toCertificationModel(): CertificationModel {
-    return CertificationModel(languageCertificateName = languageCertificateName, score = score)
 }

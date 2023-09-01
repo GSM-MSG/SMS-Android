@@ -12,11 +12,11 @@ import com.msg.sms.design.theme.SMSTheme
 
 @Preview
 @Composable
-fun SmsSpacer() {
+fun SmsSpacer(height: Int = 16) {
     SMSTheme { colors, _ ->
         Spacer(modifier = Modifier
             .fillMaxWidth()
-            .height(16.dp)
+            .height(height.dp)
             .background(colors.N10))
     }
 }

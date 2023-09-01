@@ -9,34 +9,74 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.msg.sms.design.component.button.SmsBoxButton
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.filter.component.FilterDetailStackSearchComponent
+import com.sms.presentation.main.ui.filter.component.FilterSearchTechStackComponent
 import com.sms.presentation.main.ui.filter.component.FilterSelectionControlsGroup
 import com.sms.presentation.main.ui.filter.component.FilterSelectorGroup
 import com.sms.presentation.main.ui.filter.component.FilterSliderGroup
 import com.sms.presentation.main.viewmodel.StudentListViewModel
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun FilterScreen(
-    navController: NavController,
     viewModel: StudentListViewModel,
-    lifecycleScope: CoroutineScope,
-    role: String
+    role: String,
+    detailStacks: List<String>,
+    onBackPressed: () -> Unit,
+    onChangeToMainPage: () -> Unit,
+    onChangeToSearchPage: () -> Unit,
+    onRightButtonClick: () -> Unit,
+    onLeftButtonClick: () -> Unit,
+    onFilteringTechStackValueChanged: (techStack: List<String>) -> Unit,
+    //Selector
+    gradeList: List<String>,
+    classList: List<String>,
+    departmentList: List<String>,
+    majorList: List<String>,
+    typeOfEmploymentList: List<String>,
+    selectedGradeList: List<String>,
+    selectedClassList: List<String>,
+    selectedDepartmentList: List<String>,
+    selectedMajorList: List<String>,
+    selectedTypeOfEmploymentList: List<String>,
+    onGradeListValueChanged: (gradeList: List<String>) -> Unit,
+    onClassListValueChanged: (classList: List<String>) -> Unit,
+    onDepartmentListValueChanged: (departmentList: List<String>) -> Unit,
+    onMajorListValueChanged: (mojorList: List<String>) -> Unit,
+    onTypeOfEmploymentListValueChanged: (typeOfEmploymentList: List<String>) -> Unit,
+    //Slider
+    selectedGsmScoreSliderValue: ClosedFloatingPointRange<Float>,
+    selectedDesiredAnnualSalarySliderValue: ClosedFloatingPointRange<Float>,
+    onGsmScoreSliderValueChanged: (value: ClosedFloatingPointRange<Float>) -> Unit,
+    onDesiredAnnualSalarySliderValueChanged: (value: ClosedFloatingPointRange<Float>) -> Unit,
+    //SelectionCtroll
+    selectedSchoolNumberAscendingValue: Boolean,
+    selectedGsmScoreAscendingValue: Boolean,
+    selectedDesiredAnnualSalaryAscendingValue: Boolean,
+    onSchoolNumberAscendingValueChanged: (value: Boolean) -> Unit,
+    onGsmScoreAscendingValueChanged: (value: Boolean) -> Unit,
+    onDesiredAnnualSalaryAscendingValueChanged: (value: Boolean) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val selectorResetButtonClick = remember {
+        mutableStateOf(false)
+    }
+    val sliderResetButtonClick = remember {
+        mutableStateOf(false)
+    }
+    val selectionControlResetButtonClick = remember {
+        mutableStateOf(false)
+    }
 
     BackHandler {
-        navController.navigate("Main") {
-            popUpTo("Main") { inclusive = false }
-        }
+        onBackPressed()
     }
 
     SMSTheme { colors, typography ->
@@ -46,10 +86,9 @@ fun FilterScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     text = "확인",
-                    enabled = true
-                ) {
-                    navController.navigate("Main")
-                }
+                    enabled = true,
+                    onClick = onChangeToMainPage
+                )
             }
         ) {
             Column(
@@ -70,23 +109,67 @@ fun FilterScreen(
                     },
                     rightIcon = { DeleteButtonIcon() },
                     onClickLeftButton = {
-                        viewModel.resetFilter()
+                        selectorResetButtonClick.value = true
+                        sliderResetButtonClick.value = true
+                        selectionControlResetButtonClick.value = true
+                        onLeftButtonClick()
                     },
-                    onClickRightButton = {
-                        navController.navigate("Main") {
-                            popUpTo("Main") { inclusive = false }
-                        }
-                    }
+                    onClickRightButton = onRightButtonClick
                 )
                 Divider(thickness = 16.dp, color = colors.N10)
                 Spacer(modifier = Modifier.height(20.dp))
                 Column(modifier = Modifier.fillMaxSize()) {
-                    FilterSelectorGroup(role = role, viewModel = viewModel)
-                    FilterSliderGroup(role = role, viewModel = viewModel)
-                    FilterSelectionControlsGroup(role = role, viewModel = viewModel)
-                    FilterDetailStackSearchComponent(detailStack = viewModel.detailStackList.value) {
-                        navController.navigate("Search")
-                    }
+                    FilterSelectorGroup(
+                        role = role,
+                        resetButtonClick = selectorResetButtonClick.value,
+                        onResetButtonClickValueChanged = {
+                            selectorResetButtonClick.value = it
+                        },
+                        gradeList = gradeList,
+                        classList = classList,
+                        departmentList = departmentList,
+                        majorList = majorList,
+                        typeOfEmploymentList = typeOfEmploymentList,
+                        selectedGradeList = selectedGradeList,
+                        selectedClassList = selectedClassList,
+                        selectedDepartmentList = selectedDepartmentList,
+                        selectedMajorList = selectedMajorList,
+                        selectedTypeOfEmploymentList = selectedTypeOfEmploymentList,
+                        onGradeListValueChanged = onGradeListValueChanged,
+                        onClassListValueChanged = onClassListValueChanged,
+                        onDepartmentListValueChanged = onDepartmentListValueChanged,
+                        onMajorListValueChanged = onMajorListValueChanged,
+                        onTypeOfEmploymentListValueChanged = onTypeOfEmploymentListValueChanged
+                    )
+                    FilterSliderGroup(
+                        role = role,
+                        resetButtonClick = sliderResetButtonClick.value,
+                        onResetButtonClickValueChanged = {
+                            sliderResetButtonClick.value = it
+                        },
+                        selectedGsmScoreSliderValue = selectedGsmScoreSliderValue,
+                        selectedDesiredAnnualSalarySliderValue = selectedDesiredAnnualSalarySliderValue,
+                        onGsmScoreSliderValueChanged = onGsmScoreSliderValueChanged,
+                        onDesiredAnnualSalarySliderValueChanged = onDesiredAnnualSalarySliderValueChanged
+                    )
+                    FilterSelectionControlsGroup(
+                        role = role,
+                        resetButtonClick = selectionControlResetButtonClick.value,
+                        onResetButtonClickValueChanged = {
+                            selectionControlResetButtonClick.value = it
+                        },
+                        selectedSchoolNumberAscendingValue = selectedSchoolNumberAscendingValue,
+                        selectedGsmScoreAscendingValue = selectedGsmScoreAscendingValue,
+                        selectedDesiredAnnualSalaryAscendingValue = selectedDesiredAnnualSalaryAscendingValue,
+                        onSchoolNumberAscendingValueChanged = onSchoolNumberAscendingValueChanged,
+                        onGsmScoreAscendingValueChanged = onGsmScoreAscendingValueChanged,
+                        onDesiredAnnualSalaryAscendingValueChanged = onDesiredAnnualSalaryAscendingValueChanged
+                    )
+                    FilterSearchTechStackComponent(
+                        techStack = detailStacks,
+                        onClick = onChangeToSearchPage,
+                        onFilteringTechStackValueChanged = onFilteringTechStackValueChanged
+                    )
                     Spacer(modifier = Modifier.height(it.calculateBottomPadding() + 64.dp))
                 }
             }

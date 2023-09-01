@@ -17,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -27,7 +26,6 @@ import com.sms.presentation.main.ui.main.data.StudentDetailData
 import com.sms.presentation.main.ui.util.departmentEnumToString
 import com.sms.presentation.main.ui.util.employmentEnumToSting
 import com.sms.presentation.main.ui.util.militaryServiceEnumToString
-import com.sms.presentation.main.viewmodel.util.downloader.AndroidDownloader
 import kotlinx.coroutines.launch
 
 @Composable
@@ -36,7 +34,6 @@ fun StudentDetailScreen(
     role: String,
     onDismissButtonClick: () -> Unit,
 ) {
-    val context = LocalContext.current
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
 
@@ -86,14 +83,6 @@ fun StudentDetailScreen(
             departments = studentDetailData.department.departmentEnumToString(),
             introduce = studentDetailData.introduce,
             isTeacher = role == "ROLE_TEACHER",
-            onDreamBookButtonClick = {
-                val downloader = AndroidDownloader(
-                    context = context,
-                    fileName =
-                    "${studentDetailData.grade}${studentDetailData.classNum}${if (studentDetailData.number.toString().length == 1) "0" + studentDetailData.number else studentDetailData.number}${studentDetailData.name}의 드림북.hwp"
-                )
-                downloader.downloadFile(url = studentDetailData.dreamBookFileUrl)
-            },
             certificationData = studentDetailData.certificates,
             email = studentDetailData.contactEmail,
             gsmAuthenticationScore = studentDetailData.gsmAuthenticationScore.toString(),
@@ -103,7 +92,9 @@ fun StudentDetailScreen(
             portfolioLink = studentDetailData.portfolioUrl,
             region = studentDetailData.regions,
             salary = studentDetailData.salary.toString(),
-            scrollState = scrollState
+            scrollState = scrollState,
+            awardData = studentDetailData.awardData,
+            projectList = studentDetailData.projectList
         )
         IconButton(
             onClick = {
