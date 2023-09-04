@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -17,23 +15,23 @@ import com.msg.sms.design.util.AddGrayBody1Title
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SchoolScoreComponent(score: Int) {
-    val gsmScore = remember {
-        mutableStateOf(score)
-    }
+fun SchoolScoreComponent(score: String, onValueChange: (value: String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
     AddGrayBody1Title(titleText = "인증제 점수") {
         SmsTextField(
             modifier = Modifier.fillMaxWidth(),
-            setText = gsmScore.value.toString(),
+            setText = score,
             placeHolder = "몇 점이고! 인증제 점수말이다.",
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.NumberPassword,
+                imeAction = ImeAction.Done
+            ),
             keyboardActions = KeyboardActions(onDone = {
                 keyboardController?.hide()
             }),
-            onValueChange = { runCatching { it.toInt() }.onSuccess { gsmScore.value = it } }
+            onValueChange = { onValueChange(if (it == "") "0" else it) }
         ) {
-            gsmScore.value = 0
+            onValueChange("")
         }
     }
 }
@@ -41,5 +39,5 @@ fun SchoolScoreComponent(score: Int) {
 @Preview
 @Composable
 private fun SchoolScoreComponentPre() {
-    SchoolScoreComponent(score = 800)
+    SchoolScoreComponent(score = "800") {}
 }
