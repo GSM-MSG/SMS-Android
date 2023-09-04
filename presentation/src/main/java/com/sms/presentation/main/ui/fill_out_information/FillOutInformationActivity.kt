@@ -2,7 +2,6 @@ package com.sms.presentation.main.ui.fill_out_information
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -243,9 +242,11 @@ class FillOutInformationActivity : BaseActivity() {
                         BottomSheetValues.PhotoPicker -> {
                             PhotoPickBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                onProfileImageUriChanged = { uri, extension ->
-                                    isImageExtensionInCorrect.value = extension
-                                    profileImageUri.value = if (extension) Uri.EMPTY else uri
+                                onProfileImageUriChanged = { uri, isImageExtensionCorrect ->
+                                    isImageExtensionInCorrect.value = !isImageExtensionCorrect
+                                    if (isImageExtensionCorrect) {
+                                        profileImageUri.value = uri
+                                    }
                                 }
                             )
                         }
