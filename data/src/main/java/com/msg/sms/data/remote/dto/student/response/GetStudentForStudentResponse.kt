@@ -44,6 +44,6 @@ fun GetStudentForStudentResponse.toGetStudentForStudentModel(): GetStudentForStu
         profileImg = this.profileImg,
         techStack = this.techStack,
         projects = this.projects.map { it.toProjectModel() },
-        prizes = this.prizes.map { it.toPrizeModel() }
+        prizes = this.prizes.map { it.toPrizeModel() },
     )
 }
