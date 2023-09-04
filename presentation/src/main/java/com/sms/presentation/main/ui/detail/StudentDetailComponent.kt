@@ -4,7 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -113,16 +120,18 @@ fun StudentDetailComponent(
                     if (projectList.isNotEmpty()) {
                         ProjectListComponent(projectList = projectList)
                     }
-                    SmsRoundedButton(
-                        text = "포트폴리오",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        val urlIntent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(portfolioLink)
-                        )
-                        context.startActivity(urlIntent)
+                    if(isTeacher) {
+                        SmsRoundedButton(
+                            text = "포트폴리오",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            val urlIntent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(portfolioLink)
+                            )
+                            context.startActivity(urlIntent)
+                        }
                     }
                 }
             }
