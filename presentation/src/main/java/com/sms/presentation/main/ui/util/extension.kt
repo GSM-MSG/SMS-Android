@@ -117,3 +117,11 @@ fun String.isUrlRegularExpression(): Boolean {
     val urlRegex = Regex("^(http(s)?://)?[\\w.-]+\\.[a-zA-Z]{2,3}(/\\S*)?\$")
     return matches(urlRegex)
 }
+
+fun String.returnNumberOnly(number: (Int) -> Unit) {
+    runCatching {
+        this.toInt()
+    }.onSuccess {
+        number(it)
+    }
+}
