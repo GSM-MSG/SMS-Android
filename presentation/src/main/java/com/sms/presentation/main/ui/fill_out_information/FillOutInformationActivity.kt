@@ -392,8 +392,11 @@ class FillOutInformationActivity : BaseActivity() {
                                                 snackBarVisible.value = false
                                             }
                                         },
-                                        onProjectValueChanged = {
+                                        onProfileValueChanged = {
                                             profileData.value = it
+                                        },
+                                        onTechStackItemRemoved = {
+                                            profileDetailTechStack.remove(it)
                                         }
                                     )
                                 }
