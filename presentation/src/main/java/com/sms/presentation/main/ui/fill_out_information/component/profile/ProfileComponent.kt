@@ -39,7 +39,8 @@ fun ProfileComponent(
     onMajorBottomSheetOpenButtonClick: () -> Unit,
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
     isRequired: (Boolean) -> Unit,
-    onProfileValueChanged: (data: ProfileData) -> Unit
+    onProfileValueChanged: (data: ProfileData) -> Unit,
+    onTechStackItemRemoved: (item: String) -> Unit
 ) {
     SMSTheme { _, typography ->
         val context = LocalContext.current as FillOutInformationActivity
@@ -136,10 +137,10 @@ fun ProfileComponent(
             )
             Spacer(modifier = Modifier.height(24.dp))
             ProfileTechStackInputComponent(
-                selectedTechStack = detailStacks,
+                techStack = detailStacks,
                 onClick = changeView,
-                onProfileTechStackValueChanged = { techStacks ->
-                    onProfileValueChanged(data.copy(techStack = techStacks))
+                onTechStackRemoved = { removedItem ->
+                    onTechStackItemRemoved(removedItem)
                 }
             )
         }
@@ -160,6 +161,7 @@ fun ProfileComponentPre() {
         enteredMajor = "",
         onMajorBottomSheetOpenButtonClick = {},
         onPhotoPickBottomSheetOpenButtonClick = {},
-        onProfileValueChanged = {}
+        onProfileValueChanged = {},
+        onTechStackItemRemoved = {}
     )
 }

@@ -33,7 +33,8 @@ fun ProfileScreen(
     onMajorBottomSheetOpenButtonClick: () -> Unit,
     onDialogDissmissButtonClick: () -> Unit,
     onSnackBarVisibleChanged: (text: String) -> Unit,
-    onProjectValueChanged: (data: ProfileData) -> Unit
+    onProfileValueChanged: (data: ProfileData) -> Unit,
+    onTechStackItemRemoved: (item: String) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val isRequired = remember {
@@ -98,7 +99,8 @@ fun ProfileScreen(
                 onPhotoPickBottomSheetOpenButtonClick = onPhotoPickBottomSheetOpenButtonClick,
                 onMajorBottomSheetOpenButtonClick = onMajorBottomSheetOpenButtonClick,
                 isRequired = { result -> isRequired.value = result },
-                onProfileValueChanged = onProjectValueChanged
+                onProfileValueChanged = onProfileValueChanged,
+                onTechStackItemRemoved = onTechStackItemRemoved
             )
             Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.height(32.dp))
