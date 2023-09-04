@@ -21,7 +21,7 @@ import com.sms.presentation.main.ui.mypage.component.profile.DisplaySearchBar
 fun ProfileTechStackInputComponent(
     techStack: List<String>,
     onClick: () -> Unit,
-    onProfileTechStackValueChanged: (value: List<String>) -> Unit
+    onTechStackRemoved: (item: String) -> Unit
 ) {
     AddGrayBody1Title(titleText = "사용기술 (최대 5개)") {
         Column(
@@ -60,9 +60,7 @@ fun ProfileTechStackInputComponent(
                 itemsIndexed(techStack) { _: Int, item: String ->
                     DetailTechStackItem(
                         stack = item,
-                        onClick = {
-                            onProfileTechStackValueChanged(techStack.minus(item))
-                        }
+                        onClick = { onTechStackRemoved(item) }
                     )
                 }
             }

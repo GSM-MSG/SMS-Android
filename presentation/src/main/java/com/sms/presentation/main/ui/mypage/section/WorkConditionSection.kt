@@ -19,6 +19,7 @@ fun WorkConditionSection(
     wantPay: String,
     wantWorkForm: FormOfEmployment,
     onValueChange: (index: Int, item: String) -> Unit,
+    onPayrollValueChange: (value: String) -> Unit,
     onClickOpenButton: () -> Unit,
     onClickAddButton: () -> Unit,
     onClickRemoveButton: (Int) -> Unit,
@@ -30,7 +31,7 @@ fun WorkConditionSection(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         WantWorkFormComponent(setText = wantWorkForm.text, onClickOpenButton = onClickOpenButton)
-        WantPayComponent(wantPay = wantPay)
+        WantPayComponent(wantPay = wantPay, onValueChange = onPayrollValueChange)
         WorkLocationComponent(
             workLocationsList = wantWorkingAreas,
             onValueChange = onValueChange,
@@ -49,5 +50,8 @@ private fun WorkConditionSectionPre() {
         wantWorkForm = FormOfEmployment.FULL_TIME,
         onClickOpenButton = {},
         onValueChange = { _, _ -> },
-        onClickAddButton = {}) {}
+        onPayrollValueChange = {},
+        onClickAddButton = {},
+        onClickRemoveButton = {},
+    )
 }

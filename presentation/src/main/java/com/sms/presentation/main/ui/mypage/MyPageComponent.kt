@@ -129,7 +129,12 @@ fun MyPageComponent(
                 TitleHeader(titleText = "학교생활 *")
             }
             item {
-                SchoolLifeSection(score = 800)
+                SchoolLifeSection(
+                    score = myProfileData.gsmAuthenticationScore,
+                    onValueChange = {
+                        onProfileValueChange(myProfileData.copy(gsmAuthenticationScore = it.toInt()))
+                    },
+                )
                 SmsSpacer()
             }
             stickyHeader {
@@ -138,7 +143,7 @@ fun MyPageComponent(
             item {
                 WorkConditionSection(
                     wantWorkingAreas = myProfileData.regions,
-                    wantPay = "2000",
+                    wantPay = myProfileData.salary.toString(),
                     wantWorkForm = myProfileData.formOfEmployment,
                     onClickOpenButton = onClickOpenWorkForm,
                     onClickAddButton = onAddRegion,
@@ -146,6 +151,9 @@ fun MyPageComponent(
                         val regionList = myProfileData.regions.toMutableList()
                         regionList[index] = item
                         onProfileValueChange(myProfileData.copy(regions = regionList))
+                    },
+                    onPayrollValueChange = {
+                        onProfileValueChange(myProfileData.copy(salary = it.toInt()))
                     },
                     onClickRemoveButton = {
                         val regionList = myProfileData.regions.toMutableList()

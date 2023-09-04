@@ -272,7 +272,7 @@ fun MyPageScreen(
                         }, onMonthValueChange = {
                             onChangeAwardDateValue(
                                 awardIndex.value,
-                                viewModel.awards.value[awardIndex.value].date.replaceBefore('.', it)
+                                viewModel.awards.value[awardIndex.value].date.replaceAfter('.', it)
                             )
                         })
                 }

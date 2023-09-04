@@ -7,8 +7,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -22,41 +20,38 @@ import com.msg.sms.design.util.AddGrayBody1Title
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun WantPayComponent(wantPay: String) {
-    val desiredSalary = remember {
-        mutableStateOf(wantPay)
-    }
+fun WantPayComponent(wantPay: String, onValueChange: (String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
     AddGrayBody1Title(titleText = "희망 연봉") {
         SmsTextField(
-            setText = desiredSalary.value.toInt().toString(),
+            setText = wantPay,
             modifier = Modifier.fillMaxWidth(),
             placeHolder = "지금 내 통장엔 억억억억억억",
             onValueChange = {
                 if (it == "") {
-                    desiredSalary.value = "0"
+                    onValueChange("0")
                 } else if (it.length <= 4) {
                     runCatching {
                         it.toInt()
                     }.onSuccess { _ ->
-                        desiredSalary.value = it.trim()
+                        onValueChange(it.trim())
                     }
                 }
             },
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
+                keyboardType = KeyboardType.NumberPassword,
                 imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(onDone = {
                 keyboardController?.hide()
             }),
         ) {
-            desiredSalary.value = "0"
+            onValueChange("0")
         }
         Spacer(modifier = Modifier.height(4.dp))
         SMSTheme { colors, typography ->
             Text(
-                text = if (desiredSalary.value == "0") "상관없음" else if (desiredSalary.value == "") "" else "${desiredSalary.value.toInt()}만원",
+                text = if (wantPay == "0") "상관없음" else if (wantPay == "") "" else "${wantPay.toInt()}만원",
                 color = colors.N30,
                 style = typography.body2
             )
@@ -67,5 +62,5 @@ fun WantPayComponent(wantPay: String) {
 @Preview
 @Composable
 private fun WantPayComponentPre() {
-    WantPayComponent("2000")
+    WantPayComponent("2000") {}
 }

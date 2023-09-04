@@ -29,12 +29,13 @@ fun SchoolLifeComponent(
                 modifier = Modifier.fillMaxWidth(),
                 setText = enteredGsmAuthenticationScore,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
+                    keyboardType = KeyboardType.NumberPassword,
                     imeAction = ImeAction.Done
                 ),
                 onValueChange = {
                     gsmAuthenticationScore(it)
-                }) {
+                }
+            ) {
                 gsmAuthenticationScore("")
             }
         }
