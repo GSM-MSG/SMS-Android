@@ -395,7 +395,6 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onTechStackItemRemoved = {
                                             profileDetailTechStack.remove(it)
-                                            profileData.value = profileData.value.copy(techStack = profileDetailTechStack)
                                         }
                                     )
                                 }

@@ -141,6 +141,7 @@ fun ProfileComponent(
                 onClick = changeView,
                 onTechStackRemoved = { removedItem ->
                     onTechStackItemRemoved(removedItem)
+                    onProfileValueChanged(data.copy(techStack = detailStacks.minus(removedItem)))
                 }
             )
         }
