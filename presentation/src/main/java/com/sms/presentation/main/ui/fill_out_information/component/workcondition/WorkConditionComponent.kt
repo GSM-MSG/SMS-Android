@@ -55,10 +55,7 @@ fun WorkConditionComponent(
             mutableStateOf(false)
         }
 
-        isRequired.value =
-            wantWorkingArea != listOf("") && wantPayroll.value != "" && textFieldChecker(
-                wantWorkingCondition
-            )
+        isRequired.value = wantWorkingArea != listOf("") && wantPayroll.value != "" && textFieldChecker(wantWorkingCondition)
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -94,10 +91,10 @@ fun WorkConditionComponent(
                         placeHolder = "희망 연봉 (10,000원 단위)",
                         maxLines = 1,
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
+                            keyboardType = KeyboardType.NumberPassword,
                             imeAction = ImeAction.Done
                         ),
-                        setText = if (wantPayroll.value != "") "${wantPayroll.value.toInt()}" else wantPayroll.value,
+                        setText = wantPayroll.value,
                         onValueChange = { if (it.length < 5) wantPayroll.value = it }
                     ) {
                         wantPayroll.value = ""
