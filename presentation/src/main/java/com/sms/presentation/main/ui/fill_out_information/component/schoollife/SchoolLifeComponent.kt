@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.text.SmsTitleText
 import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.util.returnNumberOnly
 
 
 @Composable
@@ -30,13 +29,11 @@ fun SchoolLifeComponent(
                 modifier = Modifier.fillMaxWidth(),
                 setText = enteredGsmAuthenticationScore,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
+                    keyboardType = KeyboardType.NumberPassword,
                     imeAction = ImeAction.Done
                 ),
                 onValueChange = {
-                    it.returnNumberOnly { number ->
-                        gsmAuthenticationScore(number.toString())
-                    }
+                    gsmAuthenticationScore(it)
                 }
             ) {
                 gsmAuthenticationScore("")
