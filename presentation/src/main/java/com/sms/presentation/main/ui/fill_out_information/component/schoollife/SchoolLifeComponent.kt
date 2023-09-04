@@ -33,7 +33,7 @@ fun SchoolLifeComponent(
                     imeAction = ImeAction.Done
                 ),
                 onValueChange = {
-                    gsmAuthenticationScore(it)
+                    gsmAuthenticationScore(it.replace(".",""))
                 }) {
                 gsmAuthenticationScore("")
             }
