@@ -242,9 +242,11 @@ class FillOutInformationActivity : BaseActivity() {
                         BottomSheetValues.PhotoPicker -> {
                             PhotoPickBottomSheet(
                                 bottomSheetState = bottomSheetState,
-                                onProfileImageUriChanged = { uri, extension ->
-                                    isImageExtensionInCorrect.value = extension
-                                    profileImageUri.value = if (extension) Uri.EMPTY else uri
+                                onProfileImageUriChanged = { uri, isImageExtensionCorrect ->
+                                    isImageExtensionInCorrect.value = !isImageExtensionCorrect
+                                    if (isImageExtensionCorrect) {
+                                        profileImageUri.value = uri
+                                    }
                                 }
                             )
                         }
