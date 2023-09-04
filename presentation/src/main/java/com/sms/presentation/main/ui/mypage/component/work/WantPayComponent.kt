@@ -39,7 +39,7 @@ fun WantPayComponent(wantPay: String, onValueChange: (String) -> Unit) {
                 }
             },
             keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
+                keyboardType = KeyboardType.NumberPassword,
                 imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(onDone = {
