@@ -136,7 +136,7 @@ fun ProfileComponent(
             )
             Spacer(modifier = Modifier.height(24.dp))
             ProfileTechStackInputComponent(
-                techStack = detailStacks,
+                selectedTechStack = detailStacks,
                 onClick = changeView,
                 onProfileTechStackValueChanged = { techStacks ->
                     onProfileValueChanged(data.copy(techStack = techStacks))

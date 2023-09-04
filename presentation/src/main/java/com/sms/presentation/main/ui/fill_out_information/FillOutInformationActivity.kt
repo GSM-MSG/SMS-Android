@@ -391,8 +391,9 @@ class FillOutInformationActivity : BaseActivity() {
                                                 snackBarVisible.value = false
                                             }
                                         },
-                                        onProjectValueChanged = {
+                                        onProfileValueChanged = {
                                             profileData.value = it
+                                            Log.d("profileData", it.toString())
                                         }
                                     )
                                 }
