@@ -13,11 +13,13 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.toggle.ToggleComponent
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.fill_out_information.data.AwardData
+import com.sms.presentation.main.ui.fill_out_information.data.AwardRequiredDataInfo
 import com.sms.presentation.main.ui.util.hideKeyboard
 
 @Composable
 fun AwardComponent(
     data: AwardData,
+    awardValidationList: List<AwardRequiredDataInfo>,
     onCancelButtonClick: () -> Unit,
     onDateBottomSheetOpenButtonClick: () -> Unit,
     onAwardValueChanged: (award: AwardData) -> Unit
@@ -45,6 +47,7 @@ fun AwardComponent(
             AwardNameInputComponent(
                 title = "이름",
                 placeHolder = "수상 내역 이름 입력",
+                isNameEmpty = true,
                 text = data.name,
                 onButtonClick = { onAwardValueChanged(data.copy(name = "")) },
                 onValueChange = { name ->
@@ -54,6 +57,7 @@ fun AwardComponent(
             AwardNameInputComponent(
                 title = "종류",
                 placeHolder = "수상 종류입력",
+                isNameEmpty = true,
                 text = data.type,
                 onButtonClick = { onAwardValueChanged(data.copy(type = "")) },
                 onValueChange = { type ->
@@ -62,6 +66,7 @@ fun AwardComponent(
             )
             AwardDateBarComponent(
                 date = data.date,
+                isDateEmpty = true,
                 onClick = {
                     context.hideKeyboard()
                     onDateBottomSheetOpenButtonClick()

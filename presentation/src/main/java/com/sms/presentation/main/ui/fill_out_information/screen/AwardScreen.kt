@@ -14,12 +14,14 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.sms.presentation.main.ui.fill_out_information.component.award.AwardBottomButtonComponent
 import com.sms.presentation.main.ui.fill_out_information.component.award.AwardComponent
 import com.sms.presentation.main.ui.fill_out_information.data.AwardData
+import com.sms.presentation.main.ui.fill_out_information.data.AwardRequiredDataInfo
 
 
 @Composable
 fun AwardScreen(
     data: List<AwardData>,
     awardDateMap: Map<Int, String>,
+    awardValidationList: List<AwardRequiredDataInfo>,
     onPreviousButtonClick: () -> Unit,
     onDateBottomSheetOpenButtonClick: (index: Int) -> Unit,
     onAddButtonClick: () -> Unit,
@@ -36,6 +38,7 @@ fun AwardScreen(
 
             AwardComponent(
                 data = item,
+                awardValidationList = awardValidationList,
                 onDateBottomSheetOpenButtonClick = {
                     onDateBottomSheetOpenButtonClick(index)
                 },

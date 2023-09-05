@@ -11,6 +11,7 @@ fun AwardNameInputComponent(
     title: String,
     placeHolder: String,
     text: String,
+    isNameEmpty: Boolean,
     onButtonClick: () -> Unit,
     onValueChange: (String) -> Unit,
 ) {
@@ -21,7 +22,9 @@ fun AwardNameInputComponent(
             placeHolder = placeHolder,
             onValueChange = onValueChange,
             onClickButton = onButtonClick,
-            singleLine = true
+            singleLine = true,
+            errorText = "수상 이름을 입력해 주세요.",
+            isError = isNameEmpty
         )
     }
 }

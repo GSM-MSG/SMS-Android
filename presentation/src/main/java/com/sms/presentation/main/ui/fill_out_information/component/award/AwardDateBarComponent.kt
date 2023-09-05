@@ -8,6 +8,7 @@ import com.msg.sms.design.util.AddGrayBody1Title
 @Composable
 fun AwardDateBarComponent(
     date: String,
+    isDateEmpty: Boolean,
     onClick: () -> Unit
 ) {
     AddGrayBody1Title(titleText = "기간") {
@@ -16,7 +17,9 @@ fun AwardDateBarComponent(
             placeHolder = "yyyy.mm",
             readOnly = true,
             endIcon = { CalendarIcon() },
-            clickAction = onClick
+            clickAction = onClick,
+            errorText = "수상 일자를 입력해 주세요.",
+            isError = isDateEmpty
         )
     }
 }

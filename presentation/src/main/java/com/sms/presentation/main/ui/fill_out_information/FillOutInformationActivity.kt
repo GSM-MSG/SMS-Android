@@ -584,6 +584,7 @@ class FillOutInformationActivity : BaseActivity() {
                                     AwardScreen(
                                         data = awardData,
                                         awardDateMap = awardDateMap,
+                                        awardValidationList = fillOutViewModel.awardValidationData.value,
                                         onDateBottomSheetOpenButtonClick = { index ->
                                             awardIndex.value = index
                                             isProjectDate.value = false
