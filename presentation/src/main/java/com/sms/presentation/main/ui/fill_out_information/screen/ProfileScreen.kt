@@ -2,10 +2,17 @@ package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -34,7 +41,7 @@ fun ProfileScreen(
     onDialogDissmissButtonClick: () -> Unit,
     onSnackBarVisibleChanged: (text: String) -> Unit,
     onProfileValueChanged: (data: ProfileData) -> Unit,
-    onTechStackItemRemoved: (item: String) -> Unit
+    onTechStackItemRemoved: (item: String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val isRequired = remember {
@@ -88,7 +95,10 @@ fun ProfileScreen(
                 selectedMajor = selectedMajor,
                 enteredMajor = data.enteredMajor,
                 profileImageUri = profileImageUri,
-                detailStacks = if (detailStacks.size > 5) detailStacks.subList(0, 5) else detailStacks,
+                detailStacks = if (detailStacks.size > 5) detailStacks.subList(
+                    0,
+                    5
+                ) else detailStacks,
                 changeView = {
                     if (detailStacks.size < 5) {
                         navController.navigate("Search")

@@ -114,6 +114,6 @@ fun String.isEmailRegularExpression(): Boolean {
 }
 
 fun String.isUrlRegularExpression(): Boolean {
-    val urlRegex = Regex("^(http(s)?://)?[\\w.-]+\\.[a-zA-Z]{2,3}(/\\S*)?\$")
+    val urlRegex = Regex("^https?:\\/\\/.*$")
     return matches(urlRegex)
 }
