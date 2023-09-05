@@ -13,7 +13,7 @@ fun AwardNameComponent(name: String, onValueChange: (value: String) -> Unit) {
         SmsTextField(
             modifier = Modifier.fillMaxWidth(),
             setText = name,
-            placeHolder = "제 19회 스마틴 앱 챌린지 대상",
+            placeHolder = "제 19회 스마틴 앱 챌린지",
             onValueChange = { onValueChange(it) }
         ) {
             onValueChange("")
