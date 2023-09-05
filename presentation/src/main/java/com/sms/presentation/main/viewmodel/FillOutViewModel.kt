@@ -232,9 +232,15 @@ class FillOutViewModel @Inject constructor(
     }
 
     fun checkAwardValidation() {
-        awards.forEach {
-
+        val validationDataList = _awardValidationData.value.toMutableList()
+        awards.forEachIndexed { index, awardData ->
+            validationDataList[index] = AwardRequiredDataInfo(
+                isNameEmpty = awardData.name.isEmpty(),
+                isTypeEmpty = awardData.type.isEmpty(),
+                isDataEmpty = awardData.date.isEmpty()
+            )
         }
+        this._awardValidationData.value = validationDataList
     }
 
     fun getMajorList() {
