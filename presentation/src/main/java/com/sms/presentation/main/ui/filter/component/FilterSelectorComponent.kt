@@ -22,8 +22,8 @@ import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
 fun <T> FilterSelectorComponent(
     title: String,
     itemList: List<T>,
-    selectedList: List<String>,
-    onItemSelected: (checked: Boolean, value: String) -> Unit,
+    selectedList: List<T>,
+    onItemSelected: (checked: Boolean, value: T) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -44,18 +44,11 @@ fun <T> FilterSelectorComponent(
                             is FilterDepartment -> item.value
                             else -> item.toString()
                         }
-                        val itemEnum = when (item) {
-                            is FilterGrade -> item.enum
-                            is FilterClass -> item.enum
-                            is FilterTypeOfEmployment -> item.enum
-                            is FilterDepartment -> item.enum
-                            else -> item.toString()
-                        }
                         FilterItem(
                             item = itemText,
-                            checked = selectedList.contains(itemEnum.toString())
+                            checked = selectedList.contains(item)
                         ) { checked ->
-                            onItemSelected(checked, itemEnum.toString())
+                            onItemSelected(checked, item)
                         }
                         Spacer(modifier = Modifier.height(20.dp))
                     }
