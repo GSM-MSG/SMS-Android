@@ -44,13 +44,6 @@ fun <T> FilterSelectorComponent(
                             is FilterDepartment -> item.value
                             else -> item.toString()
                         }
-                        val itemEnum = when (item) {
-                            is FilterGrade -> item.enum
-                            is FilterClass -> item.enum
-                            is FilterTypeOfEmployment -> item.enum
-                            is FilterDepartment -> item.enum
-                            else -> item.toString()
-                        }
                         FilterItem(
                             item = itemText,
                             checked = selectedList.contains(item)
