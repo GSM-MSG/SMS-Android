@@ -138,7 +138,7 @@ class FillOutInformationActivity : BaseActivity() {
                 mutableStateListOf(*enteredProjectsData.toTypedArray())
             }
             val awardData = remember {
-                mutableStateListOf(AwardData(isToggleOpen = true))
+                mutableStateListOf(*enteredAwardsData.toTypedArray())
             }
             val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
 

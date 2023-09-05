@@ -70,7 +70,7 @@ class FillOutViewModel @Inject constructor(
     private val foreignLanguages =
         mutableStateListOf(ForeignLanguageInfo(languageCertificateName = "", score = ""))
     private val projects = mutableStateListOf(ProjectInfo(isToggleOpen = true))
-    private val awards = mutableStateListOf<AwardData>()
+    private val awards = mutableStateListOf(AwardData(isToggleOpen = true))
 
     private val _projectsRequiredInfoData = mutableStateOf(listOf(ProjectRequiredDataInfo()))
     val projectsRequiredInfoData: State<List<ProjectRequiredDataInfo>> = _projectsRequiredInfoData
