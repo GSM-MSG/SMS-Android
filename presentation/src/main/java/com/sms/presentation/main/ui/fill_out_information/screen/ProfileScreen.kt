@@ -1,7 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.screen
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -135,10 +134,6 @@ fun ProfileScreen(
                         )
                         navController.navigate("SchoolLife")
                     } else {
-                        Log.d(
-                            "TAG",
-                            "ProfileScreen: ${data.contactEmail.isEmailRegularExpression()}, ${data.portfolioUrl.isUrlRegularExpression()}"
-                        )
                         dialogState.value = true
                     }
                 }
