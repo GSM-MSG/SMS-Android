@@ -7,7 +7,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.sms.presentation.main.ui.filter.data.FilterClass
 import com.sms.presentation.main.ui.filter.data.FilterDepartment
+import com.sms.presentation.main.ui.filter.data.FilterGrade
 import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
 
 @Composable
@@ -15,18 +17,18 @@ fun FilterSelectorGroup(
     role: String,
     resetButtonClick: Boolean,
     onResetButtonClickValueChanged: (value: Boolean) -> Unit,
-    gradeList: List<String>,
-    classList: List<String>,
+    gradeList: List<FilterGrade>,
+    classList: List<FilterClass>,
     departmentList: List<FilterDepartment>,
     majorList: List<String>,
     typeOfEmploymentList: List<FilterTypeOfEmployment>,
-    selectedGradeList: List<String>,
-    selectedClassList: List<String>,
+    selectedGradeList: List<FilterGrade>,
+    selectedClassList: List<FilterClass>,
     selectedDepartmentList: List<FilterDepartment>,
     selectedMajorList: List<String>,
     selectedTypeOfEmploymentList: List<FilterTypeOfEmployment>,
-    onGradeListValueChanged: (gradeList: List<String>) -> Unit,
-    onClassListValueChanged: (classList: List<String>) -> Unit,
+    onGradeListValueChanged: (gradeList: List<FilterGrade>) -> Unit,
+    onClassListValueChanged: (classList: List<FilterClass>) -> Unit,
     onDepartmentListValueChanged: (departmentList: List<FilterDepartment>) -> Unit,
     onMajorListValueChanged: (mojorList: List<String>) -> Unit,
     onTypeOfEmploymentListValueChanged: (typeOfEmploymentList: List<FilterTypeOfEmployment>) -> Unit,

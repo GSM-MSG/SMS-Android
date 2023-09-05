@@ -22,13 +22,13 @@ import com.sms.presentation.main.ui.filter.component.FilterSearchTechStackCompon
 import com.sms.presentation.main.ui.filter.component.FilterSelectionControlsGroup
 import com.sms.presentation.main.ui.filter.component.FilterSelectorGroup
 import com.sms.presentation.main.ui.filter.component.FilterSliderGroup
+import com.sms.presentation.main.ui.filter.data.FilterClass
 import com.sms.presentation.main.ui.filter.data.FilterDepartment
+import com.sms.presentation.main.ui.filter.data.FilterGrade
 import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
-import com.sms.presentation.main.viewmodel.StudentListViewModel
 
 @Composable
 fun FilterScreen(
-    viewModel: StudentListViewModel,
     role: String,
     detailStacks: List<String>,
     onBackPressed: () -> Unit,
@@ -38,18 +38,18 @@ fun FilterScreen(
     onLeftButtonClick: () -> Unit,
     onFilteringTechStackValueChanged: (techStack: List<String>) -> Unit,
     //Selector
-    gradeList: List<String>,
-    classList: List<String>,
+    gradeList: List<FilterGrade>,
+    classList: List<FilterClass>,
     departmentList: List<FilterDepartment>,
     majorList: List<String>,
     typeOfEmploymentList: List<FilterTypeOfEmployment>,
-    selectedGradeList: List<String>,
-    selectedClassList: List<String>,
+    selectedGradeList: List<FilterGrade>,
+    selectedClassList: List<FilterClass>,
     selectedDepartmentList: List<FilterDepartment>,
     selectedMajorList: List<String>,
     selectedTypeOfEmploymentList: List<FilterTypeOfEmployment>,
-    onGradeListValueChanged: (gradeList: List<String>) -> Unit,
-    onClassListValueChanged: (classList: List<String>) -> Unit,
+    onGradeListValueChanged: (gradeList: List<FilterGrade>) -> Unit,
+    onClassListValueChanged: (classList: List<FilterClass>) -> Unit,
     onDepartmentListValueChanged: (departmentList: List<FilterDepartment>) -> Unit,
     onMajorListValueChanged: (mojorList: List<String>) -> Unit,
     onTypeOfEmploymentListValueChanged: (typeOfEmploymentList: List<FilterTypeOfEmployment>) -> Unit,
