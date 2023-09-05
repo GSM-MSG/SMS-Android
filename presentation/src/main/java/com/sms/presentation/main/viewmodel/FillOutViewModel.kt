@@ -75,6 +75,9 @@ class FillOutViewModel @Inject constructor(
     private val _projectsRequiredInfoData = mutableStateOf(listOf(ProjectRequiredDataInfo()))
     val projectsRequiredInfoData: State<List<ProjectRequiredDataInfo>> = _projectsRequiredInfoData
 
+    private val _awardValidationData = mutableStateOf(listOf(AwardRequiredDataInfo()))
+    val awardValidationData: State<List<AwardRequiredDataInfo>> = _awardValidationData
+
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(
             profileImageUri = profileImageUri.value,
@@ -210,6 +213,28 @@ class FillOutViewModel @Inject constructor(
         val infoDataList = this._projectsRequiredInfoData.value.toMutableList()
         infoDataList.add(data)
         this._projectsRequiredInfoData.value = infoDataList
+    }
+
+    fun removeAwardRequiredDataInformation(
+        index: Int
+    ) {
+        val infoDataList = this._awardValidationData.value.toMutableList()
+        infoDataList.removeAt(index)
+        this._awardValidationData.value = infoDataList
+    }
+
+    fun addAwardRequiredDataInformation(
+        data: AwardRequiredDataInfo = AwardRequiredDataInfo()
+    ) {
+        val infoDataList = this._awardValidationData.value.toMutableList()
+        infoDataList.add(data)
+        this._awardValidationData.value = infoDataList
+    }
+
+    fun checkAwardValidation() {
+        awards.forEach {
+
+        }
     }
 
     fun getMajorList() {
