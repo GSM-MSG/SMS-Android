@@ -17,9 +17,13 @@ import com.msg.sms.domain.usecase.student.GetStudentListUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForAnonymousUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForTeacherUseCase
 import com.msg.sms.domain.usecase.user.GetProfileImageUseCase
+import com.sms.presentation.main.ui.filter.data.FilterClass
 import com.sms.presentation.main.ui.filter.data.FilterClass.*
+import com.sms.presentation.main.ui.filter.data.FilterDepartment
 import com.sms.presentation.main.ui.filter.data.FilterDepartment.*
+import com.sms.presentation.main.ui.filter.data.FilterGrade
 import com.sms.presentation.main.ui.filter.data.FilterGrade.*
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
 import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment.*
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
@@ -76,24 +80,24 @@ class StudentListViewModel @Inject constructor(
 
     var filterMajorList = mutableStateListOf<String>()
         private set
-    var filterGradeList = mutableStateListOf<String>()
+    var filterGradeList = mutableStateListOf<FilterGrade>()
         private set
-    var filterClassList = mutableStateListOf<String>()
+    var filterClassList = mutableStateListOf<FilterClass>()
         private set
-    var filterDepartmentList = mutableStateListOf<String>()
+    var filterDepartmentList = mutableStateListOf<FilterDepartment>()
         private set
-    var filterTypeOfEmploymentList = mutableStateListOf<String>()
+    var filterTypeOfEmploymentList = mutableStateListOf<FilterTypeOfEmployment>()
         private set
 
     var selectedMajorList = mutableStateListOf<String>()
         private set
-    var selectedGradeList = mutableStateListOf<String>()
+    var selectedGradeList = mutableStateListOf<FilterGrade>()
         private set
-    var selectedClassList = mutableStateListOf<String>()
+    var selectedClassList = mutableStateListOf<FilterClass>()
         private set
-    var selectedDepartmentList = mutableStateListOf<String>()
+    var selectedDepartmentList = mutableStateListOf<FilterDepartment>()
         private set
-    var selectedTypeOfEmploymentList = mutableStateListOf<String>()
+    var selectedTypeOfEmploymentList = mutableStateListOf<FilterTypeOfEmployment>()
         private set
     //
 
@@ -141,11 +145,11 @@ class StudentListViewModel @Inject constructor(
             size = size,
             majors = filterMajorList.ifEmpty { null },
             techStacks = filterDetailStackList.ifEmpty { null },
-            grade = filterGradeList.map { it.replace("학년", "").toInt() }.ifEmpty { null },
-            classNum = filterClassList.map { it.replace("반", "").toInt() }.ifEmpty { null },
-            department = filterDepartmentList.ifEmpty { null },
+            grade = filterGradeList.map { it.enum }.ifEmpty { null },
+            classNum = filterClassList.map { it.enum }.ifEmpty { null },
+            department = filterDepartmentList.map { it.enum }.ifEmpty { null },
             stuNumSort = if (filterSchoolNumberAscendingOrder.value) "ASCENDING" else "DESCENDING",
-            formOfEmployment = this@StudentListViewModel.filterTypeOfEmploymentList.ifEmpty { null },
+            formOfEmployment = filterTypeOfEmploymentList.map { it.enum }.ifEmpty { null },
             minGsmAuthenticationScore = filterGsmScoreSliderValues.value.start.toInt()
                 .takeIf { it != 0 },
             maxGsmAuthenticationScore = filterGsmScoreSliderValues.value.endInclusive.toInt()
@@ -252,7 +256,7 @@ class StudentListViewModel @Inject constructor(
     }
 
     //Filter - Selector Setter (start)
-    fun setFilterGradeList(gradeList: List<String>) {
+    fun setFilterGradeList(gradeList: List<FilterGrade>) {
         filterGradeList.removeAll(filterGradeList.filter {
             !gradeList.contains(it)
         })
@@ -261,7 +265,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setFilterClassList(classList: List<String>) {
+    fun setFilterClassList(classList: List<FilterClass>) {
         filterClassList.removeAll(filterClassList.filter {
             !classList.contains(it)
         })
@@ -270,7 +274,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setFilterDepartmentList(departmentList: List<String>) {
+    fun setFilterDepartmentList(departmentList: List<FilterDepartment>) {
         filterDepartmentList.removeAll(filterDepartmentList.filter {
             !departmentList.contains(it)
         })
@@ -288,7 +292,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setFilterTypeOfEmploymentList(typeOfEmploymentList: List<String>) {
+    fun setFilterTypeOfEmploymentList(typeOfEmploymentList: List<FilterTypeOfEmployment>) {
         filterTypeOfEmploymentList.removeAll(filterTypeOfEmploymentList.filter {
             !typeOfEmploymentList.contains(it)
         })
@@ -297,7 +301,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setSelectedGradeList(gradeList: List<String>) {
+    fun setSelectedGradeList(gradeList: List<FilterGrade>) {
         selectedGradeList.removeAll(selectedGradeList.filter {
             !gradeList.contains(it)
         })
@@ -306,7 +310,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setSelectedClassList(classList: List<String>) {
+    fun setSelectedClassList(classList: List<FilterClass>) {
         selectedClassList.removeAll(selectedClassList.filter {
             !classList.contains(it)
         })
@@ -315,7 +319,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setSelectedDepartmentList(departmentList: List<String>) {
+    fun setSelectedDepartmentList(departmentList: List<FilterDepartment>) {
         selectedDepartmentList.removeAll(selectedDepartmentList.filter {
             !departmentList.contains(it)
         })
@@ -333,7 +337,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setSelectedTypeOfEmploymentList(typeOfEmploymentList: List<String>) {
+    fun setSelectedTypeOfEmploymentList(typeOfEmploymentList: List<FilterTypeOfEmployment  >) {
         selectedTypeOfEmploymentList.removeAll(selectedTypeOfEmploymentList.filter {
             !typeOfEmploymentList.contains(it)
         })

@@ -124,7 +124,6 @@ class MainActivity : BaseActivity() {
                             }
                             composable(MainPage.Filter.name) {
                                 FilterScreen(
-                                    viewModel = viewModel(LocalContext.current as MainActivity),
                                     role = response.data!!,
                                     onFilteringTechStackValueChanged = { list ->
                                         studentListViewModel.setSelectedDetailStackList(list)
@@ -166,11 +165,11 @@ class MainActivity : BaseActivity() {
                                         studentListViewModel.selectedDetailStack.clear()
                                     },
                                     //Selector
-                                    gradeList = studentListViewModel.gradeList.map { it.value },
-                                    classList = studentListViewModel.classList.map { it.value },
-                                    departmentList = studentListViewModel.departmentList.map { it.value },
+                                    gradeList = studentListViewModel.gradeList,
+                                    classList = studentListViewModel.classList,
+                                    departmentList = studentListViewModel.departmentList,
                                     majorList = studentListViewModel.majorList,
-                                    typeOfEmploymentList = studentListViewModel.typeOfEmploymentList.map { it.value },
+                                    typeOfEmploymentList = studentListViewModel.typeOfEmploymentList,
                                     selectedGradeList = studentListViewModel.filterGradeList,
                                     selectedClassList = studentListViewModel.filterClassList,
                                     selectedDepartmentList = studentListViewModel.filterDepartmentList,
