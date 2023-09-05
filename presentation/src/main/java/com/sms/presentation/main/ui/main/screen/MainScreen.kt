@@ -417,7 +417,7 @@ suspend fun getStudentList(
         when (response) {
             is Event.Success -> {
                 progressState(false)
-                onSuccess(response.data!!.content, response.data.contentSize)
+                onSuccess(response.data!!.content, response.data.totalSize)
             }
 
             is Event.Loading -> {
