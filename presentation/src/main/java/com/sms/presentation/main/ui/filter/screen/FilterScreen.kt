@@ -22,6 +22,8 @@ import com.sms.presentation.main.ui.filter.component.FilterSearchTechStackCompon
 import com.sms.presentation.main.ui.filter.component.FilterSelectionControlsGroup
 import com.sms.presentation.main.ui.filter.component.FilterSelectorGroup
 import com.sms.presentation.main.ui.filter.component.FilterSliderGroup
+import com.sms.presentation.main.ui.filter.data.FilterDepartment
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 
 @Composable
@@ -38,19 +40,19 @@ fun FilterScreen(
     //Selector
     gradeList: List<String>,
     classList: List<String>,
-    departmentList: List<String>,
+    departmentList: List<FilterDepartment>,
     majorList: List<String>,
-    typeOfEmploymentList: List<String>,
+    typeOfEmploymentList: List<FilterTypeOfEmployment>,
     selectedGradeList: List<String>,
     selectedClassList: List<String>,
-    selectedDepartmentList: List<String>,
+    selectedDepartmentList: List<FilterDepartment>,
     selectedMajorList: List<String>,
-    selectedTypeOfEmploymentList: List<String>,
+    selectedTypeOfEmploymentList: List<FilterTypeOfEmployment>,
     onGradeListValueChanged: (gradeList: List<String>) -> Unit,
     onClassListValueChanged: (classList: List<String>) -> Unit,
-    onDepartmentListValueChanged: (departmentList: List<String>) -> Unit,
+    onDepartmentListValueChanged: (departmentList: List<FilterDepartment>) -> Unit,
     onMajorListValueChanged: (mojorList: List<String>) -> Unit,
-    onTypeOfEmploymentListValueChanged: (typeOfEmploymentList: List<String>) -> Unit,
+    onTypeOfEmploymentListValueChanged: (typeOfEmploymentList: List<FilterTypeOfEmployment>) -> Unit,
     //Slider
     selectedGsmScoreSliderValue: ClosedFloatingPointRange<Float>,
     selectedDesiredAnnualSalarySliderValue: ClosedFloatingPointRange<Float>,

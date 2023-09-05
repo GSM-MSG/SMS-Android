@@ -168,9 +168,9 @@ class MainActivity : BaseActivity() {
                                     //Selector
                                     gradeList = studentListViewModel.gradeList.map { it.value },
                                     classList = studentListViewModel.classList.map { it.value },
-                                    departmentList = studentListViewModel.departmentList.map { it.value },
+                                    departmentList = studentListViewModel.departmentList,
                                     majorList = studentListViewModel.majorList,
-                                    typeOfEmploymentList = studentListViewModel.typeOfEmploymentList.map { it.value },
+                                    typeOfEmploymentList = studentListViewModel.typeOfEmploymentList,
                                     selectedGradeList = studentListViewModel.filterGradeList,
                                     selectedClassList = studentListViewModel.filterClassList,
                                     selectedDepartmentList = studentListViewModel.filterDepartmentList,

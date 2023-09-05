@@ -18,8 +18,10 @@ import com.msg.sms.domain.usecase.student.GetUserDetailForAnonymousUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForTeacherUseCase
 import com.msg.sms.domain.usecase.user.GetProfileImageUseCase
 import com.sms.presentation.main.ui.filter.data.FilterClass.*
+import com.sms.presentation.main.ui.filter.data.FilterDepartment
 import com.sms.presentation.main.ui.filter.data.FilterDepartment.*
 import com.sms.presentation.main.ui.filter.data.FilterGrade.*
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
 import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment.*
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
@@ -80,9 +82,9 @@ class StudentListViewModel @Inject constructor(
         private set
     var filterClassList = mutableStateListOf<String>()
         private set
-    var filterDepartmentList = mutableStateListOf<String>()
+    var filterDepartmentList = mutableStateListOf<FilterDepartment>()
         private set
-    var filterTypeOfEmploymentList = mutableStateListOf<String>()
+    var filterTypeOfEmploymentList = mutableStateListOf<FilterTypeOfEmployment>()
         private set
 
     var selectedMajorList = mutableStateListOf<String>()
@@ -91,9 +93,9 @@ class StudentListViewModel @Inject constructor(
         private set
     var selectedClassList = mutableStateListOf<String>()
         private set
-    var selectedDepartmentList = mutableStateListOf<String>()
+    var selectedDepartmentList = mutableStateListOf<FilterDepartment>()
         private set
-    var selectedTypeOfEmploymentList = mutableStateListOf<String>()
+    var selectedTypeOfEmploymentList = mutableStateListOf<FilterTypeOfEmployment>()
         private set
     //
 
@@ -143,9 +145,9 @@ class StudentListViewModel @Inject constructor(
             techStacks = filterDetailStackList.ifEmpty { null },
             grade = filterGradeList.map { it.replace("학년", "").toInt() }.ifEmpty { null },
             classNum = filterClassList.map { it.replace("반", "").toInt() }.ifEmpty { null },
-            department = filterDepartmentList.ifEmpty { null },
+            department = filterDepartmentList.map { it.enum }.ifEmpty { null },
             stuNumSort = if (filterSchoolNumberAscendingOrder.value) "ASCENDING" else "DESCENDING",
-            formOfEmployment = this@StudentListViewModel.filterTypeOfEmploymentList.ifEmpty { null },
+            formOfEmployment = filterTypeOfEmploymentList.map { it.enum }.ifEmpty { null },
             minGsmAuthenticationScore = filterGsmScoreSliderValues.value.start.toInt()
                 .takeIf { it != 0 },
             maxGsmAuthenticationScore = filterGsmScoreSliderValues.value.endInclusive.toInt()
@@ -270,7 +272,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setFilterDepartmentList(departmentList: List<String>) {
+    fun setFilterDepartmentList(departmentList: List<FilterDepartment>) {
         filterDepartmentList.removeAll(filterDepartmentList.filter {
             !departmentList.contains(it)
         })
@@ -288,7 +290,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setFilterTypeOfEmploymentList(typeOfEmploymentList: List<String>) {
+    fun setFilterTypeOfEmploymentList(typeOfEmploymentList: List<FilterTypeOfEmployment>) {
         filterTypeOfEmploymentList.removeAll(filterTypeOfEmploymentList.filter {
             !typeOfEmploymentList.contains(it)
         })
@@ -315,7 +317,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setSelectedDepartmentList(departmentList: List<String>) {
+    fun setSelectedDepartmentList(departmentList: List<FilterDepartment>) {
         selectedDepartmentList.removeAll(selectedDepartmentList.filter {
             !departmentList.contains(it)
         })
@@ -333,7 +335,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setSelectedTypeOfEmploymentList(typeOfEmploymentList: List<String>) {
+    fun setSelectedTypeOfEmploymentList(typeOfEmploymentList: List<FilterTypeOfEmployment  >) {
         selectedTypeOfEmploymentList.removeAll(selectedTypeOfEmploymentList.filter {
             !typeOfEmploymentList.contains(it)
         })
