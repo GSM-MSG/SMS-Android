@@ -41,7 +41,7 @@ fun PhotoPickBottomSheet(
             if (uri != null) {
                 onProfileImageUriChanged(
                     uri,
-                    !getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()
+                    getFileNameFromUri(context, uri)!!.isImageExtensionCorrect()
                 )
             }
         }
