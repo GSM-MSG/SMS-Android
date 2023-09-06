@@ -55,6 +55,7 @@ class MainActivity : BaseActivity() {
         observeEvent()
         authViewModel.getRoleInfo()
         fillOutViewModel.getMajorList()
+        studentListViewModel.getStudentListRequest(1, 20)
     }
 
     private fun observeEvent() {
@@ -147,6 +148,8 @@ class MainActivity : BaseActivity() {
                                         studentListViewModel.setFilterGsmScoreAscendingValue(studentListViewModel.selectedGsmScoreAscendingOrder.value)
                                         studentListViewModel.setFilterDesiredAnnualSalaryAscendingValue(studentListViewModel.selectedDesiredAnnualSalaryAscendingOrder.value)
                                         studentListViewModel.setFilterDetailStackList(studentListViewModel.selectedDetailStack)
+                                        studentListViewModel.clearStudentList()
+                                        studentListViewModel.getStudentListRequest(1, 20)
 
                                         navController.navigate(MainPage.Main.value)
                                     },
