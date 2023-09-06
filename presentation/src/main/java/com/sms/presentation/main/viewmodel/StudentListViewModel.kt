@@ -4,10 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.msg.sms.domain.model.student.response.GetStudentForAnonymousModel
-import com.msg.sms.domain.model.student.response.GetStudentForStudentModel
-import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
-import com.msg.sms.domain.model.student.response.StudentListModel
+import com.msg.sms.domain.model.student.response.*
 import com.msg.sms.domain.model.user.response.ProfileImageModel
 import com.msg.sms.domain.usecase.auth.DeleteTokenUseCase
 import com.msg.sms.domain.usecase.auth.LogoutUseCase
@@ -70,6 +67,10 @@ class StudentListViewModel @Inject constructor(
     private val _getStudentProfileImageResponse =
         MutableStateFlow<Event<ProfileImageModel>>(Event.Loading)
     val getStudentProfileImageResponse = _getStudentProfileImageResponse.asStateFlow()
+
+    // Main List
+    var studentList = mutableStateListOf<StudentModel>()
+        private set
 
     //Filter - Selector
     var majorList = listOf<String>()
@@ -255,6 +256,14 @@ class StudentListViewModel @Inject constructor(
         }
     }
 
+    fun addStudentList(list: List<StudentModel>) {
+        studentList.addAll(list)
+    }
+
+    fun clearStudentList() {
+        studentList.clear()
+    }
+
     //Filter - Selector Setter (start)
     fun setFilterGradeList(gradeList: List<FilterGrade>) {
         filterGradeList.removeAll(filterGradeList.filter {
@@ -337,7 +346,7 @@ class StudentListViewModel @Inject constructor(
         })
     }
 
-    fun setSelectedTypeOfEmploymentList(typeOfEmploymentList: List<FilterTypeOfEmployment  >) {
+    fun setSelectedTypeOfEmploymentList(typeOfEmploymentList: List<FilterTypeOfEmployment>) {
         selectedTypeOfEmploymentList.removeAll(selectedTypeOfEmploymentList.filter {
             !typeOfEmploymentList.contains(it)
         })
@@ -410,9 +419,4 @@ class StudentListViewModel @Inject constructor(
         })
     }
     //Filter - DetailStack Setter (end)
-
-    fun resetFilterData() {
-
-    }
-
 }

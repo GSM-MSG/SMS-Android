@@ -46,9 +46,6 @@ fun MainScreen(
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    val studentList = remember {
-        mutableStateOf(listOf<StudentModel>())
-    }
     val progressState = remember {
         mutableStateOf(false)
     }
@@ -88,8 +85,6 @@ fun MainScreen(
         }
     }
 
-    viewModel.getStudentListRequest(1, 20)
-
     BackHandler {
         if (bottomSheetState.isVisible) {
             scope.launch {
@@ -117,7 +112,7 @@ fun MainScreen(
             viewModel = viewModel,
             progressState = { progressState.value = it },
             onSuccess = { list, size ->
-                studentList.value = list
+                viewModel.addStudentList(list)
                 listTotalSize.value = size
             }
         )
@@ -142,8 +137,8 @@ fun MainScreen(
     }
 
     LaunchedEffect(lastVisibleItem.value) {
-        if (lastVisibleItem.value == studentList.value.lastIndex) {
-
+        if (lastVisibleItem.value == viewModel.studentList.lastIndex && viewModel.getStudentListResponse.value.data?.last != true) {
+            viewModel.getStudentListRequest(viewModel.getStudentListResponse.value.data!!.page + 1, 20)
         }
     }
 
@@ -212,7 +207,7 @@ fun MainScreen(
                     StudentListComponent(
                         listState = listState,
                         progressState = progressState.value,
-                        studentList = studentList.value,
+                        studentList = viewModel.studentList,
                         listTotalSize = listTotalSize.value
                     ) {
                         lifecycleScope.launch {
