@@ -38,7 +38,7 @@ fun AwardScreen(
 
             AwardComponent(
                 data = item,
-                awardValidationList = awardValidationList,
+                awardValidation = awardValidationList[index],
                 onDateBottomSheetOpenButtonClick = {
                     onDateBottomSheetOpenButtonClick(index)
                 },

@@ -19,7 +19,7 @@ import com.sms.presentation.main.ui.util.hideKeyboard
 @Composable
 fun AwardComponent(
     data: AwardData,
-    awardValidationList: List<AwardRequiredDataInfo>,
+    awardValidation: AwardRequiredDataInfo,
     onCancelButtonClick: () -> Unit,
     onDateBottomSheetOpenButtonClick: () -> Unit,
     onAwardValueChanged: (award: AwardData) -> Unit
@@ -47,17 +47,17 @@ fun AwardComponent(
             AwardNameInputComponent(
                 title = "이름",
                 placeHolder = "수상 내역 이름 입력",
-                isNameEmpty = true,
+                isNameEmpty = awardValidation.isNameEmpty,
                 text = data.name,
                 onButtonClick = { onAwardValueChanged(data.copy(name = "")) },
                 onValueChange = { name ->
                     onAwardValueChanged(data.copy(name = name))
                 }
             )
-            AwardNameInputComponent(
+            AwardTypeInputComponent(
                 title = "종류",
                 placeHolder = "수상 종류입력",
-                isNameEmpty = true,
+                isTypeEmpty = awardValidation.isTypeEmpty,
                 text = data.type,
                 onButtonClick = { onAwardValueChanged(data.copy(type = "")) },
                 onValueChange = { type ->
@@ -66,7 +66,7 @@ fun AwardComponent(
             )
             AwardDateBarComponent(
                 date = data.date,
-                isDateEmpty = true,
+                isDateEmpty = awardValidation.isDataEmpty,
                 onClick = {
                     context.hideKeyboard()
                     onDateBottomSheetOpenButtonClick()
