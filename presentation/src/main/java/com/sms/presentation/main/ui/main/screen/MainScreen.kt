@@ -1,6 +1,5 @@
 package com.sms.presentation.main.ui.main.screen
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -32,7 +31,6 @@ import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -81,9 +79,13 @@ fun MainScreen(
     val profileImageUrl = remember {
         mutableStateOf("")
     }
-
     val snackBarVisibility = remember {
         mutableStateOf(false)
+    }
+    val lastVisibleItem = remember {
+        derivedStateOf {
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+        }
     }
 
     viewModel.getStudentListRequest(1, 20)
@@ -103,7 +105,7 @@ fun MainScreen(
         LaunchedEffect(putProfileChange.value) {
             scope.launch {
                 snackBarVisibility.value = true
-                delay(3_000)
+                delay(3000)
                 snackBarVisibility.value = false
                 myProfileVIewModel.changeProfileState()
             }
@@ -111,12 +113,14 @@ fun MainScreen(
     }
 
     LaunchedEffect("GetStudentList") {
-        getStudentList(viewModel = viewModel,
+        getStudentList(
+            viewModel = viewModel,
             progressState = { progressState.value = it },
             onSuccess = { list, size ->
                 studentList.value = list
                 listTotalSize.value = size
-            })
+            }
+        )
     }
 
     LaunchedEffect("GetProfileImage") {
@@ -137,19 +141,10 @@ fun MainScreen(
         }
     }
 
-    LaunchedEffect("Pagination") {
-        val response = viewModel.getStudentListResponse.value
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }.filter { it == listState.layoutInfo.totalItemsCount - 1 }
-            .collect {
-                val isSuccess = response is Event.Success
-                if (isSuccess && it != 0) {
-                    val isIncompleteData = studentList.value.size < response.data!!.totalSize
-                    if (isIncompleteData) {
-                        viewModel.getStudentListRequest(response.data.page + 1, 20)
-                    }
-                    Log.d("pagination", it.toString())
-                }
-            }
+    LaunchedEffect(lastVisibleItem.value) {
+        if (lastVisibleItem.value == studentList.value.lastIndex) {
+
+        }
     }
 
     if (dialogState.value) {
