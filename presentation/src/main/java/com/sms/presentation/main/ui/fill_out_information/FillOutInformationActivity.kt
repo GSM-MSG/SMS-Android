@@ -2,6 +2,7 @@ package com.sms.presentation.main.ui.fill_out_information
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -358,7 +359,7 @@ class FillOutInformationActivity : BaseActivity() {
                             }
                             NavHost(
                                 navController = navController,
-                                startDestination = FillOutPage.Profile.value
+                                startDestination = FillOutPage.Award.value
                             ) {
                                 composable(FillOutPage.Profile.value) {
                                     currentRoute.value = FillOutPage.Profile.value
@@ -602,95 +603,89 @@ class FillOutInformationActivity : BaseActivity() {
                                             awardData.removeAt(index)
                                         },
                                         onCompleteButtonClick = {
-                                            loadingModalState.value = true
-                                            fillOutViewModel.setEnteredAwardsInformation(
-                                                awardData.filter { award ->
-                                                    award.name.isNotEmpty() ||
-                                                    award.type.isNotEmpty() ||
-                                                    award.date.isNotEmpty()
-                                                }
-                                            )
+                                            //loadingModalState.value = true
+                                            fillOutViewModel.checkAwardValidation()
 
                                             //이미지 업로드 & 정보기입 요청
-                                            lifecycleScope.launch {
-                                                val profileImageUpload =
-                                                    fillOutViewModel.profileImageUploadAsync(
-                                                        profileImageUri.value,
-                                                        this@FillOutInformationActivity
-                                                    )
-                                                val projectIconsImageUpload =
-                                                    fillOutViewModel.projectsIconUploadAsync(
-                                                        enteredProjectsData.map { it.icon },
-                                                        this@FillOutInformationActivity
-                                                    )
-                                                val projectsPreviewsImageUpload =
-                                                    fillOutViewModel.projectsPreviewAsync(
-                                                        enteredProjectsData.map { it.preview },
-                                                        this@FillOutInformationActivity
-                                                    )
-
-                                                awaitAll(
-                                                    profileImageUpload,
-                                                    projectIconsImageUpload,
-                                                    projectsPreviewsImageUpload
-                                                )
-
-                                                if (
-                                                    fillOutViewModel.profileImageUploadResponse.value is Event.Success &&
-                                                    if (enteredProjectsData.isNotEmpty()) {
-                                                        fillOutViewModel.projectIconImageUploadResponse.value is Event.Success &&
-                                                        fillOutViewModel.projectPreviewsImageUploadResponse.value is Event.Success
-                                                    } else true
-                                                ) {
-                                                    fillOutViewModel.enterStudentInformation(
-                                                        major = enteredProfileData.major.takeIf { it != "직접입력" } ?: enteredProfileData.enteredMajor,
-                                                        techStack = enteredProfileData.techStack,
-                                                        profileImgUrl = fillOutViewModel.profileImageUploadResponse.value.data!!,
-                                                        introduce = enteredProfileData.introduce,
-                                                        portfolioUrl = enteredProfileData.portfolioUrl,
-                                                        contactEmail = enteredProfileData.contactEmail,
-                                                        formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
-                                                        salary = enteredWorkConditionData.salary.toInt(),
-                                                        region = enteredWorkConditionData.regions,
-                                                        gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
-                                                        certificate = enteredCertificateData,
-                                                        militaryService = enteredMilitaryData.militaryService.toEnum(),
-                                                        languageCertificate = enteredForeignLanguagesData.map {
-                                                            CertificateModel(
-                                                                languageCertificateName = it.languageCertificateName,
-                                                                score = it.score
-                                                            )
-                                                        },
-                                                        projects = enteredProjectsData.mapIndexed { index, item ->
-                                                            ProjectModel(
-                                                                name = item.name,
-                                                                icon = fillOutViewModel.projectIconImageUploadResponse.value.data!![index],
-                                                                previewImages = fillOutViewModel.projectPreviewsImageUploadResponse.value.data!![index],
-                                                                description = item.description,
-                                                                links = item.relatedLinkList.map {
-                                                                    ProjectRelatedLinkModel(
-                                                                        name = it.first,
-                                                                        url = it.second
-                                                                    )
-                                                                },
-                                                                techStacks = item.technologyOfUse,
-                                                                myActivity = item.keyTask,
-                                                                inProgress = ProjectDateModel(
-                                                                    item.startDate,
-                                                                    if (item.isProjectProgress) null else item.endDate
-                                                                )
-                                                            )
-                                                        },
-                                                        award = enteredAwardsData.map {
-                                                            PrizeModel(
-                                                                name = it.name,
-                                                                date = it.date,
-                                                                type = it.type
-                                                            )
-                                                        }
-                                                    )
-                                                }
-                                            }
+//                                            lifecycleScope.launch {
+//                                                val profileImageUpload =
+//                                                    fillOutViewModel.profileImageUploadAsync(
+//                                                        profileImageUri.value,
+//                                                        this@FillOutInformationActivity
+//                                                    )
+//                                                val projectIconsImageUpload =
+//                                                    fillOutViewModel.projectsIconUploadAsync(
+//                                                        enteredProjectsData.map { it.icon },
+//                                                        this@FillOutInformationActivity
+//                                                    )
+//                                                val projectsPreviewsImageUpload =
+//                                                    fillOutViewModel.projectsPreviewAsync(
+//                                                        enteredProjectsData.map { it.preview },
+//                                                        this@FillOutInformationActivity
+//                                                    )
+//
+//                                                awaitAll(
+//                                                    profileImageUpload,
+//                                                    projectIconsImageUpload,
+//                                                    projectsPreviewsImageUpload
+//                                                )
+//
+//                                                if (
+//                                                    fillOutViewModel.profileImageUploadResponse.value is Event.Success &&
+//                                                    if (enteredProjectsData.isNotEmpty()) {
+//                                                        fillOutViewModel.projectIconImageUploadResponse.value is Event.Success &&
+//                                                        fillOutViewModel.projectPreviewsImageUploadResponse.value is Event.Success
+//                                                    } else true
+//                                                ) {
+//                                                    fillOutViewModel.enterStudentInformation(
+//                                                        major = enteredProfileData.major.takeIf { it != "직접입력" } ?: enteredProfileData.enteredMajor,
+//                                                        techStack = enteredProfileData.techStack,
+//                                                        profileImgUrl = fillOutViewModel.profileImageUploadResponse.value.data!!,
+//                                                        introduce = enteredProfileData.introduce,
+//                                                        portfolioUrl = enteredProfileData.portfolioUrl,
+//                                                        contactEmail = enteredProfileData.contactEmail,
+//                                                        formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
+//                                                        salary = enteredWorkConditionData.salary.toInt(),
+//                                                        region = enteredWorkConditionData.regions,
+//                                                        gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
+//                                                        certificate = enteredCertificateData,
+//                                                        militaryService = enteredMilitaryData.militaryService.toEnum(),
+//                                                        languageCertificate = enteredForeignLanguagesData.map {
+//                                                            CertificateModel(
+//                                                                languageCertificateName = it.languageCertificateName,
+//                                                                score = it.score
+//                                                            )
+//                                                        },
+//                                                        projects = enteredProjectsData.mapIndexed { index, item ->
+//                                                            ProjectModel(
+//                                                                name = item.name,
+//                                                                icon = fillOutViewModel.projectIconImageUploadResponse.value.data!![index],
+//                                                                previewImages = fillOutViewModel.projectPreviewsImageUploadResponse.value.data!![index],
+//                                                                description = item.description,
+//                                                                links = item.relatedLinkList.map {
+//                                                                    ProjectRelatedLinkModel(
+//                                                                        name = it.first,
+//                                                                        url = it.second
+//                                                                    )
+//                                                                },
+//                                                                techStacks = item.technologyOfUse,
+//                                                                myActivity = item.keyTask,
+//                                                                inProgress = ProjectDateModel(
+//                                                                    item.startDate,
+//                                                                    if (item.isProjectProgress) null else item.endDate
+//                                                                )
+//                                                            )
+//                                                        },
+//                                                        award = enteredAwardsData.map {
+//                                                            PrizeModel(
+//                                                                name = it.name,
+//                                                                date = it.date,
+//                                                                type = it.type
+//                                                            )
+//                                                        }
+//                                                    )
+//                                                }
+//                                            }
 
                                             //예외처리
                                             lifecycleScope.launch {
