@@ -604,7 +604,15 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onCompleteButtonClick = {
                                             //loadingModalState.value = true
-                                            fillOutViewModel.checkAwardValidation()
+                                            fillOutViewModel.checkAwardValidation(awardList = awardData)
+
+                                            if (
+                                                fillOutViewModel.awardValidationData.value.all {
+                                                    !it.isNameEmpty && !it.isTypeEmpty && !it.isDataEmpty
+                                                }
+                                            ) {
+                                                fillOutViewModel.setEnteredAwardsInformation(awards = awardData)
+                                            }
 
                                             //이미지 업로드 & 정보기입 요청
 //                                            lifecycleScope.launch {

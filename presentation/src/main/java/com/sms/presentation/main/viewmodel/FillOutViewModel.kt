@@ -2,6 +2,7 @@ package com.sms.presentation.main.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -231,15 +232,16 @@ class FillOutViewModel @Inject constructor(
         this._awardValidationData.value = infoDataList
     }
 
-    fun checkAwardValidation() {
+    fun checkAwardValidation(awardList: List<AwardData>) {
         val validationDataList = _awardValidationData.value.toMutableList()
-        awards.forEachIndexed { index, awardData ->
+        awardList.forEachIndexed { index, awardData ->
             validationDataList[index] = AwardRequiredDataInfo(
                 isNameEmpty = awardData.name.isEmpty(),
                 isTypeEmpty = awardData.type.isEmpty(),
                 isDataEmpty = awardData.date.isEmpty()
             )
         }
+        Log.d("ValidationDataList",validationDataList.toString())
         this._awardValidationData.value = validationDataList
     }
 
