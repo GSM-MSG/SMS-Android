@@ -598,9 +598,11 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onAddButtonClick = {
                                             awardData.add(AwardData())
+                                            fillOutViewModel.addAwardRequiredDataInformation()
                                         },
                                         onCancelButtonClick = { index ->
                                             awardData.removeAt(index)
+                                            fillOutViewModel.removeAwardRequiredDataInformation(index)
                                         },
                                         onCompleteButtonClick = {
                                             //loadingModalState.value = true
