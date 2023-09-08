@@ -2,7 +2,6 @@ package com.sms.presentation.main.viewmodel
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -10,10 +9,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.msg.sms.domain.model.major.MajorListModel
 import com.msg.sms.domain.model.common.CertificateModel
-import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
 import com.msg.sms.domain.model.common.PrizeModel
+import com.msg.sms.domain.model.major.MajorListModel
+import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
 import com.msg.sms.domain.model.student.request.ProjectModel
 import com.msg.sms.domain.usecase.fileupload.ImageUploadUseCase
 import com.msg.sms.domain.usecase.major.GetMajorListUseCase
@@ -23,10 +22,12 @@ import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -241,7 +242,6 @@ class FillOutViewModel @Inject constructor(
                 isDataEmpty = awardData.date.isEmpty()
             )
         }
-        Log.d("ValidationDataList",validationDataList.toString())
         this._awardValidationData.value = validationDataList
     }
 

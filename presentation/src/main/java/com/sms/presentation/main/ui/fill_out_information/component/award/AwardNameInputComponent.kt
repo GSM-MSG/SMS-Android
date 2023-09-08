@@ -3,6 +3,7 @@ package com.sms.presentation.main.ui.fill_out_information.component.award
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.util.AddGrayBody1Title
 
@@ -12,9 +13,14 @@ fun AwardNameInputComponent(
     placeHolder: String,
     text: String,
     isNameEmpty: Boolean,
+    focusRequester: FocusRequester,
     onButtonClick: () -> Unit,
     onValueChange: (String) -> Unit,
 ) {
+    if (isNameEmpty) {
+        focusRequester.requestFocus()
+    }
+
     AddGrayBody1Title(titleText = title) {
         SmsTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -24,7 +30,8 @@ fun AwardNameInputComponent(
             onClickButton = onButtonClick,
             singleLine = true,
             errorText = "수상 이름을 입력해 주세요.",
-            isError = isNameEmpty
+            isError = isNameEmpty,
+            focusRequester = focusRequester
         )
     }
 }

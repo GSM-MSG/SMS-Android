@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.toggle.ToggleComponent
@@ -25,6 +26,9 @@ fun AwardComponent(
     onAwardValueChanged: (award: AwardData) -> Unit
 ) {
     val context = LocalContext.current as FillOutInformationActivity
+    val focusRequester = remember {
+        mutableStateOf(FocusRequester())
+    }
     val contentVisible = remember {
         mutableStateOf(data.isToggleOpen)
     }
@@ -49,6 +53,7 @@ fun AwardComponent(
                 placeHolder = "수상 내역 이름 입력",
                 isNameEmpty = awardValidation.isNameEmpty,
                 text = data.name,
+                focusRequester = focusRequester.value,
                 onButtonClick = { onAwardValueChanged(data.copy(name = "")) },
                 onValueChange = { name ->
                     onAwardValueChanged(data.copy(name = name))
@@ -59,6 +64,7 @@ fun AwardComponent(
                 placeHolder = "수상 종류입력",
                 isTypeEmpty = awardValidation.isTypeEmpty,
                 text = data.type,
+                focusRequester = focusRequester.value,
                 onButtonClick = { onAwardValueChanged(data.copy(type = "")) },
                 onValueChange = { type ->
                     onAwardValueChanged(data.copy(type = type))
@@ -67,6 +73,7 @@ fun AwardComponent(
             AwardDateBarComponent(
                 date = data.date,
                 isDateEmpty = awardValidation.isDataEmpty,
+                focusRequester = focusRequester.value,
                 onClick = {
                     context.hideKeyboard()
                     onDateBottomSheetOpenButtonClick()
