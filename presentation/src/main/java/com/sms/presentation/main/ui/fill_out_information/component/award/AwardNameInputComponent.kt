@@ -13,20 +13,10 @@ fun AwardNameInputComponent(
     placeHolder: String,
     text: String,
     isNameEmpty: Boolean,
-    onFocusRequested: Boolean,
+    focusRequester: FocusRequester,
     onButtonClick: () -> Unit,
     onValueChange: (String) -> Unit,
 ) {
-    val focusRequester by remember {
-        mutableStateOf(FocusRequester())
-    }
-
-    LaunchedEffect(onFocusRequested) {
-        if (onFocusRequested) {
-            focusRequester.requestFocus()
-        }
-    }
-
     AddGrayBody1Title(titleText = title) {
         SmsTextField(
             modifier = Modifier.fillMaxWidth(),

@@ -10,19 +10,9 @@ import com.msg.sms.design.util.AddGrayBody1Title
 fun AwardDateBarComponent(
     date: String,
     isDateEmpty: Boolean,
-    onFocusRequested: Boolean,
+    focusRequester: FocusRequester,
     onClick: () -> Unit
 ) {
-    val focusRequester by remember {
-        mutableStateOf(FocusRequester())
-    }
-
-    LaunchedEffect(onFocusRequested) {
-        if (onFocusRequested) {
-            focusRequester.captureFocus()
-        }
-    }
-
     AddGrayBody1Title(titleText = "기간") {
         SmsCustomTextField(
             setChangeText = date,

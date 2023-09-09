@@ -16,7 +16,6 @@ import com.sms.presentation.main.ui.fill_out_information.component.award.AwardCo
 import com.sms.presentation.main.ui.fill_out_information.data.AwardData
 import com.sms.presentation.main.ui.fill_out_information.data.AwardRequiredDataInfo
 
-
 @Composable
 fun AwardScreen(
     data: List<AwardData>,
