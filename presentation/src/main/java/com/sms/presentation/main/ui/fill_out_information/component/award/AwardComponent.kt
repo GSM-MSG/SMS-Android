@@ -25,11 +25,6 @@ fun AwardComponent(
 ) {
     val context = LocalContext.current as FillOutInformationActivity
 
-    if (awardValidation.isNameEmpty || awardValidation.isTypeEmpty || awardValidation.isDataEmpty) {
-        onAwardValueChanged(data.copy(isToggleOpen = true))
-        Log.d("AwardData", data.toString())
-    }
-
     ToggleComponent(
         modifier = Modifier
             .fillMaxWidth()

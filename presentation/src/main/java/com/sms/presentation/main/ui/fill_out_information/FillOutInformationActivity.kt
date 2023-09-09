@@ -608,6 +608,12 @@ class FillOutInformationActivity : BaseActivity() {
                                             //loadingModalState.value = true
                                             fillOutViewModel.checkAwardValidation(awardList = awardData)
 
+                                            fillOutViewModel.awardValidationData.value.forEachIndexed { index, validation ->
+                                                if (validation.isNameEmpty || validation.isTypeEmpty || validation.isDataEmpty) {
+                                                    awardData[index] = awardData[index].copy(isToggleOpen = true)
+                                                }
+                                            }
+
                                             if (
                                                 fillOutViewModel.awardValidationData.value.all {
                                                     !it.isNameEmpty && !it.isTypeEmpty && !it.isDataEmpty
