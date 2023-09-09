@@ -1,12 +1,14 @@
 package com.sms.presentation.main.ui.fill_out_information.component.award
 
-import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.toggle.ToggleComponent
@@ -14,7 +16,9 @@ import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActiv
 import com.sms.presentation.main.ui.fill_out_information.data.AwardData
 import com.sms.presentation.main.ui.fill_out_information.data.AwardRequiredDataInfo
 import com.sms.presentation.main.ui.util.hideKeyboard
+import kotlinx.coroutines.cancel
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AwardComponent(
     data: AwardData,
@@ -24,6 +28,30 @@ fun AwardComponent(
     onAwardValueChanged: (award: AwardData) -> Unit
 ) {
     val context = LocalContext.current as FillOutInformationActivity
+    val onNameFocusRequested = remember {
+        mutableStateOf(false)
+    }
+    val onTypeFocusRequested = remember {
+        mutableStateOf(false)
+    }
+    val onDateFocusRequested = remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(awardValidation) {
+        if (awardValidation.isNameEmpty) {
+            onNameFocusRequested.value = true
+            this.cancel()
+        } else if (awardValidation.isTypeEmpty) {
+            onTypeFocusRequested.value = true
+            this.cancel()
+        } else {
+            onDateFocusRequested.value = true
+            this.cancel()
+        }
+    }
+
+
 
     ToggleComponent(
         modifier = Modifier
@@ -37,6 +65,7 @@ fun AwardComponent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .focusGroup()
                 .padding(top = 32.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
@@ -45,6 +74,7 @@ fun AwardComponent(
                 placeHolder = "수상 내역 이름 입력",
                 isNameEmpty = awardValidation.isNameEmpty,
                 text = data.name,
+                onFocusRequested = onNameFocusRequested.value,
                 onButtonClick = { onAwardValueChanged(data.copy(name = "")) },
                 onValueChange = { name ->
                     onAwardValueChanged(data.copy(name = name))
@@ -55,6 +85,7 @@ fun AwardComponent(
                 placeHolder = "수상 종류입력",
                 isTypeEmpty = awardValidation.isTypeEmpty,
                 text = data.type,
+                onFocusRequested = onTypeFocusRequested.value,
                 onButtonClick = { onAwardValueChanged(data.copy(type = "")) },
                 onValueChange = { type ->
                     onAwardValueChanged(data.copy(type = type))
@@ -63,6 +94,7 @@ fun AwardComponent(
             AwardDateBarComponent(
                 date = data.date,
                 isDateEmpty = awardValidation.isDataEmpty,
+                onFocusRequested = onDateFocusRequested.value,
                 onClick = {
                     context.hideKeyboard()
                     onDateBottomSheetOpenButtonClick()

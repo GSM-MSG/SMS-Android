@@ -1,9 +1,6 @@
 package com.sms.presentation.main.ui.fill_out_information.component.award
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.focus.FocusRequester
 import com.msg.sms.design.component.textfield.SmsCustomTextField
 import com.msg.sms.design.icon.CalendarIcon
@@ -13,17 +10,18 @@ import com.msg.sms.design.util.AddGrayBody1Title
 fun AwardDateBarComponent(
     date: String,
     isDateEmpty: Boolean,
+    onFocusRequested: Boolean,
     onClick: () -> Unit
 ) {
     val focusRequester by remember {
         mutableStateOf(FocusRequester())
     }
 
-//    LaunchedEffect(isDateEmpty) {
-//        if (isDateEmpty) {
-//            focusRequester.captureFocus()
-//        }
-//    }
+    LaunchedEffect(onFocusRequested) {
+        if (onFocusRequested) {
+            focusRequester.captureFocus()
+        }
+    }
 
     AddGrayBody1Title(titleText = "기간") {
         SmsCustomTextField(

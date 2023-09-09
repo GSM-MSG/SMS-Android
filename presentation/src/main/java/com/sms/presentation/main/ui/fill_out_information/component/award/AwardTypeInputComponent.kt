@@ -13,6 +13,7 @@ fun AwardTypeInputComponent(
     placeHolder: String,
     text: String,
     isTypeEmpty: Boolean,
+    onFocusRequested: Boolean,
     onButtonClick: () -> Unit,
     onValueChange: (String) -> Unit,
 ) {
@@ -20,11 +21,11 @@ fun AwardTypeInputComponent(
         mutableStateOf(FocusRequester())
     }
 
-//    LaunchedEffect(isTypeEmpty) {
-//        if (isTypeEmpty) {
-//            focusRequester.requestFocus()
-//        }
-//    }
+    LaunchedEffect(onFocusRequested) {
+        if (onFocusRequested) {
+            focusRequester.requestFocus()
+        }
+    }
 
     AddGrayBody1Title(titleText = title) {
         SmsTextField(

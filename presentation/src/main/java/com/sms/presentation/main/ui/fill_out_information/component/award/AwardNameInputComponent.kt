@@ -13,6 +13,7 @@ fun AwardNameInputComponent(
     placeHolder: String,
     text: String,
     isNameEmpty: Boolean,
+    onFocusRequested: Boolean,
     onButtonClick: () -> Unit,
     onValueChange: (String) -> Unit,
 ) {
@@ -20,8 +21,8 @@ fun AwardNameInputComponent(
         mutableStateOf(FocusRequester())
     }
 
-    LaunchedEffect(isNameEmpty) {
-        if (isNameEmpty) {
+    LaunchedEffect(onFocusRequested) {
+        if (onFocusRequested) {
             focusRequester.requestFocus()
         }
     }
