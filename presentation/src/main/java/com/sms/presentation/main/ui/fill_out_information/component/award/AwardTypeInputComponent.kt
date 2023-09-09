@@ -1,7 +1,7 @@
 package com.sms.presentation.main.ui.fill_out_information.component.award
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import com.msg.sms.design.component.textfield.SmsTextField
@@ -13,13 +13,18 @@ fun AwardTypeInputComponent(
     placeHolder: String,
     text: String,
     isTypeEmpty: Boolean,
-    focusRequester: FocusRequester,
     onButtonClick: () -> Unit,
     onValueChange: (String) -> Unit,
 ) {
-    if (isTypeEmpty) {
-        focusRequester.requestFocus()
+    val focusRequester by remember {
+        mutableStateOf(FocusRequester())
     }
+
+//    LaunchedEffect(isTypeEmpty) {
+//        if (isTypeEmpty) {
+//            focusRequester.requestFocus()
+//        }
+//    }
 
     AddGrayBody1Title(titleText = title) {
         SmsTextField(
