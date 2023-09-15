@@ -2,7 +2,6 @@ package com.sms.presentation.main.ui.fill_out_information
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -28,10 +27,6 @@ import com.msg.sms.design.component.lottie.SmsLoadingLottie
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.ExclamationMarkIcon
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.domain.model.common.CertificateModel
-import com.msg.sms.domain.model.common.PrizeModel
-import com.msg.sms.domain.model.common.ProjectDateModel
-import com.msg.sms.domain.model.common.ProjectRelatedLinkModel
 import com.msg.sms.domain.model.student.request.*
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
@@ -51,7 +46,6 @@ import com.sms.presentation.main.viewmodel.FillOutViewModel
 import com.sms.presentation.main.viewmodel.SearchDetailStackViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
@@ -790,20 +784,6 @@ class FillOutInformationActivity : BaseActivity() {
                     }
                 }
             }
-        }
-    }
-
-    private fun String.toEnum(): String {
-        return when (this) {
-            "정규직" -> "FULL_TIME"
-            "비정규직" -> "TEMPORARY"
-            "계약직" -> "CONSTRACT"
-            "인턴" -> "INTERN"
-            "병특 희망" -> "HOPE"
-            "희망하지 않음" -> "NOT_HOPE"
-            "상관없음" -> "NO_MATTER"
-            "해당 사항 없음" -> "NONE"
-            else -> ""
         }
     }
 
