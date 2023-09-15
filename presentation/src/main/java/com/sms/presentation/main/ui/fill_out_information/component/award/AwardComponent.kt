@@ -37,7 +37,7 @@ fun AwardComponent(
             nameFocusRequester.requestFocus()
         } else if (awardValidation.isTypeEmpty) {
             typeFocusRequester.requestFocus()
-        } else if (awardValidation.isDataEmpty) {
+        } else if (awardValidation.isDateEmpty) {
             dateFocusRequester.requestFocus()
         }
     }
@@ -81,7 +81,7 @@ fun AwardComponent(
             )
             AwardDateBarComponent(
                 date = data.date,
-                isDateEmpty = awardValidation.isDataEmpty,
+                isDateEmpty = awardValidation.isDateEmpty,
                 focusRequester = dateFocusRequester,
                 onClick = {
                     context.hideKeyboard()

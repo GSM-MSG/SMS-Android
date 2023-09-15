@@ -239,7 +239,7 @@ class FillOutViewModel @Inject constructor(
             validationDataList[index] = AwardRequiredDataInfo(
                 isNameEmpty = awardData.name.isEmpty(),
                 isTypeEmpty = awardData.type.isEmpty(),
-                isDataEmpty = awardData.date.isEmpty()
+                isDateEmpty = awardData.date.isEmpty()
             )
         }
         this._awardValidationData.value = validationDataList
