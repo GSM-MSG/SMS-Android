@@ -26,7 +26,7 @@ fun AwardScreen(
     onAddButtonClick: () -> Unit,
     onCancelButtonClick: (index: Int) -> Unit,
     onCompleteButtonClick: () -> Unit,
-    onAwardValueChanged: (index: Int, award: AwardData) -> Unit
+    onAwardValueChanged: (index: Int, award: AwardData) -> Unit,
 ) {
     LazyColumn {
         item {
@@ -37,6 +37,9 @@ fun AwardScreen(
 
             AwardComponent(
                 data = item,
+                isFirstValidationInCorrectItem = awardValidationList.indexOfFirst {
+                    it.isNameEmpty || it.isTypeEmpty || it.isDateEmpty
+                } == index,
                 awardValidation = awardValidationList[index],
                 onDateBottomSheetOpenButtonClick = {
                     onDateBottomSheetOpenButtonClick(index)

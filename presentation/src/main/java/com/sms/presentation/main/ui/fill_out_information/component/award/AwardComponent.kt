@@ -22,10 +22,11 @@ import com.sms.presentation.main.ui.util.hideKeyboard
 @Composable
 fun AwardComponent(
     data: AwardData,
+    isFirstValidationInCorrectItem: Boolean,
     awardValidation: AwardRequiredDataInfo,
     onCancelButtonClick: () -> Unit,
     onDateBottomSheetOpenButtonClick: () -> Unit,
-    onAwardValueChanged: (award: AwardData) -> Unit
+    onAwardValueChanged: (award: AwardData) -> Unit,
 ) {
     val context = LocalContext.current as FillOutInformationActivity
     val (nameFocusRequester, typeFocusRequester, dateFocusRequester) = remember {
@@ -33,12 +34,14 @@ fun AwardComponent(
     }
 
     LaunchedEffect(awardValidation) {
-        if (awardValidation.isNameEmpty) {
-            nameFocusRequester.requestFocus()
-        } else if (awardValidation.isTypeEmpty) {
-            typeFocusRequester.requestFocus()
-        } else if (awardValidation.isDateEmpty) {
-            dateFocusRequester.requestFocus()
+        if (isFirstValidationInCorrectItem) {
+            if (awardValidation.isNameEmpty) {
+                nameFocusRequester.requestFocus()
+            } else if (awardValidation.isTypeEmpty) {
+                typeFocusRequester.requestFocus()
+            } else if (awardValidation.isDateEmpty) {
+                dateFocusRequester.requestFocus()
+            }
         }
     }
 
