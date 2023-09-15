@@ -34,8 +34,8 @@ class AuthViewModel @Inject constructor(
     private val _getMajorList = MutableLiveData<Event<MajorListModel>>()
     val getMajorList: LiveData<Event<MajorListModel>> get() = _getMajorList
 
-    private val _saveTokenRequest = MutableLiveData<Event<MajorListModel>>()
-    val saveTokenRequest: LiveData<Event<MajorListModel>> get() = _saveTokenRequest
+    private val _saveTokenRequest = MutableLiveData<Event<Nothing>>()
+    val saveTokenRequest: LiveData<Event<Nothing>> get() = _saveTokenRequest
 
     private val _accessValidationResponse =
         MutableStateFlow<Event<AccessValidationResponseModel>>(Event.Loading)
