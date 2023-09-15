@@ -33,7 +33,6 @@ fun DatePickerBottomSheet(
 
     SMSTheme { colors, typography ->
         Column(
-            modifier = Modifier.padding(end = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
