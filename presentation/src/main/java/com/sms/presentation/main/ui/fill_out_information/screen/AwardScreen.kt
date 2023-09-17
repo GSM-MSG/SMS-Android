@@ -37,7 +37,7 @@ fun AwardScreen(
 
             AwardComponent(
                 data = item,
-                isFirstValidationInCorrectItem = awardValidationList.indexOfFirst {
+                isFirstValidationError = awardValidationList.indexOfFirst {
                     it.isNameEmpty || it.isTypeEmpty || it.isDateEmpty
                 } == index,
                 awardValidation = awardValidationList[index],

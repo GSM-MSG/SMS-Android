@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
@@ -18,30 +17,31 @@ import com.sms.presentation.main.ui.fill_out_information.data.AwardData
 import com.sms.presentation.main.ui.fill_out_information.data.AwardRequiredDataInfo
 import com.sms.presentation.main.ui.util.hideKeyboard
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AwardComponent(
     data: AwardData,
-    isFirstValidationInCorrectItem: Boolean,
+    isFirstValidationError: Boolean,
     awardValidation: AwardRequiredDataInfo,
     onCancelButtonClick: () -> Unit,
     onDateBottomSheetOpenButtonClick: () -> Unit,
     onAwardValueChanged: (award: AwardData) -> Unit,
 ) {
     val context = LocalContext.current as FillOutInformationActivity
-    val (nameFocusRequester, typeFocusRequester, dateFocusRequester) = remember {
-        FocusRequester.createRefs()
+    val nameFocusRequester = remember {
+        FocusRequester()
+    }
+    val typeFocusRequester = remember {
+        FocusRequester()
+    }
+    val dateFocusRequester = remember {
+        FocusRequester()
     }
 
     LaunchedEffect(awardValidation) {
-        if (isFirstValidationInCorrectItem) {
-            if (awardValidation.isNameEmpty) {
-                nameFocusRequester.requestFocus()
-            } else if (awardValidation.isTypeEmpty) {
-                typeFocusRequester.requestFocus()
-            } else if (awardValidation.isDateEmpty) {
-                dateFocusRequester.requestFocus()
-            }
+        if (isFirstValidationError) {
+            if (awardValidation.isNameEmpty) nameFocusRequester.requestFocus()
+            else if (awardValidation.isTypeEmpty) typeFocusRequester.requestFocus()
+            else if (awardValidation.isDateEmpty) dateFocusRequester.requestFocus()
         }
     }
 

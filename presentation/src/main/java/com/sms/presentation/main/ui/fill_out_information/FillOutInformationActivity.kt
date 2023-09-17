@@ -596,6 +596,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onCancelButtonClick = { index ->
                                             awardData.removeAt(index)
+                                            awardDateMap[index] = ""
                                             fillOutViewModel.removeAwardRequiredDataInformation(index)
                                         },
                                         onCompleteButtonClick = {
