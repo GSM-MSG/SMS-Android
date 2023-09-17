@@ -34,4 +34,5 @@ object Versions {
 
     const val GOOGLE_SERVICE_PLUGIN = "4.3.15"
     const val FIREBASE_BOM = "32.3.1"
+    const val FIREBASE_CRASHLYTICS_PLUGIN = "2.9.9"
 }

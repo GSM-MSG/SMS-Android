@@ -35,6 +35,8 @@ object Dependency {
         const val GOOGLE_SERVICES_PLUGIN = "com.google.gms.google-services"
         const val FIREBASE_BOM = "com.google.firebase:firebase-bom:${Versions.FIREBASE_BOM}"
         const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
+        const val FIREBASE_CRASHLYTICS_PLUGIN = "com.google.firebase.crashlytics"
+        const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics-ktx"
     }
 
     object Libraries {
