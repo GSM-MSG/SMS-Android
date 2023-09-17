@@ -6,6 +6,8 @@ plugins {
     id(Dependency.Gradle.KOTLIN)
     id(Dependency.Google.HILT_PLUGIN)
     kotlin(Dependency.Gradle.KAPT)
+    id(Dependency.Google.GOOGLE_SERVICES_PLUGIN)
+    id(Dependency.Google.FIREBASE_CRASHLYTICS_PLUGIN)
 }
 
 @Suppress("UnstableApiUsage")
@@ -70,6 +72,10 @@ dependencies {
     implementation(Dependency.Libraries.RETROFIT_CONVERTER_GSON)
     implementation(Dependency.Libraries.OKHTTP)
     implementation(Dependency.Libraries.OKHTTP_LOGGING_INTERCEPTOR)
+
+    implementation(platform(Dependency.Google.FIREBASE_BOM))
+    implementation(Dependency.Google.FIREBASE_ANALYTICS)
+    implementation(Dependency.Google.FIREBASE_CRASHLYTICS)
 }
 
 fun getApiKey(propertyKey: String): String {
