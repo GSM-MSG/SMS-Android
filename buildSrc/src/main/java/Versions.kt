@@ -1,5 +1,3 @@
-import org.gradle.api.JavaVersion
-
 object Versions {
     const val GRADLE = "7.4.2"
     const val KOTLIN = "1.7.0"
@@ -33,4 +31,7 @@ object Versions {
     const val COIL = "2.4.0"
 
     const val LOTTIE_COMPOSE = "6.1.0"
+
+    const val GOOGLE_SERVICE_PLUGIN = "4.3.15"
+    const val FIREBASE_BOM = "32.3.1"
 }

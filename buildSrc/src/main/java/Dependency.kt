@@ -31,6 +31,10 @@ object Dependency {
         const val HILT_PLUGIN = "com.google.dagger.hilt.android"
         const val HILT = "com.google.dagger:hilt-android:${Versions.HILT}"
         const val HILT_COMPILER = "com.google.dagger:hilt-android-compiler:${Versions.HILT}"
+
+        const val GOOGLE_SERVICES_PLUGIN = "com.google.gms.google-services"
+        const val FIREBASE_BOM = "com.google.firebase:firebase-bom:${Versions.FIREBASE_BOM}"
+        const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
     }
 
     object Libraries {
