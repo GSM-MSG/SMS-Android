@@ -1,6 +1,5 @@
 package com.sms.presentation.main.ui.main.screen
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -32,7 +31,6 @@ import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -48,9 +46,6 @@ fun MainScreen(
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    val studentList = remember {
-        mutableStateOf(listOf<StudentModel>())
-    }
     val progressState = remember {
         mutableStateOf(false)
     }
@@ -81,12 +76,14 @@ fun MainScreen(
     val profileImageUrl = remember {
         mutableStateOf("")
     }
-
     val snackBarVisibility = remember {
         mutableStateOf(false)
     }
-
-    viewModel.getStudentListRequest(1, 20)
+    val lastVisibleItem = remember {
+        derivedStateOf {
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+        }
+    }
 
     BackHandler {
         if (bottomSheetState.isVisible) {
@@ -103,7 +100,7 @@ fun MainScreen(
         LaunchedEffect(putProfileChange.value) {
             scope.launch {
                 snackBarVisibility.value = true
-                delay(3_000)
+                delay(3000)
                 snackBarVisibility.value = false
                 myProfileVIewModel.changeProfileState()
             }
@@ -111,12 +108,14 @@ fun MainScreen(
     }
 
     LaunchedEffect("GetStudentList") {
-        getStudentList(viewModel = viewModel,
+        getStudentList(
+            viewModel = viewModel,
             progressState = { progressState.value = it },
             onSuccess = { list, size ->
-                studentList.value = list
+                viewModel.addStudentList(list)
                 listTotalSize.value = size
-            })
+            }
+        )
     }
 
     LaunchedEffect("GetProfileImage") {
@@ -137,19 +136,10 @@ fun MainScreen(
         }
     }
 
-    LaunchedEffect("Pagination") {
-        val response = viewModel.getStudentListResponse.value
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }.filter { it == listState.layoutInfo.totalItemsCount - 1 }
-            .collect {
-                val isSuccess = response is Event.Success
-                if (isSuccess && it != 0) {
-                    val isIncompleteData = studentList.value.size < response.data!!.totalSize
-                    if (isIncompleteData) {
-                        viewModel.getStudentListRequest(response.data.page + 1, 20)
-                    }
-                    Log.d("pagination", it.toString())
-                }
-            }
+    LaunchedEffect(lastVisibleItem.value) {
+        if (lastVisibleItem.value == viewModel.studentList.lastIndex && viewModel.getStudentListResponse.value.data?.last != true) {
+            viewModel.getStudentListRequest(viewModel.getStudentListResponse.value.data!!.page + 1, 20)
+        }
     }
 
     if (dialogState.value) {
@@ -217,7 +207,7 @@ fun MainScreen(
                     StudentListComponent(
                         listState = listState,
                         progressState = progressState.value,
-                        studentList = studentList.value,
+                        studentList = viewModel.studentList,
                         listTotalSize = listTotalSize.value
                     ) {
                         lifecycleScope.launch {
@@ -417,7 +407,7 @@ suspend fun getStudentList(
         when (response) {
             is Event.Success -> {
                 progressState(false)
-                onSuccess(response.data!!.content, response.data.contentSize)
+                onSuccess(response.data!!.content, response.data.totalSize)
             }
 
             is Event.Loading -> {

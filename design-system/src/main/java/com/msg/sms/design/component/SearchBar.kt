@@ -38,12 +38,8 @@ fun SearchBar(
     val isFocused = remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = setText) {
-        val debounce = kotlinx.coroutines.Job()
-
         delay(debounceTime)
         debounceTextChanged(setText)
-
-        debounce.cancel()
     }
 
     SMSTheme { colors, typography ->
