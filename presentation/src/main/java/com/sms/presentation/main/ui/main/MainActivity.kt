@@ -137,20 +137,21 @@ class MainActivity : BaseActivity() {
                                         }
                                     },
                                     onChangeToMainPage = {
-                                        studentListViewModel.setFilterGradeList(studentListViewModel.selectedGradeList)
-                                        studentListViewModel.setFilterClassList(studentListViewModel.selectedClassList)
-                                        studentListViewModel.setFilterDepartmentList(studentListViewModel.selectedDepartmentList)
-                                        studentListViewModel.setFilterMajorList(studentListViewModel.selectedMajorList)
-                                        studentListViewModel.setFilterTypeOfEmploymentList(studentListViewModel.selectedTypeOfEmploymentList)
-                                        studentListViewModel.setFilterGsmScoreSliderValues(studentListViewModel.selectedGsmScoreSliderValues.value)
-                                        studentListViewModel.setFilterDesiredAnnualSalarySliderValues(studentListViewModel.selectedDesiredAnnualSalarySliderValues.value)
-                                        studentListViewModel.setFilterSchoolNumberAscendingValue(studentListViewModel.selectedSchoolNumberAscendingOrder.value)
-                                        studentListViewModel.setFilterGsmScoreAscendingValue(studentListViewModel.selectedGsmScoreAscendingOrder.value)
-                                        studentListViewModel.setFilterDesiredAnnualSalaryAscendingValue(studentListViewModel.selectedDesiredAnnualSalaryAscendingOrder.value)
-                                        studentListViewModel.setFilterDetailStackList(studentListViewModel.selectedDetailStack)
-                                        studentListViewModel.clearStudentList()
-                                        studentListViewModel.getStudentListRequest(1, 20)
-
+                                        studentListViewModel.run {
+                                            setFilterGradeList(studentListViewModel.selectedGradeList)
+                                            setFilterClassList(studentListViewModel.selectedClassList)
+                                            setFilterDepartmentList(studentListViewModel.selectedDepartmentList)
+                                            setFilterMajorList(studentListViewModel.selectedMajorList)
+                                            setFilterTypeOfEmploymentList(studentListViewModel.selectedTypeOfEmploymentList)
+                                            setFilterGsmScoreSliderValues(studentListViewModel.selectedGsmScoreSliderValues.value)
+                                            setFilterDesiredAnnualSalarySliderValues(studentListViewModel.selectedDesiredAnnualSalarySliderValues.value)
+                                            setFilterSchoolNumberAscendingValue(studentListViewModel.selectedSchoolNumberAscendingOrder.value)
+                                            setFilterGsmScoreAscendingValue(studentListViewModel.selectedGsmScoreAscendingOrder.value)
+                                            setFilterDesiredAnnualSalaryAscendingValue(studentListViewModel.selectedDesiredAnnualSalaryAscendingOrder.value)
+                                            setFilterDetailStackList(studentListViewModel.selectedDetailStack)
+                                            clearStudentList()
+                                            getStudentListRequest(1, 20)
+                                        }
                                         navController.navigate(MainPage.Main.value)
                                     },
                                     onChangeToSearchPage = {
