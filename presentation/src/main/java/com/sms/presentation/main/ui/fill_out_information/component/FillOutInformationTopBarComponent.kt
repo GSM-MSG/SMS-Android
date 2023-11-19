@@ -20,18 +20,5 @@ fun FillOutInformationTopBarComponent(
             rightIcon = null,
             onClickLeftButton = onBackButtonClick
         )
-        FilloutStatusProgressBar(
-            routeList = listOf(
-                FillOutPage.Profile.value,
-                FillOutPage.SchoolLife.value,
-                FillOutPage.WorkCondition.value,
-                FillOutPage.MilitaryService.value,
-                FillOutPage.Certification.value,
-                FillOutPage.ForeignLanguage.value,
-                FillOutPage.Projects.value,
-                FillOutPage.Award.value
-            ),
-            currentRoute = currentRoute
-        )
     }
 }
