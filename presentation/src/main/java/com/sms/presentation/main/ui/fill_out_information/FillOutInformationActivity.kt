@@ -401,14 +401,6 @@ class FillOutInformationActivity : BaseActivity() {
                                         }
                                     )
                                 }
-                                composable(FillOutPage.Certification.value) {
-                                    currentRoute.value = FillOutPage.Certification.value
-                                    setSoftInputMode("PAN")
-                                    CertificationScreen(
-                                        navController = navController,
-                                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
-                                    )
-                                }
                                 composable(FillOutPage.ForeignLanguage.value) {
                                     currentRoute.value = FillOutPage.ForeignLanguage.value
                                     setSoftInputMode("PAN")
