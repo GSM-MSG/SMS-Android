@@ -232,7 +232,6 @@ class FillOutViewModel @Inject constructor(
         profileImgUrl: String,
         introduce: String,
         contactEmail: String,
-        projects: List<ProjectModel>,
         award: List<PrizeModel>
     ) = viewModelScope.launch {
         enterStudentInformationUseCase(
@@ -242,7 +241,6 @@ class FillOutViewModel @Inject constructor(
                 profileImgUrl = profileImgUrl,
                 introduce = introduce,
                 contactEmail = contactEmail,
-                projects = projects,
                 prizes = award
             )
         ).onSuccess {

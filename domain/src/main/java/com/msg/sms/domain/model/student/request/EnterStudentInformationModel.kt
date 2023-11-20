@@ -9,6 +9,5 @@ data class EnterStudentInformationModel(
     val profileImgUrl: String,
     val introduce: String,
     val contactEmail: String,
-    val projects: List<ProjectModel>,
     val prizes: List<PrizeModel>
 )

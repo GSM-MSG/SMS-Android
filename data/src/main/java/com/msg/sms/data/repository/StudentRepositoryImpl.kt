@@ -35,26 +35,6 @@ class StudentRepositoryImpl @Inject constructor(
                 profileImgUrl = body.profileImgUrl,
                 introduce = body.introduce,
                 contactEmail = body.contactEmail,
-                projects = body.projects.map { project ->
-                    ProjectData(
-                        name = project.name,
-                        icon = project.icon,
-                        previewImages = project.previewImages,
-                        description = project.description,
-                        links = project.links.map {
-                            ProjectRelatedLinkData(
-                                name = it.name,
-                                url = it.url
-                            )
-                        },
-                        techStacks = project.techStacks,
-                        myActivity = project.myActivity,
-                        inProgress = ProjectDateData(
-                            start = project.inProgress.start,
-                            end = project.inProgress.end
-                        )
-                    )
-                },
                 prizes = body.prizes.map {
                     PrizeData(
                         name = it.name,
