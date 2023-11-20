@@ -34,47 +34,7 @@ class StudentRepositoryImpl @Inject constructor(
                 techStacks = body.techStacks,
                 profileImgUrl = body.profileImgUrl,
                 introduce = body.introduce,
-                portfolioUrl = body.portfolioUrl,
-                contactEmail = body.contactEmail,
-                formOfEmployment = body.formOfEmployment,
-                gsmAuthenticationScore = body.gsmAuthenticationScore,
-                salary = body.salary,
-                regions = body.regions,
-                languageCertificates = body.languageCertificates.map {
-                    CertificateData(
-                        languageCertificateName = it.languageCertificateName,
-                        score = it.score
-                    )
-                },
-                militaryService = body.militaryService,
-                certificates = body.certificates,
-                projects = body.projects.map { project ->
-                    ProjectData(
-                        name = project.name,
-                        icon = project.icon,
-                        previewImages = project.previewImages,
-                        description = project.description,
-                        links = project.links.map {
-                            ProjectRelatedLinkData(
-                                name = it.name,
-                                url = it.url
-                            )
-                        },
-                        techStacks = project.techStacks,
-                        myActivity = project.myActivity,
-                        inProgress = ProjectDateData(
-                            start = project.inProgress.start,
-                            end = project.inProgress.end
-                        )
-                    )
-                },
-                prizes = body.prizes.map {
-                    PrizeData(
-                        name = it.name,
-                        type = it.type,
-                        date = it.date
-                    )
-                }
+                contactEmail = body.contactEmail
             )
         )
     }

@@ -646,47 +646,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                         techStack = enteredProfileData.techStack,
                                                         profileImgUrl = fillOutViewModel.profileImageUploadResponse.value.data!!,
                                                         introduce = enteredProfileData.introduce,
-                                                        portfolioUrl = enteredProfileData.portfolioUrl,
-                                                        contactEmail = enteredProfileData.contactEmail,
-                                                        formOfEmployment = enteredWorkConditionData.formOfEmployment.toEnum(),
-                                                        salary = enteredWorkConditionData.salary.toInt(),
-                                                        region = enteredWorkConditionData.regions,
-                                                        gsmAuthenticationScore = enteredSchoolLifeData.gsmAuthenticationScore.toInt(),
-                                                        certificate = enteredCertificateData,
-                                                        militaryService = enteredMilitaryData.militaryService.toEnum(),
-                                                        languageCertificate = enteredForeignLanguagesData.map {
-                                                            CertificateModel(
-                                                                languageCertificateName = it.languageCertificateName,
-                                                                score = it.score
-                                                            )
-                                                        },
-                                                        projects = enteredProjectsData.mapIndexed { index, item ->
-                                                            ProjectModel(
-                                                                name = item.name,
-                                                                icon = fillOutViewModel.projectIconImageUploadResponse.value.data!![index],
-                                                                previewImages = fillOutViewModel.projectPreviewsImageUploadResponse.value.data!![index],
-                                                                description = item.description,
-                                                                links = item.relatedLinkList.map {
-                                                                    ProjectRelatedLinkModel(
-                                                                        name = it.first,
-                                                                        url = it.second
-                                                                    )
-                                                                },
-                                                                techStacks = item.technologyOfUse,
-                                                                myActivity = item.keyTask,
-                                                                inProgress = ProjectDateModel(
-                                                                    item.startDate,
-                                                                    if (item.isProjectProgress) null else item.endDate
-                                                                )
-                                                            )
-                                                        },
-                                                        award = enteredAwardsData.map {
-                                                            PrizeModel(
-                                                                name = it.name,
-                                                                date = it.date,
-                                                                type = it.type
-                                                            )
-                                                        }
+                                                        contactEmail = enteredProfileData.contactEmail
                                                     )
                                                 }
                                             }

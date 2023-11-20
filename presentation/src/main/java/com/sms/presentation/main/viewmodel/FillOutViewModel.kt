@@ -231,17 +231,7 @@ class FillOutViewModel @Inject constructor(
         techStack: List<String>,
         profileImgUrl: String,
         introduce: String,
-        portfolioUrl: String,
         contactEmail: String,
-        formOfEmployment: String,
-        gsmAuthenticationScore: Int,
-        salary: Int,
-        region: List<String>,
-        languageCertificate: List<CertificateModel>,
-        militaryService: String,
-        certificate: List<String>,
-        projects: List<ProjectModel>,
-        award: List<PrizeModel>
     ) = viewModelScope.launch {
         enterStudentInformationUseCase(
             EnterStudentInformationModel(
@@ -249,17 +239,7 @@ class FillOutViewModel @Inject constructor(
                 techStacks = techStack,
                 profileImgUrl = profileImgUrl,
                 introduce = introduce,
-                portfolioUrl = portfolioUrl,
-                contactEmail = contactEmail,
-                formOfEmployment = formOfEmployment,
-                gsmAuthenticationScore = gsmAuthenticationScore,
-                salary = salary,
-                regions = region,
-                languageCertificates = languageCertificate,
-                militaryService = militaryService,
-                certificates = certificate,
-                projects = projects,
-                prizes = award
+                contactEmail = contactEmail
             )
         ).onSuccess {
             it.catch { remoteError ->
