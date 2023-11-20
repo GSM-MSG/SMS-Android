@@ -35,12 +35,6 @@ class StudentRepositoryImpl @Inject constructor(
                 profileImgUrl = body.profileImgUrl,
                 introduce = body.introduce,
                 contactEmail = body.contactEmail,
-                languageCertificates = body.languageCertificates.map {
-                    CertificateData(
-                        languageCertificateName = it.languageCertificateName,
-                        score = it.score
-                    )
-                },
                 militaryService = body.militaryService,
                 certificates = body.certificates,
                 projects = body.projects.map { project ->
