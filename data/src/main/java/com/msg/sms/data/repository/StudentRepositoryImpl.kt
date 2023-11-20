@@ -35,7 +35,6 @@ class StudentRepositoryImpl @Inject constructor(
                 profileImgUrl = body.profileImgUrl,
                 introduce = body.introduce,
                 contactEmail = body.contactEmail,
-                gsmAuthenticationScore = body.gsmAuthenticationScore,
                 salary = body.salary,
                 regions = body.regions,
                 languageCertificates = body.languageCertificates.map {

@@ -9,7 +9,6 @@ data class EnterStudentInformationModel(
     val profileImgUrl: String,
     val introduce: String,
     val contactEmail: String,
-    val gsmAuthenticationScore: Int,
     val salary: Int,
     val regions: List<String>,
     val languageCertificates: List<CertificateModel>,
