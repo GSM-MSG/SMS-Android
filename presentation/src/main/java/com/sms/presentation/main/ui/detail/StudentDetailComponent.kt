@@ -32,7 +32,7 @@ import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.detail.info.StudentInfoComponent
 import com.sms.presentation.main.ui.detail.profile.StudentProfileComponent
 import com.sms.presentation.main.ui.detail.project.ProjectListComponent
-import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
+import com.sms.presentation.main.ui.detail.data.WorkConditionData
 import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 
 @Composable
