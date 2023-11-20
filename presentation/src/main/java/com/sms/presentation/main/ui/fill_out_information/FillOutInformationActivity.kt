@@ -57,10 +57,7 @@ import kotlin.time.Duration.Companion.seconds
 
 private enum class BottomSheetValues {
     PhotoPicker,
-    Major,
-    WorkingForm,
-    Military,
-    Date
+    Major
 }
 
 private enum class DetailSearchLocation {
@@ -126,7 +123,8 @@ class FillOutInformationActivity : BaseActivity() {
             val enteredWorkConditionData = fillOutViewModel.getEnteredWorkConditionInformation()
             val enteredMilitaryData = fillOutViewModel.getEnteredMilitaryServiceInformation()
             val enteredCertificateData = fillOutViewModel.getEnteredCertification().certifications
-            val enteredForeignLanguagesData = fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
+            val enteredForeignLanguagesData =
+                fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
             val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
             val enteredAwardsData = fillOutViewModel.getEnteredAwardsInformation()
 
@@ -251,6 +249,7 @@ class FillOutInformationActivity : BaseActivity() {
                                 }
                             )
                         }
+
                         BottomSheetValues.Major -> {
                             MajorSelectorBottomSheet(
                                 bottomSheetState = bottomSheetState,
@@ -259,86 +258,6 @@ class FillOutInformationActivity : BaseActivity() {
                                 onSelectedMajhorChange = {
                                     selectedMajor.value = it
                                 },
-                            )
-                        }
-                        BottomSheetValues.WorkingForm -> {
-                            HopeWorkConditionBottomSheet(
-                                bottomSheetState = bottomSheetState,
-                                majorList = listOf("정규직", "비정규직", "계약직", "인턴"),
-                                selectedMajor = if (selectedWorkingCondition.value == "") enteredWorkConditionData.formOfEmployment else selectedWorkingCondition.value,
-                                onSelectedMajhorChange = { selectedWorkingCondition.value = it }
-                            )
-                        }
-                        BottomSheetValues.Military -> {
-                            MilitarySelectorBottomSheet(
-                                bottomSheetState = bottomSheetState,
-                                militaryServiceList = listOf(
-                                    "병특 희망",
-                                    "희망하지 않음",
-                                    "상관없음",
-                                    "해당 사항 없음"
-                                ),
-                                selectedMilitaryService = if (selectedMilitaryService.value == "") enteredMilitaryData.militaryService else selectedMilitaryService.value,
-                                onSelectedMilitaryServiceChange = {
-                                    selectedMilitaryService.value = it
-                                },
-                            )
-                        }
-                        BottomSheetValues.Date -> {
-                            DatePickerBottomSheet(
-                                bottomSheetState = bottomSheetState,
-                                onDateValueChanged = { date ->
-                                    val startDate = projectList[projectIndex.value].startDate
-                                    val endDate = projectList[projectIndex.value].endDate
-
-                                    when {
-                                        isProjectDate.value && isProjectStartDate.value -> {
-                                            if (endDate.isEmpty()) {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(startDate = date)
-                                            } else {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            endDate,
-                                                            date
-                                                        )
-                                                    )
-                                            }
-                                        }
-                                        isProjectDate.value && !isProjectStartDate.value -> {
-                                            if (startDate.isEmpty()) {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(endDate = date)
-                                            } else {
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        startDate = minOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
-                                                projectList[projectIndex.value] =
-                                                    projectList[projectIndex.value].copy(
-                                                        endDate = maxOf(
-                                                            startDate,
-                                                            date
-                                                        )
-                                                    )
-                                            }
-                                        }
-                                        !isProjectDate.value -> {
-                                            awardDateMap[awardIndex.value] = date
-                                        }
-                                    }
-                                }
                             )
                         }
                     }
@@ -398,124 +317,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         },
                                         onTechStackItemRemoved = {
                                             profileDetailTechStack.remove(it)
-                                        }
-                                    )
-                                }
-                                composable(FillOutPage.Award.value) {
-                                    currentRoute.value = FillOutPage.Award.value
-                                    setSoftInputMode("PAN")
-                                    AwardScreen(
-                                        data = awardData,
-                                        awardDateMap = awardDateMap,
-                                        onDateBottomSheetOpenButtonClick = { index ->
-                                            awardIndex.value = index
-                                            isProjectDate.value = false
-                                            bottomSheetValues.value = BottomSheetValues.Date
-                                            scope.launch { bottomSheetState.show() }
                                         },
-                                        onPreviousButtonClick = {
-                                            awardDateMap.clear()
-                                            navController.popBackStack()
-                                        },
-                                        onAddButtonClick = {
-                                            awardData.add(AwardData())
-                                        },
-                                        onCancelButtonClick = { index ->
-                                            awardData.removeAt(index)
-                                        },
-                                        onCompleteButtonClick = {
-                                            loadingModalState.value = true
-                                            fillOutViewModel.setEnteredAwardsInformation(
-                                                awardData.filter { award ->
-                                                    award.name.isNotEmpty() ||
-                                                    award.type.isNotEmpty() ||
-                                                    award.date.isNotEmpty()
-                                                }
-                                            )
-
-                                            //이미지 업로드 & 정보기입 요청
-                                            lifecycleScope.launch {
-                                                val profileImageUpload =
-                                                    fillOutViewModel.profileImageUploadAsync(
-                                                        profileImageUri.value,
-                                                        this@FillOutInformationActivity
-                                                    )
-                                                val projectIconsImageUpload =
-                                                    fillOutViewModel.projectsIconUploadAsync(
-                                                        enteredProjectsData.map { it.icon },
-                                                        this@FillOutInformationActivity
-                                                    )
-                                                val projectsPreviewsImageUpload =
-                                                    fillOutViewModel.projectsPreviewAsync(
-                                                        enteredProjectsData.map { it.preview },
-                                                        this@FillOutInformationActivity
-                                                    )
-
-                                                awaitAll(
-                                                    profileImageUpload,
-                                                    projectIconsImageUpload,
-                                                    projectsPreviewsImageUpload
-                                                )
-
-                                                if (
-                                                    fillOutViewModel.profileImageUploadResponse.value is Event.Success &&
-                                                    if (enteredProjectsData.isNotEmpty()) {
-                                                        fillOutViewModel.projectIconImageUploadResponse.value is Event.Success &&
-                                                        fillOutViewModel.projectPreviewsImageUploadResponse.value is Event.Success
-                                                    } else true
-                                                ) {
-                                                    fillOutViewModel.enterStudentInformation(
-                                                        major = enteredProfileData.major.takeIf { it != "직접입력" } ?: enteredProfileData.enteredMajor,
-                                                        techStack = enteredProfileData.techStack,
-                                                        profileImgUrl = fillOutViewModel.profileImageUploadResponse.value.data!!,
-                                                        introduce = enteredProfileData.introduce,
-                                                        contactEmail = enteredProfileData.contactEmail
-                                                    )
-                                                }
-                                            }
-
-                                            //예외처리
-                                            lifecycleScope.launch {
-                                                enteredStudentInfomationResponse(
-                                                    viewModel = fillOutViewModel,
-                                                    onSuccess = {
-                                                        loadingModalState.value = false
-                                                        startActivity(
-                                                            Intent(
-                                                                this@FillOutInformationActivity,
-                                                                MainActivity::class.java
-                                                            )
-                                                        )
-                                                        finish()
-                                                    },
-                                                    error = { errorMsg, unauthorized ->
-                                                        loadingModalState.value = false
-                                                        dialogVisible.value = true
-                                                        isUnauthorized.value = unauthorized
-                                                        dialogTitle.value = "실패"
-                                                        dialogText.value = errorMsg
-                                                    }
-                                                )
-                                                profileImageUploadResponse(fillOutViewModel) { errorMsg ->
-                                                    dialogVisible.value = true
-                                                    dialogText.value = "실패"
-                                                    dialogText.value = errorMsg
-                                                }
-                                                projectsIconImageUploadResponse(fillOutViewModel) { errorMsg ->
-                                                    dialogVisible.value = true
-                                                    dialogText.value = "실패"
-                                                    dialogText.value = errorMsg
-                                                }
-                                                projectsPreviewsImageUploadResponse(fillOutViewModel) { errorMsg ->
-                                                    dialogVisible.value = true
-                                                    dialogText.value = "실패"
-                                                    dialogText.value = errorMsg
-                                                }
-                                            }
-                                        },
-                                        onAwardValueChanged = { index, award ->
-                                            awardData[index] = award
-                                        }
                                     )
                                 }
                                 composable(FillOutPage.Search.value) {
@@ -542,6 +344,7 @@ class FillOutInformationActivity : BaseActivity() {
                                                     !profileDetailTechStack.contains(it)
                                                 })
                                             }
+
                                             DetailSearchLocation.Projects -> {
                                                 projectsDetailTechStack[projectIndex.value] = stack
                                             }
@@ -588,15 +391,19 @@ class FillOutInformationActivity : BaseActivity() {
                 is Event.Success -> {
                     onSuccess()
                 }
+
                 is Event.Unauthorized -> {
                     error("토큰이 만료되었습니다, 다시 로그인 하시겠습니까?", true)
                 }
+
                 is Event.Conflict -> {
                     error("이미 존재하는 유저입니다.", false)
                 }
+
                 is Event.Server -> {
                     error("서버 에러 발생, 개발자에게 문의해주세요.", false)
                 }
+
                 is Event.Loading -> {}
                 else -> {
                     error("알 수 없는 에러 발생, 개발자에게 문의해주세요.", false)
@@ -610,11 +417,19 @@ class FillOutInformationActivity : BaseActivity() {
         error: (errorMsg: String) -> Unit
     ) {
         viewModel.profileImageUploadResponse.collect { response ->
-            when(response) {
+            when (response) {
                 is Event.Success, Event.Loading -> {}
-                is Event.BadRequest -> { error("이미지 업로드 실패, 개발자에게 문의해주세요.") }
-                is Event.Server -> { error("서버 에러 발생, 개발자에게 문의해 주세요.") }
-                else -> { error("알 수 없는 에러 발생, 개발자에게 문의해 주세요.") }
+                is Event.BadRequest -> {
+                    error("이미지 업로드 실패, 개발자에게 문의해주세요.")
+                }
+
+                is Event.Server -> {
+                    error("서버 에러 발생, 개발자에게 문의해 주세요.")
+                }
+
+                else -> {
+                    error("알 수 없는 에러 발생, 개발자에게 문의해 주세요.")
+                }
             }
         }
     }
@@ -624,11 +439,19 @@ class FillOutInformationActivity : BaseActivity() {
         error: (errorMsg: String) -> Unit
     ) {
         viewModel.projectIconImageUploadResponse.collect { response ->
-            when(response) {
+            when (response) {
                 is Event.Success, Event.Loading -> {}
-                is Event.BadRequest -> { error("이미지 업로드 실패, 개발자에게 문의해주세요.") }
-                is Event.Server -> { error("서버 에러 발생, 개발자에게 문의해 주세요.") }
-                else -> { error("알 수 없는 에러 발생, 개발자에게 문의해 주세요.") }
+                is Event.BadRequest -> {
+                    error("이미지 업로드 실패, 개발자에게 문의해주세요.")
+                }
+
+                is Event.Server -> {
+                    error("서버 에러 발생, 개발자에게 문의해 주세요.")
+                }
+
+                else -> {
+                    error("알 수 없는 에러 발생, 개발자에게 문의해 주세요.")
+                }
             }
         }
     }
@@ -638,11 +461,19 @@ class FillOutInformationActivity : BaseActivity() {
         error: (errorMsg: String) -> Unit
     ) {
         viewModel.projectPreviewsImageUploadResponse.collect { response ->
-            when(response) {
+            when (response) {
                 is Event.Success, Event.Loading -> {}
-                is Event.BadRequest -> { error("이미지 업로드 실패, 개발자에게 문의해주세요.") }
-                is Event.Server -> { error("서버 에러 발생, 개발자에게 문의해 주세요.") }
-                else -> { error("알 수 없는 에러 발생, 개발자에게 문의해 주세요.") }
+                is Event.BadRequest -> {
+                    error("이미지 업로드 실패, 개발자에게 문의해주세요.")
+                }
+
+                is Event.Server -> {
+                    error("서버 에러 발생, 개발자에게 문의해 주세요.")
+                }
+
+                else -> {
+                    error("알 수 없는 에러 발생, 개발자에게 문의해 주세요.")
+                }
             }
         }
     }
