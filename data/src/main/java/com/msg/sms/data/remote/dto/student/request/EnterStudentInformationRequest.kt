@@ -16,8 +16,6 @@ data class EnterStudentInformationRequest(
     val introduce: String,
     @SerializedName("contactEmail")
     val contactEmail: String,
-    @SerializedName("regions")
-    val regions: List<String>,
     @SerializedName("languageCertificates")
     val languageCertificates: List<CertificateData>,
     @SerializedName("militaryService")

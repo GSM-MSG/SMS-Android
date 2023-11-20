@@ -35,7 +35,6 @@ class StudentRepositoryImpl @Inject constructor(
                 profileImgUrl = body.profileImgUrl,
                 introduce = body.introduce,
                 contactEmail = body.contactEmail,
-                regions = body.regions,
                 languageCertificates = body.languageCertificates.map {
                     CertificateData(
                         languageCertificateName = it.languageCertificateName,
