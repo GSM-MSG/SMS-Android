@@ -232,7 +232,6 @@ class FillOutViewModel @Inject constructor(
         profileImgUrl: String,
         introduce: String,
         contactEmail: String,
-        militaryService: String,
         certificate: List<String>,
         projects: List<ProjectModel>,
         award: List<PrizeModel>
@@ -244,7 +243,6 @@ class FillOutViewModel @Inject constructor(
                 profileImgUrl = profileImgUrl,
                 introduce = introduce,
                 contactEmail = contactEmail,
-                militaryService = militaryService,
                 certificates = certificate,
                 projects = projects,
                 prizes = award
