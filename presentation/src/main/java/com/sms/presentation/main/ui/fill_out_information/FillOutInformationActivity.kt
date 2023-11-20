@@ -401,19 +401,6 @@ class FillOutInformationActivity : BaseActivity() {
                                         }
                                     )
                                 }
-                                composable(FillOutPage.WorkCondition.value) {
-                                    currentRoute.value = FillOutPage.WorkCondition.value
-                                    setSoftInputMode("PAN")
-                                    WorkConditionScreen(
-                                        navController = navController,
-                                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        selectedWorkingCondition = selectedWorkingCondition.value,
-                                        onWorkingConditionBottomSheetOpenButtonClick = {
-                                            bottomSheetValues.value = BottomSheetValues.WorkingForm
-                                            scope.launch { bottomSheetState.show() }
-                                        }
-                                    )
-                                }
                                 composable(FillOutPage.MilitaryService.value) {
                                     currentRoute.value = FillOutPage.MilitaryService.value
                                     setSoftInputMode()
