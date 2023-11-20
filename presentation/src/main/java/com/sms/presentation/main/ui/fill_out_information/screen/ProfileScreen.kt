@@ -42,7 +42,7 @@ fun ProfileScreen(
     onSnackBarVisibleChanged: (text: String) -> Unit,
     onProfileValueChanged: (data: ProfileData) -> Unit,
     onTechStackItemRemoved: (item: String) -> Unit,
-    onCompleteButtonClick: () -> Unit,
+    onCompleteButtonClick: (data: ProfileData) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val isRequired = remember {
@@ -132,7 +132,16 @@ fun ProfileScreen(
                             contactEmail = data.contactEmail,
                             enteredMajor = data.enteredMajor
                         )
-                        onCompleteButtonClick
+                        onCompleteButtonClick(
+                            ProfileData(
+                                profileImageUri = profileImageUri,
+                                introduce = data.introduce,
+                                contactEmail = data.contactEmail,
+                                enteredMajor = data.enteredMajor,
+                                major = selectedMajor,
+                                techStack = detailStacks
+                            )
+                        )
                     } else {
                         dialogState.value = true
                     }

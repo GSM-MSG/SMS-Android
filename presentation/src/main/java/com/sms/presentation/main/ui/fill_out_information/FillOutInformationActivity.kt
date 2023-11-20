@@ -252,7 +252,7 @@ class FillOutInformationActivity : BaseActivity() {
                                         onTechStackItemRemoved = {
                                             profileDetailTechStack.remove(it)
                                         },
-                                        onCompleteButtonClick = {
+                                        onCompleteButtonClick = { data ->
                                             loadingModalState.value = true
 
                                             //이미지 업로드 & 정보기입 요청
@@ -269,12 +269,12 @@ class FillOutInformationActivity : BaseActivity() {
 
                                                 if (fillOutViewModel.profileImageUploadResponse.value is Event.Success) {
                                                     fillOutViewModel.enterStudentInformation(
-                                                        major = enteredProfileData.major.takeIf { it != "직접입력" }
-                                                            ?: enteredProfileData.enteredMajor,
-                                                        techStack = enteredProfileData.techStack,
+                                                        major = data.major.takeIf { it != "직접입력" }
+                                                            ?: data.enteredMajor,
+                                                        techStack = data.techStack,
                                                         profileImgUrl = fillOutViewModel.profileImageUploadResponse.value.data!!,
-                                                        introduce = enteredProfileData.introduce,
-                                                        contactEmail = enteredProfileData.contactEmail
+                                                        introduce = data.introduce,
+                                                        contactEmail = data.contactEmail
                                                     )
                                                 }
                                             }

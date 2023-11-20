@@ -141,7 +141,7 @@ fun ProfileComponent(
 fun ProfileComponentPre() {
     ProfileComponent(
         selectedMajor = "FrontEnd",
-        data = ProfileData(Uri.EMPTY, "", "", "", "", "", emptyList()),
+        data = ProfileData(Uri.EMPTY, "", "", "", "", emptyList()),
         isRequired = {},
         detailStacks = listOf("a", "b", "c"),
         profileImageUri = Uri.EMPTY,
