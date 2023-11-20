@@ -14,8 +14,6 @@ data class EnterStudentInformationRequest(
     val profileImgUrl: String,
     @SerializedName("introduce")
     val introduce: String,
-    @SerializedName("portfolioUrl")
-    val portfolioUrl: String,
     @SerializedName("contactEmail")
     val contactEmail: String,
     @SerializedName("formOfEmployment")
