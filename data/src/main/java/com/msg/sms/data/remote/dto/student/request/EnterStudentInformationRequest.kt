@@ -16,8 +16,6 @@ data class EnterStudentInformationRequest(
     val introduce: String,
     @SerializedName("contactEmail")
     val contactEmail: String,
-    @SerializedName("formOfEmployment")
-    val formOfEmployment: String,
     @SerializedName("gsmAuthenticationScore")
     val gsmAuthenticationScore: Int,
     @SerializedName("salary")
