@@ -401,19 +401,6 @@ class FillOutInformationActivity : BaseActivity() {
                                         }
                                     )
                                 }
-                                composable(FillOutPage.MilitaryService.value) {
-                                    currentRoute.value = FillOutPage.MilitaryService.value
-                                    setSoftInputMode()
-                                    MilitaryServiceScreen(
-                                        navController = navController,
-                                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        selectedMilitaryService = selectedMilitaryService.value,
-                                        onMilitaryServiceBottomSheetOpenButtonClick = {
-                                            bottomSheetValues.value = BottomSheetValues.Military
-                                            scope.launch { bottomSheetState.show() }
-                                        }
-                                    )
-                                }
                                 composable(FillOutPage.Certification.value) {
                                     currentRoute.value = FillOutPage.Certification.value
                                     setSoftInputMode("PAN")
