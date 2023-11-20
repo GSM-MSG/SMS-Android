@@ -401,15 +401,6 @@ class FillOutInformationActivity : BaseActivity() {
                                         }
                                     )
                                 }
-                                composable(FillOutPage.ForeignLanguage.value) {
-                                    currentRoute.value = FillOutPage.ForeignLanguage.value
-                                    setSoftInputMode("PAN")
-                                    ForeignLanguageScreen(
-                                        navController = navController,
-                                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity),
-                                        lifecycleScope = lifecycleScope
-                                    )
-                                }
                                 composable(FillOutPage.Projects.value) {
                                     currentRoute.value = FillOutPage.Projects.value
                                     setSoftInputMode("PAN")
