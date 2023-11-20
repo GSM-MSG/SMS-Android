@@ -34,14 +34,7 @@ class StudentRepositoryImpl @Inject constructor(
                 techStacks = body.techStacks,
                 profileImgUrl = body.profileImgUrl,
                 introduce = body.introduce,
-                contactEmail = body.contactEmail,
-                prizes = body.prizes.map {
-                    PrizeData(
-                        name = it.name,
-                        type = it.type,
-                        date = it.date
-                    )
-                }
+                contactEmail = body.contactEmail
             )
         )
     }

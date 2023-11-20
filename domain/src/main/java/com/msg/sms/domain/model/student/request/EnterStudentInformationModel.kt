@@ -8,6 +8,5 @@ data class EnterStudentInformationModel(
     val techStacks: List<String>,
     val profileImgUrl: String,
     val introduce: String,
-    val contactEmail: String,
-    val prizes: List<PrizeModel>
+    val contactEmail: String
 )

@@ -240,8 +240,7 @@ class FillOutViewModel @Inject constructor(
                 techStacks = techStack,
                 profileImgUrl = profileImgUrl,
                 introduce = introduce,
-                contactEmail = contactEmail,
-                prizes = award
+                contactEmail = contactEmail
             )
         ).onSuccess {
             it.catch { remoteError ->
