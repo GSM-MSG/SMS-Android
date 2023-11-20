@@ -123,14 +123,13 @@ fun ProfileScreen(
                         if (selectedMajor == "직접입력") data.enteredMajor else selectedMajor
                     )
                 ) {
-                    if (data.contactEmail.isEmailRegularExpression() && data.portfolioUrl.isUrlRegularExpression()) {
+                    if (data.contactEmail.isEmailRegularExpression()) {
                         viewModel.setEnteredProfileInformation(
                             major = selectedMajor,
                             techStack = detailStacks,
                             profileImgUri = profileImageUri,
                             introduce = data.introduce,
                             contactEmail = data.contactEmail,
-                            portfolioUrl = data.portfolioUrl,
                             enteredMajor = data.enteredMajor
                         )
                         onCompleteButtonClick
