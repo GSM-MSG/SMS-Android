@@ -401,14 +401,6 @@ class FillOutInformationActivity : BaseActivity() {
                                         }
                                     )
                                 }
-                                composable(FillOutPage.SchoolLife.value) {
-                                    currentRoute.value = FillOutPage.SchoolLife.value
-                                    setSoftInputMode()
-                                    SchoolLifeScreen(
-                                        navController = navController,
-                                        viewModel = viewModel(LocalContext.current as FillOutInformationActivity)
-                                    )
-                                }
                                 composable(FillOutPage.WorkCondition.value) {
                                     currentRoute.value = FillOutPage.WorkCondition.value
                                     setSoftInputMode("PAN")
