@@ -57,24 +57,16 @@ import kotlin.time.Duration.Companion.seconds
 
 private enum class BottomSheetValues {
     PhotoPicker,
-    Major
+    Major,
 }
 
 private enum class DetailSearchLocation {
     Profile,
-    Projects
 }
 
 enum class FillOutPage(val value: String) {
     Profile("Profile"),
-    SchoolLife("SchoolLife"),
-    WorkCondition("WorkCondition"),
-    MilitaryService("MilitaryService"),
-    Certification("Certification"),
-    ForeignLanguage("ForeignLanguage"),
-    Projects("Projects"),
-    Award("Award"),
-    Search("Search")
+    Search("Search"),
 }
 
 @AndroidEntryPoint
@@ -95,7 +87,6 @@ class FillOutInformationActivity : BaseActivity() {
             val focusManager = LocalFocusManager.current
             val scope = rememberCoroutineScope()
             val navController = rememberNavController()
-            val projectListState = rememberLazyListState()
             val bottomSheetState =
                 rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
             val bottomSheetValues = remember {
@@ -113,30 +104,13 @@ class FillOutInformationActivity : BaseActivity() {
             val snackBarText = remember {
                 mutableStateOf("")
             }
-            val projectIndex = remember {
-                mutableStateOf(0)
-            }
 
             //enteredData
             val enteredProfileData = fillOutViewModel.getEnteredProfileInformation()
-            val enteredSchoolLifeData = fillOutViewModel.getEnteredSchoolLifeInformation()
-            val enteredWorkConditionData = fillOutViewModel.getEnteredWorkConditionInformation()
-            val enteredMilitaryData = fillOutViewModel.getEnteredMilitaryServiceInformation()
-            val enteredCertificateData = fillOutViewModel.getEnteredCertification().certifications
-            val enteredForeignLanguagesData =
-                fillOutViewModel.getEnteredForeignLanguagesInformation().foreignLanguages
-            val enteredProjectsData = fillOutViewModel.getEnteredProjectsInformation().projects
-            val enteredAwardsData = fillOutViewModel.getEnteredAwardsInformation()
 
             //data
             val profileData = remember {
                 mutableStateOf(enteredProfileData)
-            }
-            val projectList = remember {
-                mutableStateListOf(*enteredProjectsData.toTypedArray())
-            }
-            val awardData = remember {
-                mutableStateListOf(AwardData(isToggleOpen = true))
             }
             val majorList = fillOutViewModel.getMajorListResponse.collectAsState()
 
@@ -144,11 +118,6 @@ class FillOutInformationActivity : BaseActivity() {
             val profileDetailTechStack = remember {
                 mutableStateListOf(
                     *(enteredProfileData.techStack.filter { it != "" }).toTypedArray()
-                )
-            }
-            val projectsDetailTechStack = remember {
-                mutableStateListOf(
-                    *projectList.map { it.technologyOfUse }.toTypedArray()
                 )
             }
 
@@ -163,30 +132,6 @@ class FillOutInformationActivity : BaseActivity() {
             //MajorSelectorBottomSheet
             val selectedMajor = remember {
                 mutableStateOf("")
-            }
-
-            //WorkingFormBottomSheet
-            val selectedWorkingCondition = remember {
-                mutableStateOf("")
-            }
-
-            //MilitaryServiceBottomSheet
-            val selectedMilitaryService = remember {
-                mutableStateOf("")
-            }
-
-            //DateBottomSheet
-            val isProjectDate = remember {
-                mutableStateOf(true)
-            }
-            val isProjectStartDate = remember {
-                mutableStateOf(true)
-            }
-            val awardIndex = remember {
-                mutableStateOf(0)
-            }
-            val awardDateMap = remember {
-                mutableStateMapOf<Int, String>()
             }
 
             //Dialog
@@ -318,6 +263,62 @@ class FillOutInformationActivity : BaseActivity() {
                                         onTechStackItemRemoved = {
                                             profileDetailTechStack.remove(it)
                                         },
+                                        onCompleteButtonClick = {
+                                            loadingModalState.value = true
+
+                                            //이미지 업로드 & 정보기입 요청
+                                            lifecycleScope.launch {
+                                                val profileImageUpload =
+                                                    fillOutViewModel.profileImageUploadAsync(
+                                                        profileImageUri.value,
+                                                        this@FillOutInformationActivity
+                                                    )
+
+                                                awaitAll(
+                                                    profileImageUpload,
+                                                )
+
+                                                if (fillOutViewModel.profileImageUploadResponse.value is Event.Success) {
+                                                    fillOutViewModel.enterStudentInformation(
+                                                        major = enteredProfileData.major.takeIf { it != "직접입력" }
+                                                            ?: enteredProfileData.enteredMajor,
+                                                        techStack = enteredProfileData.techStack,
+                                                        profileImgUrl = fillOutViewModel.profileImageUploadResponse.value.data!!,
+                                                        introduce = enteredProfileData.introduce,
+                                                        contactEmail = enteredProfileData.contactEmail
+                                                    )
+                                                }
+                                            }
+
+                                            //예외처리
+                                            lifecycleScope.launch {
+                                                enteredStudentInfomationResponse(
+                                                    viewModel = fillOutViewModel,
+                                                    onSuccess = {
+                                                        loadingModalState.value = false
+                                                        startActivity(
+                                                            Intent(
+                                                                this@FillOutInformationActivity,
+                                                                MainActivity::class.java
+                                                            )
+                                                        )
+                                                        finish()
+                                                    },
+                                                    error = { errorMsg, unauthorized ->
+                                                        loadingModalState.value = false
+                                                        dialogVisible.value = true
+                                                        isUnauthorized.value = unauthorized
+                                                        dialogTitle.value = "실패"
+                                                        dialogText.value = errorMsg
+                                                    }
+                                                )
+                                                profileImageUploadResponse(fillOutViewModel) { errorMsg ->
+                                                    dialogVisible.value = true
+                                                    dialogText.value = "실패"
+                                                    dialogText.value = errorMsg
+                                                }
+                                            }
+                                        }
                                     )
                                 }
                                 composable(FillOutPage.Search.value) {
@@ -328,7 +329,6 @@ class FillOutInformationActivity : BaseActivity() {
                                         detailStack = searchDetailStack.value,
                                         selectedStack = when (detailStackSearchLocation.value) {
                                             DetailSearchLocation.Profile -> profileDetailTechStack
-                                            DetailSearchLocation.Projects -> projectsDetailTechStack[projectIndex.value]
                                         },
                                         onSearchStack = {
                                             searchDetailStackViewModel.searchDetailStack(it)
@@ -343,10 +343,6 @@ class FillOutInformationActivity : BaseActivity() {
                                                 profileDetailTechStack.addAll(stack.filter {
                                                     !profileDetailTechStack.contains(it)
                                                 })
-                                            }
-
-                                            DetailSearchLocation.Projects -> {
-                                                projectsDetailTechStack[projectIndex.value] = stack
                                             }
                                         }
                                         navController.popBackStack()
@@ -364,20 +360,6 @@ class FillOutInformationActivity : BaseActivity() {
                     }
                 }
             }
-        }
-    }
-
-    private fun String.toEnum(): String {
-        return when (this) {
-            "정규직" -> "FULL_TIME"
-            "비정규직" -> "TEMPORARY"
-            "계약직" -> "CONSTRACT"
-            "인턴" -> "INTERN"
-            "병특 희망" -> "HOPE"
-            "희망하지 않음" -> "NOT_HOPE"
-            "상관없음" -> "NO_MATTER"
-            "해당 사항 없음" -> "NONE"
-            else -> ""
         }
     }
 
@@ -417,50 +399,6 @@ class FillOutInformationActivity : BaseActivity() {
         error: (errorMsg: String) -> Unit
     ) {
         viewModel.profileImageUploadResponse.collect { response ->
-            when (response) {
-                is Event.Success, Event.Loading -> {}
-                is Event.BadRequest -> {
-                    error("이미지 업로드 실패, 개발자에게 문의해주세요.")
-                }
-
-                is Event.Server -> {
-                    error("서버 에러 발생, 개발자에게 문의해 주세요.")
-                }
-
-                else -> {
-                    error("알 수 없는 에러 발생, 개발자에게 문의해 주세요.")
-                }
-            }
-        }
-    }
-
-    private suspend fun projectsIconImageUploadResponse(
-        viewModel: FillOutViewModel,
-        error: (errorMsg: String) -> Unit
-    ) {
-        viewModel.projectIconImageUploadResponse.collect { response ->
-            when (response) {
-                is Event.Success, Event.Loading -> {}
-                is Event.BadRequest -> {
-                    error("이미지 업로드 실패, 개발자에게 문의해주세요.")
-                }
-
-                is Event.Server -> {
-                    error("서버 에러 발생, 개발자에게 문의해 주세요.")
-                }
-
-                else -> {
-                    error("알 수 없는 에러 발생, 개발자에게 문의해 주세요.")
-                }
-            }
-        }
-    }
-
-    private suspend fun projectsPreviewsImageUploadResponse(
-        viewModel: FillOutViewModel,
-        error: (errorMsg: String) -> Unit
-    ) {
-        viewModel.projectPreviewsImageUploadResponse.collect { response ->
             when (response) {
                 is Event.Success, Event.Loading -> {}
                 is Event.BadRequest -> {
