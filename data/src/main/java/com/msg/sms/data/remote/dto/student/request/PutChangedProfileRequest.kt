@@ -15,7 +15,7 @@ data class PutChangedProfileRequest(
     @SerializedName("introduce")
     val introduce: String,
     @SerializedName("portfolioUrl")
-    val portfolioUrl: String,
+    val portfolioUrl: String?,
     @SerializedName("contactEmail")
     val contactEmail: String,
     @SerializedName("formOfEmployment")
