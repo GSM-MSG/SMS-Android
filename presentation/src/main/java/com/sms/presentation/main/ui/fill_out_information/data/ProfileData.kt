@@ -8,6 +8,5 @@ data class ProfileData(
     val contactEmail: String,
     val enteredMajor: String,
     val major: String,
-    val portfolioUrl: String,
     val techStack: List<String>
 )

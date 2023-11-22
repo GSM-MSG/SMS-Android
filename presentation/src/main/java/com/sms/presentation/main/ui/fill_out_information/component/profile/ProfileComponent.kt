@@ -124,18 +124,6 @@ fun ProfileComponent(
                 onProfileValueChanged(data.copy(enteredMajor = enteredMajor))
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Text(text = "포트폴리오 URL", style = typography.body2)
-            Spacer(modifier = Modifier.height(8.dp))
-            SmsTextField(
-                placeHolder = "https://",
-                modifier = Modifier.fillMaxWidth(),
-                setText = data.portfolioUrl,
-                onValueChange = { portfolio ->
-                    onProfileValueChanged(data.copy(portfolioUrl = portfolio))
-                },
-                onClickButton = { onProfileValueChanged(data.copy(portfolioUrl = "")) }
-            )
-            Spacer(modifier = Modifier.height(24.dp))
             ProfileTechStackInputComponent(
                 techStack = detailStacks,
                 onClick = changeView,
@@ -153,7 +141,7 @@ fun ProfileComponent(
 fun ProfileComponentPre() {
     ProfileComponent(
         selectedMajor = "FrontEnd",
-        data = ProfileData(Uri.EMPTY, "", "", "", "", "", emptyList()),
+        data = ProfileData(Uri.EMPTY, "", "", "", "", emptyList()),
         isRequired = {},
         detailStacks = listOf("a", "b", "c"),
         profileImageUri = Uri.EMPTY,

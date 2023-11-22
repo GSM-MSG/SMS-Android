@@ -23,7 +23,7 @@ fun ProfileTechStackInputComponent(
     onClick: () -> Unit,
     onTechStackRemoved: (item: String) -> Unit
 ) {
-    AddGrayBody1Title(titleText = "사용기술 (최대 5개)") {
+    AddGrayBody1Title(titleText = "세부스택 (최대 5개)") {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)

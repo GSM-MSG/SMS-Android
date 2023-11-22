@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.divider.SmsDivider
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.common.CertificateModel
-import com.sms.presentation.main.ui.fill_out_information.data.WorkConditionData
+import com.sms.presentation.main.ui.detail.data.WorkConditionData
 
 @Composable
 fun StudentInfoComponent(

@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.fill_out_information.data
+package com.sms.presentation.main.ui.detail.data
 
 data class WorkConditionData(
     val formOfEmployment: String,

@@ -43,37 +43,12 @@ class FillOutViewModel @Inject constructor(
     private val _profileImageUploadResponse = MutableStateFlow<Event<String>>(Event.Loading)
     val profileImageUploadResponse = _profileImageUploadResponse.asStateFlow()
 
-    private val _projectIconImageUploadResponse =
-        MutableStateFlow<Event<List<String>>>(Event.Loading)
-    val projectIconImageUploadResponse = _projectIconImageUploadResponse.asStateFlow()
-
-    private val _projectPreviewsImageUploadResponse =
-        MutableStateFlow<Event<List<List<String>>>>(Event.Loading)
-    val projectPreviewsImageUploadResponse = _projectPreviewsImageUploadResponse.asStateFlow()
-
-    private val _onImageUploadComplete = MutableLiveData(false)
-    val onImageUploadComplete: LiveData<Boolean> = _onImageUploadComplete
-
     private val major = mutableStateOf("")
     private val enteredMajor = mutableStateOf("")
     private val techStacks = mutableStateListOf<String>()
     private val profileImageUri = mutableStateOf(Uri.EMPTY)
     private val introduce = mutableStateOf("")
-    private val portfolioUrl = mutableStateOf("")
     private val contactEmail = mutableStateOf("")
-    private val formOfEmployment = mutableStateOf("")
-    private val gsmAuthenticationScore = mutableStateOf("")
-    private val salary = mutableStateOf(0)
-    private val regions = mutableStateListOf("")
-    private val militaryService = mutableStateOf("")
-    private val certificates = mutableStateListOf("")
-    private val foreignLanguages =
-        mutableStateListOf(ForeignLanguageInfo(languageCertificateName = "", score = ""))
-    private val projects = mutableStateListOf(ProjectInfo(isToggleOpen = true))
-    private val awards = mutableStateListOf<AwardData>()
-
-    private val _projectsRequiredInfoData = mutableStateOf(listOf(ProjectRequiredDataInfo()))
-    val projectsRequiredInfoData: State<List<ProjectRequiredDataInfo>> = _projectsRequiredInfoData
 
     fun getEnteredProfileInformation(): ProfileData {
         return ProfileData(
@@ -82,7 +57,6 @@ class FillOutViewModel @Inject constructor(
             contactEmail = contactEmail.value,
             enteredMajor = enteredMajor.value,
             major = major.value,
-            portfolioUrl = portfolioUrl.value,
             techStack = techStacks
         )
     }
@@ -94,7 +68,6 @@ class FillOutViewModel @Inject constructor(
         profileImgUri: Uri,
         introduce: String,
         contactEmail: String,
-        portfolioUrl: String,
     ) {
         this.enteredMajor.value = enteredMajor
         this.major.value = major
@@ -103,113 +76,6 @@ class FillOutViewModel @Inject constructor(
         this.profileImageUri.value = profileImgUri
         this.introduce.value = introduce
         this.contactEmail.value = contactEmail
-        this.portfolioUrl.value = portfolioUrl
-    }
-
-    fun getEnteredWorkConditionInformation(): WorkConditionData {
-        return WorkConditionData(
-            formOfEmployment = formOfEmployment.value,
-            salary = salary.value.toString(),
-            regions = regions
-        )
-    }
-
-    fun setEnteredWorkConditionInformation(
-        formOfEmployment: String,
-        salary: String,
-        region: List<String>,
-    ) {
-        this.formOfEmployment.value = formOfEmployment
-        this.salary.value = salary.toInt()
-        this.regions.removeAll { !region.contains(it) }
-        this.regions.addAll(region.filter { !this.regions.contains(it) })
-    }
-
-    fun getEnteredMilitaryServiceInformation(): MilitaryServiceData {
-        return MilitaryServiceData(militaryService = militaryService.value)
-    }
-
-    fun setEnteredMilitaryServiceInformation(militaryService: String) {
-        this.militaryService.value = militaryService
-    }
-
-    fun getEnteredCertification(): CertificationData {
-        return CertificationData(certifications = certificates)
-    }
-
-    fun setEnteredCertification(certificate: List<String>) {
-        this.certificates.removeAll { !certificate.contains(it) }
-        this.certificates.addAll(certificate.filter { !this.certificates.contains(it) })
-    }
-
-    fun getEnteredSchoolLifeInformation(): SchoolLifeData {
-        return SchoolLifeData(
-            gsmAuthenticationScore = gsmAuthenticationScore.value
-        )
-    }
-
-    fun setEnteredSchoolLifeInformation(
-        gsmAuthenticationScore: String,
-    ) {
-        this.gsmAuthenticationScore.value = gsmAuthenticationScore
-    }
-
-    fun getEnteredProjectsInformation(): ProjectsData {
-        return ProjectsData(projects = projects)
-    }
-
-    fun setEnteredProjectsInformation(
-        projects: List<ProjectInfo>
-    ) {
-        this.projects.removeAll { !projects.contains(it) }
-        this.projects.addAll(projects.filter { !this.projects.contains(it) })
-    }
-
-    fun getEnteredForeignLanguagesInformation(): ForeignLanguagesData {
-        return ForeignLanguagesData(foreignLanguages = foreignLanguages)
-    }
-
-    fun setEnteredForeignLanguagesInformation(
-        foreignLanguages: List<ForeignLanguageInfo>
-    ) {
-        this.foreignLanguages.removeAll { !foreignLanguages.contains(it) }
-        this.foreignLanguages.addAll(foreignLanguages.filter { !this.foreignLanguages.contains(it) })
-    }
-
-    fun getEnteredAwardsInformation(): List<AwardData> {
-        return this.awards
-    }
-
-    fun setEnteredAwardsInformation(
-        awards: List<AwardData>
-    ) {
-        this.awards.removeAll { !awards.contains(it) }
-        this.awards.addAll(awards.filter { !this.awards.contains(it) })
-    }
-
-    fun setProjectRequiredDataInformation(
-        index: Int,
-        data: ProjectRequiredDataInfo
-    ) {
-        val infoDataList = this._projectsRequiredInfoData.value.toMutableList()
-        infoDataList[index] = data
-        this._projectsRequiredInfoData.value = infoDataList
-    }
-
-    fun removeProjectRequiredDataInformation(
-        index: Int
-    ) {
-        val infoDataList = this._projectsRequiredInfoData.value.toMutableList()
-        infoDataList.removeAt(index)
-        this._projectsRequiredInfoData.value = infoDataList
-    }
-
-    fun addProjectRequiredDataInformaion(
-        data: ProjectRequiredDataInfo = ProjectRequiredDataInfo()
-    ) {
-        val infoDataList = this._projectsRequiredInfoData.value.toMutableList()
-        infoDataList.add(data)
-        this._projectsRequiredInfoData.value = infoDataList
     }
 
     fun getMajorList() {
@@ -267,56 +133,4 @@ class FillOutViewModel @Inject constructor(
             this@async.cancel()
         }
     }
-
-    fun projectsIconUploadAsync(projectsIcon: List<Uri>, context: Context) = viewModelScope.async {
-        val iconUrlList = Array(projects.size) { "" }
-
-        projectsIcon.forEachIndexed { index, uri ->
-            imageUploadUseCase(
-                file = uri.toMultipartBody(context)!!
-            ).onSuccess {
-                it.catch { remoteError ->
-                    _projectIconImageUploadResponse.value = remoteError.errorHandling()
-                    this@async.cancel()
-                }.collect { response ->
-                    iconUrlList[index] = response.fileUrl
-                }
-            }.onFailure { error ->
-                _projectIconImageUploadResponse.value = error.errorHandling()
-                this@async.cancel()
-            }
-
-            if (index == projects.lastIndex) {
-                _projectIconImageUploadResponse.value = Event.Success(data = iconUrlList.toList())
-            }
-        }
-    }
-
-    fun projectsPreviewAsync(projectsPreviews: List<List<Uri>>, context: Context) =
-        viewModelScope.async {
-            val previewUrlList = Array(projects.size) { Array(projects[it].preview.size) { "" } }
-
-            projectsPreviews.forEachIndexed { projectIndex, previews ->
-                previews.forEachIndexed { index, uri ->
-                    imageUploadUseCase(
-                        file = uri.toMultipartBody(context)!!
-                    ).onSuccess {
-                        it.catch { remoteError ->
-                            _projectPreviewsImageUploadResponse.value = remoteError.errorHandling()
-                            this@async.cancel()
-                        }.collect { response ->
-                            previewUrlList[projectIndex][index] = response.fileUrl
-                        }
-                    }.onFailure { error ->
-                        _projectPreviewsImageUploadResponse.value = error.errorHandling()
-                        this@async.cancel()
-                    }
-                }
-
-                if (projectIndex == projects.lastIndex) {
-                    _projectPreviewsImageUploadResponse.value =
-                        Event.Success(previewUrlList.toList().map { it.toList() })
-                }
-            }
-        }
 }

@@ -42,6 +42,7 @@ fun ProfileScreen(
     onSnackBarVisibleChanged: (text: String) -> Unit,
     onProfileValueChanged: (data: ProfileData) -> Unit,
     onTechStackItemRemoved: (item: String) -> Unit,
+    onCompleteButtonClick: (data: ProfileData) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val isRequired = remember {
@@ -115,24 +116,32 @@ fun ProfileScreen(
             Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                 Spacer(modifier = Modifier.height(32.dp))
                 SmsRoundedButton(
-                    text = "다음", modifier = Modifier
+                    text = "완료", modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
                     enabled = isRequired.value && textFieldChecker(
                         if (selectedMajor == "직접입력") data.enteredMajor else selectedMajor
                     )
                 ) {
-                    if (data.contactEmail.isEmailRegularExpression() && data.portfolioUrl.isUrlRegularExpression()) {
+                    if (data.contactEmail.isEmailRegularExpression()) {
                         viewModel.setEnteredProfileInformation(
                             major = selectedMajor,
                             techStack = detailStacks,
                             profileImgUri = profileImageUri,
                             introduce = data.introduce,
                             contactEmail = data.contactEmail,
-                            portfolioUrl = data.portfolioUrl,
                             enteredMajor = data.enteredMajor
                         )
-                        navController.navigate("SchoolLife")
+                        onCompleteButtonClick(
+                            ProfileData(
+                                profileImageUri = profileImageUri,
+                                introduce = data.introduce,
+                                contactEmail = data.contactEmail,
+                                enteredMajor = data.enteredMajor,
+                                major = selectedMajor,
+                                techStack = detailStacks
+                            )
+                        )
                     } else {
                         dialogState.value = true
                     }
