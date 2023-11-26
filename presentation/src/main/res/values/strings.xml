@@ -1,7 +1,11 @@
 <resources>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="login_page_topcomponent_text_english">STUDENT\nMANAGEMENT\nSERVICE</string>
-    <string name="login_page_topcomponent_text_korean">학생 정보 통합관리 서비스</string>
-    <string name="title_activity_fill_out_information">FillOutInformationActivity</string>
+    <string name="title_activity_login" translatable="false">LoginActivity</string>
+    <string name="login_page_topcomponent_text_english" translatable="false">STUDENT\nMANAGEMENT\nSERVICE</string>
+    <string name="login_page_topcomponent_text_korean" translatable="false">학생 정보 통합관리 서비스</string>
+    <string name="title_activity_fill_out_information" translatable="false">FillOutInformationActivity</string>
+    <string name="browser_error_title" translatable="false">Browser error</string>
+    <string name="browser_error_content" translatable="false">Browser not found.\nPlease connect after installing the browser.</string>
+    <string name="cansel" translatable="false">Cancel</string>
+    <string name="check" translatable="false">Check</string>
 </resources>

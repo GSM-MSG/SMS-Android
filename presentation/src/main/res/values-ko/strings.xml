@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="browser_error_title">브라우저 오류</string>
+    <string name="browser_error_content">브라우저를 찾을 수 없습니다.\n브라우저 설치 후 접속해 주세요.</string>
+    <string name="cansel">취소</string>
+    <string name="check">확인</string>
+</resources>
