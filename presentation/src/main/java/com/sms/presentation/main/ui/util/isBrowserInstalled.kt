@@ -10,17 +10,17 @@ fun isBrowserInstalled(context: Context): Boolean {
     val packageManager: PackageManager = context.packageManager
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://gauth.co.kr/"))
 
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        val list = packageManager.queryIntentActivities(
+    val list = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        packageManager.queryIntentActivities(
             intent,
             PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong())
         )
-        list.isNotEmpty()
     } else {
-        val list = packageManager.queryIntentActivities(
+        packageManager.queryIntentActivities(
             intent,
             PackageManager.MATCH_DEFAULT_ONLY
         )
-        list.isNotEmpty()
     }
+
+    return list.isNotEmpty()
 }
