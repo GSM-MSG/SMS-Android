@@ -8,11 +8,11 @@ import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
-fun PortfolioComponent(portfolioValue: String, onValueChange: (value: String) -> Unit) {
+fun PortfolioComponent(portfolioValue: String?, onValueChange: (value: String) -> Unit) {
     AddGrayBody1Title(titleText = "포트폴리오 URL") {
         SmsTextField(
             modifier = Modifier.fillMaxWidth(),
-            setText = portfolioValue,
+            setText = portfolioValue?:"",
             placeHolder = "포트폴리오 URL",
             onValueChange = onValueChange) {
             onValueChange("")
