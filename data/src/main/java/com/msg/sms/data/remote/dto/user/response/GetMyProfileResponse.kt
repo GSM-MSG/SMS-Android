@@ -10,7 +10,7 @@ data class GetMyProfileResponse(
     @SerializedName("introduce")
     val introduce: String,
     @SerializedName("portfolioUrl")
-    val portfolioUrl: String,
+    val portfolioUrl: String?,
     @SerializedName("grade")
     val grade: Int,
     @SerializedName("classNum")

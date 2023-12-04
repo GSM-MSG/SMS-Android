@@ -8,15 +8,5 @@ data class EnterStudentInformationModel(
     val techStacks: List<String>,
     val profileImgUrl: String,
     val introduce: String,
-    val portfolioUrl: String,
-    val contactEmail: String,
-    val formOfEmployment: String,
-    val gsmAuthenticationScore: Int,
-    val salary: Int,
-    val regions: List<String>,
-    val languageCertificates: List<CertificateModel>,
-    val militaryService: String,
-    val certificates: List<String>,
-    val projects: List<ProjectModel>,
-    val prizes: List<PrizeModel>
+    val contactEmail: String
 )

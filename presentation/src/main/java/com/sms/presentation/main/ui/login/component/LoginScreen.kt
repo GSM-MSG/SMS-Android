@@ -12,7 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.msg.gauthsignin.GAuthSigninWebView
+import com.msg.sms.design.component.SmsDialog
 import com.sms.presentation.BuildConfig
+import com.sms.presentation.R
+import com.sms.presentation.main.ui.util.isBrowserInstalled
 
 @Composable
 fun LoginScreen(
@@ -24,6 +27,23 @@ fun LoginScreen(
         mutableStateOf(false)
     }
 
+    val dialogState = remember {
+        mutableStateOf(false)
+    }
+
+    if (dialogState.value) {
+        SmsDialog(
+            widthPercent = 1f,
+            heightPercent = 0.54f,
+            title = context.getString(R.string.browser_error_title),
+            msg = context.getString(R.string.browser_error_content),
+            outLineButtonText = context.getString(R.string.cansel),
+            importantButtonText = context.getString(R.string.check),
+            outlineButtonOnClick = { dialogState.value = false },
+            importantButtonOnClick = { dialogState.value = false }
+        )
+    }
+
     Box {
         LoginPageBackGround()
         TopComponent(context)
@@ -33,7 +53,12 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LoginButton {
-                webViewVisible.value = true
+                if (isBrowserInstalled(context)) {
+                    webViewVisible.value = true
+                }
+                else {
+                    dialogState.value = true
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row {

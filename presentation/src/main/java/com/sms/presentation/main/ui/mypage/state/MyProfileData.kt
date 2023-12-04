@@ -6,7 +6,7 @@ import com.msg.sms.domain.model.user.response.LanguageCertificateModel
 data class MyProfileData(
     val name: String,
     val introduce: String,
-    val portfolioUrl: String,
+    val portfolioUrl: String?,
     val grade: Int,
     val classNum: Int,
     val number: Int,
