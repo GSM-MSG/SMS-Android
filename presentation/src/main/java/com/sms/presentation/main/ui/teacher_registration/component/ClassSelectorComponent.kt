@@ -6,17 +6,17 @@ import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
-fun PositionTypeComponent(
-    setPosition: String,
-    onClickPositionOpenButton: () -> Unit
+fun ClassSelectorComponent(
+    setClass: String,
+    onClickClassOpenButton: () -> Unit
 ){
-    AddGrayBody1Title(titleText = "직함") {
+    AddGrayBody1Title(titleText = "반") {
         SmsCustomTextField(
             endIcon = { OpenButtonIcon() },
-            clickAction = onClickPositionOpenButton,
-            setChangeText = setPosition,
+            clickAction = onClickClassOpenButton,
+            setChangeText = setClass,
             readOnly = true,
-            placeHolder = "직함을 선택해 주세요"
+            placeHolder = "반을 선택해 주세요"
         )
     }
 }
