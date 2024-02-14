@@ -112,7 +112,6 @@ fun TeacherRegistrationPageScreen(){
                 SmsSpacer()
                 TitleHeader(titleText = "프로필 *")
                 TeacherRegistrationSection(
-                    positionData = positionData,
                     setPosition = positionData,
                     setGrade = gradeData,
                     setClass = classData,

@@ -14,7 +14,6 @@ import com.sms.presentation.main.ui.teacher_registration.component.PositionTypeC
 
 @Composable
 fun TeacherRegistrationSection(
-    positionData: String,
     setPosition: String,
     setGrade: String,
     setClass: String,
@@ -32,7 +31,7 @@ fun TeacherRegistrationSection(
             setPosition = setPosition,
             onClickPositionOpenButton = onClickPositionOpenButton
         )
-        if (positionData == "담임선생님") {
+        if (setPosition == "담임선생님") {
             GradeSelectorComponent(
                 setGrade = setGrade,
                 onClickGradeOpenButton = onClickGradeOpenButton
@@ -50,7 +49,6 @@ fun TeacherRegistrationSection(
 @Composable
 private fun TeacherRegistrationSectionPre() {
     TeacherRegistrationSection(
-        positionData = "담임선생님",
         setPosition = "",
         setGrade = "1학년",
         setClass = "1반",
