@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.teacher_registration.component.state
+package com.sms.presentation.main.ui.teacher_registration.state
 
 enum class Grade (val text: String){
     FIRST_GRADE("1학년"),

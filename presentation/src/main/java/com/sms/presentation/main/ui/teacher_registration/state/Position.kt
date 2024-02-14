@@ -1,4 +1,4 @@
-package com.sms.presentation.main.ui.teacher_registration.component.state
+package com.sms.presentation.main.ui.teacher_registration.state
 
 enum class Position (val text: String){
     HOMEROOM("담임선생님"),
