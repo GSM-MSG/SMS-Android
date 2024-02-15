@@ -98,7 +98,7 @@ fun TeacherRegistrationPageScreen(){
             }
         }
     ) {
-        Box{
+        Box {
             Column (
                 modifier = Modifier
                     .fillMaxSize()
