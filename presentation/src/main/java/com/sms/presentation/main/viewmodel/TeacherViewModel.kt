@@ -3,8 +3,10 @@ package com.sms.presentation.main.viewmodel
 import com.sms.presentation.main.viewmodel.util.Event
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.msg.sms.domain.usecase.teacher.CommonRegistrationUseCase
 import com.msg.sms.domain.usecase.teacher.PrincipalRegistrationUseCase
+import com.msg.sms.domain.usecase.teacher.VicePrincipalRegistrationUseCase
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,13 +19,17 @@ import javax.inject.Inject
 @HiltViewModel
 class TeacherViewModel @Inject constructor(
     private val commonRegistrationUseCase: CommonRegistrationUseCase,
-    private val principalRegistrationUseCase: PrincipalRegistrationUseCase
+    private val principalRegistrationUseCase: PrincipalRegistrationUseCase,
+    private val vicePrincipalRegistrationUseCase: VicePrincipalRegistrationUseCase
 ) : ViewModel() {
     private val _commonResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val commonResponse = _commonResponse.asStateFlow()
 
     private val _principalResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val principalResponse = _principalResponse.asStateFlow()
+
+    private val _vicePrincipalResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
+    val vicePrincipalResponse = _vicePrincipalResponse.asStateFlow()
 
     fun common() = viewModelScope.launch {
         commonRegistrationUseCase().onSuccess {
@@ -46,6 +52,18 @@ class TeacherViewModel @Inject constructor(
             }
         }.onFailure {
             _principalResponse.value = it.errorHandling()
+        }
+    }
+
+    fun vicePrincipal() = viewModelScope.launch {
+        vicePrincipalRegistrationUseCase().onSuccess {
+            it.catch {remoteError ->
+                _principalResponse.value = remoteError.errorHandling()
+            }.collect { response ->
+                _vicePrincipalResponse.value = Event.Success(data = response)
+            }
+        }.onFailure {
+            _vicePrincipalResponse.value = it.errorHandling()
         }
     }
 }
