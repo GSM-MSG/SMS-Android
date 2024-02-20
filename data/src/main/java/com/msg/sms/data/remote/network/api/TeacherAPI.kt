@@ -8,4 +8,7 @@ interface TeacherAPI {
 
     @POST("/teacher/principal")
     suspend fun principal()
+
+    @POST("/teacher/deputy-principal")
+    suspend fun vicePrincipal()
 }
