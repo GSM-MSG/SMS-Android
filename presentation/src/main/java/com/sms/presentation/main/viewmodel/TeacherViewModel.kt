@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.msg.sms.domain.usecase.teacher.CommonRegistrationUseCase
+import com.msg.sms.domain.usecase.teacher.HeadOfDepartmentRegistrationUseCase
 import com.msg.sms.domain.usecase.teacher.PrincipalRegistrationUseCase
 import com.msg.sms.domain.usecase.teacher.VicePrincipalRegistrationUseCase
 import com.sms.presentation.main.viewmodel.util.errorHandling
@@ -20,7 +21,8 @@ import javax.inject.Inject
 class TeacherViewModel @Inject constructor(
     private val commonRegistrationUseCase: CommonRegistrationUseCase,
     private val principalRegistrationUseCase: PrincipalRegistrationUseCase,
-    private val vicePrincipalRegistrationUseCase: VicePrincipalRegistrationUseCase
+    private val vicePrincipalRegistrationUseCase: VicePrincipalRegistrationUseCase,
+    private val headOfDepartmentRegistrationUseCase: HeadOfDepartmentRegistrationUseCase
 ) : ViewModel() {
     private val _commonResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val commonResponse = _commonResponse.asStateFlow()
@@ -30,6 +32,9 @@ class TeacherViewModel @Inject constructor(
 
     private val _vicePrincipalResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val vicePrincipalResponse = _vicePrincipalResponse.asStateFlow()
+
+    private val _headOfDepartmentResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
+    val headOfDepartmentResponse = _headOfDepartmentResponse.asStateFlow()
 
     fun common() = viewModelScope.launch {
         commonRegistrationUseCase().onSuccess {
@@ -64,6 +69,18 @@ class TeacherViewModel @Inject constructor(
             }
         }.onFailure {
             _vicePrincipalResponse.value = it.errorHandling()
+        }
+    }
+
+    fun headOfDepartment() = viewModelScope.launch {
+        headOfDepartmentRegistrationUseCase().onSuccess {
+            it.catch {remoteError ->
+                _headOfDepartmentResponse.value = remoteError.errorHandling()
+            }.collect { response ->
+                _headOfDepartmentResponse.value = Event.Success(data = response)
+            }
+        }.onFailure {
+            _headOfDepartmentResponse.value = it.errorHandling()
         }
     }
 }
