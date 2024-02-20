@@ -5,4 +5,7 @@ import retrofit2.http.POST
 interface TeacherAPI {
     @POST("/teacher/common")
     suspend fun common()
+
+    @POST("/teacher/principal")
+    suspend fun principal()
 }
