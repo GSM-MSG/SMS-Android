@@ -26,4 +26,12 @@ class RemoteTeacherDataSourceImpl @Inject constructor(
                 .sendRequest()
         )
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun vicePrincipal(): Flow<Unit> = flow {
+        emit(
+            SMSApiHandler<Unit>()
+                .httpRequest { service.vicePrincipal() }
+                .sendRequest()
+        )
+    }.flowOn(Dispatchers.IO)
 }
