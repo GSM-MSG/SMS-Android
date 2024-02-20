@@ -11,4 +11,7 @@ interface TeacherAPI {
 
     @POST("/teacher/deputy-principal")
     suspend fun vicePrincipal()
+
+    @POST("/teacher/director")
+    suspend fun headOfDepartment()
 }
