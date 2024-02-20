@@ -8,4 +8,6 @@ interface TeacherRepository {
     suspend fun principal(): Flow<Unit>
 
     suspend fun vicePrincipal(): Flow<Unit>
+
+    suspend fun headOfDepartment(): Flow<Unit>
 }
