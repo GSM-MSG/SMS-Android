@@ -15,4 +15,8 @@ class TeacherRepositoryImpl @Inject constructor(
     override suspend fun principal(): Flow<Unit> {
         return remoteTeacherDataSource.principal()
     }
+
+    override suspend fun vicePrincipal(): Flow<Unit> {
+        return remoteTeacherDataSource.vicePrincipal()
+    }
 }
