@@ -1,5 +1,7 @@
 package com.msg.sms.data.remote.network.api
 
+import com.msg.sms.data.remote.dto.teacher.request.HomeroomTeacherRequest
+import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface TeacherAPI {
@@ -14,4 +16,9 @@ interface TeacherAPI {
 
     @POST("/teacher/director")
     suspend fun headOfDepartment()
+
+    @POST("/teacher/homeroom")
+    suspend fun homeroom(
+        @Body body: HomeroomTeacherRequest,
+    )
 }
