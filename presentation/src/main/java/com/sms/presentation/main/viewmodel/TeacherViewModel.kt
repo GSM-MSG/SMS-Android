@@ -4,8 +4,10 @@ import com.sms.presentation.main.viewmodel.util.Event
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.msg.sms.domain.model.teacher.request.HomeroomTeacherRequestModel
 import com.msg.sms.domain.usecase.teacher.CommonRegistrationUseCase
 import com.msg.sms.domain.usecase.teacher.HeadOfDepartmentRegistrationUseCase
+import com.msg.sms.domain.usecase.teacher.HomeroomRegistrationUseCase
 import com.msg.sms.domain.usecase.teacher.PrincipalRegistrationUseCase
 import com.msg.sms.domain.usecase.teacher.VicePrincipalRegistrationUseCase
 import com.sms.presentation.main.viewmodel.util.errorHandling
@@ -22,7 +24,8 @@ class TeacherViewModel @Inject constructor(
     private val commonRegistrationUseCase: CommonRegistrationUseCase,
     private val principalRegistrationUseCase: PrincipalRegistrationUseCase,
     private val vicePrincipalRegistrationUseCase: VicePrincipalRegistrationUseCase,
-    private val headOfDepartmentRegistrationUseCase: HeadOfDepartmentRegistrationUseCase
+    private val headOfDepartmentRegistrationUseCase: HeadOfDepartmentRegistrationUseCase,
+    private val homeroomRegistrationUseCase: HomeroomRegistrationUseCase
 ) : ViewModel() {
     private val _commonResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val commonResponse = _commonResponse.asStateFlow()
@@ -35,6 +38,9 @@ class TeacherViewModel @Inject constructor(
 
     private val _headOfDepartmentResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val headOfDepartmentResponse = _headOfDepartmentResponse.asStateFlow()
+
+    private val _homeroomResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
+    val homeroomResponse = _homeroomResponse.asStateFlow()
 
     fun common() = viewModelScope.launch {
         commonRegistrationUseCase().onSuccess {
@@ -81,6 +87,23 @@ class TeacherViewModel @Inject constructor(
             }
         }.onFailure {
             _headOfDepartmentResponse.value = it.errorHandling()
+        }
+    }
+
+    fun homeroom(grade: Int, classNum: Int) = viewModelScope.launch {
+        homeroomRegistrationUseCase(
+            HomeroomTeacherRequestModel(
+                grade = grade,
+                classNum = classNum
+            )
+        ).onSuccess {
+            it.catch { remoteError ->
+                _headOfDepartmentResponse.value = remoteError.errorHandling()
+            }.collect { response ->
+                _homeroomResponse.value = Event.Success(data = response)
+            }
+        }.onFailure {
+            _homeroomResponse.value = it.errorHandling()
         }
     }
 }
