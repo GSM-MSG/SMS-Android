@@ -1,5 +1,6 @@
 package com.msg.sms.data.remote.datasource.teacher
 
+import com.msg.sms.data.remote.dto.teacher.request.HomeroomTeacherRequest
 import com.msg.sms.data.remote.network.api.TeacherAPI
 import com.msg.sms.data.util.SMSApiHandler
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +40,14 @@ class RemoteTeacherDataSourceImpl @Inject constructor(
         emit(
             SMSApiHandler<Unit>()
                 .httpRequest { service.headOfDepartment() }
+                .sendRequest()
+        )
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun homeroom(body: HomeroomTeacherRequest): Flow<Unit> = flow {
+        emit(
+            SMSApiHandler<Unit>()
+                .httpRequest { service.homeroom(body = body) }
                 .sendRequest()
         )
     }.flowOn(Dispatchers.IO)
