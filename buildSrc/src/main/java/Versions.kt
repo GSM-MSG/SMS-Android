@@ -18,7 +18,7 @@ object Versions {
     const val ANDROID_JUNIT = "1.1.5"
     const val ESPRESSO = "3.5.1"
 
-    const val HILT = "2.47"
+    const val HILT = "2.51"
 
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.11.0"
