@@ -6,7 +6,7 @@ object Versions {
     const val APPCOMPAT = "1.6.1"
     const val ACTIVITY_COMPOSE = "1.7.2"
     const val COMPOSE_MATERIAL = "1.4.3"
-    const val COMPOSE_MATERIAL3 = "1.1.1"
+    const val COMPOSE_MATERIAL3 = "1.2.1"
 
     const val SPLASH = "1.0.1"
     const val LIFECYCLE = "2.6.1"
