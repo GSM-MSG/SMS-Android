@@ -1,0 +1,23 @@
+name: Always failed
+
+on:
+  push:
+    branches: [ "failed" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SMS Android CI Discord Notification
+        uses: sarisia/actions-status-discord@v1
+        with:
+          title: ❗️ SMS-Android-CI 실패! ❗️
+          webhook: ${{ secrets.SMS_DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          image: ${{ secrets.FAILED_IMAGE }}
+          description: CI 실패...
+          color: 00FF00
+          url: "https://github.com/sarisia/actions-status-discord"
+          username: SMS CI 봇
