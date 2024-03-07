@@ -4,7 +4,6 @@ import android.content.Intent
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.lifecycleScope
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.main.MainActivity
