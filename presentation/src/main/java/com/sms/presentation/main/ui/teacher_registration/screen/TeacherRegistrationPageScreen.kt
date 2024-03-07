@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.header.TitleHeader
 import com.msg.sms.design.component.spacer.SmsSpacer
@@ -32,6 +33,8 @@ import com.sms.presentation.main.ui.teacher_registration.section.TeacherRegistra
 import com.sms.presentation.main.ui.teacher_registration.state.Class
 import com.sms.presentation.main.ui.teacher_registration.state.Grade
 import com.sms.presentation.main.ui.teacher_registration.state.Position
+import com.sms.presentation.main.ui.util.homeroomInfoSetting
+import com.sms.presentation.main.viewmodel.TeacherViewModel
 
 private enum class BottomSheetValues {
     Class,
@@ -39,9 +42,11 @@ private enum class BottomSheetValues {
     Position
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TeacherRegistrationPageScreen(){
+fun TeacherRegistrationPageScreen(
+    viewModel: TeacherViewModel
+){
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val bottomSheetValues = remember {
@@ -49,7 +54,7 @@ fun TeacherRegistrationPageScreen(){
     }
 
 
-    val positionData = "담임선생님"
+    val positionData = ""
     val gradeData = ""
     val classData = ""
 
@@ -131,7 +136,23 @@ fun TeacherRegistrationPageScreen(){
                         .fillMaxWidth()
                         .height(48.dp)
                 ) {
-
+                    when(positionData){
+                        "그 외 선생님" ->{
+                            viewModel.common()
+                        }
+                        "교장선생님" -> {
+                            viewModel.principal()
+                        }
+                        "교감선생님" -> {
+                            viewModel.vicePrincipal()
+                        }
+                        "부장선생님" -> {
+                            viewModel.headOfDepartment()
+                        }
+                        "담임선생님" -> {
+                            homeroomInfoSetting(gradeInfo = gradeData, classInfo = classData, viewModel = viewModel)
+                        }
+                    }
                 }
                 Spacer(modifier = Modifier.height(48.dp))
             }
@@ -142,5 +163,5 @@ fun TeacherRegistrationPageScreen(){
 @Preview
 @Composable
 fun TeacherRegistrationPageScreenPage(){
-    TeacherRegistrationPageScreen()
+
 }
