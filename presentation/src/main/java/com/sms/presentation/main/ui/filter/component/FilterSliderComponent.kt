@@ -11,7 +11,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.slider.SmsSlider
-import com.msg.sms.design.component.textfield.FilterTextFiled
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable

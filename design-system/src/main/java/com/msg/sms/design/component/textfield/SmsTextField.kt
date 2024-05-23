@@ -168,24 +168,6 @@ fun SmsCustomTextField(
 }
 
 @Composable
-fun FilterTextFiled(
-    value: String,
-    modifier: Modifier = Modifier,
-    isHopeSalary: Boolean = false,
-    onValueChange: (String) -> Unit,
-) {
-    SmsBasicTextField(
-        modifier = modifier,
-        text = if (isHopeSalary) "$value 만원" else value,
-        onValueChange = {
-            onValueChange(it.replace("\\D".toRegex(), ""))
-        },
-        maxLines = 1,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-    )
-}
-
-@Composable
 fun NoneIconTextField(
     modifier: Modifier = Modifier,
     text: String,
