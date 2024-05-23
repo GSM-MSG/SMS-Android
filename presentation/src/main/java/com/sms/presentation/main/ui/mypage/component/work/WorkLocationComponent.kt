@@ -39,7 +39,7 @@ fun WorkLocationComponent(
                 ) {
                     Box(modifier = Modifier.weight(1f)) {
                         SmsTextField(
-                            setText = item,
+                            text = item,
                             modifier = Modifier.fillMaxWidth(),
                             placeHolder = "니가가라 하와이",
                             onValueChange = { onValueChange(index, it) }

@@ -12,7 +12,7 @@ fun EmailComponent(emailValue: String, onValueChange: (value: String) -> Unit) {
     AddGrayBody1Title(titleText = "이메일") {
         SmsTextField(
             modifier = Modifier.fillMaxWidth(),
-            setText = emailValue,
+            text = emailValue,
             placeHolder = "이메일",
             onValueChange = onValueChange) {
             onValueChange("")

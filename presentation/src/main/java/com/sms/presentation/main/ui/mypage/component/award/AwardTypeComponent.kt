@@ -11,7 +11,7 @@ import com.msg.sms.design.util.AddGrayBody1Title
 fun AwardTypeComponent(type: String, onValueChange: (value: String) -> Unit) {
     AddGrayBody1Title(titleText = "종류") {
         SmsTextField(
-            setText = type,
+            text = type,
             placeHolder = "대상",
             modifier = Modifier.fillMaxWidth(),
             onValueChange = onValueChange

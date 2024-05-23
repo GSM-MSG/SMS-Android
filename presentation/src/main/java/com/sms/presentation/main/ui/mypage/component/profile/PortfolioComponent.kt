@@ -12,7 +12,7 @@ fun PortfolioComponent(portfolioValue: String?, onValueChange: (value: String) -
     AddGrayBody1Title(titleText = "포트폴리오 URL") {
         SmsTextField(
             modifier = Modifier.fillMaxWidth(),
-            setText = portfolioValue?:"",
+            text = portfolioValue?:"",
             placeHolder = "포트폴리오 URL",
             onValueChange = onValueChange) {
             onValueChange("")

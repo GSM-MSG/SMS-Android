@@ -13,7 +13,7 @@ import com.msg.sms.design.util.AddGrayBody1Title
 fun ProjectKeyTaskComponent(keyTask: String, onValueChange: (value: String) -> Unit) {
     AddGrayBody1Title(titleText = "주요 작업") {
         SmsTextField(
-            setText = keyTask,
+            text = keyTask,
             placeHolder = "저는 해당 프로젝트에 뼈를 묻었습니다.",
             modifier = Modifier
                 .fillMaxWidth()

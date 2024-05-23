@@ -12,7 +12,7 @@ fun SelfIntroduceComponent(introduceValue: String, onValueChange: (value: String
     AddGrayBody1Title(titleText = "자기 소개") {
         SmsTextField(
             modifier = Modifier.fillMaxWidth(),
-            setText = introduceValue,
+            text = introduceValue,
             placeHolder = "1줄 자기 소개 입력",
             onValueChange = onValueChange) {
             onValueChange("")

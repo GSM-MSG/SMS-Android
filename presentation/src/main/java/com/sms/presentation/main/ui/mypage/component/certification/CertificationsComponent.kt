@@ -40,7 +40,7 @@ fun CertificationsComponent(
                 ) {
                     Box(modifier = Modifier.weight(1f)) {
                         SmsTextField(
-                            setText = certification,
+                            text = certification,
                             modifier = Modifier.fillMaxWidth(),
                             onValueChange = { onValueChange(index, it) },
                             placeHolder = "정보처리 산업기사"

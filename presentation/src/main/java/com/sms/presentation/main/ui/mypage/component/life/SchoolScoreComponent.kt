@@ -20,7 +20,7 @@ fun SchoolScoreComponent(score: String, onValueChange: (value: String) -> Unit) 
     AddGrayBody1Title(titleText = "인증제 점수") {
         SmsTextField(
             modifier = Modifier.fillMaxWidth(),
-            setText = score,
+            text = score,
             placeHolder = "몇 점이고! 인증제 점수말이다.",
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.NumberPassword,

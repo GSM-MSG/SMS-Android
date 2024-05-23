@@ -44,7 +44,7 @@ fun ProjectRelatedLinksComponent(
                     Box(modifier = Modifier.weight(1f)) {
                         NoneIconTextField(
                             singleLine = true,
-                            setChangeText = it.name,
+                            text = it.name,
                             placeHolder = "",
                             onValueChange = { onLinkNameChanged(index, it) }
                         )
@@ -52,7 +52,7 @@ fun ProjectRelatedLinksComponent(
                     Box(modifier = Modifier.weight(2.5f)) {
                         NoneIconTextField(
                             singleLine = true,
-                            setChangeText = it.link,
+                            text = it.link,
                             placeHolder = "https://github.com",
                             onValueChange = { onLinkChanged(index, it) }
                         )

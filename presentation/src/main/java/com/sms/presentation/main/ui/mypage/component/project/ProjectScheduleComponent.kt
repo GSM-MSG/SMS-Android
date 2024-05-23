@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,9 +44,12 @@ fun ProjectScheduleComponent(
                 Box(modifier = Modifier.weight(1f)) {
                     SmsCustomTextField(
                         modifier = Modifier.fillMaxWidth(),
-                        endIcon = { CalendarIcon() },
-                        clickAction = onOpenStart,
-                        setChangeText = progress.start,
+                        trailingIcon = {
+                            IconButton(onClick = onOpenStart) {
+                                CalendarIcon()
+                            }
+                        },
+                        text = progress.start,
                         placeHolder = "2001.06"
                     )
                 }
@@ -53,9 +57,12 @@ fun ProjectScheduleComponent(
                     FlowIcon()
                     Box(modifier = Modifier.weight(1f)) {
                         SmsCustomTextField(
-                            endIcon = { CalendarIcon() },
-                            clickAction = onOpenEnd,
-                            setChangeText = progress.end,
+                            trailingIcon = {
+                                IconButton(onClick = onOpenEnd) {
+                                    CalendarIcon()
+                                }
+                            },
+                            text = progress.end,
                             placeHolder = "2020.03"
                         )
                     }

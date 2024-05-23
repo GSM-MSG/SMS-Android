@@ -46,7 +46,7 @@ fun ForeignLanguagesComponent(
                                 modifier = Modifier.fillMaxWidth(0.64f),
                                 singleLine = true,
                                 placeHolder = "예) 토익",
-                                setChangeText = foreignLanguage.first,
+                                text = foreignLanguage.first,
                                 onValueChange = { onValueChangeForeignName(index, it) }
                             )
                             Box(modifier = Modifier.weight(1f)) {
@@ -54,7 +54,7 @@ fun ForeignLanguagesComponent(
                                     modifier = Modifier.fillMaxWidth(),
                                     singleLine = true,
                                     placeHolder = "990",
-                                    setChangeText = foreignLanguage.second,
+                                    text = foreignLanguage.second,
                                     onValueChange = { onValueChangeForeignValue(index, it) }
                                 )
                             }

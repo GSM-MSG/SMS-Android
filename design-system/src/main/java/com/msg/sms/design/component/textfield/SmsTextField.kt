@@ -1,12 +1,9 @@
 package com.msg.sms.design.component.textfield
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,10 +13,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
@@ -28,27 +23,28 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun SmsTextField(
+fun SmsBasicTextField(
     modifier: Modifier = Modifier,
-    isError: Boolean = false,
+    text: String,
     placeHolder: String = "",
     readOnly: Boolean = false,
-    focusManager: FocusManager = LocalFocusManager.current,
-    focusRequester: FocusRequester = FocusRequester(),
+    isError: Boolean = false,
     errorText: String = "Error",
-    setText: String,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
     maxLines: Int = Int.MAX_VALUE,
     singleLine: Boolean = false,
+    focusManager: FocusManager = LocalFocusManager.current,
+    focusRequester: FocusRequester = FocusRequester(),
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    label: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     onValueChange: (String) -> Unit = {},
-    onClickButton: () -> Unit,
 ) {
     val isFocused = remember {
         mutableStateOf(false)
@@ -63,10 +59,8 @@ fun SmsTextField(
     SMSTheme { colors, typography ->
         Column {
             OutlinedTextField(
-                value = setText,
-                onValueChange = {
-                    onValueChange(it)
-                },
+                value = text,
+                onValueChange = onValueChange,
                 keyboardOptions = keyboardOptions,
                 keyboardActions = keyboardActions,
                 placeholder = {
@@ -92,13 +86,10 @@ fun SmsTextField(
                     unfocusedBorderColor = Color.Transparent,
                     cursorColor = colors.P2
                 ),
-                trailingIcon = {
-                    IconButton(onClick = onClickButton, enabled = setText.isNotEmpty())
-                    {
-                        if (setText.isNotEmpty()) DeleteButtonIcon()
-                    }
-                },
-                readOnly = readOnly
+                trailingIcon = trailingIcon,
+                leadingIcon = leadingIcon,
+                readOnly = readOnly,
+                label = label
             )
             if (isError) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -109,70 +100,71 @@ fun SmsTextField(
 }
 
 @Composable
-fun SmsCustomTextField(
+fun SmsTextField(
     modifier: Modifier = Modifier,
-    endIcon: @Composable (() -> Unit)?,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    clickAction: () -> Unit,
-    isError: Boolean = false,
+    text: String,
     placeHolder: String = "",
     readOnly: Boolean = false,
-    focusRequester: FocusRequester = FocusRequester(),
+    isError: Boolean = false,
     errorText: String = "Error",
-    setChangeText: String,
+    maxLines: Int = Int.MAX_VALUE,
     singleLine: Boolean = false,
+    focusManager: FocusManager = LocalFocusManager.current,
+    focusRequester: FocusRequester = FocusRequester(),
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     onValueChange: (String) -> Unit = {},
+    onTrailingIconClick: () -> Unit,
 ) {
-    var text by remember { mutableStateOf("") }
-    val isFocused = remember { mutableStateOf(false) }
-    text = setChangeText
-    SMSTheme { colors, typography ->
-        Column(modifier = modifier) {
-            OutlinedTextField(
-                value = text,
-                onValueChange = {
-                    text = it
-                    onValueChange(it)
-                },
-                singleLine = singleLine,
-                placeholder = {
-                    Text(text = placeHolder, style = typography.body1)
-                },
-                modifier = Modifier
-                    .focusRequester(focusRequester)
-                    .border(
-                        width = 1.dp,
-                        color = if (isFocused.value) colors.P2 else colors.N10,
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .onFocusChanged {
-                        isFocused.value = it.isFocused
-                    }
-                    .fillMaxWidth(),
-                textStyle = typography.body1,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    backgroundColor = colors.N10,
-                    placeholderColor = colors.N30,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
-                    cursorColor = colors.P2
-                ),
-                leadingIcon = leadingIcon,
-                trailingIcon = {
-                    if (endIcon != null) {
-                        IconButton(onClick = clickAction) {
-                            endIcon()
-                        }
-                    }
-                },
-                readOnly = readOnly
-            )
-            if (isError) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = errorText, color = colors.ERROR, style = typography.caption1)
+    SmsBasicTextField(
+        modifier = modifier,
+        text = text,
+        placeHolder = placeHolder,
+        readOnly = readOnly,
+        isError = isError,
+        errorText = errorText,
+        maxLines = maxLines,
+        singleLine = singleLine,
+        focusManager = focusManager,
+        focusRequester = focusRequester,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        onValueChange = onValueChange,
+        trailingIcon = {
+            IconButton(onClick = onTrailingIconClick, enabled = text.isNotEmpty()) {
+                if (text.isNotEmpty()) DeleteButtonIcon()
             }
         }
-    }
+    )
+}
+
+@Composable
+fun SmsCustomTextField(
+    modifier: Modifier = Modifier,
+    text: String,
+    placeHolder: String = "",
+    isError: Boolean = false,
+    errorText: String = "Error",
+    readOnly: Boolean = false,
+    singleLine: Boolean = false,
+    focusRequester: FocusRequester = FocusRequester(),
+    trailingIcon: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    onValueChange: (String) -> Unit = {},
+) {
+    SmsBasicTextField(
+        modifier = modifier,
+        text = text,
+        placeHolder = placeHolder,
+        isError = isError,
+        errorText = errorText,
+        readOnly = readOnly,
+        singleLine = singleLine,
+        focusRequester = focusRequester,
+        trailingIcon = trailingIcon,
+        leadingIcon = leadingIcon,
+        onValueChange = onValueChange
+    )
 }
 
 @Composable
@@ -182,101 +174,34 @@ fun FilterTextFiled(
     isHopeSalary: Boolean = false,
     onValueChange: (String) -> Unit,
 ) {
-    val isFocused = remember { mutableStateOf(false) }
-    val focusRequester = FocusRequester()
-    SMSTheme { colors, typography ->
-        OutlinedTextField(
-            value = if (isHopeSalary) "$value 만원" else value,
-            modifier = modifier
-                .focusRequester(focusRequester)
-                .border(
-                    width = 1.dp,
-                    color = if (isFocused.value) colors.P2 else colors.N10,
-                    shape = RoundedCornerShape(10.dp)
-                )
-                .onFocusChanged {
-                    isFocused.value = it.isFocused
-                },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                backgroundColor = colors.N10,
-                placeholderColor = colors.N30,
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent,
-                cursorColor = colors.P2
-            ),
-            label = null,
-            textStyle = typography.body1,
-            maxLines = 1,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                onValueChange(it.replace("\\D".toRegex(), ""))
-            }
-        )
-    }
+    SmsBasicTextField(
+        modifier = modifier,
+        text = if (isHopeSalary) "$value 만원" else value,
+        onValueChange = {
+            onValueChange(it.replace("\\D".toRegex(), ""))
+        },
+        maxLines = 1,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+    )
 }
 
 @Composable
 fun NoneIconTextField(
     modifier: Modifier = Modifier,
+    text: String,
     placeHolder: String = "",
     readOnly: Boolean = false,
     focusRequester: FocusRequester = FocusRequester(),
-    setChangeText: String,
     singleLine: Boolean = false,
     onValueChange: (String) -> Unit = {},
 ) {
-    var text by remember { mutableStateOf("") }
-    val isFocused = remember { mutableStateOf(false) }
-    text = setChangeText
-    SMSTheme { colors, typography ->
-        Box(modifier = modifier) {
-            OutlinedTextField(
-                value = text,
-                onValueChange = {
-                    text = it
-                    onValueChange(it)
-                },
-                singleLine = singleLine,
-                placeholder = {
-                    Text(text = placeHolder, style = typography.body1)
-                },
-                modifier = Modifier
-                    .focusRequester(focusRequester)
-                    .border(
-                        width = 1.dp,
-                        color = if (isFocused.value) colors.P2 else colors.N10,
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .onFocusChanged {
-                        isFocused.value = it.isFocused
-                    }
-                    .fillMaxWidth(),
-                textStyle = typography.body1,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    backgroundColor = colors.N10,
-                    placeholderColor = colors.N30,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
-                    cursorColor = colors.P2
-                ),
-                readOnly = readOnly
-            )
-        }
-
-    }
-}
-
-@Preview
-@Composable
-fun SmsTextFieldPre() {
-    SmsTextField(
-        modifier = Modifier
-            .height(48.dp)
-            .width(200.dp),
-        placeHolder = "Test",
-        isError = true,
-        onClickButton = {},
-        onValueChange = {},
-        setText = ""
+    SmsBasicTextField(
+        modifier = modifier,
+        text = text,
+        onValueChange = onValueChange,
+        placeHolder = placeHolder,
+        readOnly = readOnly,
+        focusRequester = focusRequester,
+        singleLine = singleLine
     )
 }

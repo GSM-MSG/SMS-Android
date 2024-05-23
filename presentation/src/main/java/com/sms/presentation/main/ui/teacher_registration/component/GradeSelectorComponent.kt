@@ -1,21 +1,27 @@
 package com.sms.presentation.main.ui.teacher_registration.component
 
+import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import com.msg.sms.design.component.textfield.SmsCustomTextField
+import com.msg.sms.design.icon.CalendarIcon
 import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
 fun GradeSelectorComponent(
     setGrade: String,
-    onClickGradeOpenButton: () -> Unit
-){
+    onClickGradeOpenButton: () -> Unit,
+) {
     AddGrayBody1Title(titleText = "학년") {
         SmsCustomTextField(
-            endIcon = { OpenButtonIcon() },
-            clickAction = onClickGradeOpenButton,
-            setChangeText = setGrade,
+            trailingIcon = {
+                IconButton(onClick = onClickGradeOpenButton) {
+                    OpenButtonIcon()
+                }
+            },
+            text = setGrade,
             readOnly = true,
-            placeHolder = "학년을 선택해 주세요")
+            placeHolder = "학년을 선택해 주세요"
+        )
     }
 }

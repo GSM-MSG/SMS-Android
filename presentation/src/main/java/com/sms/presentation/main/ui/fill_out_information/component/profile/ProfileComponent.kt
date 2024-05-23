@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,7 +41,7 @@ fun ProfileComponent(
     onPhotoPickBottomSheetOpenButtonClick: () -> Unit,
     isRequired: (Boolean) -> Unit,
     onProfileValueChanged: (data: ProfileData) -> Unit,
-    onTechStackItemRemoved: (item: String) -> Unit
+    onTechStackItemRemoved: (item: String) -> Unit,
 ) {
     SMSTheme { _, typography ->
         val context = LocalContext.current as FillOutInformationActivity
@@ -89,11 +90,11 @@ fun ProfileComponent(
             SmsTextField(
                 placeHolder = "1줄 자기소개 입력",
                 modifier = Modifier.fillMaxWidth(),
-                setText = data.introduce,
+                text = data.introduce,
                 onValueChange = { introduce ->
                     onProfileValueChanged(data.copy(introduce = introduce))
                 },
-                onClickButton = { onProfileValueChanged(data.copy(introduce = "")) }
+                onTrailingIconClick = { onProfileValueChanged(data.copy(introduce = "")) }
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "이메일", style = typography.body2)
@@ -101,11 +102,11 @@ fun ProfileComponent(
             SmsTextField(
                 placeHolder = "공개용 이메일 입력",
                 modifier = Modifier.fillMaxWidth(),
-                setText = data.contactEmail,
+                text = data.contactEmail,
                 onValueChange = { email ->
                     onProfileValueChanged(data.copy(contactEmail = email))
                 },
-                onClickButton = { onProfileValueChanged(data.copy(contactEmail = "")) }
+                onTrailingIconClick = { onProfileValueChanged(data.copy(contactEmail = "")) }
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "분야", style = typography.body2)
@@ -113,13 +114,16 @@ fun ProfileComponent(
             SmsCustomTextField(
                 placeHolder = "FrondEnd",
                 modifier = Modifier.fillMaxWidth(),
-                endIcon = { OpenButtonIcon() },
-                readOnly = isReadOnly,
-                clickAction = {
-                    onMajorBottomSheetOpenButtonClick()
-                    context.hideKeyboard()
+                trailingIcon = {
+                    IconButton(onClick = {
+                        onMajorBottomSheetOpenButtonClick()
+                        context.hideKeyboard()
+                    }) {
+                        OpenButtonIcon()
+                    }
                 },
-                setChangeText = if (selectedMajor == "직접입력") enteredMajor else selectedMajor
+                readOnly = isReadOnly,
+                text = if (selectedMajor == "직접입력") enteredMajor else selectedMajor
             ) { enteredMajor ->
                 onProfileValueChanged(data.copy(enteredMajor = enteredMajor))
             }

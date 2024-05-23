@@ -24,7 +24,7 @@ fun WantPayComponent(wantPay: String, onValueChange: (String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
     AddGrayBody1Title(titleText = "희망 연봉") {
         SmsTextField(
-            setText = wantPay,
+            text = wantPay,
             modifier = Modifier.fillMaxWidth(),
             placeHolder = "지금 내 통장엔 억억억억억억",
             onValueChange = {

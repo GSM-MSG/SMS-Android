@@ -16,7 +16,7 @@ fun ActivityDescriptionComponent(
     AddGrayBody1Title(titleText = "활동 설명") {
         SmsTextField(
             modifier = modifier.fillMaxWidth(),
-            setText = activityDescriptionValue,
+            text = activityDescriptionValue,
             placeHolder = "활동 설명 입력",
             onValueChange = onValueChange
         ) {

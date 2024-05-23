@@ -12,7 +12,7 @@ fun AwardNameComponent(name: String, onValueChange: (value: String) -> Unit) {
     AddGrayBody1Title(titleText = "이름") {
         SmsTextField(
             modifier = Modifier.fillMaxWidth(),
-            setText = name,
+            text = name,
             placeHolder = "제 19회 스마틴 앱 챌린지",
             onValueChange = { onValueChange(it) }
         ) {
