@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.chip.SmsChip
-import com.msg.sms.design.component.textfield.NoneIconTextField
+import com.msg.sms.design.component.textfield.SmsBasicTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
@@ -42,7 +42,7 @@ fun ProjectRelatedLinksComponent(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Box(modifier = Modifier.weight(1f)) {
-                        NoneIconTextField(
+                        SmsBasicTextField(
                             singleLine = true,
                             text = it.name,
                             placeHolder = "",
@@ -50,7 +50,7 @@ fun ProjectRelatedLinksComponent(
                         )
                     }
                     Box(modifier = Modifier.weight(2.5f)) {
-                        NoneIconTextField(
+                        SmsBasicTextField(
                             singleLine = true,
                             text = it.link,
                             placeHolder = "https://github.com",

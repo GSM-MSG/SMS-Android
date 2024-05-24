@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.selector.SmsCheckBox
-import com.msg.sms.design.component.textfield.SmsCustomTextField
+import com.msg.sms.design.component.textfield.SmsBasicTextField
 import com.msg.sms.design.icon.CalendarIcon
 import com.msg.sms.design.icon.FlowIcon
 import com.msg.sms.design.theme.SMSTheme
@@ -42,7 +42,7 @@ fun ProjectScheduleComponent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(modifier = Modifier.weight(1f)) {
-                    SmsCustomTextField(
+                    SmsBasicTextField(
                         modifier = Modifier.fillMaxWidth(),
                         trailingIcon = {
                             IconButton(onClick = onOpenStart) {
@@ -56,7 +56,7 @@ fun ProjectScheduleComponent(
                 if (progress.end != null) {
                     FlowIcon()
                     Box(modifier = Modifier.weight(1f)) {
-                        SmsCustomTextField(
+                        SmsBasicTextField(
                             trailingIcon = {
                                 IconButton(onClick = onOpenEnd) {
                                     CalendarIcon()

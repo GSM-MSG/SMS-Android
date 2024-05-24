@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.component.text.SmsTitleText
-import com.msg.sms.design.component.textfield.SmsCustomTextField
+import com.msg.sms.design.component.textfield.SmsBasicTextField
 import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.icon.ProfileIcon
@@ -111,7 +111,7 @@ fun ProfileComponent(
             Spacer(modifier = Modifier.height(24.dp))
             Text(text = "분야", style = typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            SmsCustomTextField(
+            SmsBasicTextField(
                 placeHolder = "FrondEnd",
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = {

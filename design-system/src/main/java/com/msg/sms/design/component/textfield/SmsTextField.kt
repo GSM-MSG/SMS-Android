@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -26,7 +25,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.DeleteButtonIcon
@@ -152,55 +150,5 @@ fun SmsTextField(
                 if (text.isNotEmpty()) DeleteButtonIcon()
             }
         }
-    )
-}
-
-@Composable
-fun SmsCustomTextField(
-    modifier: Modifier = Modifier,
-    text: String,
-    placeHolder: String = "",
-    isError: Boolean = false,
-    errorText: String = "Error",
-    readOnly: Boolean = false,
-    singleLine: Boolean = false,
-    focusRequester: FocusRequester = FocusRequester(),
-    trailingIcon: @Composable (() -> Unit)? = null,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    onValueChange: (String) -> Unit = {},
-) {
-    SmsBasicTextField(
-        modifier = modifier,
-        text = text,
-        placeHolder = placeHolder,
-        isError = isError,
-        errorText = errorText,
-        readOnly = readOnly,
-        singleLine = singleLine,
-        focusRequester = focusRequester,
-        trailingIcon = trailingIcon,
-        leadingIcon = leadingIcon,
-        onValueChange = onValueChange
-    )
-}
-
-@Composable
-fun NoneIconTextField(
-    modifier: Modifier = Modifier,
-    text: String,
-    placeHolder: String = "",
-    readOnly: Boolean = false,
-    focusRequester: FocusRequester = FocusRequester(),
-    singleLine: Boolean = false,
-    onValueChange: (String) -> Unit = {},
-) {
-    SmsBasicTextField(
-        modifier = modifier,
-        text = text,
-        onValueChange = onValueChange,
-        placeHolder = placeHolder,
-        readOnly = readOnly,
-        focusRequester = focusRequester,
-        singleLine = singleLine
     )
 }

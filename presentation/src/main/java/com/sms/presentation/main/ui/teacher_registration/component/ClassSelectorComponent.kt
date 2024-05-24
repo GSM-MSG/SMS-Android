@@ -2,8 +2,7 @@ package com.sms.presentation.main.ui.teacher_registration.component
 
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
-import com.msg.sms.design.component.textfield.SmsCustomTextField
-import com.msg.sms.design.icon.CalendarIcon
+import com.msg.sms.design.component.textfield.SmsBasicTextField
 import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 
@@ -13,7 +12,7 @@ fun ClassSelectorComponent(
     onClickClassOpenButton: () -> Unit,
 ) {
     AddGrayBody1Title(titleText = "반") {
-        SmsCustomTextField(
+        SmsBasicTextField(
             trailingIcon = {
                 IconButton(onClick = onClickClassOpenButton) {
                     OpenButtonIcon()
