@@ -23,11 +23,7 @@ fun DetailTechStackComponent(
     Column {
         AddGrayBody1Title(titleText = "세부스택 (5개)") {
             DisplaySearchBar(
-                modifier = Modifier.onFocusChanged {
-                    if (it.isFocused) {
-                        onClickSearchBar()
-                    }
-                },
+                onSearchBarClick = onClickSearchBar
             )
         }
         LazyRow(

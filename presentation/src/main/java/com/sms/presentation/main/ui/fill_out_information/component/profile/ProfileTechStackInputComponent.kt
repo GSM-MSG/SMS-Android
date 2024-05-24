@@ -21,7 +21,7 @@ import com.sms.presentation.main.ui.mypage.component.profile.DisplaySearchBar
 fun ProfileTechStackInputComponent(
     techStack: List<String>,
     onClick: () -> Unit,
-    onTechStackRemoved: (item: String) -> Unit
+    onTechStackRemoved: (item: String) -> Unit,
 ) {
     AddGrayBody1Title(titleText = "세부스택 (최대 5개)") {
         Column(
@@ -29,13 +29,8 @@ fun ProfileTechStackInputComponent(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             DisplaySearchBar(
-                modifier = Modifier
-                    .onFocusChanged {
-                        if (it.isFocused) {
-                            onClick()
-                        }
-                    },
-                placeHolder = "찾고 싶은 세부 스택 입력"
+                placeHolder = "찾고 싶은 세부 스택 입력",
+                onSearchBarClick = onClick
             )
             LazyHorizontalStaggeredGrid(
                 modifier = Modifier

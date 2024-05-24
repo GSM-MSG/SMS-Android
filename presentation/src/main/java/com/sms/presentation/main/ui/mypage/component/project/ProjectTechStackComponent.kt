@@ -31,12 +31,8 @@ fun ProjectTechStackComponent(
         DisplaySearchBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 20.dp)
-                .onFocusChanged {
-                    if (it.isFocused) {
-                        onClickSearchBar()
-                    }
-                }
+                .padding(end = 20.dp),
+            onSearchBarClick = onClickSearchBar
         )
         LazyHorizontalStaggeredGrid(
             modifier = Modifier

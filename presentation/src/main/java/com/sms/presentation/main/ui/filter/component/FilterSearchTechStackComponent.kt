@@ -24,19 +24,16 @@ fun FilterSearchTechStackComponent(
 
     AddBody1Title(
         titleText = "세부스택",
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             DisplaySearchBar(
-                modifier = Modifier
-                    .onFocusChanged {
-                        if (it.isFocused) {
-                            onClick()
-                        }
-                    }
+                onSearchBarClick = onClick
             )
             LazyHorizontalStaggeredGrid(
                 modifier = Modifier
