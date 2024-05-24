@@ -1,12 +1,16 @@
 package com.msg.sms.design.component.textfield
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -23,10 +27,12 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SmsBasicTextField(
     modifier: Modifier = Modifier,
@@ -58,14 +64,7 @@ fun SmsBasicTextField(
 
     SMSTheme { colors, typography ->
         Column {
-            OutlinedTextField(
-                value = text,
-                onValueChange = onValueChange,
-                keyboardOptions = keyboardOptions,
-                keyboardActions = keyboardActions,
-                placeholder = {
-                    Text(text = placeHolder, style = typography.body1)
-                },
+            BasicTextField(
                 modifier = modifier
                     .focusRequester(focusRequester)
                     .border(
@@ -76,20 +75,38 @@ fun SmsBasicTextField(
                     .onFocusChanged {
                         isFocused.value = it.isFocused
                     },
+                value = text,
+                onValueChange = onValueChange,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
                 maxLines = maxLines,
                 singleLine = singleLine,
                 textStyle = typography.body1,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    backgroundColor = colors.N10,
-                    placeholderColor = colors.N30,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
-                    cursorColor = colors.P2
-                ),
-                trailingIcon = trailingIcon,
-                leadingIcon = leadingIcon,
                 readOnly = readOnly,
-                label = label
+                decorationBox = { innerTextField ->
+                    TextFieldDefaults.OutlinedTextFieldDecorationBox(
+                        value = text,
+                        innerTextField = innerTextField,
+                        enabled = true,
+                        singleLine = singleLine,
+                        visualTransformation = VisualTransformation.None,
+                        interactionSource = remember { MutableInteractionSource() },
+                        placeholder = {
+                            Text(text = placeHolder, style = typography.body1)
+                        },
+                        trailingIcon = trailingIcon,
+                        leadingIcon = leadingIcon,
+                        label = label,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            backgroundColor = colors.N10,
+                            placeholderColor = colors.N30,
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedBorderColor = Color.Transparent,
+                            cursorColor = colors.P2
+                        ),
+                        contentPadding = PaddingValues(vertical = 13.5.dp, horizontal = 12.dp)
+                    )
+                }
             )
             if (isError) {
                 Spacer(modifier = Modifier.height(8.dp))
