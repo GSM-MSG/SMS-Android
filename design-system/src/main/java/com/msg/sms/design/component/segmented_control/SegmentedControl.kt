@@ -45,7 +45,7 @@ fun SegmentedControl(
                 .fillMaxWidth()
                 .height(48.dp),
             colors = CardDefaults.cardColors(
-                containerColor = if (selectedIndex.value == itemIndex.value) colors.N10 else colors.N10
+                containerColor = if (selectedIndex.value == itemIndex.value) colors.N10 else colors.P2
             ),
             shape = RoundedCornerShape(backgroundCorner.dp)
         ) {
@@ -87,13 +87,9 @@ fun SegmentedControl(
                         ) {
                             Text(
                                 text = item,
-                                style = LocalTextStyle.current.copy(
-                                    fontSize = 17.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = typography.pretendard,
-                                    color = textColor
-                                ),
-                                textAlign = TextAlign.Center
+                                style = typography.title2,
+                                fontWeight = FontWeight.Bold,
+                                color = textColor,
                             )
                         }
                     }
