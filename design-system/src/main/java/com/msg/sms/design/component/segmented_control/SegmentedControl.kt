@@ -16,7 +16,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,6 +34,7 @@ fun SegmentedControl(
     defaultSelectedItemIndex: Int = 0,
     itemCorner: Int = 4,
     backgroundCorner: Int = 8,
+    onItemSelection: (selectedItemIndex: Int) -> Unit,
 ) {
     val selectedIndex = remember { mutableStateOf(defaultSelectedItemIndex) }
     val itemIndex = remember { mutableStateOf(defaultSelectedItemIndex) }
@@ -69,6 +69,7 @@ fun SegmentedControl(
                                 indication = null
                             ) {
                                 selectedIndex.value = index
+                                onItemSelection(index)
                             },
                         colors = CardDefaults.cardColors(
                             containerColor = containerColor,
@@ -105,6 +106,7 @@ fun SegmentedControl(
 @Preview
 @Composable
 fun PreviewSegmentControl(){
-    SegmentedControl(items = listOf("True", "False"))
+    SegmentedControl(items = listOf("True", "False")) {
+    }
 }
 
