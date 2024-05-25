@@ -1,6 +1,5 @@
 package com.msg.sms.design.component.segmented_control
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,12 +16,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,7 +35,6 @@ fun SegmentedControl(
     defaultSelectedItemIndex: Int = 0,
     itemCorner: Int = 4,
     backgroundCorner: Int = 8,
-    onItemSelection: (selectedItemIndex: Int) -> Unit,
 ) {
     val selectedIndex = remember { mutableStateOf(defaultSelectedItemIndex) }
     val itemIndex = remember { mutableStateOf(defaultSelectedItemIndex) }
@@ -72,7 +69,6 @@ fun SegmentedControl(
                                 indication = null
                             ) {
                                 selectedIndex.value = index
-                                onItemSelection(index)
                             },
                         colors = CardDefaults.cardColors(
                             containerColor = containerColor,
@@ -105,11 +101,10 @@ fun SegmentedControl(
     }
 }
 
+
 @Preview
 @Composable
 fun PreviewSegmentControl(){
-    SegmentedControl(
-        items = listOf("True", "Flase"),
-        defaultSelectedItemIndex = 0,
-    ){}
+    SegmentedControl(items = listOf("True", "False"))
 }
+
