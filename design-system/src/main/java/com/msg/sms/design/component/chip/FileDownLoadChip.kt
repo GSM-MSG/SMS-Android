@@ -34,7 +34,7 @@ fun FileDownLoadChip(
         mutableStateOf(Color.Transparent)
     }
 
-    SMSTheme { colors, typography ->
+    SMSTheme { _, typography ->
         Box(
             modifier = modifier
                 .clip(RoundedCornerShape(8.dp))
