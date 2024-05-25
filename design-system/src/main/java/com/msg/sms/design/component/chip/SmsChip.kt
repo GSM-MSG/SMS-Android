@@ -1,4 +1,4 @@
-package com.msg.sms.design.component
+package com.msg.sms.design.component.chip
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures

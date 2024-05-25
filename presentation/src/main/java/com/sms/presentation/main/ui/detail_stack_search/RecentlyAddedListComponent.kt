@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.component.SmsChip
+import com.msg.sms.design.component.chip.SmsChip
 import com.msg.sms.design.component.item.RecentlyAddedItem
 import com.msg.sms.design.theme.SMSTheme
 
