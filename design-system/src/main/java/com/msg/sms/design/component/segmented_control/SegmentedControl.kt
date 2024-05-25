@@ -90,6 +90,7 @@ fun SegmentedControl(
                                 style = LocalTextStyle.current.copy(
                                     fontSize = 17.sp,
                                     fontWeight = FontWeight.Bold,
+                                    fontFamily = typography.pretendard,
                                     color = textColor
                                 ),
                                 textAlign = TextAlign.Center
