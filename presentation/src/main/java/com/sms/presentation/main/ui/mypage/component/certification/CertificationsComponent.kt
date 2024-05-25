@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.component.SmsChip
+import com.msg.sms.design.component.chip.SmsChip
 import com.msg.sms.design.component.textfield.SmsTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.util.AddGrayBody1Title
