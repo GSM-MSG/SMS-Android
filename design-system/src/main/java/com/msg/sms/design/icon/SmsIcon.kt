@@ -348,13 +348,13 @@ fun ArrowDownIcon(
 }
 
 @Composable
-fun FileIcon(
+fun FolderIcon(
     modifier: Modifier = Modifier,
 ) {
     Image(
         modifier = modifier,
-        painter = painterResource(id = R.drawable.ic_file),
-        contentDescription = "파일 아이콘"
+        painter = painterResource(id = R.drawable.ic_folder),
+        contentDescription = "폴더 아이콘"
     )
 }
 
@@ -377,5 +377,16 @@ fun XMarkIcon(
         modifier = modifier,
         painter = painterResource(id = R.drawable.ic_xmark),
         contentDescription = "닫기 아이콘"
+    )
+}
+
+@Composable
+fun FileIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_file),
+        contentDescription = "파일 아이콘"
     )
 }

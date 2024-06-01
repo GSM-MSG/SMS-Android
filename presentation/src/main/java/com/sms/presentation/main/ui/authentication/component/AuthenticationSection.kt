@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.chip.SmsChip
 import com.msg.sms.design.component.segmented_control.SegmentedControl
 import com.msg.sms.design.icon.ArrowDownIcon
-import com.msg.sms.design.icon.FileIcon
+import com.msg.sms.design.icon.FolderIcon
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.icon.XMarkIcon
 import com.msg.sms.design.theme.SMSTheme
@@ -95,7 +95,7 @@ fun AuthenticationSection(
                                                             )
                                                         )
 
-                                                        FILE -> FileIcon(modifier = Modifier.size(24.dp))
+                                                        FILE -> FolderIcon(modifier = Modifier.size(24.dp))
                                                         SELECT -> ArrowDownIcon(
                                                             modifier = Modifier.size(
                                                                 24.dp
