@@ -335,3 +335,47 @@ fun SmallPlusIcon(
         contentDescription = "추가 아이콘"
     )
 }
+
+@Composable
+fun ArrowDownIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_arrow_down),
+        contentDescription = "접기 아이콘"
+    )
+}
+
+@Composable
+fun FileIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_file),
+        contentDescription = "파일 아이콘"
+    )
+}
+
+@Composable
+fun PlusIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_plus),
+        contentDescription = "추가 아이콘"
+    )
+}
+
+@Composable
+fun XMarkIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_xmark),
+        contentDescription = "닫기 아이콘"
+    )
+}

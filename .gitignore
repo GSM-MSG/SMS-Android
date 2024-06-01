@@ -17,4 +17,5 @@
 .externalNativeBuild
 .cxx
 local.properties
-/.idea/sonarlint
+/.idea/
+.idea/
