@@ -14,7 +14,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.component.textfield.SmsTextField
+import com.msg.sms.design.component.textfield.SmsOnlyInputTextField
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.util.AddGrayBody1Title
 
@@ -23,7 +23,7 @@ import com.msg.sms.design.util.AddGrayBody1Title
 fun WantPayComponent(wantPay: String, onValueChange: (String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
     AddGrayBody1Title(titleText = "희망 연봉") {
-        SmsTextField(
+        SmsOnlyInputTextField(
             text = wantPay,
             modifier = Modifier.fillMaxWidth(),
             placeHolder = "지금 내 통장엔 억억억억억억",

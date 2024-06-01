@@ -4,13 +4,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.msg.sms.design.component.textfield.SmsTextField
+import com.msg.sms.design.component.textfield.SmsOnlyInputTextField
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
 fun AwardTypeComponent(type: String, onValueChange: (value: String) -> Unit) {
     AddGrayBody1Title(titleText = "종류") {
-        SmsTextField(
+        SmsOnlyInputTextField(
             text = type,
             placeHolder = "대상",
             modifier = Modifier.fillMaxWidth(),

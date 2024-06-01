@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.chip.SmsChip
-import com.msg.sms.design.component.textfield.SmsTextField
+import com.msg.sms.design.component.textfield.SmsOnlyInputTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 
@@ -38,7 +38,7 @@ fun WorkLocationComponent(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Box(modifier = Modifier.weight(1f)) {
-                        SmsTextField(
+                        SmsOnlyInputTextField(
                             text = item,
                             modifier = Modifier.fillMaxWidth(),
                             placeHolder = "니가가라 하와이",
@@ -62,5 +62,5 @@ fun WorkLocationComponent(
 @Preview
 @Composable
 private fun WorkLocationComponentPre() {
-    WorkLocationComponent(listOf("도쿄", "광저우", "교토"), onValueChange = { index, item ->  }, onClickAddButton = {}) {}
+    WorkLocationComponent(listOf("도쿄", "광저우", "교토"), onValueChange = { _, _ ->  }, onClickAddButton = {}) {}
 }

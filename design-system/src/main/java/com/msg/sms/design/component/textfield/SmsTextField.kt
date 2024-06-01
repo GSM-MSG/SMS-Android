@@ -26,6 +26,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.design.theme.SMSTheme
@@ -115,7 +116,7 @@ fun SmsBasicTextField(
 }
 
 @Composable
-fun SmsTextField(
+fun SmsOnlyInputTextField(
     modifier: Modifier = Modifier,
     text: String,
     placeHolder: String = "",
@@ -128,8 +129,8 @@ fun SmsTextField(
     focusRequester: FocusRequester = FocusRequester(),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    onValueChange: (String) -> Unit = {},
-    onTrailingIconClick: () -> Unit,
+    onValueChange: (String) -> Unit,
+    onDeleteButtonClick: () -> Unit,
 ) {
     SmsBasicTextField(
         modifier = modifier,
@@ -146,9 +147,36 @@ fun SmsTextField(
         keyboardActions = keyboardActions,
         onValueChange = onValueChange,
         trailingIcon = {
-            IconButton(onClick = onTrailingIconClick, enabled = text.isNotEmpty()) {
+            IconButton(onClick = onDeleteButtonClick, enabled = text.isNotEmpty()) {
                 if (text.isNotEmpty()) DeleteButtonIcon()
             }
         }
+    )
+}
+
+@Preview
+@Composable
+fun SmsBasicTextFieldPre() {
+    val (text, onValueChange) = remember {
+        mutableStateOf("")
+    }
+
+    SmsBasicTextField(
+        text = text,
+        onValueChange = onValueChange
+    )
+}
+
+@Preview
+@Composable
+fun SmsTextFieldPre() {
+    val (text, onValueChange) = remember {
+        mutableStateOf("")
+    }
+
+    SmsOnlyInputTextField(
+        text = text,
+        onValueChange = onValueChange,
+        onDeleteButtonClick = {}
     )
 }
