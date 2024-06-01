@@ -185,6 +185,8 @@ fun SmsTextFieldPre() {
     SmsOnlyInputTextField(
         text = text,
         onValueChange = onValueChange,
-        onDeleteButtonClick = {}
+        onDeleteButtonClick = {
+
+        }
     )
 }
