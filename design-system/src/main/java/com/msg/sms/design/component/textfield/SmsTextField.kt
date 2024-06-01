@@ -40,6 +40,7 @@ fun SmsBasicTextField(
     readOnly: Boolean = false,
     isError: Boolean = false,
     errorText: String = "Error",
+    assistiveText: String = "",
     maxLines: Int = Int.MAX_VALUE,
     singleLine: Boolean = false,
     focusManager: FocusManager = LocalFocusManager.current,
@@ -111,6 +112,10 @@ fun SmsBasicTextField(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = errorText, color = colors.ERROR, style = typography.caption1)
             }
+            if (assistiveText.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = assistiveText, color = Color(0xFFA0ACB1), style = typography.caption1)
+            }
         }
     }
 }
@@ -163,7 +168,10 @@ fun SmsBasicTextFieldPre() {
 
     SmsBasicTextField(
         text = text,
-        onValueChange = onValueChange
+        onValueChange = onValueChange,
+        isError = true,
+        errorText = "error text",
+        assistiveText = "assistive text"
     )
 }
 
