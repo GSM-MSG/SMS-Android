@@ -1,6 +1,5 @@
 package com.msg.sms.design.component.header
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.SpanStyle
@@ -26,6 +25,7 @@ import com.msg.sms.design.theme.SMSTheme
 @Composable
 // if that component is required just add * on text last
 fun TitleHeader(
+    modifier: Modifier = Modifier,
     titleText: String,
     isExpandable: Boolean = false,
     isRemovable: Boolean = false,
@@ -33,12 +33,9 @@ fun TitleHeader(
     onClickRemoveButton: () -> Unit = {},
     onClickToggleButton: () -> Unit = {},
 ) {
-    val rotateState by animateFloatAsState(
-        targetValue = if (isExpand)  0f else 90f
-    )
     SMSTheme { colors, typography ->
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .background(colors.WHITE)
         ) {
@@ -52,8 +49,9 @@ fun TitleHeader(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(start = 20.dp, end = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     modifier = Modifier
@@ -63,12 +61,12 @@ fun TitleHeader(
                     fontWeight = FontWeight.Bold,
                 )
                 Row(
-                    modifier = Modifier.padding(top = 8.dp),
                 ) {
                     if (isExpandable) {
-                        IconButton(onClick = onClickToggleButton
+                        IconButton(
+                            onClick = onClickToggleButton
                         ) {
-                            ChevronDownIcon(modifier = Modifier.rotate(rotateState))
+                            ChevronDownIcon(modifier = Modifier.rotate(90f * (if (isExpand) 0f else 1f)))
                         }
                     }
                     if (isRemovable) {
@@ -85,5 +83,5 @@ fun TitleHeader(
 @Preview
 @Composable
 private fun TitleHeaderPre() {
-    TitleHeader("Test *", isExpandable = true, isRemovable = true,isExpand = true)
+    TitleHeader(titleText = "Test *", isExpandable = true, isRemovable = true, isExpand = true)
 }
