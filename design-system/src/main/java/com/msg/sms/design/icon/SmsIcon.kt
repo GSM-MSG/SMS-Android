@@ -343,7 +343,7 @@ fun ArrowDownIcon(
     Image(
         modifier = modifier,
         painter = painterResource(id = R.drawable.ic_arrow_down),
-        contentDescription = "추가 아이콘"
+        contentDescription = "접기 아이콘"
     )
 }
 
@@ -354,7 +354,7 @@ fun FileIcon(
     Image(
         modifier = modifier,
         painter = painterResource(id = R.drawable.ic_file),
-        contentDescription = "추가 아이콘"
+        contentDescription = "파일 아이콘"
     )
 }
 
@@ -376,6 +376,6 @@ fun XMarkIcon(
     Image(
         modifier = modifier,
         painter = painterResource(id = R.drawable.ic_xmark),
-        contentDescription = "추가 아이콘"
+        contentDescription = "닫기 아이콘"
     )
 }
