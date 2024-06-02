@@ -11,11 +11,13 @@
 /.idea/deploymentTargetDropDown.xml
 /.idea/shelf
 /.idea/misc.xml
+/.idea/compiler.xml
+/.idea/kotlinc.xml
+/.idea/migrations.xml
+/gradlew.bat
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
 local.properties
-/.idea/
-.idea/
