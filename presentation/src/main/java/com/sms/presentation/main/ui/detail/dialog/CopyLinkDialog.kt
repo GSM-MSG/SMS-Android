@@ -2,6 +2,7 @@ package com.sms.presentation.main.ui.detail.dialog
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -90,6 +91,7 @@ fun CopyLinkDialog(
                     Row (
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
+                            .border(1.dp, color = colors.N20, shape = RoundedCornerShape(12.dp))
                             .background(color = colors.N10)
                             .fillMaxWidth()
                             .fillMaxHeight(0.39f)
