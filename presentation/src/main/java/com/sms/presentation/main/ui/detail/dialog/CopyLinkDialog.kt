@@ -89,9 +89,7 @@ fun CopyLinkDialog(
                     Spacer(modifier = Modifier.size(24.dp))
                     Row (
                         modifier = Modifier
-                            .clip(
-                                RoundedCornerShape(12.dp)
-                            )
+                            .clip(RoundedCornerShape(12.dp))
                             .background(color = colors.N10)
                             .fillMaxWidth()
                             .fillMaxHeight(0.39f)
@@ -99,10 +97,7 @@ fun CopyLinkDialog(
                         Text(
                             text = "https://blog.naver.com.ds...",
                             modifier = Modifier
-                                .padding(
-                                    vertical = 13.5.dp,
-                                    horizontal = 12.dp
-                                )
+                                .padding(vertical = 13.5.dp, horizontal = 12.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(
