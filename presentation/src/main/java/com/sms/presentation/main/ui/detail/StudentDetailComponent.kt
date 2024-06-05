@@ -143,7 +143,7 @@ fun StudentDetailComponent(
                             SmsRoundedButton(
                                 text = "공유",
                                 modifier = Modifier
-                                    .fillMaxWidth(0.385f),
+                                    .fillMaxWidth(0.95f),
                                 state = ButtonState.OutLine
                             ) {
 
