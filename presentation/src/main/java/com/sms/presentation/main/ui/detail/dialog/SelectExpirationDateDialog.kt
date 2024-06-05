@@ -1,20 +1,20 @@
 package com.sms.presentation.main.ui.detail.dialog
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.RadioButtonColors
 import androidx.compose.material.Text
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
@@ -73,7 +73,7 @@ fun SelectExpirationDateDialog(
 
     var selectedOption by remember { mutableStateOf("30일") }
 
-    val options = listOf("5일", "20일", "10일", "25일", "15일", "30일")
+    val options = listOf("5일", "10일", "15일", "20일", "25일", "30일")
 
     SMSTheme { colors, typography ->
         Dialog(
@@ -97,34 +97,23 @@ fun SelectExpirationDateDialog(
                     if (betweenTextAndButtonHeight != null)
                         Spacer(modifier = Modifier.height(betweenTextAndButtonHeight))
                 }
-                Column(
-                    modifier = Modifier
-                        .padding(start = 10.dp, top = 50.dp)
-                ){
-                    options.chunked(2).forEach { rowOptions ->
+                LazyVerticalGrid(
+                    modifier = Modifier.padding(top = 50.dp),
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                ) {
+                    items(options) { text ->
                         Row(
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            rowOptions.forEach { text ->
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .weight(0.1f)
-
-                                ) {
-                                    RadioButton(
-                                        selected = (text == selectedOption),
-                                        onClick = { selectedOption = text },
-                                        colors = RadioButtonDefaults.colors(
-                                            selectedColor = colors.P2
-                                        )
-                                    )
-                                    Text(
-                                        text = text,
-                                    )
-                                }
-                            }
+                            RadioButton(
+                                selected = (text == selectedOption),
+                                onClick = { selectedOption = text },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = colors.P2
+                                )
+                            )
+                            Text(text = text)
                         }
                     }
                 }
