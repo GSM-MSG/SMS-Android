@@ -27,12 +27,13 @@ import com.msg.sms.design.theme.SMSTheme
 
 @Composable
 fun FileItem(
+    modifier: Modifier = Modifier,
     fileName: String,
     onDownLoadClick: () -> Unit,
 ) {
     SMSTheme { colors, typography ->
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .clip(RoundedCornerShape(8.dp))
                 .background(colors.N10)
                 .border(
