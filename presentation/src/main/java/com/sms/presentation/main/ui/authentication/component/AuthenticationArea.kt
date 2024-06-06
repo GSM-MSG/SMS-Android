@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +24,6 @@ fun AuthenticationArea(
     modifier: Modifier = Modifier,
     title: String, // (e.g. 전공 영역, 인문.인성 영역, 외국어 영역), area
     items: List<SectionItem>,
-    file: List<String> = listOf(),// 추가 첨부파일 e.g. 독서 활동 템플릿, 외국어 영역 항목별 점수표
 ) {
     val isExpanded = rememberSaveable {
         mutableStateOf(false)
@@ -65,9 +63,6 @@ fun AuthenticationArea(
                     if (index != items.size - 1) {
                         Spacer(modifier = Modifier.height(24.dp))
                     }
-                }
-                items(file) {
-
                 }
             }
         }
