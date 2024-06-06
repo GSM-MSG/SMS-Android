@@ -2,10 +2,23 @@ package com.sms.presentation.main.ui.main.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,7 +30,6 @@ import com.msg.sms.design.icon.CheckedIcon
 import com.msg.sms.domain.model.student.response.GetStudentForAnonymousModel
 import com.msg.sms.domain.model.student.response.GetStudentForStudentModel
 import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
-import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
@@ -49,14 +61,14 @@ fun MainScreen(
     val progressState = remember {
         mutableStateOf(false)
     }
-    val listTotalSize = remember {
-        mutableStateOf(0)
-    }
     val isScrolled = remember {
         mutableStateOf(false)
     }
     val bottomSheetState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
+        rememberModalBottomSheetState(
+            initialValue = ModalBottomSheetValue.Hidden,
+            skipHalfExpanded = true
+        )
 
     val dialogState = remember {
         mutableStateOf(false)
@@ -107,15 +119,10 @@ fun MainScreen(
         }
     }
 
-    LaunchedEffect("GetStudentList") {
-        getStudentList(
-            viewModel = viewModel,
-            progressState = { progressState.value = it },
-            onSuccess = { list, size ->
-                viewModel.addStudentList(list)
-                listTotalSize.value = size
-            }
-        )
+    LaunchedEffect("observeGetStudentListResponse") {
+        observeGetStudentListResponse(viewModel) {
+            progressState.value = it
+        }
     }
 
     LaunchedEffect("GetProfileImage") {
@@ -138,7 +145,10 @@ fun MainScreen(
 
     LaunchedEffect(lastVisibleItem.value) {
         if (lastVisibleItem.value == viewModel.studentList.lastIndex && viewModel.getStudentListResponse.value.data?.last != true) {
-            viewModel.getStudentListRequest(viewModel.getStudentListResponse.value.data!!.page + 1, 20)
+            viewModel.getStudentListRequest(
+                viewModel.getStudentListResponse.value.data!!.page + 1,
+                20
+            )
         }
     }
 
@@ -208,7 +218,7 @@ fun MainScreen(
                         listState = listState,
                         progressState = progressState.value,
                         studentList = viewModel.studentList,
-                        listTotalSize = listTotalSize.value
+                        listTotalSize = viewModel.studentList.size
                     ) {
                         lifecycleScope.launch {
                             when (role) {
@@ -398,16 +408,14 @@ fun MainScreen(
     }
 }
 
-suspend fun getStudentList(
+suspend fun observeGetStudentListResponse(
     viewModel: StudentListViewModel,
     progressState: (Boolean) -> Unit,
-    onSuccess: (studentList: List<StudentModel>, totalListSize: Int) -> Unit,
 ) {
     viewModel.getStudentListResponse.collect { response ->
         when (response) {
             is Event.Success -> {
                 progressState(false)
-                onSuccess(response.data!!.content, response.data.totalSize)
             }
 
             is Event.Loading -> {
