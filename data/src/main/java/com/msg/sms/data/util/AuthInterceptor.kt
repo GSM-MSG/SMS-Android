@@ -7,7 +7,11 @@ import com.msg.sms.domain.exception.NeedLoginException
 import com.sms.data.BuildConfig
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import okhttp3.*
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
@@ -45,7 +49,13 @@ class AuthInterceptor @Inject constructor(
                 val client = OkHttpClient()
                 val refreshRequest = Request.Builder()
                     .url(BuildConfig.BASE_URL + "auth")
-                    .patch(chain.request().body ?: RequestBody.create(null, byteArrayOf()))
+                    .patch(
+                        chain.request().body ?: byteArrayOf().toRequestBody(
+                            null,
+                            0,
+                            0
+                        )
+                    )
                     .addHeader(
                         "Refresh-Token",
                         dataSource.getRefreshToken().first().replace("\"", "")
