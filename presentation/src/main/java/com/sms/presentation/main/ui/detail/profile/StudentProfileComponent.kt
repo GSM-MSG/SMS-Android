@@ -1,7 +1,12 @@
 package com.sms.presentation.main.ui.detail.profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,11 +26,11 @@ fun StudentProfileComponent(
     name: String,
     isNotGuest: Boolean,
     techStack: List<String>,
-    grade: String,
-    classNumber: String,
-    schoolNumber: String,
+    grade: Int?,
+    classNumber: Int?,
+    schoolNumber: Int?,
     departments: String,
-    introduce: String
+    introduce: String,
 ) {
     SMSTheme { colors, typography ->
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -44,7 +49,7 @@ fun StudentProfileComponent(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
             )
-            if (isNotGuest) {
+            if (isNotGuest && grade != null && classNumber != null && schoolNumber != null) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "${grade}학년 ${classNumber}반 ${schoolNumber}번 • $departments",
