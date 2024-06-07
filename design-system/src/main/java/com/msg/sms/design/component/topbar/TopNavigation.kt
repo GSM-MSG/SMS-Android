@@ -16,11 +16,11 @@ import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
-fun TopBarComponent(
+fun TopNavigation(
     modifier: Modifier = Modifier,
     text: String,
-    leftIcon: @Composable (() -> Unit)?,
-    rightIcon: @Composable (() -> Unit)?,
+    leftIcon: @Composable (() -> Unit)? = null,
+    rightIcon: @Composable (() -> Unit)? = null,
     onClickRightButton: (() -> Unit) = {},
     onClickLeftButton: (() -> Unit) = {},
 ) {
@@ -64,8 +64,8 @@ fun TopBarComponent(
 
 @Preview
 @Composable
-fun TopBarPre() {
-    TopBarComponent(
+fun TopNavigationPre() {
+    TopNavigation(
         text = "정보입력",
         leftIcon = { BackButtonIcon() },
         onClickRightButton = { },
