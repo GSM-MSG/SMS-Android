@@ -144,10 +144,14 @@ class MainActivity : BaseActivity() {
                                             setFilterMajorList(studentListViewModel.selectedMajorList)
                                             setFilterTypeOfEmploymentList(studentListViewModel.selectedTypeOfEmploymentList)
                                             setFilterGsmScoreSliderValues(studentListViewModel.selectedGsmScoreSliderValues.value)
-                                            setFilterDesiredAnnualSalarySliderValues(studentListViewModel.selectedDesiredAnnualSalarySliderValues.value)
+                                            setFilterDesiredAnnualSalarySliderValues(
+                                                studentListViewModel.selectedDesiredAnnualSalarySliderValues.value
+                                            )
                                             setFilterSchoolNumberAscendingValue(studentListViewModel.selectedSchoolNumberAscendingOrder.value)
                                             setFilterGsmScoreAscendingValue(studentListViewModel.selectedGsmScoreAscendingOrder.value)
-                                            setFilterDesiredAnnualSalaryAscendingValue(studentListViewModel.selectedDesiredAnnualSalaryAscendingOrder.value)
+                                            setFilterDesiredAnnualSalaryAscendingValue(
+                                                studentListViewModel.selectedDesiredAnnualSalaryAscendingOrder.value
+                                            )
                                             setFilterDetailStackList(studentListViewModel.selectedDetailStack)
                                             clearStudentList()
                                             getStudentListRequest(1, 20)
@@ -159,7 +163,9 @@ class MainActivity : BaseActivity() {
                                         navController.navigate(MainPage.Search.value)
                                     },
                                     onRightButtonClick = {
-                                        studentListViewModel.setSelectedDetailStackList(studentListViewModel.filterDetailStackList)
+                                        studentListViewModel.setSelectedDetailStackList(
+                                            studentListViewModel.filterDetailStackList
+                                        )
                                         navController.navigate(MainPage.Main.value) {
                                             popUpTo(route = MainPage.Main.value) {
                                                 inclusive = false
@@ -187,35 +193,49 @@ class MainActivity : BaseActivity() {
                                         studentListViewModel.setSelectedClassList(classList)
                                     },
                                     onDepartmentListValueChanged = { departmentList ->
-                                        studentListViewModel.setSelectedDepartmentList(departmentList)
+                                        studentListViewModel.setSelectedDepartmentList(
+                                            departmentList
+                                        )
                                     },
                                     onMajorListValueChanged = { majorList ->
                                         studentListViewModel.setSelectedMajorList(majorList)
                                     },
                                     onTypeOfEmploymentListValueChanged = { typeOfEmploymentList ->
-                                        studentListViewModel.setSelectedTypeOfEmploymentList(typeOfEmploymentList)
+                                        studentListViewModel.setSelectedTypeOfEmploymentList(
+                                            typeOfEmploymentList
+                                        )
                                     },
                                     //Slider
                                     selectedGsmScoreSliderValue = studentListViewModel.filterGsmScoreSliderValues.value,
                                     selectedDesiredAnnualSalarySliderValue = studentListViewModel.filterDesiredAnnualSalarySliderValues.value,
                                     onGsmScoreSliderValueChanged = { gsmScoreSliderValue ->
-                                        studentListViewModel.setSelectedGsmScoreSliderValues(gsmScoreSliderValue)
+                                        studentListViewModel.setSelectedGsmScoreSliderValues(
+                                            gsmScoreSliderValue
+                                        )
                                     },
                                     onDesiredAnnualSalarySliderValueChanged = { desiredAnnualSalarySliderValue ->
-                                        studentListViewModel.setSelectedDesiredAnnualSalarySliderValues(desiredAnnualSalarySliderValue)
+                                        studentListViewModel.setSelectedDesiredAnnualSalarySliderValues(
+                                            desiredAnnualSalarySliderValue
+                                        )
                                     },
                                     //SelectionControl
                                     selectedSchoolNumberAscendingValue = studentListViewModel.filterSchoolNumberAscendingOrder.value,
                                     selectedGsmScoreAscendingValue = studentListViewModel.filterGsmScoreAscendingOrder.value,
                                     selectedDesiredAnnualSalaryAscendingValue = studentListViewModel.filterDesiredAnnualSalaryAscendingOrder.value,
                                     onSchoolNumberAscendingValueChanged = { schoolNumberAscendingValue ->
-                                        studentListViewModel.setSelectedSchoolNumberAscendingValue(schoolNumberAscendingValue)
+                                        studentListViewModel.setSelectedSchoolNumberAscendingValue(
+                                            schoolNumberAscendingValue
+                                        )
                                     },
                                     onGsmScoreAscendingValueChanged = { gsmScoreAscendingValue ->
-                                        studentListViewModel.setSelectedGsmScoreAscendingValue(gsmScoreAscendingValue)
+                                        studentListViewModel.setSelectedGsmScoreAscendingValue(
+                                            gsmScoreAscendingValue
+                                        )
                                     },
                                     onDesiredAnnualSalaryAscendingValueChanged = { desiredAnnualSalaryAscendingValue ->
-                                        studentListViewModel.setSelectedDesiredAnnualSalaryAscendingValue(desiredAnnualSalaryAscendingValue)
+                                        studentListViewModel.setSelectedDesiredAnnualSalaryAscendingValue(
+                                            desiredAnnualSalaryAscendingValue
+                                        )
                                     },
                                     //DetailStack
                                     detailStacks = studentListViewModel.selectedDetailStack,
