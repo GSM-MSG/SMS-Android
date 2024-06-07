@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -18,14 +17,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.header.TitleHeader
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.authentication.enum.InputItemEnum
+import com.msg.sms.domain.model.authentication.AuthenticationFormModel
 
 @Composable
 fun AuthenticationArea(
     modifier: Modifier = Modifier,
     title: String, // (e.g. 전공 영역, 인문.인성 영역, 외국어 영역), area
-    items: List<SectionItem>,
-    file: List<String> = listOf(),// 추가 첨부파일 e.g. 독서 활동 템플릿, 외국어 영역 항목별 점수표
+    items: List<AuthenticationFormModel.AuthenticationSectionModel>,
 ) {
     val isExpanded = rememberSaveable {
         mutableStateOf(false)
@@ -56,18 +54,15 @@ fun AuthenticationArea(
                         section = it.section,
                         maxCount = it.maxCount,
                         fields = it.fields,
-                        description = it.description,
+                        description = it.scoreDescription,
                         onClickButton = {},
-                        onValueChanged = { changedIndex, changedItem ->
+                        onValueChanged = { _, _ ->
 
                         }
                     )
                     if (index != items.size - 1) {
                         Spacer(modifier = Modifier.height(24.dp))
                     }
-                }
-                items(file) {
-
                 }
             }
         }
@@ -80,17 +75,17 @@ private fun AuthenticationAreaPreview() {
     AuthenticationArea(
         title = "전공 영역",
         items = listOf(
-            SectionItem(
+            AuthenticationFormModel.AuthenticationSectionModel(
                 section = "aa",
-                fieldScore = 50,
-                description = null,
+                sectionScore = 50,
+                scoreDescription = null,
                 maxCount = 10,
                 fields = listOf(
-                    FieldItem(
-                        name = "aa",
-                        type = InputItemEnum.STRING,
+                    AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSectionFieldModel(
+                        key = "aa",
+                        type = AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.TEXT,
                         values = null,
-                        placeHolder = ""
+                        example = ""
                     )
                 )
             )

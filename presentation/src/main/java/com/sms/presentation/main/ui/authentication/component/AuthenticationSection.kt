@@ -27,11 +27,7 @@ import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.icon.XMarkIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.util.AddGrayBody1Title
-import com.sms.presentation.main.ui.authentication.enum.InputItemEnum.BOOLEAN
-import com.sms.presentation.main.ui.authentication.enum.InputItemEnum.FILE
-import com.sms.presentation.main.ui.authentication.enum.InputItemEnum.NUMBER
-import com.sms.presentation.main.ui.authentication.enum.InputItemEnum.SELECT
-import com.sms.presentation.main.ui.authentication.enum.InputItemEnum.STRING
+import com.msg.sms.domain.model.authentication.AuthenticationFormModel
 
 @Composable
 fun AuthenticationSection(
@@ -40,7 +36,7 @@ fun AuthenticationSection(
     description: String? = null,
     maxCount: Int,
     currentFieldCount: Int = 1,
-    fields: List<FieldItem>,
+    fields: List<AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSectionFieldModel>,
     onClickButton: (Int) -> Unit,
     addField: (index: Int) -> Unit = {},
     removeField: (index: Int) -> Unit = {},
@@ -49,26 +45,29 @@ fun AuthenticationSection(
     SMSTheme { colors, typography ->
         AddGrayBody1Title(modifier = modifier, titleText = section) {
             LazyColumn(
-                modifier = Modifier.heightIn(max = 5000.dp)) {
+                modifier = Modifier.heightIn(max = 5000.dp)
+            ) {
                 items(currentFieldCount) {
                     LazyColumn(modifier = Modifier.heightIn(max = 1000.dp)) {
                         items(currentFieldCount) {
                             LazyColumn(modifier = Modifier.heightIn(max = 1000.dp)) {
                                 itemsIndexed(fields) { index, item ->
-                                    if (item.type == BOOLEAN) {
-                                        SegmentedControl(items = item.values ?: listOf()) {
-                                            onValueChanged(index, item.values?.get(it) ?: "")
+                                    if (item.type == AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.BOOLEAN) {
+                                        SegmentedControl(items = item.values?.map { it.value }
+                                            ?: listOf()) {
+                                            onValueChanged(index, item.values?.map { it.selectId }
+                                                ?.get(it) ?: "")
                                         }
                                     } else {
                                         OutlinedTextField(
                                             modifier = Modifier.fillMaxWidth(),
-                                            value = item.name,
+                                            value = item.key,
                                             onValueChange = { value ->
                                                 onValueChanged(index, value)
                                             },
                                             placeholder = {
                                                 Text(
-                                                    text = item.placeHolder ?: "",
+                                                    text = item.example ?: "",
                                                     style = typography.body1
                                                 )
                                             },
@@ -83,20 +82,17 @@ fun AuthenticationSection(
                                             trailingIcon = {
                                                 IconButton(onClick = { onClickButton(index) }) {
                                                     when (item.type) {
-                                                        STRING -> XMarkIcon(
+                                                        AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.TEXT -> XMarkIcon(
                                                             modifier = Modifier.size(
                                                                 24.dp
                                                             )
                                                         )
 
-                                                        NUMBER -> XMarkIcon(
-                                                            modifier = Modifier.size(
-                                                                24.dp
-                                                            )
+                                                        AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.FILE -> FileIcon(
+                                                            modifier = Modifier.size(24.dp)
                                                         )
 
-                                                        FILE -> FileIcon(modifier = Modifier.size(24.dp))
-                                                        SELECT -> ArrowDownIcon(
+                                                        AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.SELECT_VALUE -> ArrowDownIcon(
                                                             modifier = Modifier.size(
                                                                 24.dp
                                                             )
@@ -154,13 +150,18 @@ private fun AuthenticationSectionPreview() {
         description = "활동 제목 DESCRIPTION",
         maxCount = 3,
         fields = listOf(
-            FieldItem(
-                name = "String",
-                type = STRING,
+            AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSectionFieldModel(
+                key = "String",
+                type = AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.TEXT,
                 values = null,
-                placeHolder = ""
+                example = "TEXT"
             ),
-            FieldItem(name = "String", type = FILE, values = null, placeHolder = "TEXT")
+            AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSectionFieldModel(
+                key = "String",
+                type = AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.FILE,
+                values = null,
+                example = "TEXT"
+            )
         ),
         onValueChanged = { _, _ -> },
         onClickButton = {},
