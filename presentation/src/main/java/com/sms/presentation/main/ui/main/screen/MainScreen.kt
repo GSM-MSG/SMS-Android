@@ -156,13 +156,13 @@ fun MainScreen(
         SmsDialog(
             title = dialogTitle.value,
             msg = dialogMsg.value,
-            outLineButtonText = "확인",
-            importantButtonText = "취소",
+            outLineButtonText = "취소",
+            importantButtonText = "확인",
             outlineButtonOnClick = {
-                dialogOnClick.value()
                 dialogState.value = false
             },
             importantButtonOnClick = {
+                dialogOnClick.value()
                 dialogState.value = false
             }
         )
