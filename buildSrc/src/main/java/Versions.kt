@@ -19,6 +19,7 @@ object Versions {
     const val ESPRESSO = "3.5.1"
 
     const val HILT = "2.47"
+    const val HILT_NAVIGATION = "1.0.0"
 
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.11.0"

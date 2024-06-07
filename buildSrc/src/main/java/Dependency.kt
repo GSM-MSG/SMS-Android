@@ -11,6 +11,8 @@ object Dependency {
         const val LIFECYCLE = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.LIFECYCLE}"
         const val APPCOMPAT = "androidx.appcompat:appcompat:${Versions.APPCOMPAT}"
         const val SPLASH = "androidx.core:core-splashscreen:${Versions.SPLASH}"
+        const val HILT_NAVIGATION = "androidx.hilt:hilt-navigation-compose:${Versions.HILT_NAVIGATION}"
+
     }
 
     object Compose {
