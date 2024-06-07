@@ -2,10 +2,8 @@ package com.msg.sms.data.remote.datasource.student
 
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
 import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
-import com.msg.sms.data.remote.dto.student.response.GetStudentForAnonymousResponse
-import com.msg.sms.data.remote.dto.student.response.GetStudentForStudentResponse
-import com.msg.sms.data.remote.dto.student.response.GetStudentForTeacherResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentListResponse
+import com.msg.sms.data.remote.dto.student.response.GetStudentResponse
 import com.msg.sms.data.remote.network.api.StudentAPI
 import com.msg.sms.data.util.SMSApiHandler
 import kotlinx.coroutines.Dispatchers
@@ -72,35 +70,15 @@ class RemoteStudentDataSourceImpl @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun getUserDetailForStudent(uuid: UUID): Flow<GetStudentForStudentResponse> {
+    override suspend fun getUserDetail(
+        role: String,
+        uuid: UUID,
+    ): Flow<GetStudentResponse> {
         return flow {
             emit(
-                SMSApiHandler<GetStudentForStudentResponse>().httpRequest {
-                    service.getStudentForStudent(
-                        uuid = uuid
-                    )
-                }.sendRequest()
-            )
-        }
-    }
-
-    override suspend fun getUserDetailForAnonymous(uuid: UUID): Flow<GetStudentForAnonymousResponse> {
-        return flow {
-            emit(
-                SMSApiHandler<GetStudentForAnonymousResponse>().httpRequest {
-                    service.getStudentForAnonymous(
-                        uuid = uuid
-                    )
-                }.sendRequest()
-            )
-        }
-    }
-
-    override suspend fun getUserDetailForTeacher(uuid: UUID): Flow<GetStudentForTeacherResponse> {
-        return flow {
-            emit(
-                SMSApiHandler<GetStudentForTeacherResponse>().httpRequest {
-                    service.getStudentForTeacher(
+                SMSApiHandler<GetStudentResponse>().httpRequest {
+                    service.getUserDetail(
+                        role = role,
                         uuid = uuid
                     )
                 }.sendRequest()
