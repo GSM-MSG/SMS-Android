@@ -7,11 +7,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -23,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.domain.model.common.CertificateModel
 import com.sms.presentation.main.ui.detail.award.AwardComponent
@@ -121,16 +124,30 @@ fun StudentDetailComponent(
                         ProjectListComponent(projectList = projectList)
                     }
                     if(isTeacher) {
-                        SmsRoundedButton(
-                            text = "포트폴리오",
+                        Row (
                             modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            val urlIntent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(portfolioLink)
-                            )
-                            context.startActivity(urlIntent)
+                                .padding(horizontal = 8.dp)
+                        ){
+                            SmsRoundedButton(
+                                text = "포트폴리오",
+                                modifier = Modifier
+                                    .fillMaxWidth(0.685f)
+                            ) {
+                                val urlIntent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(portfolioLink)
+                                )
+                                context.startActivity(urlIntent)
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            SmsRoundedButton(
+                                text = "공유",
+                                modifier = Modifier
+                                    .fillMaxWidth(0.95f),
+                                state = ButtonState.OutLine
+                            ) {
+
+                            }
                         }
                     }
                 }
