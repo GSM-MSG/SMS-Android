@@ -1,6 +1,11 @@
 package com.sms.presentation.main.ui.detail.project
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -9,13 +14,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.detail.data.ProjectData
-import com.sms.presentation.main.ui.detail.data.RelatedLinksData
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.msg.sms.domain.model.common.LinkModel
+import com.msg.sms.domain.model.common.ProjectModel
+import com.msg.sms.domain.model.user.response.ActivityDuration
 
 @Composable
 fun ProjectListComponent(
-    projectList: List<ProjectData>,
+    projectList: List<ProjectModel>,
 ) {
     SMSTheme { colors, typography ->
         Column(
@@ -49,10 +54,10 @@ fun ProjectListComponent(
 private fun ProjectComponentPre() {
     ProjectListComponent(
         projectList = listOf(
-            ProjectData(
+            ProjectModel(
                 name = "SMS",
                 activityDuration = ActivityDuration(start = "2023. 03", end = null),
-                projectImage = listOf(
+                previewImages = listOf(
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
@@ -60,25 +65,25 @@ private fun ProjectComponentPre() {
                 ),
                 icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
                 techStacks = listOf("Github", "Git", "Kotlin", "Android Studio"),
-                keyTask = "모이자 ㅋㅋ",
-                relatedLinks = listOf(
-                    RelatedLinksData("Youtube", "https://dolmc.com"),
-                    RelatedLinksData("GitHujb", "https://youyu.com"),
-                    RelatedLinksData("X", "https://asdgasgw.com")
+                task = "모이자 ㅋㅋ",
+                links = listOf(
+                    LinkModel("Youtube", "https://dolmc.com"),
+                    LinkModel("GitHujb", "https://youyu.com"),
+                    LinkModel("X", "https://asdgasgw.com")
                 ),
                 description = ""
             ),
-            ProjectData(
+            ProjectModel(
                 name = "SMS",
                 activityDuration = ActivityDuration(start = "2023. 03", end = "2023. 07"),
-                projectImage = listOf("https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"),
+                previewImages = listOf("https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"),
                 icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
                 techStacks = listOf("Github", "Git", "Kotlin", "Android Studio"),
-                keyTask = "모이자 ㅋㅋ",
-                relatedLinks = listOf(
-                    RelatedLinksData("Youtube", "https://dolmc.com"),
-                    RelatedLinksData("GitHujb", "https://youyu.com"),
-                    RelatedLinksData("X", "https://asdgasgw.com")
+                task = "모이자 ㅋㅋ",
+                links = listOf(
+                    LinkModel("Youtube", "https://dolmc.com"),
+                    LinkModel("GitHujb", "https://youyu.com"),
+                    LinkModel("X", "https://asdgasgw.com")
                 ), description = "ø"
             )
         )
