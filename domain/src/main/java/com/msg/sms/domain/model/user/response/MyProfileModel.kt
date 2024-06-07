@@ -1,5 +1,8 @@
 package com.msg.sms.domain.model.user.response
 
+import com.msg.sms.domain.model.common.PrizeModel
+import com.msg.sms.domain.model.common.ProjectModel
+
 data class MyProfileModel(
     val name: String,
     val introduce: String,
