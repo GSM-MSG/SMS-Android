@@ -28,7 +28,8 @@ android {
         }
         productFlavors {
             create("dev") {
-                buildConfigField("String",
+                buildConfigField(
+                    "String",
                     "BASE_URL",
                     getApiKey("BASE_URL_DEV")
                 )
@@ -36,7 +37,8 @@ android {
                 versionNameSuffix="-DEV"
             }
             create("live") {
-                buildConfigField("String",
+                buildConfigField(
+                    "String",
                     "BASE_URL",
                     getApiKey("BASE_URL")
                 )
