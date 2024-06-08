@@ -26,17 +26,18 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        flavorDimensions.add("url")
         productFlavors {
             create("dev") {
+                dimension = "url"
                 buildConfigField(
                     "String",
                     "BASE_URL",
                     getApiKey("BASE_URL_DEV")
                 )
-                applicationIdSuffix=".dev"
-                versionNameSuffix="-DEV"
             }
             create("live") {
+                dimension = "url"
                 buildConfigField(
                     "String",
                     "BASE_URL",
