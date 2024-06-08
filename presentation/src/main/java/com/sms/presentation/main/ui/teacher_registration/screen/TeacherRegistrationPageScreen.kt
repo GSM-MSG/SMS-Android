@@ -8,20 +8,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.header.TitleHeader
 import com.msg.sms.design.component.spacer.SmsSpacer
@@ -33,10 +35,12 @@ import com.sms.presentation.main.ui.teacher_registration.section.TeacherRegistra
 import com.sms.presentation.main.ui.teacher_registration.state.Class
 import com.sms.presentation.main.ui.teacher_registration.state.Grade
 import com.sms.presentation.main.ui.teacher_registration.state.Position
-import com.sms.presentation.main.ui.util.homeroomInfoSetting
+import com.sms.presentation.main.ui.util.stringClassDataToIntClassData
+import com.sms.presentation.main.ui.util.stringGradeDataToIntGradeData
 import com.sms.presentation.main.viewmodel.TeacherViewModel
+import kotlinx.coroutines.launch
 
-private enum class BottomSheetValues {
+private enum class SelectedBottomSheetSettingValue {
     Class,
     Grade,
     Position
@@ -46,69 +50,79 @@ private enum class BottomSheetValues {
 @Composable
 fun TeacherRegistrationPageScreen(
     viewModel: TeacherViewModel
-){
+) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val bottomSheetValues = remember {
-        mutableStateOf(BottomSheetValues.Position)
+    var selectedBottomSheetSettingValue = remember {
+        mutableStateOf(SelectedBottomSheetSettingValue.Position)
     }
+    val scope = rememberCoroutineScope()
 
-
-    val positionData = ""
-    val gradeData = ""
-    val classData = ""
+    val setPositionData by viewModel.positionData.collectAsState()
+    val setGradeData by viewModel.gradeData.collectAsState()
+    val setClassData by viewModel.classData.collectAsState()
 
     ModalBottomSheetLayout(
         sheetContent = {
-            when (bottomSheetValues.value) {
-                BottomSheetValues.Position -> {
+            when (selectedBottomSheetSettingValue.value) {
+                SelectedBottomSheetSettingValue.Position -> {
                     PositionSelectorBottomSheet(
                         bottomSheetState = bottomSheetState,
-                        selectedPosition = positionData,
+                        selectedPosition = setPositionData,
                         positionList = listOf(
-                            Position.HOMEROOM,
-                            Position.PRINCIPAL,
-                            Position.VICE_PRINCIPAL,
-                            Position.HEAD_OF_DEPARTMENT,
-                            Position.BESIDES
+                            Position.HOMEROOM.text,
+                            Position.PRINCIPAL.text,
+                            Position.VICE_PRINCIPAL.text,
+                            Position.HEAD_OF_DEPARTMENT.text,
+                            Position.BESIDES.text
                         ),
-                        onSelectedPositionChange = {}
+                        onSelectedPositionChange = {
+                            viewModel.selectedPositionDataChange(it)
+                        }
                     )
                 }
-                BottomSheetValues.Grade -> {
+
+                SelectedBottomSheetSettingValue.Grade -> {
                     GradeSelectorBottomSheet(
                         bottomSheetState = bottomSheetState,
-                        selectedGrade = gradeData,
+                        selectedGrade = setGradeData,
                         gradeList = listOf(
-                            Grade.FIRST_GRADE,
-                            Grade.SECOND_GRADE,
-                            Grade.THIRD_GRADE
+                            Grade.FIRST_GRADE.text,
+                            Grade.SECOND_GRADE.text,
+                            Grade.THIRD_GRADE.text
                         ),
-                        onSelectedGradeChange = {}
+                        onSelectedGradeChange = {
+                            viewModel.selectedGradeDataChange(it)
+                        }
                     )
                 }
-                BottomSheetValues.Class -> {
+
+                SelectedBottomSheetSettingValue.Class -> {
                     ClassSelectorBottomSheet(
                         bottomSheetState = bottomSheetState,
-                        selectedClass = classData,
+                        selectedClass = setClassData,
                         classList = listOf(
-                            Class.CLASS_1,
-                            Class.CLASS_2,
-                            Class.CLASS_3,
-                            Class.CLASS_4
+                            Class.CLASS_1.text,
+                            Class.CLASS_2.text,
+                            Class.CLASS_3.text,
+                            Class.CLASS_4.text
                         ),
-                        onSelectedClassChange = {}
+                        onSelectedClassChange = {
+                            viewModel.selectedClassDataChange(it)
+                        }
                     )
                 }
             }
-        }
+        },
+        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+        sheetState = bottomSheetState
     ) {
         Box {
-            Column (
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(color = Color.White)
-            ){
+            ) {
                 TopBarComponent(
                     text = "정보입력",
                     leftIcon = {},
@@ -117,15 +131,33 @@ fun TeacherRegistrationPageScreen(
                 SmsSpacer()
                 TitleHeader(titleText = "프로필 *")
                 TeacherRegistrationSection(
-                    setPosition = positionData,
-                    setGrade = gradeData,
-                    setClass = classData,
-                    onClickPositionOpenButton = {},
-                    onClickGradeOpenButton = {},
-                    onClickClassOpenButton = {}
+                    setPosition = setPositionData,
+                    setGrade = setGradeData,
+                    setClass = setClassData,
+                    onClickPositionOpenButton = {
+                        selectedBottomSheetSettingValue.value =
+                            SelectedBottomSheetSettingValue.Position
+                        scope.launch {
+                            bottomSheetState.show()
+                        }
+                    },
+                    onClickGradeOpenButton = {
+                        selectedBottomSheetSettingValue.value =
+                            SelectedBottomSheetSettingValue.Grade
+                        scope.launch {
+                            bottomSheetState.show()
+                        }
+                    },
+                    onClickClassOpenButton = {
+                        selectedBottomSheetSettingValue.value =
+                            SelectedBottomSheetSettingValue.Class
+                        scope.launch {
+                            bottomSheetState.show()
+                        }
+                    }
                 )
             }
-            Column (
+            Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(horizontal = 20.dp)
@@ -133,24 +165,30 @@ fun TeacherRegistrationPageScreen(
                 SmsRoundedButton(
                     text = "완료",
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
+                        .fillMaxWidth(1f)
                 ) {
-                    when(positionData){
-                        "그 외 선생님" ->{
+                    when (viewModel.positionData.value) {
+                        "그 외 선생님" -> {
                             viewModel.common()
                         }
+
                         "교장선생님" -> {
                             viewModel.principal()
                         }
+
                         "교감선생님" -> {
                             viewModel.vicePrincipal()
                         }
+
                         "부장선생님" -> {
                             viewModel.headOfDepartment()
                         }
+
                         "담임선생님" -> {
-                            homeroomInfoSetting(gradeInfo = gradeData, classInfo = classData, viewModel = viewModel)
+                            viewModel.homeroom(
+                                viewModel.gradeData.value.stringGradeDataToIntGradeData(),
+                                viewModel.classData.value.stringClassDataToIntClassData()
+                            )
                         }
                     }
                 }
@@ -162,6 +200,5 @@ fun TeacherRegistrationPageScreen(
 
 @Preview
 @Composable
-fun TeacherRegistrationPageScreenPage(){
-
+fun TeacherRegistrationPageScreenPage() {
 }
