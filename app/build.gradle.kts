@@ -36,7 +36,7 @@ android {
                     getApiKey("BASE_URL_DEV")
                 )
             }
-            create("live") {
+            create("product") {
                 dimension = "url"
                 buildConfigField(
                     "String",
