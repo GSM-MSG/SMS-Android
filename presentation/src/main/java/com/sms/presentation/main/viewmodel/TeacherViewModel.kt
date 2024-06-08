@@ -1,5 +1,7 @@
 package com.sms.presentation.main.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.sms.presentation.main.viewmodel.util.Event
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +12,7 @@ import com.msg.sms.domain.usecase.teacher.HeadOfDepartmentRegistrationUseCase
 import com.msg.sms.domain.usecase.teacher.HomeroomRegistrationUseCase
 import com.msg.sms.domain.usecase.teacher.PrincipalRegistrationUseCase
 import com.msg.sms.domain.usecase.teacher.VicePrincipalRegistrationUseCase
+import com.sms.presentation.main.ui.teacher_registration.state.Position
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,6 +45,24 @@ class TeacherViewModel @Inject constructor(
     private val _homeroomResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val homeroomResponse = _homeroomResponse.asStateFlow()
 
+    private var _positionData = MutableStateFlow("")
+    val positionData = _positionData.asStateFlow()
+
+    private val _gradeData = MutableStateFlow("")
+    val gradeData = _gradeData.asStateFlow()
+
+    private val _classData = MutableStateFlow("")
+    val classData = _classData.asStateFlow()
+
+    fun selectedPositionDataChange(positionData: String) {
+        _positionData.value = positionData
+    }
+    fun selectedGradeDataChange(gradeData: String) {
+        _gradeData.value = gradeData
+    }
+    fun selectedClassDataChange(classData: String) {
+        _classData.value = classData
+    }
     fun common() = viewModelScope.launch {
         commonRegistrationUseCase().onSuccess {
             it.catch {remoteError ->
