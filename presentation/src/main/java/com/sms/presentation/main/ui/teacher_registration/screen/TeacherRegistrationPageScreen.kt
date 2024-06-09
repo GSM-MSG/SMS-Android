@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.header.TitleHeader
 import com.msg.sms.design.component.spacer.SmsSpacer
@@ -49,7 +50,7 @@ private enum class SelectedBottomSheetSettingValue {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TeacherRegistrationPageScreen(
-    viewModel: TeacherViewModel
+    viewModel: TeacherViewModel = hiltViewModel()
 ) {
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
