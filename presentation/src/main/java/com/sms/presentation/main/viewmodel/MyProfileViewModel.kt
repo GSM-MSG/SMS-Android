@@ -209,6 +209,11 @@ class MyProfileViewModel @Inject constructor(
     }
 
     private fun setProjectData(data: MyProfileModel) {
+        if (data.projects.isEmpty()) {
+            onAddProject()
+            return
+        }
+
         _isExpandedProject.value = data.projects.map { true }
         setBitmapProjectPromotions(data = data)
         setProjectIcon(data = data)
@@ -237,6 +242,11 @@ class MyProfileViewModel @Inject constructor(
     }
 
     private fun setAwardData(data: MyProfileModel) {
+        if (data.prizes.isEmpty()) {
+            onAddAward()
+            return
+        }
+
         _isExpandedAward.value = data.prizes.map { true }
         _awards.value =
             data.prizes.map {
