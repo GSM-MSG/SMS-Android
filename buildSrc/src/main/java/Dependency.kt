@@ -67,6 +67,7 @@ object Dependency {
 
     object Navigation {
         const val NAVIGATION = "androidx.navigation:navigation-compose:${Versions.NAVIGATION}"
+        const val HILT_NAVIGATION = "androidx.hilt:hilt-navigation-compose:${Versions.HILT_NAVIGATION}"
     }
 
     object Lottie {
