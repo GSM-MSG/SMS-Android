@@ -41,7 +41,7 @@ class StudentListViewModel @Inject constructor(
     private val getStudentDetailForTeacherUseCase: GetUserDetailForTeacherUseCase,
     private val getStudentDetailForStudentUseCase: GetStudentDetailForStudentUseCase,
     private val getStudentDetailForAnonymousUseCase: GetUserDetailForAnonymousUseCase,
-    private val getProfileImageUseCase: GetProfileImageUseCase
+    private val getProfileImageUseCase: GetProfileImageUseCase,
 ) : ViewModel() {
     private val _getStudentListResponse = MutableStateFlow<Event<StudentListModel>>(Event.Loading)
     val getStudentListResponse = _getStudentListResponse.asStateFlow()
@@ -136,9 +136,13 @@ class StudentListViewModel @Inject constructor(
     var selectedDetailStack = mutableStateListOf<String>()
         private set
 
+    init {
+        getStudentListRequest(1, 20)
+    }
+
     fun getStudentListRequest(
         page: Int,
-        size: Int
+        size: Int,
     ) = viewModelScope.launch {
         _getStudentListResponse.value = Event.Loading
         getStudentListUseCase(
@@ -165,6 +169,7 @@ class StudentListViewModel @Inject constructor(
             it.catch { remoteError ->
                 _getStudentListResponse.value = remoteError.errorHandling()
             }.collect { response ->
+                studentList.addAll(response.content)
                 _getStudentListResponse.value = Event.Success(data = response)
             }
         }.onFailure { error ->
@@ -254,10 +259,6 @@ class StudentListViewModel @Inject constructor(
         }.onFailure { error ->
             _getStudentProfileImageResponse.value = error.errorHandling()
         }
-    }
-
-    fun addStudentList(list: List<StudentModel>) {
-        studentList.addAll(list)
     }
 
     fun clearStudentList() {
