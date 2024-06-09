@@ -83,7 +83,6 @@ fun MainScreen(
         }
     }
 
-
     BackHandler {
         if (bottomSheetState.isVisible) {
             scope.launch {
