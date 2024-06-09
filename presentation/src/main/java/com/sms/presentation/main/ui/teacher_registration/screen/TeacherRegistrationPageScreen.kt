@@ -168,23 +168,23 @@ fun TeacherRegistrationPageScreen(
                         .fillMaxWidth(1f)
                 ) {
                     when (viewModel.positionData.value) {
-                        "그 외 선생님" -> {
+                        Position.BESIDES.text -> {
                             viewModel.common()
                         }
 
-                        "교장선생님" -> {
+                        Position.PRINCIPAL.text -> {
                             viewModel.principal()
                         }
 
-                        "교감선생님" -> {
+                        Position.VICE_PRINCIPAL.text -> {
                             viewModel.vicePrincipal()
                         }
 
-                        "부장선생님" -> {
+                        Position.HEAD_OF_DEPARTMENT.text -> {
                             viewModel.headOfDepartment()
                         }
 
-                        "담임선생님" -> {
+                        Position.HOMEROOM.text -> {
                             viewModel.homeroom(
                                 viewModel.gradeData.value.stringGradeDataToIntGradeData(),
                                 viewModel.classData.value.stringClassDataToIntClassData()
