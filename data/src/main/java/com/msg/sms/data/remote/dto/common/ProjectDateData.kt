@@ -1,7 +1,7 @@
 package com.msg.sms.data.remote.dto.common
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.domain.model.common.ProjectDateModel
+import com.msg.sms.domain.model.user.response.ActivityDuration
 
 data class ProjectDateData(
     @SerializedName("start")
@@ -10,8 +10,8 @@ data class ProjectDateData(
     val end: String?
 )
 
-fun ProjectDateData.toProjectDateModel(): ProjectDateModel {
-    return ProjectDateModel(
+fun ProjectDateData.toProjectDateModel(): ActivityDuration {
+    return ActivityDuration(
         start = this.start,
         end = this.end
     )

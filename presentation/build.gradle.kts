@@ -86,6 +86,7 @@ dependencies {
     kapt(Dependency.Google.HILT_COMPILER)
     implementation(Dependency.AndroidX.HILT_NAVIGATION)
     implementation(Dependency.Navigation.NAVIGATION)
+    implementation(Dependency.Navigation.HILT_NAVIGATION)
 
     implementation(Dependency.Libraries.OKHTTP)
 

@@ -117,3 +117,22 @@ fun String.isUrlRegularExpression(): Boolean {
     val urlRegex = Regex("^https?:\\/\\/.*$")
     return matches(urlRegex)
 }
+
+fun String.stringGradeDataToIntGradeData(): Int {
+    return when (this) {
+        "1학년" -> 1
+        "2학년" -> 2
+        "3학년" -> 3
+        else -> 0
+    }
+}
+
+fun String.stringClassDataToIntClassData(): Int {
+    return when (this) {
+        "1반" -> 1
+        "2반" -> 2
+        "3반" -> 3
+        "4반" -> 4
+        else -> 0
+    }
+}

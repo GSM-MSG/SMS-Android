@@ -28,15 +28,15 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.domain.model.common.CertificateModel
+import com.msg.sms.domain.model.common.LinkModel
+import com.msg.sms.domain.model.common.PrizeModel
+import com.msg.sms.domain.model.common.ProjectModel
+import com.msg.sms.domain.model.user.response.ActivityDuration
 import com.sms.presentation.main.ui.detail.award.AwardComponent
-import com.sms.presentation.main.ui.detail.data.AwardData
-import com.sms.presentation.main.ui.detail.data.ProjectData
-import com.sms.presentation.main.ui.detail.data.RelatedLinksData
+import com.sms.presentation.main.ui.detail.data.WorkConditionData
 import com.sms.presentation.main.ui.detail.info.StudentInfoComponent
 import com.sms.presentation.main.ui.detail.profile.StudentProfileComponent
 import com.sms.presentation.main.ui.detail.project.ProjectListComponent
-import com.sms.presentation.main.ui.detail.data.WorkConditionData
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 
 @Composable
 fun StudentDetailComponent(
@@ -45,14 +45,14 @@ fun StudentDetailComponent(
     modifier: Modifier,
     name: String,
     techStack: List<String>,
-    grade: String,
-    classNumber: String,
-    schoolNumber: String,
+    grade: Int?,
+    classNumber: Int?,
+    schoolNumber: Int?,
     departments: String,
     introduce: String,
     portfolioLink: String,
-    awardData: List<AwardData>,
-    projectList: List<ProjectData>,
+    awardData: List<PrizeModel>,
+    projectList: List<ProjectModel>,
     gsmAuthenticationScore: String,
     email: String,
     militaryService: String,
@@ -123,11 +123,11 @@ fun StudentDetailComponent(
                     if (projectList.isNotEmpty()) {
                         ProjectListComponent(projectList = projectList)
                     }
-                    if(isTeacher) {
-                        Row (
+                    if (isTeacher) {
+                        Row(
                             modifier = Modifier
                                 .padding(horizontal = 8.dp)
-                        ){
+                        ) {
                             SmsRoundedButton(
                                 text = "포트폴리오",
                                 modifier = Modifier
@@ -172,18 +172,18 @@ private fun StudentDetailComponentPre() {
             "Dart",
             "Compose for Web"
         ),
-        grade = "3",
-        classNumber = "2",
-        schoolNumber = "15",
+        grade = 3,
+        classNumber = 2,
+        schoolNumber = 15,
         departments = "SW개발과",
         introduce = "트렌드가 문화가 될 때까지",
         portfolioLink = "https://",
-        awardData = listOf(AwardData("기업상", organization = "해피문데이", date = "2023. 08. 09")),
+        awardData = listOf(PrizeModel("기업상", type = "해피문데이", date = "2023. 08. 09")),
         projectList = listOf(
-            ProjectData(
+            ProjectModel(
                 name = "SMS",
                 activityDuration = ActivityDuration(start = "2023. 03", end = null),
-                projectImage = listOf(
+                previewImages = listOf(
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
                     "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
@@ -191,18 +191,18 @@ private fun StudentDetailComponentPre() {
                 ),
                 icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
                 techStacks = listOf("Github", "Git", "Kotlin", "Android Studio"),
-                keyTask = "모이자 ㅋㅋ",
-                relatedLinks = listOf(
-                    RelatedLinksData("Youtube", "https://dolmc.com"),
-                    RelatedLinksData("GitHujb", "https://youyu.com"),
-                    RelatedLinksData("X", "https://asdgasgw.com")
+                task = "모이자 ㅋㅋ",
+                links = listOf(
+                    LinkModel("Youtube", "https://dolmc.com"),
+                    LinkModel("GitHujb", "https://youyu.com"),
+                    LinkModel("X", "https://asdgasgw.com")
                 ),
                 description = ""
             ),
-            ProjectData(
+            ProjectModel(
                 name = "SMS",
                 activityDuration = ActivityDuration(start = "2023.03", end = null),
-                projectImage = listOf("https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"),
+                previewImages = listOf("https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"),
                 icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
                 techStacks = listOf(
                     "Github",
@@ -218,11 +218,11 @@ private fun StudentDetailComponentPre() {
                     "Kotlin",
                     "Android Studio"
                 ),
-                keyTask = "모이자 ㅋㅋ",
-                relatedLinks = listOf(
-                    RelatedLinksData("Youtube", "https://dolmc.com"),
-                    RelatedLinksData("GitHujb", "https://youyu.com"),
-                    RelatedLinksData("X", "https://asdgasgw.com")
+                task = "모이자 ㅋㅋ",
+                links = listOf(
+                    LinkModel("Youtube", "https://dolmc.com"),
+                    LinkModel("GitHujb", "https://youyu.com"),
+                    LinkModel("X", "https://asdgasgw.com")
                 ),
                 description = ""
             )

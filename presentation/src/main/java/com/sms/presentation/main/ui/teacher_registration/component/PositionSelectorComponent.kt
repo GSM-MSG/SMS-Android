@@ -1,7 +1,9 @@
 package com.sms.presentation.main.ui.teacher_registration.component
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.msg.sms.design.component.textfield.SmsBasicTextField
 import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.util.AddGrayBody1Title
@@ -20,7 +22,8 @@ fun PositionTypeComponent(
             },
             text = setPosition,
             readOnly = true,
-            placeHolder = "직함을 선택해 주세요"
+            placeHolder = "직함을 선택해 주세요",
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

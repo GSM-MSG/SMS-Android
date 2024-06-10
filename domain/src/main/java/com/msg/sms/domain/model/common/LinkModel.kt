@@ -1,4 +1,4 @@
-package com.msg.sms.domain.model.user.response
+package com.msg.sms.domain.model.common
 
 data class LinkModel(
     val name: String,
