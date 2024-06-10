@@ -26,13 +26,13 @@ import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.bottomsheet.SelectorBottomSheet
 import com.msg.sms.design.component.picker.SmsDatePicker
 import com.msg.sms.design.component.selector.MajorSelector
+import com.msg.sms.domain.model.user.response.ActivityDuration
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.military.MilitaryBottomSheet
 import com.sms.presentation.main.ui.mypage.component.work.WorkingConditionBottomSheet
 import com.sms.presentation.main.ui.mypage.modal.MyPageBottomSheet
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 import com.sms.presentation.main.ui.mypage.state.FormOfEmployment
 import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData

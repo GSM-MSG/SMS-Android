@@ -1,4 +1,6 @@
-package com.msg.sms.domain.model.user.response
+package com.msg.sms.domain.model.common
+
+import com.msg.sms.domain.model.user.response.ActivityDuration
 
 data class ProjectModel(
     val name: String,
@@ -7,6 +9,6 @@ data class ProjectModel(
     val description: String,
     val links: List<LinkModel>,
     val techStacks: List<String>,
-    val myActivity: String,
-    val inProgress: ProgressModel
+    val task: String,
+    val activityDuration: ActivityDuration
 )

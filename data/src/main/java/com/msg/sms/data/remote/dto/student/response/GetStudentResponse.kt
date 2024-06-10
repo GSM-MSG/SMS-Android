@@ -2,43 +2,43 @@ package com.msg.sms.data.remote.dto.student.response
 
 import com.google.gson.annotations.SerializedName
 import com.msg.sms.data.remote.dto.common.*
-import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
+import com.msg.sms.domain.model.student.response.GetStudentModel
 
-data class GetStudentForTeacherResponse(
+data class GetStudentResponse(
     @SerializedName("name")
     val name: String,
     @SerializedName("introduce")
     val introduce: String,
     @SerializedName("portfolioUrl")
-    val portfolioUrl: String,
+    val portfolioUrl: String?,
     @SerializedName("grade")
-    val grade: Int,
+    val grade: Int?,
     @SerializedName("classNum")
-    val classNum: Int,
+    val classNum: Int?,
     @SerializedName("number")
-    val number: Int,
+    val number: Int?,
     @SerializedName("department")
-    val department: String,
+    val department: String?,
     @SerializedName("major")
     val major: String,
     @SerializedName("profileImgUrl")
-    val profileImg: String,
+    val profileImg: String?,
     @SerializedName("contactEmail")
-    val contactEmail: String,
+    val contactEmail: String?,
     @SerializedName("gsmAuthenticationScore")
-    val gsmAuthenticationScore: Int,
+    val gsmAuthenticationScore: Int?,
     @SerializedName("formOfEmployment")
-    val formOfEmployment: String,
+    val formOfEmployment: String?,
     @SerializedName("regions")
-    val regions: List<String>,
+    val regions: List<String>?,
     @SerializedName("militaryService")
-    val militaryService: String,
+    val militaryService: String?,
     @SerializedName("salary")
-    val salary: Int,
+    val salary: Int?,
     @SerializedName("languageCertificates")
-    val languageCertificates: List<CertificateData>,
+    val languageCertificates: List<CertificateData>?,
     @SerializedName("certificates")
-    val certificates: List<String>,
+    val certificates: List<String>?,
     @SerializedName("techStacks")
     val techStacks: List<String>,
     @SerializedName("projects")
@@ -48,8 +48,8 @@ data class GetStudentForTeacherResponse(
 )
 
 
-fun GetStudentForTeacherResponse.toGetStudentForTeacherModel(): GetStudentForTeacherModel {
-    return GetStudentForTeacherModel(
+fun GetStudentResponse.toGetStudentForTeacherModel(): GetStudentModel {
+    return GetStudentModel(
         name = this.name,
         introduce = this.introduce,
         profileImg = this.profileImg,
@@ -65,10 +65,10 @@ fun GetStudentForTeacherResponse.toGetStudentForTeacherModel(): GetStudentForTea
         regions = this.regions,
         militaryService = this.militaryService,
         salary = this.salary,
-        languageCertificates = this.languageCertificates.map { it.toCertificateModel() },
+        languageCertificates = this.languageCertificates?.map { it.toCertificateModel() },
         techStacks = this.techStacks,
         certificates = this.certificates,
         projects = this.projects.map { it.toProjectModel() },
-        prizes = this.prize.map { it.toPrizeModel() }
+        prize = this.prize.map { it.toPrizeModel() }
     )
 }

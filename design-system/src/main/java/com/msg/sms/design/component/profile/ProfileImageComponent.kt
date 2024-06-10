@@ -8,14 +8,14 @@ import com.msg.sms.design.icon.ProfileDefaultIcon
 
 @Composable
 fun ProfileImageComponent(
-    profileImage: String,
+    profileImage: String?,
     modifier: Modifier,
     imageView: @Composable (Modifier) -> Unit
 ) {
     val imageModifier = modifier
         .fillMaxWidth()
         .aspectRatio(1f)
-    if (profileImage == "") {
+    if (profileImage == null || profileImage == "") {
         ProfileDefaultIcon(modifier = imageModifier)
     } else {
         imageView(imageModifier)

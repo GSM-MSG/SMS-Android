@@ -1,7 +1,7 @@
 package com.msg.sms.data.remote.dto.user.response
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.domain.model.user.response.PrizeModel
+import com.msg.sms.domain.model.common.PrizeModel
 
 data class PrizeResponse(
     @SerializedName("name")
@@ -12,7 +12,7 @@ data class PrizeResponse(
     val date: String,
 )
 
-fun PrizeResponse.toPrizeModel(): PrizeModel{
+fun PrizeResponse.toPrizeModel(): PrizeModel {
     return PrizeModel(
         name = this.name,
         type = this.type,

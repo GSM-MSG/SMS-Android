@@ -26,6 +26,7 @@ import com.msg.sms.design.component.spacer.SmsSpacer
 import com.msg.sms.design.component.topbar.TopBarComponent
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.icon.BlackLogoutIcon
+import com.msg.sms.domain.model.user.response.ActivityDuration
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
@@ -38,7 +39,6 @@ import com.sms.presentation.main.ui.mypage.section.ProfileSection
 import com.sms.presentation.main.ui.mypage.section.ProjectsSection
 import com.sms.presentation.main.ui.mypage.section.SchoolLifeSection
 import com.sms.presentation.main.ui.mypage.section.WorkConditionSection
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 import com.sms.presentation.main.ui.mypage.state.FormOfEmployment
 import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData

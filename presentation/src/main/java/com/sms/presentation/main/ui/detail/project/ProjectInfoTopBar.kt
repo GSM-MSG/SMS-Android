@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.msg.sms.domain.model.user.response.ActivityDuration
 
 @Composable
 fun ProjectInfoTopBar(

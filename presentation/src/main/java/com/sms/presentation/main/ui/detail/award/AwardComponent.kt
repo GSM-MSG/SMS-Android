@@ -23,10 +23,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.detail.data.AwardData
+import com.msg.sms.domain.model.common.PrizeModel
 
 @Composable
-fun AwardComponent(awardList: List<AwardData>) {
+fun AwardComponent(awardList: List<PrizeModel>) {
     SMSTheme { colors, typography ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -60,7 +60,7 @@ fun AwardComponent(awardList: List<AwardData>) {
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = award.title,
+                                text = award.name,
                                 style = typography.body1,
                                 color = colors.BLACK,
                                 fontWeight = FontWeight.Normal,
@@ -74,7 +74,7 @@ fun AwardComponent(awardList: List<AwardData>) {
                             )
                         }
                         Text(
-                            text = award.organization,
+                            text = award.type,
                             style = typography.caption2,
                             fontWeight = FontWeight.Normal,
                             color = colors.N40
@@ -89,5 +89,5 @@ fun AwardComponent(awardList: List<AwardData>) {
 @Preview
 @Composable
 private fun AwardComponentPre() {
-    AwardComponent(awardList = listOf(AwardData("기업상", "해피문데이", "2023. 03. 02")))
+    AwardComponent(awardList = listOf(PrizeModel("기업상", "해피문데이", "2023. 03. 02")))
 }
