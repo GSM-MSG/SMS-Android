@@ -4,7 +4,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.msg.sms.domain.model.student.response.*
+import com.msg.sms.domain.model.student.response.GetStudentModel
+import com.msg.sms.domain.model.student.response.StudentListModel
+import com.msg.sms.domain.model.student.response.StudentModel
 import com.msg.sms.domain.model.user.response.ProfileImageModel
 import com.msg.sms.domain.usecase.auth.DeleteTokenUseCase
 import com.msg.sms.domain.usecase.auth.LogoutUseCase
@@ -15,13 +17,23 @@ import com.msg.sms.domain.usecase.student.GetUserDetailForAnonymousUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForTeacherUseCase
 import com.msg.sms.domain.usecase.user.GetProfileImageUseCase
 import com.sms.presentation.main.ui.filter.data.FilterClass
-import com.sms.presentation.main.ui.filter.data.FilterClass.*
+import com.sms.presentation.main.ui.filter.data.FilterClass.FIRST
+import com.sms.presentation.main.ui.filter.data.FilterClass.FOURTH
+import com.sms.presentation.main.ui.filter.data.FilterClass.SECOND
+import com.sms.presentation.main.ui.filter.data.FilterClass.THIRD
 import com.sms.presentation.main.ui.filter.data.FilterDepartment
-import com.sms.presentation.main.ui.filter.data.FilterDepartment.*
+import com.sms.presentation.main.ui.filter.data.FilterDepartment.AI_DEVELOPMENT
+import com.sms.presentation.main.ui.filter.data.FilterDepartment.SMART_IOT_DEVELOPMENT
+import com.sms.presentation.main.ui.filter.data.FilterDepartment.SW_DEVELOPMENT
 import com.sms.presentation.main.ui.filter.data.FilterGrade
-import com.sms.presentation.main.ui.filter.data.FilterGrade.*
+import com.sms.presentation.main.ui.filter.data.FilterGrade.FIRST_GRADE
+import com.sms.presentation.main.ui.filter.data.FilterGrade.SECOND_GRADE
+import com.sms.presentation.main.ui.filter.data.FilterGrade.THIRD_GRADE
 import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment
-import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment.*
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment.CONTRACT
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment.FULL_TIME
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment.INTERN
+import com.sms.presentation.main.ui.filter.data.FilterTypeOfEmployment.TEMPORARY
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +41,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,17 +64,12 @@ class StudentListViewModel @Inject constructor(
     private val _withdrawalResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val withdrawalResponse = _withdrawalResponse.asStateFlow()
 
-    private val _getStudentDetailForTeacherResponse =
-        MutableStateFlow<Event<GetStudentForTeacherModel>>(Event.Loading)
-    val getStudentDetailForTeacherResponse = _getStudentDetailForTeacherResponse.asStateFlow()
+    private val _getStudentDetailStatusResponse =
+        MutableStateFlow<Event<Unit>>(Event.Loading)
+    val getStudentDetailStatusResponse = _getStudentDetailStatusResponse.asStateFlow()
 
-    private val _getStudentDetailForStudentResponse =
-        MutableStateFlow<Event<GetStudentForStudentModel>>(Event.Loading)
-    val getStudentDetailForStudentResponse = _getStudentDetailForStudentResponse.asStateFlow()
-
-    private val _getStudentDetailForAnonymousResponse =
-        MutableStateFlow<Event<GetStudentForAnonymousModel>>(Event.Loading)
-    val getStudentDetailForAnonymousResponse = _getStudentDetailForAnonymousResponse.asStateFlow()
+    private val _getStudentDetailResponse = MutableStateFlow(GetStudentModel())
+    val getStudentDetailResponse = _getStudentDetailResponse.asStateFlow()
 
     private val _getStudentProfileImageResponse =
         MutableStateFlow<Event<ProfileImageModel>>(Event.Loading)
@@ -204,47 +211,53 @@ class StudentListViewModel @Inject constructor(
     }
 
     fun getStudentDetailForTeacher(uuid: UUID) = viewModelScope.launch {
-        _getStudentDetailForTeacherResponse.value = Event.Loading
+        _getStudentDetailResponse.value = GetStudentModel()
+        _getStudentDetailStatusResponse.value = Event.Loading
         getStudentDetailForTeacherUseCase(
             uuid = uuid
         ).onSuccess {
             it.catch { remoteError ->
-                _getStudentDetailForTeacherResponse.value = remoteError.errorHandling()
+                _getStudentDetailStatusResponse.value = remoteError.errorHandling()
             }.collect { response ->
-                _getStudentDetailForTeacherResponse.value = Event.Success(data = response)
+                _getStudentDetailStatusResponse.value = Event.Success(data = Unit)
+                _getStudentDetailResponse.value = response
             }
-        }.onFailure { error ->
-            _getStudentDetailForTeacherResponse.value = error.errorHandling()
+        }.onFailure {
+            _getStudentDetailStatusResponse.value = it.errorHandling()
         }
     }
 
     fun getStudentDetailForStudent(uuid: UUID) = viewModelScope.launch {
-        _getStudentDetailForStudentResponse.value = Event.Loading
+        _getStudentDetailResponse.value = GetStudentModel()
+        _getStudentDetailStatusResponse.value = Event.Loading
         getStudentDetailForStudentUseCase(
             uuid = uuid
         ).onSuccess {
             it.catch { remoteError ->
-                _getStudentDetailForStudentResponse.value = remoteError.errorHandling()
+                _getStudentDetailStatusResponse.value = remoteError.errorHandling()
             }.collect { response ->
-                _getStudentDetailForStudentResponse.value = Event.Success(data = response)
+                _getStudentDetailStatusResponse.value = Event.Success(data = Unit)
+                _getStudentDetailResponse.value = response
             }
-        }.onFailure { error ->
-            _getStudentDetailForStudentResponse.value = error.errorHandling()
+        }.onFailure {
+            _getStudentDetailStatusResponse.value = it.errorHandling()
         }
     }
 
     fun getStudentDetailForAnonymous(uuid: UUID) = viewModelScope.launch {
-        _getStudentDetailForAnonymousResponse.value = Event.Loading
+        _getStudentDetailResponse.value = GetStudentModel()
+        _getStudentDetailStatusResponse.value = Event.Loading
         getStudentDetailForAnonymousUseCase(
             uuid = uuid
         ).onSuccess {
             it.catch { remoteError ->
-                _getStudentDetailForAnonymousResponse.value = remoteError.errorHandling()
+                _getStudentDetailStatusResponse.value = remoteError.errorHandling()
             }.collect { response ->
-                _getStudentDetailForAnonymousResponse.value = Event.Success(data = response)
+                _getStudentDetailStatusResponse.value = Event.Success(data = Unit)
+                _getStudentDetailResponse.value = response
             }
-        }.onFailure { error ->
-            _getStudentDetailForAnonymousResponse.value = error.errorHandling()
+        }.onFailure {
+            _getStudentDetailStatusResponse.value = it.errorHandling()
         }
     }
 

@@ -20,7 +20,7 @@ import com.msg.sms.design.icon.CalendarIcon
 import com.msg.sms.design.icon.FlowIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.util.AddGrayBody1Title
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.msg.sms.domain.model.user.response.ActivityDuration
 
 @Composable
 fun ProjectScheduleComponent(
@@ -62,7 +62,7 @@ fun ProjectScheduleComponent(
                                     CalendarIcon()
                                 }
                             },
-                            text = progress.end,
+                            text = progress.end!!,
                             placeHolder = "2020.03"
                         )
                     }

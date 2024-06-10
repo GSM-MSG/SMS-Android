@@ -8,14 +8,10 @@ import com.msg.sms.data.remote.dto.common.ProjectData
 import com.msg.sms.data.remote.dto.common.ProjectDateData
 import com.msg.sms.data.remote.dto.common.ProjectRelatedLinkData
 import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
-import com.msg.sms.data.remote.dto.student.response.toGetStudentForAnonymousModel
-import com.msg.sms.data.remote.dto.student.response.toGetStudentForStudentModel
 import com.msg.sms.data.remote.dto.student.response.toGetStudentForTeacherModel
 import com.msg.sms.data.remote.dto.student.response.toStudentListModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
-import com.msg.sms.domain.model.student.response.GetStudentForAnonymousModel
-import com.msg.sms.domain.model.student.response.GetStudentForStudentModel
-import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
+import com.msg.sms.domain.model.student.response.GetStudentModel
 import com.msg.sms.domain.model.student.response.StudentListModel
 import com.msg.sms.domain.model.user.response.MyProfileModel
 import com.msg.sms.domain.repository.StudentRepository
@@ -75,17 +71,8 @@ class StudentRepositoryImpl @Inject constructor(
         ).map { it.toStudentListModel() }
     }
 
-    override suspend fun getUserDetailForStudent(uuid: UUID): Flow<GetStudentForStudentModel> {
-        return dataSource.getUserDetailForStudent(uuid = uuid).map { it.toGetStudentForStudentModel() }
-    }
-
-    override suspend fun getUserDetailForAnonymous(uuid: UUID): Flow<GetStudentForAnonymousModel> {
-        return dataSource.getUserDetailForAnonymous(uuid = uuid)
-            .map { it.toGetStudentForAnonymousModel() }
-    }
-
-    override suspend fun getUserDetailForTeacher(uuid: UUID): Flow<GetStudentForTeacherModel> {
-        return dataSource.getUserDetailForTeacher(uuid = uuid).map { it.toGetStudentForTeacherModel() }
+    override suspend fun getUserDetail(role: String, uuid: UUID): Flow<GetStudentModel> {
+        return dataSource.getUserDetail(role = role, uuid = uuid).map { it.toGetStudentForTeacherModel() }
     }
 
     override suspend fun putChangedProfile(profile: MyProfileModel): Flow<Unit> {
@@ -121,10 +108,10 @@ class StudentRepositoryImpl @Inject constructor(
                                 url = link.url
                             )
                         }, techStacks = it.techStacks,
-                        myActivity = it.myActivity,
+                        myActivity = it.task,
                         inProgress = ProjectDateData(
-                            start = it.inProgress.start,
-                            end = it.inProgress.end
+                            start = it.activityDuration.start,
+                            end = it.activityDuration.end
                         )
                     )
                 },

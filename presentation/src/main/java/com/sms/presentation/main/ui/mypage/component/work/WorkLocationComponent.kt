@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +26,10 @@ fun WorkLocationComponent(
     onClickAddButton: () -> Unit,
     onClickRemoveButton: (Int) -> Unit,
 ) {
+    LaunchedEffect(key1 = Unit) {
+        if (workLocationsList.isEmpty()) onClickAddButton()
+    }
+
     AddGrayBody1Title(titleText = "근무지역") {
         LazyColumn(
             modifier = Modifier
@@ -62,5 +67,8 @@ fun WorkLocationComponent(
 @Preview
 @Composable
 private fun WorkLocationComponentPre() {
-    WorkLocationComponent(listOf("도쿄", "광저우", "교토"), onValueChange = { _, _ ->  }, onClickAddButton = {}) {}
+    WorkLocationComponent(
+        listOf("도쿄", "광저우", "교토"),
+        onValueChange = { _, _ -> },
+        onClickAddButton = {}) {}
 }

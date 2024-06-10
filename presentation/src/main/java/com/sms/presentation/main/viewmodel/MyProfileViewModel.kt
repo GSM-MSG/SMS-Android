@@ -6,19 +6,18 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.msg.sms.domain.model.common.LinkModel
+import com.msg.sms.domain.model.common.PrizeModel
+import com.msg.sms.domain.model.common.ProjectModel
+import com.msg.sms.domain.model.user.response.ActivityDuration
 import com.msg.sms.domain.model.user.response.LanguageCertificateModel
-import com.msg.sms.domain.model.user.response.LinkModel
 import com.msg.sms.domain.model.user.response.MyProfileModel
-import com.msg.sms.domain.model.user.response.PrizeModel
-import com.msg.sms.domain.model.user.response.ProgressModel
-import com.msg.sms.domain.model.user.response.ProjectModel
 import com.msg.sms.domain.usecase.fileupload.ImageUploadUseCase
 import com.msg.sms.domain.usecase.student.PutChangedProfileUseCase
 import com.msg.sms.domain.usecase.user.GetMyProfileUseCase
 import com.sms.presentation.main.ui.detail.data.AwardData
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 import com.sms.presentation.main.ui.mypage.state.FormOfEmployment
 import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData
@@ -209,13 +208,18 @@ class MyProfileViewModel @Inject constructor(
     }
 
     private fun setProjectData(data: MyProfileModel) {
+        if (data.projects.isEmpty()) {
+            onAddProject()
+            return
+        }
+
         _isExpandedProject.value = data.projects.map { true }
         setBitmapProjectPromotions(data = data)
         setProjectIcon(data = data)
         _projects.value = data.projects.map { project ->
             ProjectData(
                 name = project.name,
-                activityDuration = project.inProgress.let { activityDuration ->
+                activityDuration = project.activityDuration.let { activityDuration ->
                     ActivityDuration(
                         start = activityDuration.start.replace("-", "."),
                         end = activityDuration.end?.replace("-", ".")
@@ -224,7 +228,7 @@ class MyProfileViewModel @Inject constructor(
                 projectImage = project.previewImages,
                 icon = project.icon,
                 techStacks = project.techStacks,
-                keyTask = project.myActivity,
+                keyTask = project.task,
                 relatedLinks = project.links.map { link ->
                     RelatedLinksData(
                         name = link.name,
@@ -237,6 +241,11 @@ class MyProfileViewModel @Inject constructor(
     }
 
     private fun setAwardData(data: MyProfileModel) {
+        if (data.prizes.isEmpty()) {
+            onAddAward()
+            return
+        }
+
         _isExpandedAward.value = data.prizes.map { true }
         _awards.value =
             data.prizes.map {
@@ -411,7 +420,6 @@ class MyProfileViewModel @Inject constructor(
             )
         ).onSuccess {
             it.catch { remoteError ->
-//                remoteError.errorHandling()
             }.collect { response ->
                 when (typeOfRequest) {
                     0 -> updateProfileImage(url = response.fileUrl)
@@ -420,7 +428,6 @@ class MyProfileViewModel @Inject constructor(
                 }
             }
         }.onFailure {
-//            it.errorHandling()
         }
     }
 
@@ -436,7 +443,7 @@ class MyProfileViewModel @Inject constructor(
             val changedData = _projects.value[projectIndex].copy(icon = url)
             _projects.value =
                 _projects.value.mapIndexed { index, projectData -> if (index == projectIndex) changedData else projectData }
-            _iconChangeCount.value = _iconChangeCount.value + 1
+            _iconChangeCount.value += 1
             if (bitmapIcons.value.size == _iconChangeCount.value) {
                 _isProjectIconChanged.value = true
             }
@@ -452,7 +459,7 @@ class MyProfileViewModel @Inject constructor(
             val changedData = _projects.value[projectIndex].copy(projectImage = projectPromotions)
             _projects.value =
                 _projects.value.mapIndexed { index, projectData -> if (index == projectIndex) changedData else projectData }
-            _previewChangeCount.value = _previewChangeCount.value + 1
+            _previewChangeCount.value += 1
             if (bitmapPreviews.value.sumOf { it.size } == _previewChangeCount.value) {
                 _isProjectPreviewsChanged.value = true
             }
@@ -533,8 +540,8 @@ class MyProfileViewModel @Inject constructor(
                             )
                         },
                         techStacks = it.techStacks,
-                        myActivity = it.keyTask,
-                        inProgress = ProgressModel(
+                        task = it.keyTask,
+                        activityDuration = ActivityDuration(
                             start = it.activityDuration.start,
                             end = it.activityDuration.end
                         )

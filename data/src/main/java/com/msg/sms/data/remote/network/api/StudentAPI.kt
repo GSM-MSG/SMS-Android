@@ -2,9 +2,7 @@ package com.msg.sms.data.remote.network.api
 
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
 import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
-import com.msg.sms.data.remote.dto.student.response.GetStudentForAnonymousResponse
-import com.msg.sms.data.remote.dto.student.response.GetStudentForStudentResponse
-import com.msg.sms.data.remote.dto.student.response.GetStudentForTeacherResponse
+import com.msg.sms.data.remote.dto.student.response.GetStudentResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentListResponse
 import retrofit2.http.*
 import java.util.*
@@ -34,20 +32,11 @@ interface StudentAPI {
         @Query("salarySort") salarySort: String?,
     ): GetStudentListResponse
 
-    @GET("student/anonymous/{uuid}")
-    suspend fun getStudentForAnonymous(
-        @Path("uuid") uuid: UUID,
-    ): GetStudentForAnonymousResponse
-
-    @GET("student/{uuid}")
-    suspend fun getStudentForStudent(
-        @Path("uuid") uuid: UUID,
-    ): GetStudentForStudentResponse
-
-    @GET("student/teacher/{uuid}")
-    suspend fun getStudentForTeacher(
-        @Path("uuid") uuid: UUID,
-    ): GetStudentForTeacherResponse
+    @GET("student/{role}{uuid}")
+    suspend fun getUserDetail(
+        @Path("role") role: String,
+        @Path("uuid") uuid: UUID
+    ): GetStudentResponse
 
     @PUT("student")
     suspend fun putChangedProfile(

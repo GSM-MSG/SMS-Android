@@ -99,7 +99,7 @@ class MainActivity : BaseActivity() {
                             composable(MainPage.Main.value) {
                                 MainScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
-                                    myProfileVIewModel = viewModel(LocalContext.current as MainActivity),
+                                    myProfileViewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
                                     role = response.data!!,
                                     onFilterClick = { navController.navigate(MainPage.Filter.value) },
