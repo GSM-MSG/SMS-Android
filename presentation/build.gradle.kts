@@ -85,6 +85,7 @@ dependencies {
     implementation(Dependency.Google.HILT)
     kapt(Dependency.Google.HILT_COMPILER)
     implementation(Dependency.Navigation.NAVIGATION)
+    implementation(Dependency.Navigation.HILT_NAVIGATION)
 
     implementation(Dependency.Libraries.OKHTTP)
 

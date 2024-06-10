@@ -28,6 +28,9 @@
             android:name=".main.ui.main.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_main" />
+        <activity android:name=".main.ui.teacher_registration.TeacherRegistrationActivity"
+            android:exported="false"
+            android:label="TeacherRegistrationActivity"/>
     </application>
 
 </manifest>

@@ -15,15 +15,15 @@ import kotlinx.coroutines.launch
 fun ClassSelectorBottomSheet(
     bottomSheetState: ModalBottomSheetState,
     selectedClass: String,
-    classList: List<Class>,
+    classList: List<String>,
     onSelectedClassChange: (value: String) -> Unit
 ){
     val coroutineScope = rememberCoroutineScope()
 
     LazyColumn{
         items(classList.size){
-            MajorSelector(major = classList[it].text, selected = selectedClass == classList[it].name) {
-                onSelectedClassChange(classList[it].name)
+            MajorSelector(major = classList[it], selected = selectedClass == classList[it]) {
+                onSelectedClassChange(classList[it])
                 coroutineScope.launch {
                     bottomSheetState.hide()
                 }
