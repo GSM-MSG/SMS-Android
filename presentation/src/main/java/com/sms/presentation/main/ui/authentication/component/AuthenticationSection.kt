@@ -27,20 +27,22 @@ import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.icon.XMarkIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.util.AddGrayBody1Title
-import com.msg.sms.domain.model.authentication.AuthenticationFormModel
+import com.msg.sms.domain.model.authentication.AuthenticationSectionFieldModel
+import com.msg.sms.domain.model.authentication.AuthenticationSelectionType
 
 @Composable
 fun AuthenticationSection(
     modifier: Modifier = Modifier,
     section: String,
     description: String? = null,
+    sectionId: String,
     maxCount: Int,
     currentFieldCount: Int = 1,
-    fields: List<AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSectionFieldModel>,
+    fields: List<AuthenticationSectionFieldModel>,
     onClickButton: (Int) -> Unit,
     addField: (index: Int) -> Unit = {},
     removeField: (index: Int) -> Unit = {},
-    onValueChanged: (Int, String) -> Unit,
+    onValueChanged: () -> Unit,
 ) {
     SMSTheme { colors, typography ->
         AddGrayBody1Title(modifier = modifier, titleText = section) {
@@ -52,18 +54,18 @@ fun AuthenticationSection(
                         items(currentFieldCount) {
                             LazyColumn(modifier = Modifier.heightIn(max = 1000.dp)) {
                                 itemsIndexed(fields) { index, item ->
-                                    if (item.type == AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.BOOLEAN) {
+                                    if (item.type == AuthenticationSelectionType.BOOLEAN) {
                                         SegmentedControl(items = item.values?.map { it.value }
                                             ?: listOf()) {
-                                            onValueChanged(index, item.values?.map { it.selectId }
-                                                ?.get(it) ?: "")
+//                                            onValueChanged(index, item.values?.map { it.selectId }
+//                                                ?.get(it) ?: "")
                                         }
                                     } else {
                                         OutlinedTextField(
                                             modifier = Modifier.fillMaxWidth(),
-                                            value = item.key,
+                                            value = sectionId,
                                             onValueChange = { value ->
-                                                onValueChanged(index, value)
+//                                                onValueChanged(index, value)
                                             },
                                             placeholder = {
                                                 Text(
@@ -82,17 +84,17 @@ fun AuthenticationSection(
                                             trailingIcon = {
                                                 IconButton(onClick = { onClickButton(index) }) {
                                                     when (item.type) {
-                                                        AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.TEXT -> XMarkIcon(
+                                                        AuthenticationSelectionType.TEXT -> XMarkIcon(
                                                             modifier = Modifier.size(
                                                                 24.dp
                                                             )
                                                         )
 
-                                                        AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.FILE -> FileIcon(
+                                                        AuthenticationSelectionType.FILE -> FileIcon(
                                                             modifier = Modifier.size(24.dp)
                                                         )
 
-                                                        AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.SELECT_VALUE -> ArrowDownIcon(
+                                                        AuthenticationSelectionType.SELECT_VALUE -> ArrowDownIcon(
                                                             modifier = Modifier.size(
                                                                 24.dp
                                                             )
@@ -148,22 +150,21 @@ private fun AuthenticationSectionPreview() {
     AuthenticationSection(
         section = "활동 제목",
         description = "활동 제목 DESCRIPTION",
+        sectionId = "",
         maxCount = 3,
         fields = listOf(
-            AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSectionFieldModel(
-                key = "String",
-                type = AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.TEXT,
+           AuthenticationSectionFieldModel(
+                type = AuthenticationSelectionType.TEXT,
                 values = null,
                 example = "TEXT"
             ),
-            AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSectionFieldModel(
-                key = "String",
-                type = AuthenticationFormModel.AuthenticationSectionModel.AuthenticationSelectionType.FILE,
+            AuthenticationSectionFieldModel(
+                type = AuthenticationSelectionType.FILE,
                 values = null,
                 example = "TEXT"
             )
         ),
-        onValueChanged = { _, _ -> },
+        onValueChanged = {},
         onClickButton = {},
     )
 }

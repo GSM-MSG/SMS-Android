@@ -12,7 +12,7 @@ class RemoteAuthenticationDataSourceImpl @Inject constructor(
 ) : RemoteAuthenticationDataSource {
     override suspend fun fetchAuthenticationForm(): Flow<AuthenticationFormResponse> = flow {
         emit(SMSApiHandler<AuthenticationFormResponse>().httpRequest {
-            authenticationApi.fetchAuthenticationForm()
+            authenticationApi.fetchAuthenticationForm(uuid = "bc3933a-44be-49b4-a6e7-2ecfd3f6c30a")
         }.sendRequest())
     }
 }

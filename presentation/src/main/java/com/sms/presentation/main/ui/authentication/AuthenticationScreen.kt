@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -14,6 +16,7 @@ import com.msg.sms.design.component.topbar.TopNavigation
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.authentication.AuthenticationFormModel
+import com.msg.sms.domain.model.authentication.SendAuthenticationDataModel
 import com.sms.presentation.main.ui.authentication.component.AuthenticationArea
 
 @Composable
@@ -22,6 +25,9 @@ fun AuthenticationScreen(
     authenticationForm: AuthenticationFormModel,
     onClickBackButton: () -> Unit,
 ) {
+    val data = rememberSaveable {
+        mutableStateOf((listOf<SendAuthenticationDataModel>()))
+    }
     SMSTheme { colors, _ ->
         LazyColumn(
             modifier = modifier
@@ -41,8 +47,8 @@ fun AuthenticationScreen(
                         .height(16.dp)
                 )
             }
-            itemsIndexed(authenticationForm.content) { index, it ->
-                if (index != authenticationForm.content.lastIndex) {
+            itemsIndexed(authenticationForm.contents) { index, it ->
+                if (index != authenticationForm.contents.lastIndex) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -50,7 +56,7 @@ fun AuthenticationScreen(
                             .height(16.dp)
                     )
                 }
-                AuthenticationArea(title = it.title, items = it.items)
+                AuthenticationArea(title = it.title, items = it.sections)
             }
         }
     }
@@ -59,5 +65,5 @@ fun AuthenticationScreen(
 @Preview
 @Composable
 private fun AuthenticationScreenPre() {
-    AuthenticationScreen(authenticationForm = AuthenticationFormModel(content = listOf())) {}
+    AuthenticationScreen(authenticationForm = AuthenticationFormModel(listOf(), listOf())) {}
 }

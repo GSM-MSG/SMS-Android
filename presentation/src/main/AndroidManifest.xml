@@ -18,11 +18,6 @@
         <activity
             android:name=".main.ui.login.LoginActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".main.ui.main.MainActivity"
@@ -31,6 +26,17 @@
         <activity android:name=".main.ui.teacher_registration.TeacherRegistrationActivity"
             android:exported="false"
             android:label="TeacherRegistrationActivity"/>
+
+        <activity
+            android:name=".main.ui.authentication.AuthenticationActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

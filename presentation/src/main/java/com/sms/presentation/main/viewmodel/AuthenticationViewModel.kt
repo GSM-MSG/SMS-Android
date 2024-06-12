@@ -17,10 +17,10 @@ import javax.inject.Inject
 class AuthenticationViewModel @Inject constructor(
     private val fetchAuthenticationFormUseCase: FetchAuthenticationFormUseCase,
 ) : ViewModel() {
-    private val _authenticationForm = MutableStateFlow(
-        AuthenticationFormModel(listOf())
+    private val _authenticationForm: MutableStateFlow<AuthenticationFormModel?> = MutableStateFlow(
+        null
     )
-    val authenticationForm: StateFlow<AuthenticationFormModel> get() = _authenticationForm
+    val authenticationForm: StateFlow<AuthenticationFormModel?> get() = _authenticationForm
 
     private val _fetchAuthenticationStatus = MutableStateFlow<Event<Unit>>(Event.None)
     val fetchAuthenticationStatus: StateFlow<Event<Unit>> get() = _fetchAuthenticationStatus
@@ -31,14 +31,14 @@ class AuthenticationViewModel @Inject constructor(
 
     fun fetchAuthentication() = viewModelScope.launch {
         runCatching {
-            _fetchAuthenticationStatus.emit(Event.Loading)
+            _fetchAuthenticationStatus.value = Event.Loading
             fetchAuthenticationFormUseCase()
         }.onSuccess {
             it.catch { remoteError ->
                 _fetchAuthenticationStatus.value = remoteError.errorHandling()
             }.collect {
                 _authenticationForm.value = it
-                _fetchAuthenticationStatus.emit(Event.Success(Unit))
+                _fetchAuthenticationStatus.value = Event.Success(Unit)
             }
         }.onFailure {
             _fetchAuthenticationStatus.value = it.errorHandling()
