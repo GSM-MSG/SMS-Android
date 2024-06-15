@@ -3,13 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application>
+        <service
+            android:name=".service.SMSFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".main.ui.fill_out_information.FillOutInformationActivity"
             android:exported="false"
@@ -28,9 +39,10 @@
             android:name=".main.ui.main.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_main" />
-        <activity android:name=".main.ui.teacher_registration.TeacherRegistrationActivity"
+        <activity
+            android:name=".main.ui.teacher_registration.TeacherRegistrationActivity"
             android:exported="false"
-            android:label="TeacherRegistrationActivity"/>
+            android:label="TeacherRegistrationActivity" />
     </application>
 
 </manifest>

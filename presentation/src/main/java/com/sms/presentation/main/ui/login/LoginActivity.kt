@@ -1,9 +1,14 @@
 package com.sms.presentation.main.ui.login
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.sms.presentation.main.ui.base.BaseActivity
@@ -24,6 +29,7 @@ class LoginActivity : BaseActivity() {
     private lateinit var role: String
 
     override fun init() {
+        askNotificationPermission()
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 viewModel.accessValidationResponse.value is Event.Loading
@@ -102,7 +108,7 @@ class LoginActivity : BaseActivity() {
         finish()
     }
 
-    private fun registrationPageController(isExist: Boolean, role: String){
+    private fun registrationPageController(isExist: Boolean, role: String) {
         startActivity(
             Intent(
                 this,
@@ -113,6 +119,21 @@ class LoginActivity : BaseActivity() {
                 }
             )
         )
+    }
 
+    private fun askNotificationPermission() {
+        val requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { _ -> }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
     }
 }
