@@ -137,7 +137,7 @@ fun String.stringClassDataToIntClassData(): Int {
     }
 }
 
-fun String.stringClassDataToLongClassData() : Long {
+fun String.stringDaysDataToLongDaysData() : Long {
     return when (this) {
         "5일" -> 5
         "10일" -> 10
