@@ -315,13 +315,13 @@ class StudentListViewModel @Inject constructor(
                 periodDay = periodDay
             )
         ).onSuccess {
-            it.catch {remoteError ->
+            it.catch { remoteError ->
                 _createInformationLinkStatusResponse.value = remoteError.errorHandling()
             }.collect { response ->
                 _createInformationLinkStatusResponse.value = Event.Success(data = response)
                 _createInformationLinkResponse.value = response.token
             }
-        }.onFailure {error ->
+        }.onFailure { error ->
             _createInformationLinkStatusResponse.value = error.errorHandling()
         }
     }
