@@ -1,7 +1,9 @@
 package com.msg.sms.data.remote.network.api
 
+import com.msg.sms.data.remote.dto.student.request.CreateInformationLinkRequest
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
 import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
+import com.msg.sms.data.remote.dto.student.response.CreateInformationLinkResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentListResponse
 import retrofit2.http.*
@@ -32,8 +34,13 @@ interface StudentAPI {
         @Query("salarySort") salarySort: String?,
     ): GetStudentListResponse
 
-    @GET("student/{role}{uuid}")
+    @GET("student/{uuid}")
     suspend fun getUserDetail(
+        @Path("uuid") uuid: UUID
+    ): GetStudentResponse
+
+    @GET("student/{role}/{uuid}")
+    suspend fun getUserDetailRole(
         @Path("role") role: String,
         @Path("uuid") uuid: UUID
     ): GetStudentResponse
@@ -42,4 +49,9 @@ interface StudentAPI {
     suspend fun putChangedProfile(
         @Body body: PutChangedProfileRequest
     )
+
+    @POST("student/link")
+    suspend fun createInformationLink (
+        @Body body: CreateInformationLinkRequest
+    ): CreateInformationLinkResponse
 }
