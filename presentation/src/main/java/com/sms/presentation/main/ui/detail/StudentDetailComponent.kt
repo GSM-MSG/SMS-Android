@@ -1,7 +1,9 @@
 package com.sms.presentation.main.ui.detail
 
+import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,13 +20,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.domain.model.common.CertificateModel
@@ -34,9 +42,22 @@ import com.msg.sms.domain.model.common.ProjectModel
 import com.msg.sms.domain.model.user.response.ActivityDuration
 import com.sms.presentation.main.ui.detail.award.AwardComponent
 import com.sms.presentation.main.ui.detail.data.WorkConditionData
+import com.sms.presentation.main.ui.detail.dialog.CopyLinkDialog
+import com.sms.presentation.main.ui.detail.dialog.SelectExpirationDateDialog
 import com.sms.presentation.main.ui.detail.info.StudentInfoComponent
 import com.sms.presentation.main.ui.detail.profile.StudentProfileComponent
 import com.sms.presentation.main.ui.detail.project.ProjectListComponent
+import com.sms.presentation.main.ui.util.stringClassDataToLongClassData
+import com.sms.presentation.main.viewmodel.StudentListViewModel
+
+enum class ExpirationDate(val date: String) {
+    DAYS_5("5일"),
+    DAYS_10("10일"),
+    DAYS_15("15일"),
+    DAYS_20("20일"),
+    DAYS_25("25일"),
+    DAYS_30("30일")
+}
 
 @Composable
 fun StudentDetailComponent(
@@ -64,8 +85,66 @@ fun StudentDetailComponent(
     isNotGuest: Boolean,
     isTeacher: Boolean,
     scrollState: ScrollState = rememberScrollState(),
+    viewModel: StudentListViewModel
 ) {
     val context = LocalContext.current
+
+    var onClickSharingButtonState = remember {
+        mutableStateOf(false)
+    }
+
+    val successCreateLinkStatus by viewModel.createInformationLinkState.collectAsState()
+    val createdLinkToken by viewModel.createInformationLinkResponse.collectAsState()
+
+    val clipboardManager = LocalClipboardManager.current
+
+
+    if (onClickSharingButtonState.value) {
+        SelectExpirationDateDialog(
+            title = "만료기간 선택",
+            outLineButtonText = "취소",
+            importantButtonText = "링크 생성",
+            outlineButtonOnClick = { onClickSharingButtonState.value = false },
+            importantButtonOnClick = {
+                viewModel.createInformationLink(
+                    viewModel.studentId.value.toString(),
+                    viewModel.selectedExpirationDaysData.value.stringClassDataToLongClassData()
+                )
+                onClickSharingButtonState.value = false
+            },
+            widthDp = 328.dp,
+            heightDp = 280.dp,
+            expirationDate = listOf(
+                ExpirationDate.DAYS_5.date,
+                ExpirationDate.DAYS_10.date,
+                ExpirationDate.DAYS_15.date,
+                ExpirationDate.DAYS_20.date,
+                ExpirationDate.DAYS_25.date,
+                ExpirationDate.DAYS_30.date
+            ),
+            onSelectedExpiredDays = {
+                viewModel.selectedExpirationDaysDataChange(it)
+            }
+        )
+    }
+    
+    if (successCreateLinkStatus) {
+        Log.e("log","${viewModel.createInformationLinkResponse}")
+        CopyLinkDialog(
+            title = "만료기간 선택",
+            outLineButtonText = "",
+            importantButtonText = "확인",
+            outlineButtonOnClick = { },
+            importantButtonOnClick = {
+                viewModel.saveCreateInformationLinkState(false)
+                Log.e("test","https://server-sms.msg-team.com/student/link?token=$createdLinkToken")
+                                     },
+            token = createdLinkToken,
+            widthDp = 328.dp,
+            heightDp = 226.dp,
+        )
+    }
+
 
     Column(
         modifier = modifier
@@ -146,7 +225,8 @@ fun StudentDetailComponent(
                                     .fillMaxWidth(0.95f),
                                 state = ButtonState.OutLine
                             ) {
-
+                                onClickSharingButtonState.value = true
+                                Log.e("Log","$successCreateLinkStatus")
                             }
                         }
                     }
@@ -156,6 +236,7 @@ fun StudentDetailComponent(
     }
 }
 
+/*
 @Preview
 @Composable
 private fun StudentDetailComponentPre() {
@@ -237,5 +318,7 @@ private fun StudentDetailComponentPre() {
         foreignLanguage = listOf(),
         isNotGuest = true,
         isTeacher = true,
+        viewModel =
     )
 }
+*/

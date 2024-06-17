@@ -34,6 +34,7 @@ import androidx.compose.ui.window.Dialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.theme.SMSTheme
+import com.sms.presentation.main.ui.detail.ExpirationDate
 
 @Composable
 fun SelectExpirationDateDialog(
@@ -50,6 +51,8 @@ fun SelectExpirationDateDialog(
     outlineButtonOnClick: () -> Unit,
     importantButtonOnClick: () -> Unit,
     onDismissRequest: () -> Unit = {},
+    expirationDate: List<String>,
+    onSelectedExpiredDays: (date: String) -> Unit
 ) {
     val modifier = when {
         widthPercent != null && heightPercent != null -> {
@@ -71,9 +74,7 @@ fun SelectExpirationDateDialog(
         }
     }
 
-    var selectedOption by remember { mutableStateOf("30일") }
-
-    val options = listOf("5일", "10일", "15일", "20일", "25일", "30일")
+    var selectedOption by remember { mutableStateOf("") }
 
     SMSTheme { colors, typography ->
         Dialog(
@@ -102,13 +103,16 @@ fun SelectExpirationDateDialog(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(horizontal = 8.dp),
                 ) {
-                    items(options) { text ->
+                    items(expirationDate) { text ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             RadioButton(
                                 selected = (text == selectedOption),
-                                onClick = { selectedOption = text },
+                                onClick = {
+                                    selectedOption = text
+                                    onSelectedExpiredDays(text)
+                                          },
                                 colors = RadioButtonDefaults.colors(
                                     selectedColor = colors.P2
                                 )
@@ -157,6 +161,15 @@ fun DialogPre() {
         outlineButtonOnClick = { /*TODO*/ },
         importantButtonOnClick = { /*TODO*/ },
         widthDp = 328.dp,
-        heightDp = 280.dp
+        heightDp = 280.dp,
+        expirationDate = listOf(
+            ExpirationDate.DAYS_5.date,
+            ExpirationDate.DAYS_10.date,
+            ExpirationDate.DAYS_15.date,
+            ExpirationDate.DAYS_20.date,
+            ExpirationDate.DAYS_25.date,
+            ExpirationDate.DAYS_30.date
+        ),
+        onSelectedExpiredDays = {}
     )
 }

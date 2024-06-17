@@ -1,6 +1,8 @@
 package com.sms.presentation.main.ui.main
 
 import android.content.Intent
+import android.provider.CalendarContract.EventsEntity
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf
@@ -58,6 +60,14 @@ class MainActivity : BaseActivity() {
     }
 
     private fun observeEvent() {
+        lifecycleScope.launch {
+            studentListViewModel.createInformationLinkStatusResponse.collect {
+                Log.e("log", "observeEvent")
+                if (it is Event.Success) {
+                    studentListViewModel.saveCreateInformationLinkState(true)
+                }
+            }
+        }
         lifecycleScope.launch {
             searchDetailStackViewModel.searchResultEvent.collect {
                 if (it is Event.Success) {
