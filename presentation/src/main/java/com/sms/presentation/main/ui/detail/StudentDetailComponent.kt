@@ -96,8 +96,6 @@ fun StudentDetailComponent(
     val successCreateLinkStatus by viewModel.createInformationLinkState.collectAsState()
     val createdLinkToken by viewModel.createInformationLinkResponse.collectAsState()
 
-    val clipboardManager = LocalClipboardManager.current
-
 
     if (onClickSharingButtonState.value) {
         SelectExpirationDateDialog(
@@ -129,7 +127,6 @@ fun StudentDetailComponent(
     }
     
     if (successCreateLinkStatus) {
-        Log.e("log","${viewModel.createInformationLinkResponse}")
         CopyLinkDialog(
             title = "만료기간 선택",
             outLineButtonText = "",
@@ -137,7 +134,6 @@ fun StudentDetailComponent(
             outlineButtonOnClick = { },
             importantButtonOnClick = {
                 viewModel.saveCreateInformationLinkState(false)
-                Log.e("test","https://server-sms.msg-team.com/student/link?token=$createdLinkToken")
                                      },
             token = createdLinkToken,
             widthDp = 328.dp,
@@ -226,7 +222,6 @@ fun StudentDetailComponent(
                                 state = ButtonState.OutLine
                             ) {
                                 onClickSharingButtonState.value = true
-                                Log.e("Log","$successCreateLinkStatus")
                             }
                         }
                     }

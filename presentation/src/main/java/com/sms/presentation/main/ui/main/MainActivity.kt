@@ -62,7 +62,6 @@ class MainActivity : BaseActivity() {
     private fun observeEvent() {
         lifecycleScope.launch {
             studentListViewModel.createInformationLinkStatusResponse.collect {
-                Log.e("log", "observeEvent")
                 if (it is Event.Success) {
                     studentListViewModel.saveCreateInformationLinkState(true)
                 }
