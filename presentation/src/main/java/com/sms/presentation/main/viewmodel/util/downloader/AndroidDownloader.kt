@@ -24,3 +24,7 @@ class AndroidDownloader(
     }
 
 }
+
+fun Context.downloadFile(url: String, fileName: String) {
+    AndroidDownloader(fileName, this).downloadFile(url)
+}

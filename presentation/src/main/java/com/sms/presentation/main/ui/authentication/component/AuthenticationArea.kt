@@ -17,18 +17,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.header.TitleHeader
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.domain.model.authentication.AuthenticationSectionFieldModel
-import com.msg.sms.domain.model.authentication.AuthenticationSectionModel
-import com.msg.sms.domain.model.authentication.AuthenticationSelectionType
+import com.msg.sms.domain.model.authentication.request.SubmitAuthenticationFormModel
+import com.msg.sms.domain.model.authentication.response.AuthenticationFieldType
+import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldModel
+import com.msg.sms.domain.model.authentication.response.AuthenticationSectionModel
 
 @Composable
 fun AuthenticationArea(
     modifier: Modifier = Modifier,
     title: String, // (e.g. 전공 영역, 인문.인성 영역, 외국어 영역), area
     items: List<AuthenticationSectionModel>,
+    onValueChanged: (List<SubmitAuthenticationFormModel>) -> Unit,
 ) {
     val isExpanded = rememberSaveable {
         mutableStateOf(false)
+    }
+    val areaData = rememberSaveable {
+        mutableListOf<SubmitAuthenticationFormModel>()
     }
     SMSTheme { colors, _ ->
         LazyColumn(
@@ -56,12 +61,13 @@ fun AuthenticationArea(
                         section = it.section,
                         maxCount = it.maxCount,
                         fields = it.fields,
-                        description = it.scoreDescription,
-                        onClickButton = {},
-                        onValueChanged = {
-
+                        onValueChanged = { sectionDataList ->
+                            areaData[index] = SubmitAuthenticationFormModel(
+                                sectionId = it.sectionId,
+                                objects = sectionDataList
+                            )
+                            onValueChanged(areaData)
                         },
-                        sectionId = it.sectionId
                     )
                     if (index != items.size - 1) {
                         Spacer(modifier = Modifier.height(24.dp))
@@ -80,18 +86,19 @@ private fun AuthenticationAreaPreview() {
         items = listOf(
             AuthenticationSectionModel(
                 section = "aa",
-                sectionScore = 50,
-                scoreDescription = null,
                 maxCount = 10,
                 sectionId = "",
                 fields = listOf(
                     AuthenticationSectionFieldModel(
-                        type = AuthenticationSelectionType.TEXT,
+                        fieldId = "",
+                        fieldType = AuthenticationFieldType.TEXT,
                         values = null,
-                        example = ""
+                        example = "",
+                        scoreDescription = ""
                     )
-                )
+                ),
             )
         ),
+        onValueChanged = {},
     )
 }
