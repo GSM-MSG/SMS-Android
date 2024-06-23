@@ -2,17 +2,15 @@ package com.sms.presentation.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.sms.presentation.R
 
 class SMSFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        // todo: 추후 서버 이용하게 되면 신규 토큰 발급시 서버로 전달필요
-        Log.d("onNewToken", token)
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
@@ -28,9 +26,9 @@ class SMSFirebaseMessagingService : FirebaseMessagingService() {
             val notificationBuilder =
                 NotificationCompat.Builder(this@SMSFirebaseMessagingService, NOTIFICATION_ID)
                     .setAutoCancel(true)
+                    .setSmallIcon(R.drawable.ic_sms_white)
                     .setContentText(it.body)
                     .setContentTitle(it.title)
-                    .setSmallIcon(com.sms.design_system.R.drawable.ic_sms)
 
             notificationManager.notify(0, notificationBuilder.build())
         }
