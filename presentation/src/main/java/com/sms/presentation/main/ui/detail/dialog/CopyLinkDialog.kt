@@ -35,6 +35,7 @@ import androidx.compose.ui.window.Dialog
 import com.msg.sms.design.component.button.ButtonState
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.theme.SMSTheme
+import com.sms.presentation.main.ui.util.copyText
 
 @Composable
 fun CopyLinkDialog(
@@ -72,8 +73,6 @@ fun CopyLinkDialog(
                 .height(180.dp)
         }
     }
-
-    val clipBoardManager = LocalClipboardManager.current
 
     SMSTheme { colors, typography ->
         Dialog(
@@ -114,7 +113,7 @@ fun CopyLinkDialog(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(
-                            onClick = { clipBoardManager.setText(AnnotatedString("https://sms.msg-team.com/student/link?token=$token")) },
+                            onClick = { copyText("https://sms.msg-team.com/student/link?token=$token") },
                             modifier = Modifier
                                 .padding(end = 12.dp, top = 8.5.dp, bottom = 8.5.dp),
                             border = BorderStroke(1.dp, colors.P2),
