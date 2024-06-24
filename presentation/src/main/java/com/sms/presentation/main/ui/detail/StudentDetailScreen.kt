@@ -27,6 +27,7 @@ import com.msg.sms.domain.model.student.response.GetStudentModel
 import com.sms.presentation.main.ui.util.departmentEnumToString
 import com.sms.presentation.main.ui.util.employmentEnumToSting
 import com.sms.presentation.main.ui.util.militaryServiceEnumToString
+import com.sms.presentation.main.viewmodel.StudentListViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -34,6 +35,7 @@ fun StudentDetailScreen(
     studentDetailData: GetStudentModel,
     role: String,
     onDismissButtonClick: () -> Unit,
+    viewModel: StudentListViewModel
 ) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -98,6 +100,7 @@ fun StudentDetailScreen(
             scrollState = scrollState,
             awardData = studentDetailData.prize ?: emptyList(),
             projectList = studentDetailData.projects ?: emptyList(),
+            viewModel = viewModel
         )
         IconButton(
             onClick = {

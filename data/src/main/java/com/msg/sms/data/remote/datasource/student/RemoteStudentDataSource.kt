@@ -1,7 +1,9 @@
 package com.msg.sms.data.remote.datasource.student
 
+import com.msg.sms.data.remote.dto.student.request.CreateInformationLinkRequest
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
 import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
+import com.msg.sms.data.remote.dto.student.response.CreateInformationLinkResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentListResponse
 import kotlinx.coroutines.flow.Flow
@@ -30,5 +32,9 @@ interface RemoteStudentDataSource {
 
     suspend fun getUserDetail(role: String, uuid: UUID): Flow<GetStudentResponse>
 
+    suspend fun getUserDetailRole(role: String, uuid: UUID): Flow<GetStudentResponse>
+
     suspend fun putChangedProfile(body: PutChangedProfileRequest): Flow<Unit>
+
+    suspend fun createInformationLink(body: CreateInformationLinkRequest): Flow<CreateInformationLinkResponse>
 }

@@ -136,3 +136,15 @@ fun String.stringClassDataToIntClassData(): Int {
         else -> 0
     }
 }
+
+fun String.stringDaysDataToLongDaysData() : Long {
+    return when (this) {
+        "5일" -> 5
+        "10일" -> 10
+        "15일" -> 15
+        "20일" -> 20
+        "25일" -> 25
+        "30일" -> 30
+        else -> 0
+    }
+}
