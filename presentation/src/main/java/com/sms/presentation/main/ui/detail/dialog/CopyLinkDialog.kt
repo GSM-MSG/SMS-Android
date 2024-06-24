@@ -52,7 +52,7 @@ fun CopyLinkDialog(
     outlineButtonOnClick: () -> Unit,
     importantButtonOnClick: () -> Unit,
     onDismissRequest: () -> Unit = {},
-    token: String,
+    token: String
 ) {
     val modifier = when {
         widthPercent != null && heightPercent != null -> {
@@ -73,6 +73,8 @@ fun CopyLinkDialog(
                 .height(180.dp)
         }
     }
+
+    val clipBoardManager = LocalClipboardManager.current
 
     SMSTheme { colors, typography ->
         Dialog(
@@ -113,7 +115,7 @@ fun CopyLinkDialog(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(
-                            onClick = { copyText("https://sms.msg-team.com/student/link?token=$token") },
+                            onClick = { copyText(text = "https://sms.msg-team.com/student/link?token=$token",clipBoardManager) },
                             modifier = Modifier
                                 .padding(end = 12.dp, top = 8.5.dp, bottom = 8.5.dp),
                             border = BorderStroke(1.dp, colors.P2),
@@ -174,6 +176,6 @@ fun LinkDialogPre() {
         importantButtonOnClick = { /*TODO*/ },
         widthDp = 328.dp,
         heightDp = 226.dp,
-        token = "",
+        token = ""
     )
 }

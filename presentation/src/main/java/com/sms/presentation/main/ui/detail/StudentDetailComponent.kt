@@ -39,6 +39,7 @@ import com.sms.presentation.main.ui.detail.dialog.SelectExpirationDateDialog
 import com.sms.presentation.main.ui.detail.info.StudentInfoComponent
 import com.sms.presentation.main.ui.detail.profile.StudentProfileComponent
 import com.sms.presentation.main.ui.detail.project.ProjectListComponent
+import com.sms.presentation.main.ui.util.copyText
 import com.sms.presentation.main.ui.util.stringDaysDataToLongDaysData
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 
@@ -129,7 +130,7 @@ fun StudentDetailComponent(
                                      },
             token = createdLinkToken,
             widthDp = 328.dp,
-            heightDp = 226.dp,
+            heightDp = 226.dp
         )
     }
 
