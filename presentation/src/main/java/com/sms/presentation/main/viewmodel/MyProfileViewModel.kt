@@ -2,6 +2,7 @@ package com.sms.presentation.main.viewmodel
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -68,6 +69,9 @@ class MyProfileViewModel @Inject constructor(
         )
     )
     val myProfileData: State<MyProfileData> = _myProfileData
+
+    private val _pdfData = mutableStateOf<Uri?>(null)
+    val pdfData: State<Uri?> = _pdfData
 
     private val _techStacks = mutableStateOf<List<String>>(listOf())
     val techStacks: State<List<String>> = _techStacks
@@ -481,6 +485,10 @@ class MyProfileViewModel @Inject constructor(
 
     fun onProfileValueChange(myProfile: MyProfileData) {
         _myProfileData.value = myProfile
+    }
+
+    fun onPdfValueChange(uri: Uri) {
+        _pdfData.value = uri
     }
 
     private fun putChangedProfile(changedProfile: MyProfileModel) = viewModelScope.launch {
