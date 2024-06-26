@@ -14,7 +14,7 @@ fun MajorSelectorBottomSheet(
     bottomSheetState: ModalBottomSheetState,
     selectedMajor: String,
     majorList: List<String>,
-    onSelectedMajhorChange: (value: String) -> Unit,
+    onSelectedMajorChange: (value: String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -22,13 +22,13 @@ fun MajorSelectorBottomSheet(
         list = majorList,
         bottomSheetState = bottomSheetState,
         selected = selectedMajor,
-        itemChange = onSelectedMajhorChange,
+        itemChange = onSelectedMajorChange,
         lastItem = {
             MajorSelector(
                 major = "직접입력",
                 selected = selectedMajor == "직접입력"
             ) {
-                onSelectedMajhorChange("직접입력")
+                onSelectedMajorChange("직접입력")
                 scope.launch {
                     bottomSheetState.hide()
                 }
