@@ -273,6 +273,7 @@ class MainActivity : BaseActivity() {
                                 MyPageScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     myProfileData = myProfileViewModel.myProfileData.value,
+                                    pdfData = myProfileViewModel.pdfData.value,
                                     navController = navController,
                                     bitmapPreviews = myProfileViewModel.bitmapPreviews.value,
                                     projects = myProfileViewModel.projects.value,
@@ -353,6 +354,9 @@ class MainActivity : BaseActivity() {
                                     },
                                     onProfileValueChange = {
                                         myProfileViewModel.onProfileValueChange(myProfile = it)
+                                    },
+                                    onPdfValueChange = {
+                                        myProfileViewModel.onPdfValueChange(uri = it)
                                     },
                                     onSaveButtonClick = {
                                         myProfileViewModel.onChangeProfileChange(myProfileViewModel.myProfileData.value.profileImageBitmap)
