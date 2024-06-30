@@ -7,6 +7,7 @@ import com.msg.sms.data.remote.dto.student.response.CreateInformationLinkRespons
 import com.msg.sms.data.remote.dto.student.response.GetStudentResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentListResponse
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
 import java.util.*
 
 interface RemoteStudentDataSource {
@@ -37,4 +38,6 @@ interface RemoteStudentDataSource {
     suspend fun putChangedProfile(body: PutChangedProfileRequest): Flow<Unit>
 
     suspend fun createInformationLink(body: CreateInformationLinkRequest): Flow<CreateInformationLinkResponse>
+
+    suspend fun putChangedPortfolioPdf(file: MultipartBody.Part): Flow<Unit>
 }

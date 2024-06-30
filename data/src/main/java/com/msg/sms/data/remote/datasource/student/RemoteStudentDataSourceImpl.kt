@@ -1,5 +1,6 @@
 package com.msg.sms.data.remote.datasource.student
 
+import android.util.Log
 import com.msg.sms.data.remote.dto.student.request.CreateInformationLinkRequest
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
 import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
@@ -12,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import okhttp3.MultipartBody
 import java.util.UUID
 import javax.inject.Inject
 
@@ -116,6 +118,17 @@ class RemoteStudentDataSourceImpl @Inject constructor(
             emit(SMSApiHandler<CreateInformationLinkResponse>().httpRequest {
                 service.createInformationLink(body = body)
             }.sendRequest())
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun putChangedPortfolioPdf(file: MultipartBody.Part): Flow<Unit> {
+        Log.d("testt-start", file.toString())
+        SMSApiHandler<Unit>().httpRequest {
+            service.putChangedPortfolioPdf(file = file)
+            Log.d("testt-end", file.toString())
+        }.sendRequest()
+        return flow {
+            emit(Unit)
         }.flowOn(Dispatchers.IO)
     }
 }
