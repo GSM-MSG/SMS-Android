@@ -7,6 +7,7 @@ data class MyProfileModel(
     val name: String,
     val introduce: String,
     val portfolioUrl: String?,
+    val portfolioFileUrl: String?,
     val grade: Int,
     val classNum: Int,
     val number: Int,
