@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -99,6 +100,7 @@ fun MyPageScreen(
     onAwardValueChange: (index: Int, award: AwardData) -> Unit,
     onSaveButtonClick: () -> Unit,
 ) {
+    val context = LocalContext.current
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
@@ -139,9 +141,20 @@ fun MyPageScreen(
         }
     }
 
+    LaunchedEffect(viewModel.myProfileData.value.portfolioUrl, viewModel.myProfileData.value) {
+        when {
+            viewModel.myProfileData.value.portfolioUrl != null -> selectedPortfolioType.value = PortfolioType.URL.text
+            viewModel.myPortfolioPdfData.value != null -> selectedPortfolioType.value = PortfolioType.PDF.text
+            else -> selectedPortfolioType.value = ""
+        }
+    }
+
     LaunchedEffect(viewModel.isProfileChanged.value && viewModel.isProjectIconChanged.value && viewModel.isProjectPreviewChanged.value) {
         if (viewModel.isProfileChanged.value && viewModel.isProjectIconChanged.value && viewModel.isProjectPreviewChanged.value) {
             viewModel.putChangeProfile()
+        }
+        if (selectedPortfolioType.value == PortfolioType.PDF.text && viewModel.pdfData.value != null) {
+            viewModel.putChangedPortfolioPdf(context)
         }
     }
 
