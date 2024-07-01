@@ -1,6 +1,5 @@
 package com.msg.sms.data.remote.datasource.student
 
-import android.util.Log
 import com.msg.sms.data.remote.dto.student.request.CreateInformationLinkRequest
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
 import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
@@ -122,10 +121,8 @@ class RemoteStudentDataSourceImpl @Inject constructor(
     }
 
     override suspend fun putChangedPortfolioPdf(file: MultipartBody.Part): Flow<Unit> {
-        Log.d("testt-start", file.toString())
         SMSApiHandler<Unit>().httpRequest {
             service.putChangedPortfolioPdf(file = file)
-            Log.d("testt-end", file.toString())
         }.sendRequest()
         return flow {
             emit(Unit)
