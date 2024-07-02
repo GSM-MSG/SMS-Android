@@ -121,11 +121,10 @@ class RemoteStudentDataSourceImpl @Inject constructor(
     }
 
     override suspend fun putChangedPortfolioPdf(file: MultipartBody.Part): Flow<Unit> {
-        SMSApiHandler<Unit>().httpRequest {
-            service.putChangedPortfolioPdf(file = file)
-        }.sendRequest()
         return flow {
-            emit(Unit)
+            emit(SMSApiHandler<Unit>().httpRequest {
+                service.putChangedPortfolioPdf(file = file)
+            }.sendRequest())
         }.flowOn(Dispatchers.IO)
     }
 }
