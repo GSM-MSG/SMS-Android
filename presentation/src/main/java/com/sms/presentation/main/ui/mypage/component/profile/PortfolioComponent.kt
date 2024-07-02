@@ -27,7 +27,7 @@ import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.util.AddGrayBody1Title
 import com.sms.presentation.main.ui.mypage.state.PortfolioType
-import com.sms.presentation.main.ui.util.getFileNameFromUri
+import com.sms.presentation.main.ui.util.getFileName
 
 @Composable
 fun PortfolioComponent(
@@ -93,7 +93,7 @@ fun PortfolioComponent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = if (portfolioPdfValue != null) getFileNameFromUri(context, portfolioPdfValue) ?: ".pdf" else "+ pdf 파일 추가",
+                            text = if (portfolioPdfValue != null) getFileName(context, portfolioPdfValue.toString()) ?: "?.pdf" else "+ pdf 파일 추가",
                             style = typography.body1,
                             fontWeight = FontWeight.Normal,
                             color = if (portfolioPdfValue != null) colors.BLACK else colors.N30

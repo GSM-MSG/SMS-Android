@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import okhttp3.MultipartBody
 import java.util.UUID
 import javax.inject.Inject
 
@@ -115,6 +116,14 @@ class RemoteStudentDataSourceImpl @Inject constructor(
         return flow {
             emit(SMSApiHandler<CreateInformationLinkResponse>().httpRequest {
                 service.createInformationLink(body = body)
+            }.sendRequest())
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun putChangedPortfolioPdf(file: MultipartBody.Part): Flow<Unit> {
+        return flow {
+            emit(SMSApiHandler<Unit>().httpRequest {
+                service.putChangedPortfolioPdf(file = file)
             }.sendRequest())
         }.flowOn(Dispatchers.IO)
     }
