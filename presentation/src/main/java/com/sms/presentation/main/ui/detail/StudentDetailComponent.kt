@@ -2,6 +2,7 @@ package com.sms.presentation.main.ui.detail
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -65,6 +66,7 @@ fun StudentDetailComponent(
     departments: String,
     introduce: String,
     portfolioLink: String,
+    portFolioFileLink: String,
     awardData: List<PrizeModel>,
     projectList: List<ProjectModel>,
     gsmAuthenticationScore: String,
@@ -201,11 +203,21 @@ fun StudentDetailComponent(
                                 modifier = Modifier
                                     .fillMaxWidth(0.685f)
                             ) {
-                                val urlIntent = Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse(portfolioLink)
-                                )
-                                context.startActivity(urlIntent)
+                                if (portfolioLink.isEmpty()) {
+                                    Log.e("portfolio","$portFolioFileLink")
+                                    val fileIntent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(portFolioFileLink)
+                                    )
+                                    context.startActivity(fileIntent)
+                                } else if (portFolioFileLink.isEmpty()){
+                                    Log.e("portfolio", "$portfolioLink")
+                                    val urlIntent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(portfolioLink)
+                                    )
+                                    context.startActivity(urlIntent)
+                                }
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             SmsRoundedButton(
