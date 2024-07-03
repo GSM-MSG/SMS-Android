@@ -11,6 +11,8 @@ data class GetStudentResponse(
     val introduce: String,
     @SerializedName("portfolioUrl")
     val portfolioUrl: String?,
+    @SerializedName("portfolioFileUrl")
+    val portfolioFileUrl: String?,
     @SerializedName("grade")
     val grade: Int?,
     @SerializedName("classNum")
@@ -54,6 +56,7 @@ fun GetStudentResponse.toGetStudentForTeacherModel(): GetStudentModel {
         introduce = this.introduce,
         profileImg = this.profileImg,
         portfolioUrl = this.portfolioUrl,
+        portfolioFileUrl = this.portfolioFileUrl,
         grade = this.grade,
         classNum = this.classNum,
         number = this.number,
