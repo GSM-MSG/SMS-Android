@@ -2,11 +2,12 @@ package com.msg.sms.domain.repository
 
 import com.msg.sms.domain.model.student.request.CreateInformationLinkRequestModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
+import com.msg.sms.domain.model.student.request.PutChangeProfileRequestModel
 import com.msg.sms.domain.model.student.response.CreateInformationLinkResponseModel
 import com.msg.sms.domain.model.student.response.GetStudentModel
 import com.msg.sms.domain.model.student.response.StudentListModel
-import com.msg.sms.domain.model.user.response.MyProfileModel
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
 import java.util.UUID
 
 interface StudentRepository {
@@ -32,7 +33,9 @@ interface StudentRepository {
 
     suspend fun getUserDetail(role: String, uuid: UUID): Flow<GetStudentModel>
 
-    suspend fun putChangedProfile(profile: MyProfileModel): Flow<Unit>
+    suspend fun putChangedProfile(profile: PutChangeProfileRequestModel): Flow<Unit>
 
     suspend fun createInformationLink(body: CreateInformationLinkRequestModel): Flow<CreateInformationLinkResponseModel>
+
+    suspend fun putChangedPortfolioPdf(file: MultipartBody.Part): Flow<Unit>
 }

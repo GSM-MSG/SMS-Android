@@ -1,9 +1,10 @@
-package com.msg.sms.domain.model.user.response
+package com.msg.sms.domain.model.student.request
 
 import com.msg.sms.domain.model.common.PrizeModel
 import com.msg.sms.domain.model.common.ProjectModel
+import com.msg.sms.domain.model.user.response.LanguageCertificateModel
 
-data class MyProfileModel(
+data class PutChangeProfileRequestModel(
     val name: String,
     val introduce: String,
     val portfolioUrl: String?,

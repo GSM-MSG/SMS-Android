@@ -6,6 +6,7 @@ import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
 import com.msg.sms.data.remote.dto.student.response.CreateInformationLinkResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentListResponse
+import okhttp3.MultipartBody
 import retrofit2.http.*
 import java.util.*
 
@@ -54,4 +55,10 @@ interface StudentAPI {
     suspend fun createInformationLink (
         @Body body: CreateInformationLinkRequest
     ): CreateInformationLinkResponse
+
+    @Multipart
+    @PUT("student/pdf")
+    suspend fun putChangedPortfolioPdf(
+        @Part file: MultipartBody.Part
+    )
 }

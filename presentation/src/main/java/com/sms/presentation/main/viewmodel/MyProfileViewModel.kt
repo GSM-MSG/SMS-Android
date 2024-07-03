@@ -1,6 +1,7 @@
 package com.sms.presentation.main.viewmodel
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.runtime.State
@@ -10,10 +11,12 @@ import androidx.lifecycle.viewModelScope
 import com.msg.sms.domain.model.common.LinkModel
 import com.msg.sms.domain.model.common.PrizeModel
 import com.msg.sms.domain.model.common.ProjectModel
+import com.msg.sms.domain.model.student.request.PutChangeProfileRequestModel
 import com.msg.sms.domain.model.user.response.ActivityDuration
 import com.msg.sms.domain.model.user.response.LanguageCertificateModel
 import com.msg.sms.domain.model.user.response.MyProfileModel
 import com.msg.sms.domain.usecase.fileupload.ImageUploadUseCase
+import com.msg.sms.domain.usecase.student.PutChangedPortfolioPdfUseCase
 import com.msg.sms.domain.usecase.student.PutChangedProfileUseCase
 import com.msg.sms.domain.usecase.user.GetMyProfileUseCase
 import com.sms.presentation.main.ui.detail.data.AwardData
@@ -24,6 +27,7 @@ import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData
 import com.sms.presentation.main.ui.util.createCurrentTime
 import com.sms.presentation.main.ui.util.createFileFromBitmap
+import com.sms.presentation.main.ui.util.toMultipartBody
 import com.sms.presentation.main.viewmodel.util.Event
 import com.sms.presentation.main.viewmodel.util.errorHandling
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +35,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
@@ -39,6 +44,7 @@ class MyProfileViewModel @Inject constructor(
     private val getMyProfileUseCase: GetMyProfileUseCase,
     private val imageUploadUseCase: ImageUploadUseCase,
     private val putChangedProfileUseCase: PutChangedProfileUseCase,
+    private val putChangedPortfolioPdfUseCase: PutChangedPortfolioPdfUseCase,
 ) : ViewModel() {
     private val _getProfileResponse = MutableStateFlow<Event<MyProfileModel>>(Event.Loading)
     val getProfileResponse = _getProfileResponse.asStateFlow()
@@ -46,11 +52,14 @@ class MyProfileViewModel @Inject constructor(
     private val _putChangedProfileResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
     val putChangedProfileResponse = _putChangedProfileResponse.asStateFlow()
 
+    private val _putChangedPortfolioPdfResponse = MutableStateFlow<Event<Unit>>(Event.Loading)
+    val putChangedPortfolioPdfResponse = _putChangedPortfolioPdfResponse.asStateFlow()
+
     private val _myProfileData = mutableStateOf(
         MyProfileData(
             name = "",
             introduce = "",
-            portfolioUrl = "",
+            portfolioUrl = null,
             grade = 0,
             classNum = 0,
             number = 0,
@@ -69,6 +78,9 @@ class MyProfileViewModel @Inject constructor(
         )
     )
     val myProfileData: State<MyProfileData> = _myProfileData
+
+    private val _myPortfolioPdfData = mutableStateOf<String?>(null)
+    val myPortfolioPdfData: State<String?> = _myPortfolioPdfData
 
     private val _pdfData = mutableStateOf<Uri?>(null)
     val pdfData: State<Uri?> = _pdfData
@@ -355,6 +367,8 @@ class MyProfileViewModel @Inject constructor(
             certificates = data.certificates,
             profileImageBitmap = null
         )
+        _myPortfolioPdfData.value = data.portfolioFileUrl
+        if (data.portfolioFileUrl != null) _pdfData.value = Uri.parse(data.portfolioFileUrl)
     }
 
     private fun setMyProfileData(data: MyProfileModel) {
@@ -491,7 +505,7 @@ class MyProfileViewModel @Inject constructor(
         _pdfData.value = uri
     }
 
-    private fun putChangedProfile(changedProfile: MyProfileModel) = viewModelScope.launch {
+    private fun putChangedProfile(changedProfile: PutChangeProfileRequestModel) = viewModelScope.launch {
         _isProfileChanged.value = false
         _isProjectIconChanged.value = false
         _isProjectPreviewsChanged.value = false
@@ -509,10 +523,11 @@ class MyProfileViewModel @Inject constructor(
     fun putChangeProfile() {
         val myProfile = myProfileData.value
         putChangedProfile(
-            MyProfileModel(
+            PutChangeProfileRequestModel(
                 name = myProfile.name,
                 introduce = myProfile.introduce,
                 portfolioUrl = myProfile.portfolioUrl,
+                portfolioFileUrl = null,
                 grade = myProfile.grade,
                 classNum = myProfile.classNum,
                 number = myProfile.number,
@@ -557,5 +572,17 @@ class MyProfileViewModel @Inject constructor(
                 }
             )
         )
+    }
+
+    fun putChangedPortfolioPdf(context: Context) = viewModelScope.launch {
+        putChangedPortfolioPdfUseCase(file = pdfData.value?.toMultipartBody(context)!!).onSuccess {
+            it.catch { remoteError ->
+                _putChangedPortfolioPdfResponse.value = remoteError.errorHandling()
+            }.collect {
+                _putChangedPortfolioPdfResponse.value = Event.Success()
+            }
+        }.onFailure {
+            _putChangedPortfolioPdfResponse.value = it.errorHandling()
+        }
     }
 }
