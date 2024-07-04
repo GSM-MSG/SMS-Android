@@ -2,7 +2,6 @@ package com.sms.presentation.main.ui.detail
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +39,6 @@ import com.sms.presentation.main.ui.detail.dialog.SelectExpirationDateDialog
 import com.sms.presentation.main.ui.detail.info.StudentInfoComponent
 import com.sms.presentation.main.ui.detail.profile.StudentProfileComponent
 import com.sms.presentation.main.ui.detail.project.ProjectListComponent
-import com.sms.presentation.main.ui.util.copyText
 import com.sms.presentation.main.ui.util.stringDaysDataToLongDaysData
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 
@@ -204,9 +202,10 @@ fun StudentDetailComponent(
                                     .fillMaxWidth(0.685f)
                             ) {
                                 if (portfolioLink.isEmpty()) {
+                                    val googleDriveViewerUrl = "https://drive.google.com/viewerng/viewer?embedded=true&url=${portFolioFileLink}"
                                     val fileIntent = Intent(
                                         Intent.ACTION_VIEW,
-                                        Uri.parse(portFolioFileLink)
+                                        Uri.parse(googleDriveViewerUrl)
                                     )
                                     context.startActivity(fileIntent)
                                 } else if (portFolioFileLink.isEmpty()){
