@@ -204,14 +204,12 @@ fun StudentDetailComponent(
                                     .fillMaxWidth(0.685f)
                             ) {
                                 if (portfolioLink.isEmpty()) {
-                                    Log.e("portfolio","$portFolioFileLink")
                                     val fileIntent = Intent(
                                         Intent.ACTION_VIEW,
                                         Uri.parse(portFolioFileLink)
                                     )
                                     context.startActivity(fileIntent)
                                 } else if (portFolioFileLink.isEmpty()){
-                                    Log.e("portfolio", "$portfolioLink")
                                     val urlIntent = Intent(
                                         Intent.ACTION_VIEW,
                                         Uri.parse(portfolioLink)
