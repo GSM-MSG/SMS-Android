@@ -1,8 +1,6 @@
 package com.sms.presentation.main.ui.main
 
 import android.content.Intent
-import android.provider.CalendarContract.EventsEntity
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateListOf

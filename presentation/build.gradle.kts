@@ -92,6 +92,11 @@ dependencies {
     implementation(Dependency.Libraries.COIL)
 
     implementation(Dependency.AndroidX.SPLASH)
+
+    implementation(platform(Dependency.Google.FIREBASE_BOM))
+    implementation(Dependency.Google.FIREBASE_ANALYTICS)
+    implementation(Dependency.Google.FIREBASE_CRASHLYTICS)
+    implementation(Dependency.Google.FIREBASE_MESSAGING)
 }
 
 fun getApiKey(propertyKey: String): String {
