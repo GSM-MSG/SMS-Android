@@ -95,6 +95,7 @@ fun StudentDetailScreen(
             militaryService = studentDetailData.militaryService?.militaryServiceEnumToString()
                 ?: "",
             portfolioLink = studentDetailData.portfolioUrl ?: "",
+            portFolioFileLink = studentDetailData.portfolioFileUrl ?: "",
             region = studentDetailData.regions ?: emptyList(),
             salary = studentDetailData.salary.toString(),
             scrollState = scrollState,

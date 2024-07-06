@@ -39,7 +39,6 @@ import com.sms.presentation.main.ui.detail.dialog.SelectExpirationDateDialog
 import com.sms.presentation.main.ui.detail.info.StudentInfoComponent
 import com.sms.presentation.main.ui.detail.profile.StudentProfileComponent
 import com.sms.presentation.main.ui.detail.project.ProjectListComponent
-import com.sms.presentation.main.ui.util.copyText
 import com.sms.presentation.main.ui.util.stringDaysDataToLongDaysData
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 
@@ -65,6 +64,7 @@ fun StudentDetailComponent(
     departments: String,
     introduce: String,
     portfolioLink: String,
+    portFolioFileLink: String,
     awardData: List<PrizeModel>,
     projectList: List<ProjectModel>,
     gsmAuthenticationScore: String,
@@ -201,11 +201,20 @@ fun StudentDetailComponent(
                                 modifier = Modifier
                                     .fillMaxWidth(0.685f)
                             ) {
-                                val urlIntent = Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse(portfolioLink)
-                                )
-                                context.startActivity(urlIntent)
+                                if (portfolioLink.isEmpty()) {
+                                    val googleDriveViewerUrl = "https://drive.google.com/viewerng/viewer?embedded=true&url=${portFolioFileLink}"
+                                    val fileIntent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(googleDriveViewerUrl)
+                                    )
+                                    context.startActivity(fileIntent)
+                                } else if (portFolioFileLink.isEmpty()){
+                                    val urlIntent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(portfolioLink)
+                                    )
+                                    context.startActivity(urlIntent)
+                                }
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             SmsRoundedButton(
