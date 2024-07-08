@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,12 +15,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.selector.SmsCheckBox
-import com.msg.sms.design.component.textfield.SmsCustomTextField
+import com.msg.sms.design.component.textfield.SmsBasicTextField
 import com.msg.sms.design.icon.CalendarIcon
 import com.msg.sms.design.icon.FlowIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.design.util.AddGrayBody1Title
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.msg.sms.domain.model.user.response.ActivityDuration
 
 @Composable
 fun ProjectScheduleComponent(
@@ -41,21 +42,27 @@ fun ProjectScheduleComponent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(modifier = Modifier.weight(1f)) {
-                    SmsCustomTextField(
+                    SmsBasicTextField(
                         modifier = Modifier.fillMaxWidth(),
-                        endIcon = { CalendarIcon() },
-                        clickAction = onOpenStart,
-                        setChangeText = progress.start,
+                        trailingIcon = {
+                            IconButton(onClick = onOpenStart) {
+                                CalendarIcon()
+                            }
+                        },
+                        text = progress.start,
                         placeHolder = "2001.06"
                     )
                 }
                 if (progress.end != null) {
                     FlowIcon()
                     Box(modifier = Modifier.weight(1f)) {
-                        SmsCustomTextField(
-                            endIcon = { CalendarIcon() },
-                            clickAction = onOpenEnd,
-                            setChangeText = progress.end,
+                        SmsBasicTextField(
+                            trailingIcon = {
+                                IconButton(onClick = onOpenEnd) {
+                                    CalendarIcon()
+                                }
+                            },
+                            text = progress.end!!,
                             placeHolder = "2020.03"
                         )
                     }

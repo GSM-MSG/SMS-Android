@@ -55,10 +55,16 @@ class MainActivity : BaseActivity() {
         observeEvent()
         authViewModel.getRoleInfo()
         fillOutViewModel.getMajorList()
-        studentListViewModel.getStudentListRequest(1, 20)
     }
 
     private fun observeEvent() {
+        lifecycleScope.launch {
+            studentListViewModel.createInformationLinkStatusResponse.collect {
+                if (it is Event.Success) {
+                    studentListViewModel.saveCreateInformationLinkState(true)
+                }
+            }
+        }
         lifecycleScope.launch {
             searchDetailStackViewModel.searchResultEvent.collect {
                 if (it is Event.Success) {
@@ -100,7 +106,7 @@ class MainActivity : BaseActivity() {
                             composable(MainPage.Main.value) {
                                 MainScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
-                                    myProfileVIewModel = viewModel(LocalContext.current as MainActivity),
+                                    myProfileViewModel = viewModel(LocalContext.current as MainActivity),
                                     lifecycleScope = lifecycleScope,
                                     role = response.data!!,
                                     onFilterClick = { navController.navigate(MainPage.Filter.value) },
@@ -150,7 +156,6 @@ class MainActivity : BaseActivity() {
                                             setFilterDesiredAnnualSalaryAscendingValue(studentListViewModel.selectedDesiredAnnualSalaryAscendingOrder.value)
                                             setFilterDetailStackList(studentListViewModel.selectedDetailStack)
                                             clearStudentList()
-                                            getStudentListRequest(1, 20)
                                         }
 
                                         navController.navigate(MainPage.Main.value)
@@ -266,6 +271,7 @@ class MainActivity : BaseActivity() {
                                 MyPageScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     myProfileData = myProfileViewModel.myProfileData.value,
+                                    pdfData = myProfileViewModel.pdfData.value,
                                     navController = navController,
                                     bitmapPreviews = myProfileViewModel.bitmapPreviews.value,
                                     projects = myProfileViewModel.projects.value,
@@ -346,6 +352,9 @@ class MainActivity : BaseActivity() {
                                     },
                                     onProfileValueChange = {
                                         myProfileViewModel.onProfileValueChange(myProfile = it)
+                                    },
+                                    onPdfValueChange = {
+                                        myProfileViewModel.onPdfValueChange(uri = it)
                                     },
                                     onSaveButtonClick = {
                                         myProfileViewModel.onChangeProfileChange(myProfileViewModel.myProfileData.value.profileImageBitmap)

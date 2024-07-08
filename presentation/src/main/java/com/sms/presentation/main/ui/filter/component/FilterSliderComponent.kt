@@ -11,7 +11,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.slider.SmsSlider
-import com.msg.sms.design.component.textfield.FilterTextFiled
 import com.msg.sms.design.theme.SMSTheme
 
 @Composable
@@ -24,7 +23,7 @@ fun FilterSliderComponent(
     startValue: String,
     endValue: String,
     onStartValueChange: (String) -> Unit,
-    onEndValueChange: (String) -> Unit
+    onEndValueChange: (String) -> Unit,
 ) {
     SMSTheme { colors, typography ->
         Column(
@@ -55,10 +54,9 @@ fun FilterSliderComponent(
                         .clip(RoundedCornerShape(10.dp))
                         .widthIn(min = 80.dp, max = 100.dp)
                         .height(50.dp)
-                        .background(colors.N10)
-                ) {
-                    onStartValueChange(it)
-                }
+                        .background(colors.N10),
+                    onValueChange = onStartValueChange
+                )
                 FilterTextFiled(
                     value = endValue,
                     isHopeSalary = isHopeSalary,
@@ -67,10 +65,9 @@ fun FilterSliderComponent(
                         .clip(RoundedCornerShape(10.dp))
                         .widthIn(min = 80.dp, max = 100.dp)
                         .height(50.dp)
-                        .background(colors.N10)
-                ) {
-                    onEndValueChange(it)
-                }
+                        .background(colors.N10),
+                    onValueChange = onEndValueChange
+                )
             }
         }
     }

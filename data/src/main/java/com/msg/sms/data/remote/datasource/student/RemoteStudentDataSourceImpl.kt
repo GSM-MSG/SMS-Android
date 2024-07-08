@@ -1,17 +1,18 @@
 package com.msg.sms.data.remote.datasource.student
 
+import com.msg.sms.data.remote.dto.student.request.CreateInformationLinkRequest
 import com.msg.sms.data.remote.dto.student.request.EnterStudentInformationRequest
 import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
-import com.msg.sms.data.remote.dto.student.response.GetStudentForAnonymousResponse
-import com.msg.sms.data.remote.dto.student.response.GetStudentForStudentResponse
-import com.msg.sms.data.remote.dto.student.response.GetStudentForTeacherResponse
+import com.msg.sms.data.remote.dto.student.response.CreateInformationLinkResponse
 import com.msg.sms.data.remote.dto.student.response.GetStudentListResponse
+import com.msg.sms.data.remote.dto.student.response.GetStudentResponse
 import com.msg.sms.data.remote.network.api.StudentAPI
 import com.msg.sms.data.util.SMSApiHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import okhttp3.MultipartBody
 import java.util.UUID
 import javax.inject.Inject
 
@@ -72,11 +73,14 @@ class RemoteStudentDataSourceImpl @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun getUserDetailForStudent(uuid: UUID): Flow<GetStudentForStudentResponse> {
+    override suspend fun getUserDetail(
+        role: String,
+        uuid: UUID,
+    ): Flow<GetStudentResponse> {
         return flow {
             emit(
-                SMSApiHandler<GetStudentForStudentResponse>().httpRequest {
-                    service.getStudentForStudent(
+                SMSApiHandler<GetStudentResponse>().httpRequest {
+                    service.getUserDetail(
                         uuid = uuid
                     )
                 }.sendRequest()
@@ -84,23 +88,15 @@ class RemoteStudentDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserDetailForAnonymous(uuid: UUID): Flow<GetStudentForAnonymousResponse> {
+    override suspend fun getUserDetailRole(
+        role: String,
+        uuid: UUID
+    ): Flow<GetStudentResponse> {
         return flow {
             emit(
-                SMSApiHandler<GetStudentForAnonymousResponse>().httpRequest {
-                    service.getStudentForAnonymous(
-                        uuid = uuid
-                    )
-                }.sendRequest()
-            )
-        }
-    }
-
-    override suspend fun getUserDetailForTeacher(uuid: UUID): Flow<GetStudentForTeacherResponse> {
-        return flow {
-            emit(
-                SMSApiHandler<GetStudentForTeacherResponse>().httpRequest {
-                    service.getStudentForTeacher(
+                SMSApiHandler<GetStudentResponse>().httpRequest {
+                    service.getUserDetailRole(
+                        role = role,
                         uuid = uuid
                     )
                 }.sendRequest()
@@ -112,6 +108,22 @@ class RemoteStudentDataSourceImpl @Inject constructor(
         return flow {
             emit(SMSApiHandler<Unit>().httpRequest {
                 service.putChangedProfile(body = body)
+            }.sendRequest())
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun createInformationLink(body: CreateInformationLinkRequest): Flow<CreateInformationLinkResponse> {
+        return flow {
+            emit(SMSApiHandler<CreateInformationLinkResponse>().httpRequest {
+                service.createInformationLink(body = body)
+            }.sendRequest())
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun putChangedPortfolioPdf(file: MultipartBody.Part): Flow<Unit> {
+        return flow {
+            emit(SMSApiHandler<Unit>().httpRequest {
+                service.putChangedPortfolioPdf(file = file)
             }.sendRequest())
         }.flowOn(Dispatchers.IO)
     }

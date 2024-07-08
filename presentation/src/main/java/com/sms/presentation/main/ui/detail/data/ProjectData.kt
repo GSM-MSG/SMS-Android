@@ -1,6 +1,6 @@
 package com.sms.presentation.main.ui.detail.data
 
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.msg.sms.domain.model.user.response.ActivityDuration
 
 data class ProjectData(
     val name: String,

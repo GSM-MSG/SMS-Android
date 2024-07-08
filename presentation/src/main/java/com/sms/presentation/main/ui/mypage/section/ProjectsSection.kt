@@ -10,10 +10,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.msg.sms.domain.model.user.response.ActivityDuration
 import com.sms.presentation.main.ui.detail.data.ProjectData
 import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.mypage.component.project.ProjectComponent
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 
 @Composable

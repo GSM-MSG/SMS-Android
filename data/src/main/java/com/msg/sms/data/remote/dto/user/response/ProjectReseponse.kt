@@ -1,7 +1,7 @@
 package com.msg.sms.data.remote.dto.user.response
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.domain.model.user.response.ProjectModel
+import com.msg.sms.domain.model.common.ProjectModel
 
 data class ProjectResponse(
     @SerializedName("name")
@@ -30,7 +30,7 @@ fun ProjectResponse.toProjectModel(): ProjectModel {
         description = this.description,
         links = this.links.map { it.toLinkModel() },
         techStacks = this.techStacks,
-        myActivity = this.myActivity,
-        inProgress = this.inProgress.toProgressModel()
+        task = this.myActivity,
+        activityDuration = this.inProgress.toProgressModel()
     )
 }

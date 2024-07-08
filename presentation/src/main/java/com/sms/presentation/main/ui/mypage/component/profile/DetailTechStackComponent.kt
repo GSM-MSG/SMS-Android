@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.DetailTechStackItem
@@ -23,11 +22,7 @@ fun DetailTechStackComponent(
     Column {
         AddGrayBody1Title(titleText = "세부스택 (5개)") {
             DisplaySearchBar(
-                modifier = Modifier.onFocusChanged {
-                    if (it.isFocused) {
-                        onClickSearchBar()
-                    }
-                },
+                onSearchBarClick = onClickSearchBar
             )
         }
         LazyRow(

@@ -189,7 +189,7 @@ class FillOutInformationActivity : BaseActivity() {
                                 bottomSheetState = bottomSheetState,
                                 majorList = if (majorList.value.data != null) majorList.value.data!!.major else listOf(),
                                 selectedMajor = selectedMajor.value,
-                                onSelectedMajhorChange = {
+                                onSelectedMajorChange = {
                                     selectedMajor.value = it
                                 },
                             )

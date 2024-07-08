@@ -9,10 +9,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sms.presentation.main.ui.detail.data.RelatedLinksData
+import com.msg.sms.domain.model.common.LinkModel
 
 @Composable
-fun ProjectRelatedLinksComponent(modifier: Modifier = Modifier, links: List<RelatedLinksData>) {
+fun ProjectRelatedLinksComponent(modifier: Modifier = Modifier, links: List<LinkModel>) {
     val itemHeight = remember {
         mutableStateOf(0.dp)
     }
@@ -33,9 +33,9 @@ fun ProjectRelatedLinksComponent(modifier: Modifier = Modifier, links: List<Rela
 fun RelatedLinksComponentPre() {
     ProjectRelatedLinksComponent(
         links = listOf(
-            RelatedLinksData("Youtube", "https://dolmc.com"),
-            RelatedLinksData("GitHub", "https://youyu.com"),
-            RelatedLinksData(
+            LinkModel("Youtube", "https://dolmc.com"),
+            LinkModel("GitHub", "https://youyu.com"),
+            LinkModel(
                 "X",
                 "https://asdgasasdfljkasjhdlfalsdhfklhalksdhfklhaskldjfhlkasdhfklahsdfkjgw.com"
             )

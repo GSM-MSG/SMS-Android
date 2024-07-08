@@ -86,4 +86,10 @@ object NetworkModule {
     fun provideUserService(retrofit: Retrofit): UserAPI {
         return retrofit.create(UserAPI::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideTeacherService(retrofit: Retrofit): TeacherAPI{
+        return retrofit.create(TeacherAPI::class.java)
+    }
 }

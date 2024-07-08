@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.detail
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,17 +23,19 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.msg.sms.design.component.profile.ProfileImageComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
-import com.sms.presentation.main.ui.main.data.StudentDetailData
+import com.msg.sms.domain.model.student.response.GetStudentModel
 import com.sms.presentation.main.ui.util.departmentEnumToString
 import com.sms.presentation.main.ui.util.employmentEnumToSting
 import com.sms.presentation.main.ui.util.militaryServiceEnumToString
+import com.sms.presentation.main.viewmodel.StudentListViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun StudentDetailScreen(
-    studentDetailData: StudentDetailData,
+    studentDetailData: GetStudentModel,
     role: String,
     onDismissButtonClick: () -> Unit,
+    viewModel: StudentListViewModel
 ) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -62,6 +65,7 @@ fun StudentDetailScreen(
                 )
                 .align(Alignment.TopCenter)
         ) { modifier ->
+            Log.d("TTTTTTTTTTTTTT", "${studentDetailData.profileImg}")
             Image(
                 painter = rememberAsyncImagePainter(
                     model = studentDetailData.profileImg,
@@ -77,24 +81,27 @@ fun StudentDetailScreen(
             major = studentDetailData.major,
             modifier = Modifier.align(Alignment.TopCenter),
             isNotGuest = role == "ROLE_TEACHER" || role == "ROLE_STUDENT",
-            grade = studentDetailData.grade.toString(),
-            classNumber = studentDetailData.classNum.toString(),
-            schoolNumber = studentDetailData.number.toString(),
-            departments = studentDetailData.department.departmentEnumToString(),
+            grade = studentDetailData.grade,
+            classNumber = studentDetailData.classNum,
+            schoolNumber = studentDetailData.number,
+            departments = studentDetailData.department?.departmentEnumToString() ?: "",
             introduce = studentDetailData.introduce,
             isTeacher = role == "ROLE_TEACHER",
-            certificationData = studentDetailData.certificates,
-            email = studentDetailData.contactEmail,
+            certificationData = studentDetailData.certificates ?: emptyList(),
+            email = studentDetailData.contactEmail ?: "",
             gsmAuthenticationScore = studentDetailData.gsmAuthenticationScore.toString(),
-            foreignLanguage = studentDetailData.languageCertificates,
-            formOfEmployment = studentDetailData.formOfEmployment.employmentEnumToSting(),
-            militaryService = studentDetailData.militaryService.militaryServiceEnumToString(),
-            portfolioLink = studentDetailData.portfolioUrl,
-            region = studentDetailData.regions,
+            foreignLanguage = studentDetailData.languageCertificates ?: emptyList(),
+            formOfEmployment = studentDetailData.formOfEmployment?.employmentEnumToSting() ?: "",
+            militaryService = studentDetailData.militaryService?.militaryServiceEnumToString()
+                ?: "",
+            portfolioLink = studentDetailData.portfolioUrl ?: "",
+            portFolioFileLink = studentDetailData.portfolioFileUrl ?: "",
+            region = studentDetailData.regions ?: emptyList(),
             salary = studentDetailData.salary.toString(),
             scrollState = scrollState,
-            awardData = studentDetailData.awardData,
-            projectList = studentDetailData.projectList
+            awardData = studentDetailData.prize ?: emptyList(),
+            projectList = studentDetailData.projects ?: emptyList(),
+            viewModel = viewModel
         )
         IconButton(
             onClick = {

@@ -6,14 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.msg.sms.design.component.textfield.SmsTextField
+import com.msg.sms.design.component.textfield.SmsOnlyInputTextField
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
 fun ProjectDescriptionComponent(projectDescription: String, onValueChange: (value: String) -> Unit) {
     AddGrayBody1Title(titleText = "프로젝트 설명") {
-        SmsTextField(
-            setText = projectDescription,
+        SmsOnlyInputTextField(
+            text = projectDescription,
             placeHolder = "프젝로트 내용 서술",
             modifier = Modifier
                 .fillMaxWidth()

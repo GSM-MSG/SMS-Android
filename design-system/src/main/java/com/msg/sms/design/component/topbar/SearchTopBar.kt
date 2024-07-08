@@ -35,7 +35,7 @@ fun SearchTopBar(
         }
         Spacer(modifier = Modifier.width(22.dp))
         SearchBar(
-            modifier = modifier.weight(1f),
+            modifier = modifier,
             setText = setText,
             onValueChanged = onValueChanged,
             placeHolder = "찾고 싶은 세부 스택 입력",

@@ -26,13 +26,13 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.icon.TopEndArrowIcon
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.detail.data.RelatedLinksData
+import com.msg.sms.domain.model.common.LinkModel
 
 @Composable
 fun ProjectLinkComponent(
     context: Context = LocalContext.current,
-    linksData: RelatedLinksData,
-    getHeight: (height: Dp) -> Unit
+    linksData: LinkModel,
+    getHeight: (height: Dp) -> Unit,
 ) {
     SMSTheme { colors, typography ->
         Box(
@@ -45,7 +45,7 @@ fun ProjectLinkComponent(
                 .smsClickable {
                     val urlIntent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(linksData.link)
+                        Uri.parse(linksData.url)
                     )
                     context.startActivity(urlIntent)
                 }
@@ -65,7 +65,7 @@ fun ProjectLinkComponent(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = linksData.link,
+                        text = linksData.url,
                         maxLines = 1,
                         style = typography.caption2,
                         fontWeight = FontWeight.Normal,
@@ -84,7 +84,7 @@ fun ProjectLinkComponent(
 @Composable
 private fun LinkComponentPre() {
     ProjectLinkComponent(
-        linksData = RelatedLinksData(name = "Youtube", link = "https://youtube.com"),
+        linksData = LinkModel(name = "Youtube", url = "https://youtube.com"),
         getHeight = {})
 }
 
@@ -92,8 +92,8 @@ private fun LinkComponentPre() {
 @Composable
 private fun LongLinkComponentPre() {
     ProjectLinkComponent(
-        linksData = RelatedLinksData(
+        linksData = LinkModel(
             name = "Youtube",
-            link = "https://youtube.com/lkajsdlfjal;sdlfnaosdjfkasodfjkao;rigjasdg;ljaworgji"
+            url = "https://youtube.com/lkajsdlfjal;sdlfnaosdjfkasodfjkao;rigjasdg;ljaworgji"
         ), getHeight = {})
 }

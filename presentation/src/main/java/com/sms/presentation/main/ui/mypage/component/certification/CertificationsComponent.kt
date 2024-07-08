@@ -9,12 +9,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.chip.SmsChip
-import com.msg.sms.design.component.textfield.SmsTextField
+import com.msg.sms.design.component.textfield.SmsOnlyInputTextField
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 
@@ -25,6 +26,10 @@ fun CertificationsComponent(
     onClickRemoveButton: (index: Int) -> Unit,
     onClickAddButton: () -> Unit,
 ) {
+    LaunchedEffect(key1 = Unit) {
+        if (certifications.isEmpty()) onClickAddButton()
+    }
+
     AddGrayBody1Title(titleText = "자격증") {
         LazyColumn(
             modifier = Modifier
@@ -39,8 +44,8 @@ fun CertificationsComponent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(modifier = Modifier.weight(1f)) {
-                        SmsTextField(
-                            setText = certification,
+                        SmsOnlyInputTextField(
+                            text = certification,
                             modifier = Modifier.fillMaxWidth(),
                             onValueChange = { onValueChange(index, it) },
                             placeHolder = "정보처리 산업기사"

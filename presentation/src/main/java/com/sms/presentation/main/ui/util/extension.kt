@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -17,17 +16,17 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-fun Uri.toMultipartBody(context: Context): MultipartBody.Part? {
-    val file: File? = getFileFromUri(context, this)
-    file?.let {
-        val requestFile: RequestBody =
-            it.asRequestBody("application/octet-stream".toMediaTypeOrNull())
-        val part: MultipartBody.Part =
-            MultipartBody.Part.createFormData("file", it.name, requestFile)
-        Log.d("Multipart", file.name)
-        return part
+suspend fun Uri.toMultipartBody(context: Context): MultipartBody.Part? {
+    val file = if (this.toString().startsWith("http://") || this.toString().startsWith("https://")) {
+        downloadFile(context, this.toString())
+    } else {
+        getFileFromUri(context, this)
     }
-    return null
+
+    return file?.let {
+        val requestFile: RequestBody = it.asRequestBody("application/octet-stream".toMediaTypeOrNull())
+        MultipartBody.Part.createFormData("file", it.name, requestFile)
+    }
 }
 
 fun Bitmap?.toUri(context: Context): Uri? {
@@ -116,4 +115,35 @@ fun String.isEmailRegularExpression(): Boolean {
 fun String.isUrlRegularExpression(): Boolean {
     val urlRegex = Regex("^https?:\\/\\/.*$")
     return matches(urlRegex)
+}
+
+fun String.stringGradeDataToIntGradeData(): Int {
+    return when (this) {
+        "1학년" -> 1
+        "2학년" -> 2
+        "3학년" -> 3
+        else -> 0
+    }
+}
+
+fun String.stringClassDataToIntClassData(): Int {
+    return when (this) {
+        "1반" -> 1
+        "2반" -> 2
+        "3반" -> 3
+        "4반" -> 4
+        else -> 0
+    }
+}
+
+fun String.stringDaysDataToLongDaysData() : Long {
+    return when (this) {
+        "5일" -> 5
+        "10일" -> 10
+        "15일" -> 15
+        "20일" -> 20
+        "25일" -> 25
+        "30일" -> 30
+        else -> 0
+    }
 }

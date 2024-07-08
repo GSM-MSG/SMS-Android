@@ -1,15 +1,21 @@
 package com.sms.presentation.main.ui.login
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.fill_out_information.FillOutInformationActivity
 import com.sms.presentation.main.ui.login.component.LoginScreen
 import com.sms.presentation.main.ui.main.MainActivity
+import com.sms.presentation.main.ui.teacher_registration.TeacherRegistrationActivity
 import com.sms.presentation.main.ui.util.setTransparentStatusBar
 import com.sms.presentation.main.viewmodel.AuthViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -20,8 +26,10 @@ import kotlinx.coroutines.launch
 class LoginActivity : BaseActivity() {
     private val viewModel by viewModels<AuthViewModel>()
     private lateinit var isExist: String
+    private lateinit var role: String
 
     override fun init() {
+        askNotificationPermission()
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 viewModel.accessValidationResponse.value is Event.Loading
@@ -66,7 +74,9 @@ class LoginActivity : BaseActivity() {
                 is Event.Success -> {
                     viewModel.saveTheLoginData(event.data!!)
                     isExist = event.data.isExist.toString()
+                    role = event.data.role
                 }
+
                 else -> {
                     Log.d("login", event.toString())
                 }
@@ -78,8 +88,9 @@ class LoginActivity : BaseActivity() {
         viewModel.saveTokenRequest.observe(this) { event ->
             when (event) {
                 is Event.Success -> {
-                    pageController(isExist.toBoolean())
+                    registrationPageController(isExist.toBoolean(), role)
                 }
+
                 else -> {
                     Log.d("login", event.toString())
                 }
@@ -95,5 +106,34 @@ class LoginActivity : BaseActivity() {
             )
         )
         finish()
+    }
+
+    private fun registrationPageController(isExist: Boolean, role: String) {
+        startActivity(
+            Intent(
+                this,
+                if (isExist) MainActivity::class.java
+                else {
+                    if (role == "ROLE_STUDENT") FillOutInformationActivity::class.java
+                    else TeacherRegistrationActivity::class.java
+                }
+            )
+        )
+    }
+
+    private fun askNotificationPermission() {
+        val requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { _ -> }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
     }
 }

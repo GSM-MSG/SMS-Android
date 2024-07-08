@@ -1,11 +1,25 @@
 package com.sms.presentation.main.ui.main.screen
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,18 +28,9 @@ import com.msg.sms.design.component.SmsDialog
 import com.msg.sms.design.component.button.ListFloatingButton
 import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.CheckedIcon
-import com.msg.sms.domain.model.student.response.GetStudentForAnonymousModel
-import com.msg.sms.domain.model.student.response.GetStudentForStudentModel
-import com.msg.sms.domain.model.student.response.GetStudentForTeacherModel
-import com.msg.sms.domain.model.student.response.StudentModel
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
-import com.sms.presentation.main.ui.detail.data.AwardData
-import com.sms.presentation.main.ui.detail.data.ProjectData
-import com.sms.presentation.main.ui.detail.data.RelatedLinksData
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
 import com.sms.presentation.main.ui.main.component.StudentListComponent
-import com.sms.presentation.main.ui.main.data.StudentDetailData
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
 import com.sms.presentation.main.viewmodel.MyProfileViewModel
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -36,7 +41,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
-    myProfileVIewModel: MyProfileViewModel,
+    myProfileViewModel: MyProfileViewModel,
     viewModel: StudentListViewModel,
     lifecycleScope: CoroutineScope,
     role: String,
@@ -49,14 +54,14 @@ fun MainScreen(
     val progressState = remember {
         mutableStateOf(false)
     }
-    val listTotalSize = remember {
-        mutableStateOf(0)
-    }
     val isScrolled = remember {
         mutableStateOf(false)
     }
     val bottomSheetState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
+        rememberModalBottomSheetState(
+            initialValue = ModalBottomSheetValue.Hidden,
+            skipHalfExpanded = true
+        )
 
     val dialogState = remember {
         mutableStateOf(false)
@@ -69,12 +74,6 @@ fun MainScreen(
     }
     val dialogOnClick = remember {
         mutableStateOf({})
-    }
-    val studentDetailData = remember {
-        mutableStateOf(StudentDetailData())
-    }
-    val profileImageUrl = remember {
-        mutableStateOf("")
     }
     val snackBarVisibility = remember {
         mutableStateOf(false)
@@ -95,38 +94,30 @@ fun MainScreen(
         }
     }
 
-    val putProfileChange = myProfileVIewModel.putChangedProfileResponse.collectAsState()
-    if (putProfileChange.value is Event.Success) {
-        LaunchedEffect(putProfileChange.value) {
+    val putProfileChange = myProfileViewModel.putChangedProfileResponse.collectAsState()
+    val userDetail = viewModel.getStudentDetailResponse.collectAsState()
+    val profileImageUrl = viewModel.getStudentProfileImageResponse.collectAsState()
+
+    LaunchedEffect(putProfileChange.value) {
+        if (putProfileChange.value is Event.Success) {
             scope.launch {
                 snackBarVisibility.value = true
                 delay(3000)
                 snackBarVisibility.value = false
-                myProfileVIewModel.changeProfileState()
+                myProfileViewModel.changeProfileState()
             }
         }
     }
 
-    LaunchedEffect("GetStudentList") {
-        getStudentList(
-            viewModel = viewModel,
-            progressState = { progressState.value = it },
-            onSuccess = { list, size ->
-                viewModel.addStudentList(list)
-                listTotalSize.value = size
-            }
-        )
+    LaunchedEffect("observeGetStudentListResponse") {
+        observeGetStudentListResponse(viewModel) {
+            progressState.value = it
+        }
     }
 
     LaunchedEffect("GetProfileImage") {
         if (role == "ROLE_TEACHER" || role == "ROLE_STUDENT") {
             viewModel.getProfileImageUrl()
-            getUserProfileImageUrl(
-                viewModel = viewModel,
-                onSuccess = {
-                    profileImageUrl.value = it
-                }
-            )
         }
     }
 
@@ -138,7 +129,10 @@ fun MainScreen(
 
     LaunchedEffect(lastVisibleItem.value) {
         if (lastVisibleItem.value == viewModel.studentList.lastIndex && viewModel.getStudentListResponse.value.data?.last != true) {
-            viewModel.getStudentListRequest(viewModel.getStudentListResponse.value.data!!.page + 1, 20)
+            viewModel.getStudentListRequest(
+                viewModel.getStudentListResponse.value.data!!.page + 1,
+                20
+            )
         }
     }
 
@@ -146,13 +140,13 @@ fun MainScreen(
         SmsDialog(
             title = dialogTitle.value,
             msg = dialogMsg.value,
-            outLineButtonText = "확인",
-            importantButtonText = "취소",
+            outLineButtonText = "취소",
+            importantButtonText = "확인",
             outlineButtonOnClick = {
-                dialogOnClick.value()
                 dialogState.value = false
             },
             importantButtonOnClick = {
+                dialogOnClick.value()
                 dialogState.value = false
             }
         )
@@ -161,13 +155,14 @@ fun MainScreen(
     ModalBottomSheetLayout(
         sheetContent = {
             StudentDetailScreen(
-                studentDetailData = studentDetailData.value,
+                studentDetailData = userDetail.value,
                 role = role,
                 onDismissButtonClick = {
                     scope.launch {
                         bottomSheetState.hide()
                     }
-                }
+                },
+                viewModel = viewModel
             )
         },
         sheetState = bottomSheetState,
@@ -180,7 +175,8 @@ fun MainScreen(
             ) {
                 Box {
                     MainScreenTopBar(
-                        profileImageUrl = profileImageUrl.value,
+                        profileImageUrl = if (profileImageUrl.value is Event.Success) profileImageUrl.value.data?.profileImgUrl
+                            ?: "" else "",
                         isScolled = isScrolled.value,
                         filterButtonOnClick = onFilterClick,
                         profileButtonOnClick = {
@@ -208,168 +204,30 @@ fun MainScreen(
                         listState = listState,
                         progressState = progressState.value,
                         studentList = viewModel.studentList,
-                        listTotalSize = listTotalSize.value
+                        listTotalSize = viewModel.studentList.size
                     ) {
                         lifecycleScope.launch {
                             when (role) {
                                 "ROLE_TEACHER" -> {
+                                    viewModel.saveStudentId(it)
                                     viewModel.getStudentDetailForTeacher(it)
-                                    getStudentDetailForTeacher(
-                                        viewModel,
-                                        { state, title, msg ->
-                                            dialogState.value = state
-                                            dialogTitle.value = title
-                                            dialogMsg.value = msg
-                                        },
-                                        {
-                                            studentDetailData.value = StudentDetailData(
-                                                name = it.name,
-                                                introduce = it.introduce,
-                                                portfolioUrl = it.portfolioUrl!!,
-                                                grade = it.grade,
-                                                classNum = it.classNum,
-                                                number = it.number,
-                                                department = it.department,
-                                                major = it.major,
-                                                profileImg = it.profileImg,
-                                                contactEmail = it.contactEmail,
-                                                gsmAuthenticationScore = it.gsmAuthenticationScore,
-                                                formOfEmployment = it.formOfEmployment,
-                                                regions = it.regions,
-                                                militaryService = it.militaryService,
-                                                salary = it.salary,
-                                                languageCertificates = it.languageCertificates,
-                                                certificates = it.certificates,
-                                                techStacks = it.techStacks,
-                                                projectList = it.projects.map { model ->
-                                                    ProjectData(
-                                                        name = model.name,
-                                                        activityDuration = ActivityDuration(
-                                                            model.inProgress.start,
-                                                            model.inProgress.end
-                                                        ),
-                                                        description = model.description,
-                                                        icon = model.icon,
-                                                        keyTask = model.myActivity,
-                                                        projectImage = model.previewImages,
-                                                        relatedLinks = model.links.map { link ->
-                                                            RelatedLinksData(link.name, link.url)
-                                                        },
-                                                        techStacks = model.techStacks
-                                                    )
-                                                },
-                                                awardData = it.prizes.map { model ->
-                                                    AwardData(
-                                                        title = model.name,
-                                                        organization = model.type,
-                                                        date = model.date
-                                                    )
-                                                }
-                                            )
-                                            scope.launch {
-                                                bottomSheetState.show()
-                                            }
-                                        }
-                                    )
+                                    scope.launch {
+                                        bottomSheetState.show()
+                                    }
                                 }
 
                                 "ROLE_STUDENT" -> {
                                     viewModel.getStudentDetailForStudent(it)
-                                    getStudentDetailForStudent(
-                                        viewModel,
-                                        { state, title, msg ->
-                                            dialogState.value = state
-                                            dialogTitle.value = title
-                                            dialogMsg.value = msg
-                                        },
-                                        {
-                                            studentDetailData.value = StudentDetailData(
-                                                name = it.name,
-                                                introduce = it.introduce,
-                                                grade = it.grade,
-                                                classNum = it.classNum,
-                                                number = it.number,
-                                                department = it.department,
-                                                major = it.major,
-                                                profileImg = it.profileImg,
-                                                techStacks = it.techStack,
-                                                projectList = it.projects.map { model ->
-                                                    ProjectData(
-                                                        name = model.name,
-                                                        activityDuration = ActivityDuration(
-                                                            model.inProgress.start,
-                                                            model.inProgress.end
-                                                        ),
-                                                        description = model.description,
-                                                        icon = model.icon,
-                                                        keyTask = model.myActivity,
-                                                        projectImage = model.previewImages,
-                                                        relatedLinks = model.links.map { link ->
-                                                            RelatedLinksData(link.name, link.url)
-                                                        },
-                                                        techStacks = model.techStacks
-                                                    )
-                                                },
-                                                awardData = it.prizes.map { model ->
-                                                    AwardData(
-                                                        title = model.name,
-                                                        organization = model.type,
-                                                        date = model.date
-                                                    )
-                                                }
-                                            )
-                                            scope.launch {
-                                                bottomSheetState.show()
-                                            }
-                                        }
-                                    )
+                                    scope.launch {
+                                        bottomSheetState.show()
+                                    }
                                 }
 
                                 else -> {
                                     viewModel.getStudentDetailForAnonymous(it)
-                                    getStudentDetailForAnonymous(
-                                        viewModel,
-                                        { state, title, msg ->
-                                            dialogState.value = state
-                                            dialogTitle.value = title
-                                            dialogMsg.value = msg
-                                        },
-                                        {
-                                            studentDetailData.value = StudentDetailData(
-                                                name = it.name,
-                                                introduce = it.introduce,
-                                                major = it.major,
-                                                techStacks = it.techStack,
-                                                awardData = it.awardData.map { prize ->
-                                                    AwardData(
-                                                        title = prize.name,
-                                                        date = prize.date,
-                                                        organization = prize.type
-                                                    )
-                                                },
-                                                projectList = it.projectList.map { model ->
-                                                    ProjectData(
-                                                        name = model.name,
-                                                        activityDuration = ActivityDuration(
-                                                            model.inProgress.start,
-                                                            model.inProgress.end
-                                                        ),
-                                                        description = model.description,
-                                                        icon = model.icon,
-                                                        keyTask = model.myActivity,
-                                                        projectImage = model.previewImages,
-                                                        relatedLinks = model.links.map { link ->
-                                                            RelatedLinksData(link.name, link.url)
-                                                        },
-                                                        techStacks = model.techStacks
-                                                    )
-                                                }
-                                            )
-                                            scope.launch {
-                                                bottomSheetState.show()
-                                            }
-                                        }
-                                    )
+                                    scope.launch {
+                                        bottomSheetState.show()
+                                    }
                                 }
                             }
                         }
@@ -398,16 +256,14 @@ fun MainScreen(
     }
 }
 
-suspend fun getStudentList(
+suspend fun observeGetStudentListResponse(
     viewModel: StudentListViewModel,
     progressState: (Boolean) -> Unit,
-    onSuccess: (studentList: List<StudentModel>, totalListSize: Int) -> Unit,
 ) {
     viewModel.getStudentListResponse.collect { response ->
         when (response) {
             is Event.Success -> {
                 progressState(false)
-                onSuccess(response.data!!.content, response.data.totalSize)
             }
 
             is Event.Loading -> {
@@ -417,78 +273,6 @@ suspend fun getStudentList(
             else -> {
                 progressState(false)
             }
-        }
-    }
-}
-
-suspend fun getStudentDetailForTeacher(
-    viewModel: StudentListViewModel,
-    dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForTeacherModel) -> Unit,
-) {
-    viewModel.getStudentDetailForTeacherResponse.collect { response ->
-        when (response) {
-            is Event.Success -> {
-                onSuccess(response.data!!)
-            }
-
-            is Event.Loading -> {}
-            else -> {
-                dialog(true, "에러", "알 수 없는 에러 발생")
-            }
-        }
-    }
-}
-
-suspend fun getStudentDetailForStudent(
-    viewModel: StudentListViewModel,
-    dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForStudentModel) -> Unit,
-) {
-    viewModel.getStudentDetailForStudentResponse.collect { response ->
-        when (response) {
-            is Event.Success -> {
-                onSuccess(response.data!!)
-            }
-
-            is Event.Loading -> {}
-            else -> {
-                dialog(true, "에러", "알 수 없는 에러 발생")
-            }
-        }
-    }
-}
-
-suspend fun getStudentDetailForAnonymous(
-    viewModel: StudentListViewModel,
-    dialog: (dialogState: Boolean, dialogTitle: String, dialogMsg: String) -> Unit,
-    onSuccess: (GetStudentForAnonymousModel) -> Unit,
-) {
-    viewModel.getStudentDetailForAnonymousResponse.collect { response ->
-        when (response) {
-            is Event.Success -> {
-                onSuccess(response.data!!)
-            }
-
-            is Event.Loading -> {}
-            else -> {
-                dialog(true, "에러", "알 수 없는 에러 발생")
-            }
-        }
-    }
-}
-
-suspend fun getUserProfileImageUrl(
-    viewModel: StudentListViewModel,
-    onSuccess: (profileImageUrl: String) -> Unit,
-) {
-    viewModel.getStudentProfileImageResponse.collect { response ->
-        when (response) {
-            is Event.Success -> {
-                onSuccess(response.data!!.profileImgUrl)
-            }
-
-            else -> {}
         }
     }
 }

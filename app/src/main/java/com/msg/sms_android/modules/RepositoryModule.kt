@@ -40,4 +40,9 @@ abstract class RepositoryModule {
     abstract fun provideUserRepository(
         userRepositoryImpl: UserRepositoryImpl
     ): UserRepository
+
+    @Binds
+    abstract fun provideTeacherRepository(
+        teacherRepositoryImpl: TeacherRepositoryImpl
+    ): TeacherRepository
 }

@@ -1,10 +1,11 @@
 package com.sms.presentation.main.ui.mypage.component.profile
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.msg.sms.design.component.textfield.SmsCustomTextField
+import com.msg.sms.design.component.textfield.SmsBasicTextField
 import com.msg.sms.design.icon.OpenButtonIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 
@@ -16,13 +17,16 @@ fun MajorComponent(
     onValueChange: (value: String) -> Unit,
 ) {
     AddGrayBody1Title(titleText = "분야") {
-        SmsCustomTextField(
+        SmsBasicTextField(
+            trailingIcon = {
+                IconButton(onClick = onClick) {
+                    OpenButtonIcon()
+                }
+            },
             placeHolder = "FrondEnd",
             modifier = Modifier.fillMaxWidth(),
-            endIcon = { OpenButtonIcon() },
             readOnly = !isSelfTyping,
-            clickAction = onClick,
-            setChangeText = majorValue,
+            text = majorValue,
             onValueChange = onValueChange
         )
     }

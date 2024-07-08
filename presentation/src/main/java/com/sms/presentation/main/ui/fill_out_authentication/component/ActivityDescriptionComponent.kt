@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.msg.sms.design.component.textfield.SmsTextField
+import com.msg.sms.design.component.textfield.SmsOnlyInputTextField
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @Composable
@@ -14,9 +14,9 @@ fun ActivityDescriptionComponent(
     onValueChange: (value: String) -> Unit
 ) {
     AddGrayBody1Title(titleText = "활동 설명") {
-        SmsTextField(
+        SmsOnlyInputTextField(
             modifier = modifier.fillMaxWidth(),
-            setText = activityDescriptionValue,
+            text = activityDescriptionValue,
             placeHolder = "활동 설명 입력",
             onValueChange = onValueChange
         ) {

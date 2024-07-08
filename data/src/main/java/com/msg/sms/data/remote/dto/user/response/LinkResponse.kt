@@ -1,7 +1,7 @@
 package com.msg.sms.data.remote.dto.user.response
 
 import com.google.gson.annotations.SerializedName
-import com.msg.sms.domain.model.user.response.LinkModel
+import com.msg.sms.domain.model.common.LinkModel
 
 data class LinkResponse(
     @SerializedName("name")

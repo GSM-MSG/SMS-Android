@@ -1,16 +1,20 @@
 package com.sms.presentation.main.ui.detail.project
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sms.presentation.main.ui.detail.data.ProjectData
-import com.sms.presentation.main.ui.detail.data.RelatedLinksData
-import com.sms.presentation.main.ui.mypage.state.ActivityDuration
+import com.msg.sms.domain.model.common.LinkModel
+import com.msg.sms.domain.model.common.ProjectModel
+import com.msg.sms.domain.model.user.response.ActivityDuration
 
 @Composable
-fun ProjectComponent(data: ProjectData) {
+fun ProjectComponent(data: ProjectModel) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(24.dp)
@@ -21,11 +25,11 @@ fun ProjectComponent(data: ProjectData) {
                 projectIconUrl = data.icon,
                 projectDate = data.activityDuration
             )
-            if (data.projectImage.isNotEmpty()) {
+            if (data.previewImages.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 ProjectPreviewComponent(
                     projectName = data.name,
-                    projectPreviewUrlList = data.projectImage
+                    projectPreviewUrlList = data.previewImages
                 )
             }
         }
@@ -37,14 +41,14 @@ fun ProjectComponent(data: ProjectData) {
                 description = data.description
             )
         }
-        if (data.keyTask.isNotEmpty()) {
+        if (data.task.isNotEmpty()) {
             ProjectKeyTaskComponent(
-                keyTask = data.keyTask
+                keyTask = data.task
             )
         }
-        if (data.relatedLinks.isNotEmpty()) {
+        if (data.links.isNotEmpty()) {
             ProjectRelatedLinksComponent(
-                links = data.relatedLinks
+                links = data.links
             )
         }
     }
@@ -54,10 +58,10 @@ fun ProjectComponent(data: ProjectData) {
 @Composable
 private fun ProjectComponentPre() {
     ProjectComponent(
-        data = ProjectData(
+        data = ProjectModel(
             name = "SMS",
             activityDuration = ActivityDuration(start = "2023. 03", end = null),
-            projectImage = listOf("https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"),
+            previewImages = listOf("https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4"),
             icon = "https://avatars.githubusercontent.com/u/82383983?s=400&u=776e1d000088224cbabf4dec2bdea03071aaaef2&v=4",
             techStacks = listOf(
                 "Github",
@@ -69,11 +73,11 @@ private fun ProjectComponentPre() {
                 "Kotlin",
                 "Android Studio"
             ),
-            keyTask = "모이자 ㅋㅋ",
-            relatedLinks = listOf(
-                RelatedLinksData("Youtube", "https://dolmc.com"),
-                RelatedLinksData("GitHujb", "https://youyu.com"),
-                RelatedLinksData("X", "https://asdgasgw.com")
+            task = "모이자 ㅋㅋ",
+            links = listOf(
+                LinkModel("Youtube", "https://dolmc.com"),
+                LinkModel("GitHujb", "https://youyu.com"),
+                LinkModel("X", "https://asdgasgw.com")
             ),
             description = ""
         )

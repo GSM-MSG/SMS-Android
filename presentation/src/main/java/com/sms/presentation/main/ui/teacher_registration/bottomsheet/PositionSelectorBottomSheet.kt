@@ -6,7 +6,6 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import com.msg.sms.design.component.selector.MajorSelector
-import com.sms.presentation.main.ui.teacher_registration.state.Position
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -14,15 +13,15 @@ import kotlinx.coroutines.launch
 fun PositionSelectorBottomSheet(
     bottomSheetState: ModalBottomSheetState,
     selectedPosition: String,
-    positionList: List<Position>,
+    positionList: List<String>,
     onSelectedPositionChange: (value: String) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     LazyColumn {
         items(positionList.size){
-            MajorSelector(major = positionList[it].text, selected = selectedPosition == positionList[it].name) {
-                onSelectedPositionChange(positionList[it].name)
+            MajorSelector(major = positionList[it], selected = selectedPosition == positionList[it]) {
+                onSelectedPositionChange(positionList[it])
                 coroutineScope.launch {
                     bottomSheetState.hide()
                 }

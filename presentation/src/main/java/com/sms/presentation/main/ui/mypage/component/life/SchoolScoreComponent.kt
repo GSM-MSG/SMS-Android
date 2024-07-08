@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.msg.sms.design.component.textfield.SmsTextField
+import com.msg.sms.design.component.textfield.SmsOnlyInputTextField
 import com.msg.sms.design.util.AddGrayBody1Title
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -18,9 +18,9 @@ import com.msg.sms.design.util.AddGrayBody1Title
 fun SchoolScoreComponent(score: String, onValueChange: (value: String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
     AddGrayBody1Title(titleText = "인증제 점수") {
-        SmsTextField(
+        SmsOnlyInputTextField(
             modifier = Modifier.fillMaxWidth(),
-            setText = score,
+            text = score,
             placeHolder = "몇 점이고! 인증제 점수말이다.",
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.NumberPassword,
