@@ -390,3 +390,25 @@ fun FileIcon(
         contentDescription = "파일 아이콘"
     )
 }
+
+@Composable
+fun MyProfileIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_my_profile),
+        contentDescription = "파일 아이콘"
+    )
+}
+
+@Composable
+fun BriefcaseIcon(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        modifier = modifier,
+        painter = painterResource(id = R.drawable.ic_briefcases),
+        contentDescription = "파일 아이콘"
+    )
+}
