@@ -32,11 +32,6 @@
             android:exported="false"
             android:label="TeacherRegistrationActivity"/>
 
-        <activity
-            android:name=".main.ui.authentication.AuthenticationActivity"
-            android:exported="true" >
-        </activity>
-
     </application>
 
 </manifest>
