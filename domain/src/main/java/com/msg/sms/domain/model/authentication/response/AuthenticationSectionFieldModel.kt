@@ -5,5 +5,5 @@ data class AuthenticationSectionFieldModel(
     val fieldType: AuthenticationFieldType,
     val scoreDescription : String?,
     val values: List<AuthenticationSectionFieldValuesModel>?,
-    val example: String,
+    val placeholder: String,
 )

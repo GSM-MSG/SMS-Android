@@ -3,17 +3,15 @@ package com.msg.sms.data.remote.dto.athentication.response
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionModel
 
 data class AuthenticationSectionResponse(
-    val section: String,
+    val sectionName: String,
     val sectionId: String,
     val maxCount: Int,
-    val fields: List<AuthenticationSectionField>,
+    val groups: List<AuthenticationSectionGroupsResponse>,
 ) {
-
     fun toAuthenticationSectionModel() = AuthenticationSectionModel(
-        section = this.section,
+        sectionName = this.sectionName,
         maxCount = this.maxCount,
-        fields = this.fields.map { it.toAuthenticationSectionFieldModel() },
+        groups = this.groups.map { it.toAuthenticationSectionGroupModel() },
         sectionId = this.sectionId
     )
-
 }

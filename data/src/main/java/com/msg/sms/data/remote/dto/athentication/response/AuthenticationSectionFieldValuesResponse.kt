@@ -2,7 +2,7 @@ package com.msg.sms.data.remote.dto.athentication.response
 
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldValuesModel
 
-data class AuthenticationSectionFieldValues(
+data class AuthenticationSectionFieldValuesResponse(
     val selectId: String,
     val value: String,
 ) {

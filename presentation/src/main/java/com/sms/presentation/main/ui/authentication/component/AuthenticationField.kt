@@ -33,7 +33,7 @@ fun AuthenticationField(
     modifier: Modifier = Modifier,
     fieldType: AuthenticationFieldType,
     values: List<AuthenticationSectionFieldValuesModel>?,
-    example: String,
+    placeHolder: String,
     onUpload: () -> Unit,
     scoreDescription: String?,
     onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String,
@@ -64,7 +64,7 @@ fun AuthenticationField(
                 },
                 placeholder = {
                     Text(
-                        text = example,
+                        text = placeHolder,
                         style = typography.body1
                     )
                 },
