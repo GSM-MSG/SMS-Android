@@ -66,7 +66,7 @@ fun TopNavigation(
 @Composable
 fun TopNavigationPre() {
     TopNavigation(
-        text = "정보입력",
+        text = "정보 입력",
         leftIcon = { BackButtonIcon() },
         onClickRightButton = { },
         rightIcon = null
