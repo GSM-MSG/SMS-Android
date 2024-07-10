@@ -5,16 +5,14 @@ import com.msg.sms.data.remote.dto.athentication.response.AuthenticationFormResp
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Path
 
 interface AuthenticationAPI {
 
-    @GET("authentication/form/{uuid}")
-    suspend fun fetchAuthenticationForm(@Path("uuid") uuid: String): AuthenticationFormResponse
+    @GET("authentication/form")
+    suspend fun fetchAuthenticationForm(): AuthenticationFormResponse
 
-    @POST("authentication/submit/{uuid}")
+    @POST("authentication/submit")
     suspend fun submitAuthenticationForm(
-        @Path("uuid") uuid: String,
         @Body formData: SubmitAuthenticationFormRequest,
     )
 }
