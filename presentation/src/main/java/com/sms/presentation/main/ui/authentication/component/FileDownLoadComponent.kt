@@ -3,6 +3,7 @@ package com.sms.presentation.main.ui.authentication.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
@@ -23,7 +24,7 @@ fun FileDownLoadComponent(
 ) {
     SMSTheme { colors, typography ->
         LazyColumn(
-            modifier = modifier,
+            modifier = modifier.heightIn(max = 10000.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {

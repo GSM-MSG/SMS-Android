@@ -43,15 +43,13 @@ class AuthenticationViewModel @Inject constructor(
         }.onSuccess {
             it.catch { remoteError ->
                 _fetchAuthenticationStatus.value = remoteError.errorHandling()
-                Log.d("TTTTTTTTTTE", remoteError.toString())
             }.collect {
                 _authenticationForm.value = it
+                Log.d("TTTTTTTTTTTTTTT", it.toString())
                 _fetchAuthenticationStatus.value = Event.Success(Unit)
-                Log.d("TTTTTTTTTT", it.toString())
             }
         }.onFailure {
             _fetchAuthenticationStatus.value = it.errorHandling()
-            Log.d("TTTTTTTTTTEE", it.toString())
         }
     }
 

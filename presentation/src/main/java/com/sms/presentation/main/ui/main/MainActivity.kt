@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.msg.sms.design.component.SmsDialog
+import com.sms.presentation.main.ui.authentication.AuthenticationRoute
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.filter.screen.FilterScreen
@@ -34,7 +35,8 @@ private enum class MainPage(val value: String) {
     Main("Main"),
     Filter("Filter"),
     Search("Search"),
-    MyPage("MyPage")
+    MyPage("MyPage"),
+    AuthenticationPage("AuthenticationPage")
 }
 
 private enum class SelectedTechStack {
@@ -94,29 +96,29 @@ class MainActivity : BaseActivity() {
                         }
                         NavHost(
                             navController = navController,
-                            startDestination = "Main"
+                            startDestination = MainPage.Main.value
                         ) {
                             composable(MainPage.Main.value) {
                                 MainScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     myProfileViewModel = viewModel(LocalContext.current as MainActivity),
-                                    lifecycleScope = lifecycleScope,
                                     role = response.data!!,
                                     onFilterClick = { navController.navigate(MainPage.Filter.value) },
-                                    onProfileClick = { role ->
-                                        if (role == "ROLE_STUDENT") {
-                                            myProfileViewModel.getMyProfile()
-                                            navController.navigate(MainPage.MyPage.value)
-                                        } else {
-                                            authViewModel.deleteToken()
-                                            this@MainActivity.startActivity(
-                                                Intent(
-                                                    this@MainActivity,
-                                                    LoginActivity::class.java
-                                                )
+                                    onDeleteToken = {
+                                        authViewModel.deleteToken()
+                                        this@MainActivity.startActivity(
+                                            Intent(
+                                                this@MainActivity,
+                                                LoginActivity::class.java
                                             )
-                                            this@MainActivity.finish()
-                                        }
+                                        )
+                                        this@MainActivity.finish()
+                                    },
+                                    onAuthenticationOpen = {
+                                        navController.navigate(MainPage.AuthenticationPage.value)
+                                    },
+                                    onProfileOpen = {
+                                        navController.navigate(MainPage.MyPage.value)
                                     }
                                 ) {
                                     controlTheStackWhenBackPressed()
@@ -413,6 +415,9 @@ class MainActivity : BaseActivity() {
                                         )
                                     }
                                 )
+                            }
+                            composable(MainPage.AuthenticationPage.name) {
+                                AuthenticationRoute(onBackPressed = { navController.popBackStack() })
                             }
                         }
                     }

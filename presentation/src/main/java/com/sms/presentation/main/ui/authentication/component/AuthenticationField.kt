@@ -114,7 +114,7 @@ fun AuthenticationField(
                     }
                 },
             )
-            if (scoreDescription != null) {
+            if (! scoreDescription.isNullOrBlank()) {
                 Text(
                     modifier = Modifier.padding(top = 8.dp),
                     text = scoreDescription,

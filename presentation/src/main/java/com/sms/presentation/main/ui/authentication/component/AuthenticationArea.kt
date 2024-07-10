@@ -20,6 +20,7 @@ import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.authentication.request.SubmitAuthenticationFormModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationFieldType
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldModel
+import com.msg.sms.domain.model.authentication.response.AuthenticationSectionGroupModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionModel
 
 @Composable
@@ -30,7 +31,7 @@ fun AuthenticationArea(
     onValueChanged: (List<SubmitAuthenticationFormModel>) -> Unit,
 ) {
     val isExpanded = rememberSaveable {
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
     val areaData = rememberSaveable {
         mutableListOf<SubmitAuthenticationFormModel>()
@@ -58,9 +59,9 @@ fun AuthenticationArea(
                 itemsIndexed(items) { index, it ->
                     AuthenticationSection(
                         modifier = Modifier.padding(start = 20.dp, top = 12.dp, end = 20.dp),
-                        section = it.section,
+                        sectionName = it.sectionName,
                         maxCount = it.maxCount,
-                        fields = it.fields,
+                        groups = it.groups,
                         onValueChanged = { sectionDataList ->
                             areaData[index] = SubmitAuthenticationFormModel(
                                 sectionId = it.sectionId,
@@ -85,16 +86,22 @@ private fun AuthenticationAreaPreview() {
         title = "전공 영역",
         items = listOf(
             AuthenticationSectionModel(
-                section = "aa",
+                sectionName = "aa",
                 maxCount = 10,
                 sectionId = "",
-                fields = listOf(
-                    AuthenticationSectionFieldModel(
-                        fieldId = "",
-                        fieldType = AuthenticationFieldType.TEXT,
-                        values = null,
-                        example = "",
-                        scoreDescription = ""
+                groups = listOf(
+                    AuthenticationSectionGroupModel(
+                        groupId = "",
+                        maxScore = 50.0,
+                        fields = listOf(
+                            AuthenticationSectionFieldModel(
+                                fieldId = "",
+                                fieldType = AuthenticationFieldType.BOOLEAN,
+                                scoreDescription = "33",
+                                values = null,
+                                placeholder = "placeHolder"
+                            )
+                        )
                     )
                 ),
             )

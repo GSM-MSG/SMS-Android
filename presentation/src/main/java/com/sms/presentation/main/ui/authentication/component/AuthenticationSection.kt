@@ -7,29 +7,28 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.chip.SmsChip
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 import com.msg.sms.domain.model.authentication.request.AuthenticationObject
-import com.msg.sms.domain.model.authentication.response.AuthenticationFieldType
-import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldValuesModel
+import com.msg.sms.domain.model.authentication.response.AuthenticationSectionGroupModel
 
 @Composable
 fun AuthenticationSection(
     modifier: Modifier = Modifier,
-    section: String,
+    sectionName: String,
     maxCount: Int,
     currentFieldCount: Int = 1,
-    fields: List<AuthenticationSectionFieldModel>,
+    groups: List<AuthenticationSectionGroupModel>,
     onUpload: () -> Unit = {},
     onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String = { _ -> "" },
     addField: (index: Int) -> Unit = {},
@@ -39,31 +38,38 @@ fun AuthenticationSection(
     val sectionItem = rememberSaveable {
         mutableListOf<AuthenticationObject>()
     }
-    AddGrayBody1Title(modifier = modifier, titleText = section) {
+
+    AddGrayBody1Title(modifier = modifier, titleText = sectionName) {
+        // section
         LazyColumn(
             modifier = Modifier.heightIn(max = 5000.dp)
         ) {
             items(currentFieldCount) {
+                // group
                 LazyColumn(modifier = Modifier.heightIn(max = 1000.dp)) {
-                    itemsIndexed(fields) { index, item ->
-                        AuthenticationField(
-                            modifier = Modifier.padding(bottom = if (index != fields.lastIndex) 8.dp else 0.dp),
-                            fieldType = item.fieldType,
-                            values = item.values,
-                            example = item.example,
-                            scoreDescription = item.scoreDescription,
-                            onUpload = onUpload,
-                            onSelect = onSelect,
-                            enteredValue = { enteredValue, selectedId ->
-                                sectionItem[index] = AuthenticationObject(
-                                    fieldId = item.fieldId,
-                                    value = enteredValue,
-                                    selectId = selectedId,
-                                    fieldType = item.fieldType
+                    items(groups) { group ->
+                        LazyColumn(modifier = Modifier.heightIn(max = 1000.dp)) {
+                            itemsIndexed(group.fields) { index, item ->
+                                AuthenticationField(
+                                    modifier = Modifier.padding(bottom = if (index != group.fields.lastIndex) 8.dp else 0.dp),
+                                    fieldType = item.fieldType,
+                                    values = item.values,
+                                    placeHolder = item.placeholder,
+                                    scoreDescription = item.scoreDescription,
+                                    onUpload = onUpload,
+                                    onSelect = onSelect,
+                                    enteredValue = { enteredValue, selectedId ->
+                                        sectionItem[index] = AuthenticationObject(
+                                            fieldId = item.fieldId,
+                                            value = enteredValue,
+                                            selectId = selectedId,
+                                            fieldType = item.fieldType
+                                        )
+                                        onValueChanged(sectionItem)
+                                    }
                                 )
-                                onValueChanged(sectionItem)
                             }
-                        )
+                        }
                     }
                     if (maxCount > 1) {
                         item {
@@ -83,32 +89,4 @@ fun AuthenticationSection(
             }
         }
     }
-}
-
-
-@Preview
-@Composable
-private fun AuthenticationSectionPreview() {
-    AuthenticationSection(
-        section = "활동 제목",
-        maxCount = 3,
-        fields = listOf(
-            AuthenticationSectionFieldModel(
-                fieldId = "",
-                fieldType = AuthenticationFieldType.TEXT,
-                values = null,
-                example = "TEXT",
-                scoreDescription = ""
-
-            ),
-            AuthenticationSectionFieldModel(
-                fieldId = "",
-                fieldType = AuthenticationFieldType.FILE,
-                values = null,
-                example = "TEXT",
-                scoreDescription = ""
-            )
-        ),
-        onValueChanged = {},
-    )
 }
