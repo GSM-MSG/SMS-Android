@@ -11,14 +11,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.chip.SmsChip
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.util.AddGrayBody1Title
-import com.msg.sms.domain.model.authentication.request.AuthenticationObject
+import com.msg.sms.domain.model.authentication.request.AtomicAuthenticationFieldModel
+import com.msg.sms.domain.model.authentication.request.AuthenticationFieldModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldValuesModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionGroupModel
 
@@ -33,12 +33,8 @@ fun AuthenticationSection(
     onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String = { _ -> "" },
     addField: (index: Int) -> Unit = {},
     removeField: (index: Int) -> Unit = {},
-    onValueChanged: (List<AuthenticationObject>) -> Unit,
+    onValueChanged: (uuid: String, data: AtomicAuthenticationFieldModel) -> Unit,
 ) {
-    val sectionItem = rememberSaveable {
-        mutableListOf<AuthenticationObject>()
-    }
-
     AddGrayBody1Title(modifier = modifier, titleText = sectionName) {
         // section
         LazyColumn(
@@ -59,13 +55,16 @@ fun AuthenticationSection(
                                     onUpload = onUpload,
                                     onSelect = onSelect,
                                     enteredValue = { enteredValue, selectedId ->
-                                        sectionItem[index] = AuthenticationObject(
-                                            fieldId = item.fieldId,
-                                            value = enteredValue,
-                                            selectId = selectedId,
-                                            fieldType = item.fieldType
+                                        onValueChanged(
+                                            item.uuid,
+                                            AtomicAuthenticationFieldModel(
+                                                fieldId = item.fieldId,
+                                                value = enteredValue,
+                                                selectId = selectedId,
+                                                fieldType = item.fieldType,
+                                                groupId = group.groupId
+                                            )
                                         )
-                                        onValueChanged(sectionItem)
                                     }
                                 )
                             }

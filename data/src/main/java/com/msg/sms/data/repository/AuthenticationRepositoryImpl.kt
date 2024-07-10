@@ -2,6 +2,7 @@ package com.msg.sms.data.repository
 
 import com.msg.sms.data.remote.datasource.authentication.RemoteAuthenticationDataSource
 import com.msg.sms.data.remote.dto.athentication.request.AuthenticationFieldRequest
+import com.msg.sms.data.remote.dto.athentication.request.AuthenticationGroupRequest
 import com.msg.sms.data.remote.dto.athentication.request.AuthenticationSectionRequest
 import com.msg.sms.data.remote.dto.athentication.request.SubmitAuthenticationFormRequest
 import com.msg.sms.domain.model.authentication.request.SubmitAuthenticationModel
@@ -26,13 +27,19 @@ class AuthenticationRepositoryImpl @Inject constructor(
                     AuthenticationSectionRequest(
                         sectionId = it.sectionId,
                         objects = it.objects.map { data ->
-                            AuthenticationFieldRequest(
-                                fieldId = data.fieldId,
-                                fieldType = data.fieldId,
-                                value = data.value,
-                                selectId = data.selectId
+                            AuthenticationGroupRequest(
+                                groupId = data.groupId,
+                                fields = data.fields.map { field ->
+                                    AuthenticationFieldRequest(
+                                        fieldId = field.fieldId,
+                                        value = field.value,
+                                        fieldType = field.fieldType.name,
+                                        selectId = field.selectId
+                                    )
+                                }
                             )
-                        })
+                        }
+                    )
                 }
             )
         )

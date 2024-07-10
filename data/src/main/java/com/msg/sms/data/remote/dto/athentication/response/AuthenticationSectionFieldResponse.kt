@@ -2,6 +2,7 @@ package com.msg.sms.data.remote.dto.athentication.response
 
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationFieldType
+import java.util.UUID
 
 data class AuthenticationSectionFieldResponse(
     val fieldId: String,
@@ -13,6 +14,7 @@ data class AuthenticationSectionFieldResponse(
 
     fun toAuthenticationSectionFieldModel() =
         AuthenticationSectionFieldModel(
+            uuid = UUID.randomUUID().toString(),
             fieldId = this.fieldId,
             fieldType = AuthenticationFieldType.valueOf(
                 this.fieldType

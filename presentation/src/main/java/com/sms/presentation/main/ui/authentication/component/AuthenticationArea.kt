@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.header.TitleHeader
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.domain.model.authentication.request.SubmitAuthenticationFormModel
+import com.msg.sms.domain.model.authentication.request.AtomicAuthenticationFieldModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationFieldType
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionGroupModel
@@ -28,13 +28,10 @@ fun AuthenticationArea(
     modifier: Modifier = Modifier,
     title: String, // (e.g. 전공 영역, 인문.인성 영역, 외국어 영역), area
     items: List<AuthenticationSectionModel>,
-    onValueChanged: (List<SubmitAuthenticationFormModel>) -> Unit,
+    onValueChanged: (uuid: String, data: AtomicAuthenticationFieldModel) -> Unit,
 ) {
     val isExpanded = rememberSaveable {
         mutableStateOf(true)
-    }
-    val areaData = rememberSaveable {
-        mutableListOf<SubmitAuthenticationFormModel>()
     }
     SMSTheme { colors, _ ->
         LazyColumn(
@@ -62,12 +59,8 @@ fun AuthenticationArea(
                         sectionName = it.sectionName,
                         maxCount = it.maxCount,
                         groups = it.groups,
-                        onValueChanged = { sectionDataList ->
-                            areaData[index] = SubmitAuthenticationFormModel(
-                                sectionId = it.sectionId,
-                                objects = sectionDataList
-                            )
-                            onValueChanged(areaData)
+                        onValueChanged = { uuid, data ->
+                            onValueChanged(uuid, data.copy(sectionId = it.sectionId))
                         },
                     )
                     if (index != items.size - 1) {
@@ -106,6 +99,6 @@ private fun AuthenticationAreaPreview() {
                 ),
             )
         ),
-        onValueChanged = {},
+        onValueChanged = { _, _ -> },
     )
 }

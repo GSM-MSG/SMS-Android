@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,8 +21,7 @@ import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.topbar.TopNavigation
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
-import com.msg.sms.domain.model.authentication.request.SubmitAuthenticationFormModel
-import com.msg.sms.domain.model.authentication.request.SubmitAuthenticationModel
+import com.msg.sms.domain.model.authentication.request.AtomicAuthenticationFieldModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationFormModel
 import com.msg.sms.domain.model.authentication.response.FileModel
 import com.sms.presentation.main.ui.authentication.component.AuthenticationArea
@@ -32,11 +33,12 @@ fun AuthenticationScreen(
     authenticationForm: AuthenticationFormModel,
     downloadFile: (url: FileModel) -> Unit,
     onClickBackButton: () -> Unit,
-    submitAuthenticationForm: (data: SubmitAuthenticationModel) -> Unit,
+    submitAuthenticationForm: (data: Map<String, AtomicAuthenticationFieldModel>) -> Unit,
 ) {
-    var authenticationFormList = rememberSaveable {
-        mutableListOf<SubmitAuthenticationFormModel>()
+    val userDataMap = remember {
+        mutableStateMapOf<String, AtomicAuthenticationFieldModel>()
     }
+
     SMSTheme { colors, _ ->
         Column(
             modifier = Modifier
@@ -72,8 +74,8 @@ fun AuthenticationScreen(
                     AuthenticationArea(
                         title = it.title,
                         items = it.sections,
-                        onValueChanged = {
-                            authenticationFormList = it.toMutableList()
+                        onValueChanged = { uuid, data ->
+                            userDataMap[uuid] = data
                         })
                     if (index != authenticationForm.contents.lastIndex) {
                         Box(
@@ -95,7 +97,7 @@ fun AuthenticationScreen(
                                 .fillMaxWidth(),
                             text = "저장",
                             onClick = {
-                                submitAuthenticationForm(SubmitAuthenticationModel(contents = authenticationFormList))
+                                submitAuthenticationForm(userDataMap)
                             },
                         )
                     }
