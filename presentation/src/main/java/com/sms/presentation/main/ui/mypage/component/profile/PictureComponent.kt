@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.msg.sms.design.modifier.smsClickable
 import com.msg.sms.design.util.AddGrayBody1Title
 
@@ -52,7 +53,12 @@ fun PicturePickerComponent(
                     .smsClickable {
                         launcher.launch("image/*")
                     },
-                painter = rememberAsyncImagePainter(model = imageUrl),
+                painter = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageUrl)
+                        .error(com.sms.design_system.R.drawable.ic_profile_default)
+                        .build(),
+                ),
                 contentScale = ContentScale.Crop,
                 contentDescription = "프로필 이미지"
             )
