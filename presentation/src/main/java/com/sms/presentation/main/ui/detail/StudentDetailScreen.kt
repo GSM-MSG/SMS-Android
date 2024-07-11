@@ -18,15 +18,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.msg.sms.design.component.profile.ProfileImageComponent
 import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.domain.model.student.response.GetStudentModel
 import com.sms.presentation.main.ui.util.departmentEnumToString
 import com.sms.presentation.main.ui.util.employmentEnumToSting
 import com.sms.presentation.main.ui.util.militaryServiceEnumToString
+import com.sms.presentation.main.viewmodel.StudentListViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -34,6 +37,7 @@ fun StudentDetailScreen(
     studentDetailData: GetStudentModel,
     role: String,
     onDismissButtonClick: () -> Unit,
+    viewModel: StudentListViewModel,
 ) {
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
@@ -66,7 +70,10 @@ fun StudentDetailScreen(
             Log.d("TTTTTTTTTTTTTT", "${studentDetailData.profileImg}")
             Image(
                 painter = rememberAsyncImagePainter(
-                    model = studentDetailData.profileImg,
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(studentDetailData.profileImg)
+                        .error(com.sms.design_system.R.drawable.ic_profile_default)
+                        .build(),
                 ), contentDescription = "User Image",
                 contentScale = ContentScale.Crop,
                 modifier = modifier
@@ -93,11 +100,13 @@ fun StudentDetailScreen(
             militaryService = studentDetailData.militaryService?.militaryServiceEnumToString()
                 ?: "",
             portfolioLink = studentDetailData.portfolioUrl ?: "",
+            portFolioFileLink = studentDetailData.portfolioFileUrl ?: "",
             region = studentDetailData.regions ?: emptyList(),
             salary = studentDetailData.salary.toString(),
             scrollState = scrollState,
             awardData = studentDetailData.prize ?: emptyList(),
             projectList = studentDetailData.projects ?: emptyList(),
+            viewModel = viewModel
         )
         IconButton(
             onClick = {

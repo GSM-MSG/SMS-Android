@@ -39,6 +39,7 @@ object Dependency {
         const val FIREBASE_ANALYTICS = "com.google.firebase:firebase-analytics-ktx"
         const val FIREBASE_CRASHLYTICS_PLUGIN = "com.google.firebase.crashlytics"
         const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics-ktx"
+        const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging-ktx"
     }
 
     object Libraries {
@@ -69,7 +70,8 @@ object Dependency {
 
     object Navigation {
         const val NAVIGATION = "androidx.navigation:navigation-compose:${Versions.NAVIGATION}"
-        const val HILT_NAVIGATION = "androidx.hilt:hilt-navigation-compose:${Versions.HILT_NAVIGATION}"
+        const val HILT_NAVIGATION =
+            "androidx.hilt:hilt-navigation-compose:${Versions.HILT_NAVIGATION}"
     }
 
     object Lottie {

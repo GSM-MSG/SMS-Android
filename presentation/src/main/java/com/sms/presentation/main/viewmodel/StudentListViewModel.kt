@@ -2,8 +2,12 @@ package com.sms.presentation.main.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.msg.sms.domain.model.student.request.CreateInformationLinkRequestModel
+import com.msg.sms.domain.model.student.response.CreateInformationLinkResponseModel
 import com.msg.sms.domain.model.student.response.GetStudentModel
 import com.msg.sms.domain.model.student.response.StudentListModel
 import com.msg.sms.domain.model.student.response.StudentModel
@@ -11,6 +15,7 @@ import com.msg.sms.domain.model.user.response.ProfileImageModel
 import com.msg.sms.domain.usecase.auth.DeleteTokenUseCase
 import com.msg.sms.domain.usecase.auth.LogoutUseCase
 import com.msg.sms.domain.usecase.auth.WithdrawalUseCase
+import com.msg.sms.domain.usecase.student.CreateInformationLinkUseCase
 import com.msg.sms.domain.usecase.student.GetStudentDetailForStudentUseCase
 import com.msg.sms.domain.usecase.student.GetStudentListUseCase
 import com.msg.sms.domain.usecase.student.GetUserDetailForAnonymousUseCase
@@ -54,6 +59,7 @@ class StudentListViewModel @Inject constructor(
     private val getStudentDetailForStudentUseCase: GetStudentDetailForStudentUseCase,
     private val getStudentDetailForAnonymousUseCase: GetUserDetailForAnonymousUseCase,
     private val getProfileImageUseCase: GetProfileImageUseCase,
+    private val createInformationLinkUseCase: CreateInformationLinkUseCase
 ) : ViewModel() {
     private val _getStudentListResponse = MutableStateFlow<Event<StudentListModel>>(Event.Loading)
     val getStudentListResponse = _getStudentListResponse.asStateFlow()
@@ -74,6 +80,12 @@ class StudentListViewModel @Inject constructor(
     private val _getStudentProfileImageResponse =
         MutableStateFlow<Event<ProfileImageModel>>(Event.Loading)
     val getStudentProfileImageResponse = _getStudentProfileImageResponse.asStateFlow()
+
+    private val _createInformationLinkStatusResponse = MutableStateFlow<Event<CreateInformationLinkResponseModel>>(Event.Loading)
+    val createInformationLinkStatusResponse = _createInformationLinkStatusResponse.asStateFlow()
+
+    private val _createInformationLinkResponse = MutableStateFlow("")
+    val createInformationLinkResponse = _createInformationLinkResponse.asStateFlow()
 
     // Main List
     var studentList = mutableStateListOf<StudentModel>()
@@ -142,6 +154,27 @@ class StudentListViewModel @Inject constructor(
         private set
     var selectedDetailStack = mutableStateListOf<String>()
         private set
+
+    private val _selectedExpirationDaysData = MutableStateFlow("")
+    val selectedExpirationDaysData = _selectedExpirationDaysData.asStateFlow()
+
+    private val _studentId = MutableLiveData<String>()
+    val studentId: LiveData<String> get() = _studentId
+
+    fun saveStudentId(id: UUID) = viewModelScope.launch{
+        _studentId.value = id.toString()
+    }
+
+    private val _createInformationLinkState = MutableStateFlow(false)
+    val createInformationLinkState = _createInformationLinkState.asStateFlow()
+
+    fun saveCreateInformationLinkState(boolean: Boolean) {
+        _createInformationLinkState.value = boolean
+    }
+
+    fun selectedExpirationDaysDataChange(expirationDays: String) {
+        _selectedExpirationDaysData.value = expirationDays
+    }
 
     init {
         getStudentListRequest(1, 20)
@@ -271,6 +304,25 @@ class StudentListViewModel @Inject constructor(
             }
         }.onFailure { error ->
             _getStudentProfileImageResponse.value = error.errorHandling()
+        }
+    }
+
+    fun createInformationLink(studentId: String, periodDay: Long) = viewModelScope.launch {
+        _createInformationLinkStatusResponse.value = Event.Loading
+        createInformationLinkUseCase(
+            CreateInformationLinkRequestModel(
+                studentId = studentId,
+                periodDay = periodDay
+            )
+        ).onSuccess {
+            it.catch { remoteError ->
+                _createInformationLinkStatusResponse.value = remoteError.errorHandling()
+            }.collect { response ->
+                _createInformationLinkStatusResponse.value = Event.Success(data = response)
+                _createInformationLinkResponse.value = response.token
+            }
+        }.onFailure { error ->
+            _createInformationLinkStatusResponse.value = error.errorHandling()
         }
     }
 

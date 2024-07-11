@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.mypage.section
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,10 +22,14 @@ import com.sms.presentation.main.ui.mypage.state.MyProfileData
 @Composable
 fun ProfileSection(
     myProfileData: MyProfileData,
+    pdfData: Uri?,
     onEnteredMajorValue: (value: String) -> Unit,
+    selectedPortfolioType: String,
     onValueChange: (value: MyProfileData) -> Unit,
+    onPdfValueChange: (value: Uri) -> Unit,
     selectedTechList: List<String>,
     onClickMajorComponent: () -> Unit,
+    onClickPortfolioButton: () -> Unit,
     onClickSearchBar: () -> Unit,
     onRemoveDetailStack: (value: String) -> Unit,
 ) {
@@ -51,9 +56,18 @@ fun ProfileSection(
             onClick = onClickMajorComponent,
             onValueChange = onEnteredMajorValue
         )
-        PortfolioComponent(portfolioValue = myProfileData.portfolioUrl, onValueChange = {
-            onValueChange(myProfileData.copy(portfolioUrl = it))
-        })
+        PortfolioComponent(
+            selectedPortfolioType = selectedPortfolioType,
+            portfolioUrlValue = myProfileData.portfolioUrl,
+            portfolioPdfValue = pdfData,
+            onClickPortfolioButton = onClickPortfolioButton,
+            onPortfolioUrlValueChange = {
+                onValueChange(myProfileData.copy(portfolioUrl = it))
+            },
+            onPortfolioPdfValueChange = {
+                onPdfValueChange(it)
+            }
+        )
         DetailTechStackComponent(
             addedList = selectedTechList,
             onClickSearchBar = onClickSearchBar,
@@ -86,9 +100,13 @@ private fun ProfileSectionPre() {
             certificates = listOf(),
             profileImageBitmap = null
         ),
+        pdfData = Uri.EMPTY,
         onValueChange = {},
+        onPdfValueChange = {},
+        selectedPortfolioType = "",
         selectedTechList = listOf("Android Studio", "Kotlin", "Flutter"),
         onClickMajorComponent = {},
+        onClickPortfolioButton = {},
         onClickSearchBar = {},
         onRemoveDetailStack = {},
         onEnteredMajorValue = {}

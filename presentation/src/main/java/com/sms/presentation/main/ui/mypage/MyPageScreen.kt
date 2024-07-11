@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.mypage
 
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,7 @@ import com.sms.presentation.main.ui.mypage.modal.MyPageBottomSheet
 import com.sms.presentation.main.ui.mypage.state.FormOfEmployment
 import com.sms.presentation.main.ui.mypage.state.MilitaryService
 import com.sms.presentation.main.ui.mypage.state.MyProfileData
+import com.sms.presentation.main.ui.mypage.state.PortfolioType
 import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 import com.sms.presentation.main.viewmodel.MyProfileViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -43,6 +46,7 @@ import kotlinx.coroutines.launch
 
 private enum class BottomSheetValues {
     Major,
+    Portfolio,
     MyPage,
     WorkingForm,
     Military,
@@ -60,6 +64,7 @@ private enum class ModalValue {
 fun MyPageScreen(
     viewModel: MyProfileViewModel,
     myProfileData: MyProfileData,
+    pdfData: Uri?,
     navController: NavController,
     bitmapPreviews: List<List<Bitmap>>,
     projects: List<ProjectData>,
@@ -84,6 +89,7 @@ fun MyPageScreen(
     onClickBackButton: () -> Unit,
     onClickProjectSearchBar: (itemIndex: Int) -> Unit,
     onProfileValueChange: (value: MyProfileData) -> Unit,
+    onPdfValueChange: (value: Uri) -> Unit,
     onRemoveDetailStack: (value: String) -> Unit,
     onRemoveProject: (index: Int) -> Unit,
     onRemoveAward: (index: Int) -> Unit,
@@ -94,6 +100,7 @@ fun MyPageScreen(
     onAwardValueChange: (index: Int, award: AwardData) -> Unit,
     onSaveButtonClick: () -> Unit,
 ) {
+    val context = LocalContext.current
     val bottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
@@ -102,6 +109,10 @@ fun MyPageScreen(
         mutableStateOf(BottomSheetValues.MyPage)
     }
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    val selectedPortfolioType = remember {
+        mutableStateOf("")
+    }
 
     val dialogState = remember {
         mutableStateOf(ModalValue.Logout)
@@ -130,9 +141,20 @@ fun MyPageScreen(
         }
     }
 
+    LaunchedEffect(viewModel.myProfileData.value.portfolioUrl, viewModel.myProfileData.value) {
+        when {
+            viewModel.myProfileData.value.portfolioUrl != null -> selectedPortfolioType.value = PortfolioType.URL.text
+            viewModel.myPortfolioPdfData.value != null -> selectedPortfolioType.value = PortfolioType.PDF.text
+            else -> selectedPortfolioType.value = ""
+        }
+    }
+
     LaunchedEffect(viewModel.isProfileChanged.value && viewModel.isProjectIconChanged.value && viewModel.isProjectPreviewChanged.value) {
         if (viewModel.isProfileChanged.value && viewModel.isProjectIconChanged.value && viewModel.isProjectPreviewChanged.value) {
             viewModel.putChangeProfile()
+        }
+        if (selectedPortfolioType.value == PortfolioType.PDF.text && viewModel.pdfData.value != null) {
+            viewModel.putChangedPortfolioPdf(context)
         }
     }
 
@@ -175,6 +197,17 @@ fun MyPageScreen(
                                 }
                             }
                         }
+                    )
+                }
+
+                BottomSheetValues.Portfolio -> {
+                    SelectorBottomSheet(
+                        list = listOf(PortfolioType.URL.text, PortfolioType.PDF.text),
+                        bottomSheetState = bottomSheetState,
+                        selected = selectedPortfolioType.value,
+                        itemChange = {
+                            selectedPortfolioType.value = it
+                        },
                     )
                 }
 
@@ -284,6 +317,7 @@ fun MyPageScreen(
         Box {
             MyPageComponent(
                 myProfileData = myProfileData,
+                pdfData = pdfData,
                 bitmapPreviews = bitmapPreviews,
                 projects = projects,
                 awards = awards,
@@ -323,6 +357,13 @@ fun MyPageScreen(
                 onClickMajorButton = {
                     coroutineScope.launch {
                         bottomSheetValues.value = BottomSheetValues.Major
+                        keyboardController!!.hide()
+                        bottomSheetState.show()
+                    }
+                },
+                onClickPortfolioButton = {
+                    coroutineScope.launch {
+                        bottomSheetValues.value = BottomSheetValues.Portfolio
                         keyboardController!!.hide()
                         bottomSheetState.show()
                     }
@@ -367,8 +408,10 @@ fun MyPageScreen(
                 onProjectValueChange = onProjectValueChange,
                 onAwardValueChange = onAwardValueChange,
                 onProfileValueChange = onProfileValueChange,
+                onPdfValueChange = onPdfValueChange,
                 onSaveButtonClick = onSaveButtonClick,
                 iconBitmaps = bitmapIcons,
+                selectedPortfolioType = selectedPortfolioType.value,
                 setBitmap = setBitmap,
                 onChangeProgressState = onChangeProgressState
             )
@@ -400,6 +443,7 @@ private fun MyPageScreenPre() {
             certificates = listOf(),
             profileImageBitmap = null
         ),
+        pdfData = Uri.EMPTY,
         bitmapPreviews = listOf(),
         isExpandedAward = listOf(),
         isExpandedProject = listOf(),
@@ -436,6 +480,7 @@ private fun MyPageScreenPre() {
         onClickSearchBar = {},
         onClickProjectSearchBar = {},
         onProfileValueChange = {},
+        onPdfValueChange = {},
         onRemoveDetailStack = {},
         onRemoveProject = {},
         onRemoveProjectDetailStack = { _, _ -> },

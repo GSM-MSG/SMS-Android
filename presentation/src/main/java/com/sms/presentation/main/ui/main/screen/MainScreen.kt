@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.main.screen
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -172,6 +173,7 @@ fun MainScreen(
                             bottomSheetState.hide()
                         }
                     },
+                    viewModel = viewModel
                 )
             } else if (bottomSheetValue.value == BottomSheetValues.MyPage) {
                 ProfileBottomSheet(
@@ -232,6 +234,7 @@ fun MainScreen(
                             bottomSheetValue.value = BottomSheetValues.Detail
                             when (role) {
                                 "ROLE_TEACHER" -> {
+                                    viewModel.saveStudentId(it)
                                     viewModel.getStudentDetailForTeacher(it)
                                 }
 

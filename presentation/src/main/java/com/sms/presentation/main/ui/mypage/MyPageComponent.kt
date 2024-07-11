@@ -1,6 +1,7 @@
 package com.sms.presentation.main.ui.mypage
 
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -48,6 +49,7 @@ import com.sms.presentation.main.ui.mypage.state.ProjectTechStack
 @Composable
 fun MyPageComponent(
     myProfileData: MyProfileData,
+    pdfData: Uri?,
     isExpandedProject: List<Boolean>,
     isExpandedAward: List<Boolean>,
     projects: List<ProjectData>,
@@ -56,6 +58,7 @@ fun MyPageComponent(
     selectedTechList: List<String>,
     selectedTechListOnProject: List<ProjectTechStack>,
     iconBitmaps: List<Bitmap?>,
+    selectedPortfolioType: String,
     setBitmap: (index: Int, element: Bitmap) -> Unit,
     onAddProject: () -> Unit,
     onAddAward: () -> Unit,
@@ -67,12 +70,14 @@ fun MyPageComponent(
     onChangeProgressState: (index: Int) -> Unit,
     onEnteredMajorValue: (value: String) -> Unit,
     onProfileValueChange: (value: MyProfileData) -> Unit,
+    onPdfValueChange: (value: Uri) -> Unit,
     onClickMilitaryOpenButton: () -> Unit,
     onClickOpenWorkForm: () -> Unit,
     onClickTopLeftButton: () -> Unit,
     onClickTopRightButton: () -> Unit,
     onOpenNumberPicker: (index: Int) -> Unit,
     onClickMajorButton: () -> Unit,
+    onClickPortfolioButton: () -> Unit,
     onExpandProjectClick: (index: Int) -> Unit,
     onExpandAwardClick: (index: Int) -> Unit,
     onRemoveDetailStack: (value: String) -> Unit,
@@ -116,11 +121,15 @@ fun MyPageComponent(
             item {
                 ProfileSection(
                     myProfileData = myProfileData,
+                    pdfData = pdfData,
                     selectedTechList = selectedTechList,
+                    selectedPortfolioType = selectedPortfolioType,
                     onClickMajorComponent = onClickMajorButton,
+                    onClickPortfolioButton = onClickPortfolioButton,
                     onClickSearchBar = onMyPageSearchBar,
                     onRemoveDetailStack = onRemoveDetailStack,
                     onValueChange = onProfileValueChange,
+                    onPdfValueChange = onPdfValueChange,
                     onEnteredMajorValue = onEnteredMajorValue
                 )
                 SmsSpacer()
@@ -413,6 +422,7 @@ private fun MyPageComponentPre() {
             certificates = listOf(),
             profileImageBitmap = null
         ),
+        pdfData = Uri.EMPTY,
         bitmapPreviews = listOf(),
         projects = listOf(
             ProjectData(
@@ -459,6 +469,7 @@ private fun MyPageComponentPre() {
         onRemoveProjectDetailStack = { _, _ -> },
         onRemoveProject = {},
         onProfileValueChange = {},
+        onPdfValueChange = {},
         onProjectValueChange = { _, _ -> },
         onAwardValueChange = { _, _ -> },
         onAddBitmapPreview = { _, _ -> },
@@ -467,7 +478,9 @@ private fun MyPageComponentPre() {
         onSaveButtonClick = {},
         iconBitmaps = listOf(),
         setBitmap = { _, _ -> },
+        selectedPortfolioType = "",
         onOpenNumberPicker = {},
+        onClickPortfolioButton = {},
         onOpenEnd = {},
         onOpenStart = {},
         onChangeProgressState = {}

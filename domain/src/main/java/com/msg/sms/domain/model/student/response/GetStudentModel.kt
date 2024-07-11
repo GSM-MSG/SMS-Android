@@ -8,6 +8,7 @@ data class GetStudentModel(
     val name: String = "",
     val introduce: String = "",
     val portfolioUrl: String? = null,
+    val portfolioFileUrl: String? = null,
     val grade: Int? = null,
     val classNum: Int? = null,
     val number: Int? = null,

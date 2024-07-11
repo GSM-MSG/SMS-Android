@@ -7,16 +7,21 @@ import com.msg.sms.data.remote.dto.common.PrizeData
 import com.msg.sms.data.remote.dto.common.ProjectData
 import com.msg.sms.data.remote.dto.common.ProjectDateData
 import com.msg.sms.data.remote.dto.common.ProjectRelatedLinkData
+import com.msg.sms.data.remote.dto.student.request.CreateInformationLinkRequest
 import com.msg.sms.data.remote.dto.student.request.PutChangedProfileRequest
+import com.msg.sms.data.remote.dto.student.response.toCreateInformationLinkModel
 import com.msg.sms.data.remote.dto.student.response.toGetStudentForTeacherModel
 import com.msg.sms.data.remote.dto.student.response.toStudentListModel
+import com.msg.sms.domain.model.student.request.CreateInformationLinkRequestModel
 import com.msg.sms.domain.model.student.request.EnterStudentInformationModel
+import com.msg.sms.domain.model.student.request.PutChangeProfileRequestModel
+import com.msg.sms.domain.model.student.response.CreateInformationLinkResponseModel
 import com.msg.sms.domain.model.student.response.GetStudentModel
 import com.msg.sms.domain.model.student.response.StudentListModel
-import com.msg.sms.domain.model.user.response.MyProfileModel
 import com.msg.sms.domain.repository.StudentRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import okhttp3.MultipartBody
 import java.util.UUID
 import javax.inject.Inject
 
@@ -72,10 +77,11 @@ class StudentRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUserDetail(role: String, uuid: UUID): Flow<GetStudentModel> {
-        return dataSource.getUserDetail(role = role, uuid = uuid).map { it.toGetStudentForTeacherModel() }
+        return if (role.isEmpty()) dataSource.getUserDetail(role = role, uuid = uuid).map { it.toGetStudentForTeacherModel() }
+        else dataSource.getUserDetailRole(role = role, uuid = uuid).map { it.toGetStudentForTeacherModel() }
     }
 
-    override suspend fun putChangedProfile(profile: MyProfileModel): Flow<Unit> {
+    override suspend fun putChangedProfile(profile: PutChangeProfileRequestModel): Flow<Unit> {
         return dataSource.putChangedProfile(
             body = PutChangedProfileRequest(
                 major = profile.major,
@@ -120,5 +126,18 @@ class StudentRepositoryImpl @Inject constructor(
                 },
             )
         )
+    }
+
+    override suspend fun createInformationLink(body: CreateInformationLinkRequestModel): Flow<CreateInformationLinkResponseModel> {
+        return dataSource.createInformationLink(
+            body = CreateInformationLinkRequest(
+                studentId = body.studentId,
+                periodDay = body.periodDay
+            )
+        ).map { it.toCreateInformationLinkModel() }
+    }
+
+    override suspend fun putChangedPortfolioPdf(file: MultipartBody.Part): Flow<Unit> {
+        return dataSource.putChangedPortfolioPdf(file = file)
     }
 }

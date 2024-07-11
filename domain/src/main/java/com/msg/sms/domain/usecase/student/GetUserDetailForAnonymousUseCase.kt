@@ -8,6 +8,6 @@ class GetUserDetailForAnonymousUseCase @Inject constructor(
     private val repository: StudentRepository,
 ) {
     suspend operator fun invoke(uuid: UUID) = kotlin.runCatching {
-        repository.getUserDetail(role = "anonymous/", uuid = uuid)
+        repository.getUserDetail(role = "anonymous", uuid = uuid)
     }
 }

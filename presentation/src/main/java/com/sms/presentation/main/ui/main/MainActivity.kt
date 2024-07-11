@@ -61,6 +61,13 @@ class MainActivity : BaseActivity() {
 
     private fun observeEvent() {
         lifecycleScope.launch {
+            studentListViewModel.createInformationLinkStatusResponse.collect {
+                if (it is Event.Success) {
+                    studentListViewModel.saveCreateInformationLinkState(true)
+                }
+            }
+        }
+        lifecycleScope.launch {
             searchDetailStackViewModel.searchResultEvent.collect {
                 if (it is Event.Success) {
                     searchDetailStack.value = it.data!!.techStacks
@@ -286,6 +293,7 @@ class MainActivity : BaseActivity() {
                                 MyPageScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     myProfileData = myProfileViewModel.myProfileData.value,
+                                    pdfData = myProfileViewModel.pdfData.value,
                                     navController = navController,
                                     bitmapPreviews = myProfileViewModel.bitmapPreviews.value,
                                     projects = myProfileViewModel.projects.value,
@@ -366,6 +374,9 @@ class MainActivity : BaseActivity() {
                                     },
                                     onProfileValueChange = {
                                         myProfileViewModel.onProfileValueChange(myProfile = it)
+                                    },
+                                    onPdfValueChange = {
+                                        myProfileViewModel.onPdfValueChange(uri = it)
                                     },
                                     onSaveButtonClick = {
                                         myProfileViewModel.onChangeProfileChange(myProfileViewModel.myProfileData.value.profileImageBitmap)
