@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.segmented_control.SegmentedControl
+import com.msg.sms.design.component.textfield.SmsBasicTextField
 import com.msg.sms.design.icon.ArrowDownIcon
 import com.msg.sms.design.icon.FileIcon
 import com.msg.sms.design.icon.XMarkIcon
@@ -39,7 +38,7 @@ fun AuthenticationField(
     onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String,
     enteredValue: (enteredValue: String, selectedId: String) -> Unit,
 ) {
-    SMSTheme { colors, typography ->
+    SMSTheme { _, typography ->
         var value by rememberSaveable {
             mutableStateOf("")
         }
@@ -55,27 +54,14 @@ fun AuthenticationField(
                     enteredValue(value, selectedId)
                 })
         } else {
-            OutlinedTextField(
+            SmsBasicTextField(
                 modifier = modifier.fillMaxWidth(),
-                value = value,
+                text = value,
                 onValueChange = {
                     value = it
                     enteredValue(value, selectedId)
                 },
-                placeholder = {
-                    Text(
-                        text = placeHolder,
-                        style = typography.body1
-                    )
-                },
-                textStyle = typography.body1,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    backgroundColor = colors.N10,
-                    placeholderColor = colors.N30,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
-                    cursorColor = colors.P2
-                ),
+                placeHolder = placeHolder,
                 trailingIcon = {
                     IconButton(onClick = {
                         when (fieldType) {
@@ -114,7 +100,7 @@ fun AuthenticationField(
                     }
                 },
             )
-            if (! scoreDescription.isNullOrBlank()) {
+            if (!scoreDescription.isNullOrBlank()) {
                 Text(
                     modifier = Modifier.padding(top = 8.dp),
                     text = scoreDescription,
