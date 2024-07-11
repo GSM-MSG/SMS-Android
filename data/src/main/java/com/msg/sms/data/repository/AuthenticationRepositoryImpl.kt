@@ -5,8 +5,10 @@ import com.msg.sms.data.remote.dto.athentication.request.AuthenticationFieldRequ
 import com.msg.sms.data.remote.dto.athentication.request.AuthenticationGroupRequest
 import com.msg.sms.data.remote.dto.athentication.request.AuthenticationSectionRequest
 import com.msg.sms.data.remote.dto.athentication.request.SubmitAuthenticationFormRequest
+import com.msg.sms.data.remote.dto.athentication.response.toVerifyAuthenticationResponseModel
 import com.msg.sms.domain.model.authentication.request.SubmitAuthenticationModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationFormModel
+import com.msg.sms.domain.model.authentication.response.VerifyAuthenticationModel
 import com.msg.sms.domain.repository.AuthenticationRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -43,5 +45,10 @@ class AuthenticationRepositoryImpl @Inject constructor(
                 }
             )
         )
+    }
+
+    override suspend fun verifyAuthentication(): Flow<VerifyAuthenticationModel> {
+        return remoteDataSource.verifyAuthentication()
+            .map { it.toVerifyAuthenticationResponseModel() }
     }
 }
