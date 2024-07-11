@@ -1,5 +1,6 @@
 package com.msg.sms.data.remote.dto.athentication.response
 
+import com.msg.sms.domain.extension.valueOfNull
 import com.msg.sms.domain.model.authentication.MarkingBoardType
 import com.msg.sms.domain.model.authentication.response.VerifyAuthenticationModel
 
@@ -14,5 +15,5 @@ fun VerifyAuthenticationResponse.toVerifyAuthenticationResponseModel() = VerifyA
     name = this.name,
     score = this.score,
     grader = this.grader,
-    markingBoardType = MarkingBoardType.valueOf(this.markingBoardType)
+    markingBoardType = valueOfNull<MarkingBoardType>(this.markingBoardType) ?: MarkingBoardType.UNDER_REVIEW
 )
