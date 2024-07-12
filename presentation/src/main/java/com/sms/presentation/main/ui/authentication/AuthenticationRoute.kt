@@ -1,11 +1,14 @@
 package com.sms.presentation.main.ui.authentication
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.msg.sms.design.component.topbar.TopNavigation
+import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.domain.model.authentication.MarkingBoardType
 import com.sms.presentation.main.viewmodel.AuthenticationViewModel
 import com.sms.presentation.main.viewmodel.util.Event
@@ -29,23 +32,22 @@ fun AuthenticationRoute(
         }
     }
 
-    LaunchedEffect(verifyAuthenticationData.value) {
-        if (verifyAuthenticationState.value is Event.Success && verifyAuthenticationData.value?.markingBoardType != MarkingBoardType.NOT_SUBMITTED) {
-            Toast.makeText(context, verifyAuthenticationData.value?.markingBoardType?.name ?: "이거 나오면 이슈긴해 ㅋㅋ", Toast.LENGTH_SHORT).show()
-            onBackPressed()
-        }
-    }
-
-    if (authenticationForm.value != null) {
-        AuthenticationScreen(
-            authenticationForm = authenticationForm.value!!,
-            downloadFile = {
-                context.downloadFile(url = it.url, fileName = it.name)
-            },
-            submitAuthenticationForm = {
-                viewModel.submitAuthenticationForm(it.values.toList())
-            },
-            onClickBackButton = onBackPressed,
+    Column {
+        TopNavigation(
+            text = "인증제",
+            leftIcon = { BackButtonIcon() },
+            onClickLeftButton = onBackPressed
         )
+        if (verifyAuthenticationState.value is Event.Success && verifyAuthenticationData.value?.markingBoardType == MarkingBoardType.NOT_SUBMITTED) {
+            AuthenticationScreen(
+                authenticationForm = authenticationForm.value!!,
+                downloadFile = {
+                    context.downloadFile(url = it.url, fileName = it.name)
+                },
+                submitAuthenticationForm = {
+                    viewModel.submitAuthenticationForm(it.values.toList())
+                },
+            )
+        } else AuthenticationStatusComponent(verifyAuthenticationModel = verifyAuthenticationData.value)
     }
 }

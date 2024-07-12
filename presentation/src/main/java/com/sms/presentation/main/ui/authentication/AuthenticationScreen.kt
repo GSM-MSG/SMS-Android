@@ -13,13 +13,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.SmsRoundedButton
-import com.msg.sms.design.component.topbar.TopNavigation
-import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.msg.sms.domain.model.authentication.request.AtomicAuthenticationFieldModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationFormModel
@@ -32,7 +29,6 @@ fun AuthenticationScreen(
     modifier: Modifier = Modifier,
     authenticationForm: AuthenticationFormModel,
     downloadFile: (url: FileModel) -> Unit,
-    onClickBackButton: () -> Unit,
     submitAuthenticationForm: (data: Map<String, AtomicAuthenticationFieldModel>) -> Unit,
 ) {
     val userDataMap = remember {
@@ -52,11 +48,6 @@ fun AuthenticationScreen(
                     .fillMaxWidth()
             ) {
                 item {
-                    TopNavigation(
-                        text = "인증제",
-                        leftIcon = { BackButtonIcon() },
-                        onClickLeftButton = onClickBackButton
-                    )
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -112,5 +103,5 @@ fun AuthenticationScreen(
 private fun AuthenticationScreenPre() {
     AuthenticationScreen(
         authenticationForm = AuthenticationFormModel(listOf(), listOf()),
-        downloadFile = {}, submitAuthenticationForm = {}, onClickBackButton = {})
+        downloadFile = {}, submitAuthenticationForm = {})
 }
