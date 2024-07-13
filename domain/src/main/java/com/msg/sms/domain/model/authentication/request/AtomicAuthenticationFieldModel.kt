@@ -8,5 +8,6 @@ data class AtomicAuthenticationFieldModel(
     val value: String?,
     val selectId: String?,
     val groupId: String = "",
-    val sectionId: String = ""
+    val sectionId: String = "",
+    val groupIndex: Int = 0,
 )

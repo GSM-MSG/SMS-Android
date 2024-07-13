@@ -31,6 +31,7 @@ fun AuthenticationArea(
     items: List<AuthenticationSectionModel>,
     isLastItem: Boolean,
     onValueChanged: (uuid: String, data: AtomicAuthenticationFieldModel) -> Unit,
+    onRemoveFieldGroup: (uuid: String) -> Unit = {},
 ) {
     val isExpanded = rememberSaveable {
         mutableStateOf(true)
@@ -64,6 +65,11 @@ fun AuthenticationArea(
                         onValueChanged = { uuid, data ->
                             onValueChanged(uuid, data.copy(sectionId = it.sectionId))
                         },
+                        removeFieldGroup = { groupIndex, uuids ->
+                            uuids.forEach { uuid ->
+                                onRemoveFieldGroup(uuid + groupIndex)
+                            }
+                        }
                     )
                     if (index != items.size - 1) {
                         Spacer(modifier = Modifier.height(24.dp))
