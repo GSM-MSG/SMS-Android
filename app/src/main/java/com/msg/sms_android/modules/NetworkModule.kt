@@ -3,12 +3,14 @@ package com.msg.sms_android.modules
 import com.msg.sms.data.remote.network.api.*
 import com.msg.sms.data.util.AuthInterceptor
 import com.msg.sms_android.BuildConfig
+import com.msg.sms_android.utils.PrettyJsonLogger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -23,12 +25,16 @@ object NetworkModule {
     fun provideOkhttpClient(
         authInterceptor: AuthInterceptor,
     ): OkHttpClient {
+        val httpLoggingInterceptor = HttpLoggingInterceptor(PrettyJsonLogger())
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+
         return OkHttpClient.Builder()
             .cookieJar(CookieJar.NO_COOKIES)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(authInterceptor)
+            .addInterceptor(httpLoggingInterceptor)
             .build()
     }
 
@@ -89,7 +95,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideTeacherService(retrofit: Retrofit): TeacherAPI{
+    fun provideTeacherService(retrofit: Retrofit): TeacherAPI {
         return retrofit.create(TeacherAPI::class.java)
     }
 
