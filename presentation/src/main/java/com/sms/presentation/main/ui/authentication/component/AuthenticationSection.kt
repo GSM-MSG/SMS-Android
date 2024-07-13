@@ -25,7 +25,7 @@ import com.msg.sms.domain.model.authentication.response.AuthenticationSectionGro
 fun AuthenticationSection(
     modifier: Modifier = Modifier,
     sectionName: String,
-    plusminusVisible: Boolean,
+    maxCount: Int,
     groups: List<AuthenticationSectionGroupModel>,
     onUpload: () -> Unit = {},
     removeFieldGroup: (groupIndex: Int, uuids: List<String>) -> Unit = { _, _ -> },
@@ -37,7 +37,8 @@ fun AuthenticationSection(
         }
         // section
         LazyColumn(
-            modifier = Modifier.heightIn(max = 5000.dp)
+            modifier = Modifier.heightIn(max = 5000.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(currentFieldCount.value) { groupIndex ->
                 // group
@@ -71,29 +72,30 @@ fun AuthenticationSection(
                             }
                         }
                     }
-                    if (plusminusVisible) {
-                        item {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                SmsChip(text = "추가", onClick = { currentFieldCount.value += 1 })
-                                IconButton(onClick = {
-                                    if (currentFieldCount.value > 1) {
-                                        currentFieldCount.value -= 1
-                                        removeFieldGroup(
-                                            groupIndex,
-                                            groups.first().fields.map { it.uuid }
-                                        )
-                                    }
-                                }) {
-                                    TrashCanIcon(modifier = Modifier.size(24.dp))
-                                }
-                            }
-                        }
-                    }
                 }
+            }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SmsChip(
+                text = "추가",
+                onClick = {
+                    if (maxCount > currentFieldCount.value) currentFieldCount.value += 1
+                }
+            )
+            IconButton(onClick = {
+                if (currentFieldCount.value > 1) {
+                    currentFieldCount.value -= 1
+                    removeFieldGroup(
+                        groups.lastIndex,
+                        groups.first().fields.map { it.uuid }
+                    )
+                }
+            }) {
+                TrashCanIcon(modifier = Modifier.size(24.dp))
             }
         }
     }
