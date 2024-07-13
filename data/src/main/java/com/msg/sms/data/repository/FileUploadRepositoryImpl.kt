@@ -10,11 +10,15 @@ import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class FileUploadRepositoryImpl @Inject constructor(
-    private val dataSource: RemoteFileUploadDataSource
+    private val dataSource: RemoteFileUploadDataSource,
 ) : FileUploadRepository {
     override suspend fun imageUpload(file: MultipartBody.Part): Flow<FileUploadResponseModel> {
         return dataSource.imageUpload(
             file = file
         ).map { it.toFileUploadModel() }
+    }
+
+    override suspend fun fileUpload(file: MultipartBody.Part): Flow<FileUploadResponseModel> {
+        return dataSource.fileUpload(file = file).map { it.toFileUploadModel() }
     }
 }

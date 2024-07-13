@@ -15,7 +15,7 @@ interface FileUploadAPI {
 
     @Multipart
     @POST("file")
-    suspend fun dreamBookUpload(
+    suspend fun fileUpload(
         @Part file: MultipartBody.Part
     ): FileUploadResponse
 }

@@ -23,11 +23,11 @@ class RemoteFileUploadDataSourceImpl @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun dreamBookUpload(file: MultipartBody.Part): Flow<FileUploadResponse> {
+    override suspend fun fileUpload(file: MultipartBody.Part): Flow<FileUploadResponse> {
         return flow {
             emit(
                 SMSApiHandler<FileUploadResponse>()
-                    .httpRequest { service.dreamBookUpload(file = file) }
+                    .httpRequest { service.fileUpload(file = file) }
                     .sendRequest()
             )
         }.flowOn(Dispatchers.IO)
