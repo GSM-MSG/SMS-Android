@@ -66,6 +66,7 @@ fun AuthenticationScreen(
                         title = it.title,
                         items = it.sections,
                         isLastItem = index == authenticationForm.contents.lastIndex,
+                        onRemoveFieldGroup = { userDataMap.remove(it) },
                         onValueChanged = { uuid, data ->
                             userDataMap[uuid] = data
                         }
