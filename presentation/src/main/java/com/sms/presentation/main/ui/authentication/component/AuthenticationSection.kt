@@ -19,7 +19,6 @@ import com.msg.sms.design.component.chip.SmsChip
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 import com.msg.sms.domain.model.authentication.request.AtomicAuthenticationFieldModel
-import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldValuesModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionGroupModel
 
 @Composable
@@ -29,7 +28,6 @@ fun AuthenticationSection(
     maxCount: Int,
     groups: List<AuthenticationSectionGroupModel>,
     onUpload: () -> Unit = {},
-    onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String = { _ -> "" },
     removeFieldGroup: (groupIndex: Int, uuids: List<String>) -> Unit = { _, _ -> },
     onValueChanged: (uuid: String, data: AtomicAuthenticationFieldModel) -> Unit,
 ) {
@@ -56,7 +54,6 @@ fun AuthenticationSection(
                                     placeHolder = item.placeholder,
                                     scoreDescription = item.scoreDescription,
                                     onUpload = onUpload,
-                                    onSelect = onSelect,
                                     enteredValue = { enteredValue, selectedId ->
                                         onValueChanged(
                                             item.uuid + groupIndex,
