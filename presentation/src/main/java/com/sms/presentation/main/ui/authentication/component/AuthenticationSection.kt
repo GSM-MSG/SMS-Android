@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.authentication.component
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import com.msg.sms.design.component.chip.SmsChip
 import com.msg.sms.design.icon.TrashCanIcon
 import com.msg.sms.design.util.AddGrayBody1Title
 import com.msg.sms.domain.model.authentication.request.AtomicAuthenticationFieldModel
+import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldValuesModel
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionGroupModel
 
 @Composable
@@ -27,7 +29,9 @@ fun AuthenticationSection(
     sectionName: String,
     maxCount: Int,
     groups: List<AuthenticationSectionGroupModel>,
-    onUpload: () -> Unit = {},
+    getFileName: (uri: Uri) -> Pair<String, String>,
+    showExtensionError: () -> Unit,
+    onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String = { _ -> "" },
     removeFieldGroup: (groupIndex: Int, uuids: List<String>) -> Unit = { _, _ -> },
     onValueChanged: (uuid: String, data: AtomicAuthenticationFieldModel) -> Unit,
 ) {
@@ -54,8 +58,10 @@ fun AuthenticationSection(
                                     values = item.values,
                                     placeHolder = item.placeholder,
                                     scoreDescription = item.scoreDescription,
-                                    onUpload = onUpload,
-                                    enteredValue = { enteredValue, selectedId ->
+                                    onSelect = onSelect,
+                                    getFileName = getFileName,
+                                    showExtensionError = showExtensionError,
+                                    enteredValue = { enteredValue, selectedId, uri ->
                                         onValueChanged(
                                             item.uuid + groupIndex,
                                             AtomicAuthenticationFieldModel(
@@ -64,7 +70,8 @@ fun AuthenticationSection(
                                                 selectId = selectedId,
                                                 fieldType = item.fieldType,
                                                 groupId = group.groupId,
-                                                groupIndex = groupIndex
+                                                groupIndex = groupIndex,
+                                                file = uri
                                             )
                                         )
                                     }

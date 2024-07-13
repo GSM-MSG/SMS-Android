@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.authentication
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,8 @@ fun AuthenticationScreen(
     modifier: Modifier = Modifier,
     authenticationForm: AuthenticationFormModel,
     downloadFile: (url: FileModel) -> Unit,
+    showExtensionError: () -> Unit,
+    getFileName: (uri: Uri) -> Pair<String, String>,
     submitAuthenticationForm: (data: Map<String, AtomicAuthenticationFieldModel>) -> Unit,
 ) {
     val userDataMap = remember {
@@ -67,9 +70,11 @@ fun AuthenticationScreen(
                         items = it.sections,
                         isLastItem = index == authenticationForm.contents.lastIndex,
                         onRemoveFieldGroup = { userDataMap.remove(it) },
+                        getFileName = getFileName,
+                        showExtensionError = showExtensionError,
                         onValueChanged = { uuid, data ->
                             userDataMap[uuid] = data
-                        }
+                        },
                     )
                     if (index != authenticationForm.contents.lastIndex) {
                         Box(
@@ -106,5 +111,5 @@ fun AuthenticationScreen(
 private fun AuthenticationScreenPre() {
     AuthenticationScreen(
         authenticationForm = AuthenticationFormModel(listOf(), listOf()),
-        downloadFile = {}, submitAuthenticationForm = {})
+        downloadFile = {}, submitAuthenticationForm = {}, getFileName = { Pair("", "")}, showExtensionError = {})
 }

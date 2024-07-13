@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.authentication.component
 
+import android.net.Uri
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,8 @@ fun AuthenticationArea(
     title: String, // (e.g. 전공 영역, 인문.인성 영역, 외국어 영역), area
     items: List<AuthenticationSectionModel>,
     isLastItem: Boolean,
+    showExtensionError: () -> Unit,
+    getFileName: (uri: Uri) -> Pair<String, String>,
     onValueChanged: (uuid: String, data: AtomicAuthenticationFieldModel) -> Unit,
     onRemoveFieldGroup: (uuid: String) -> Unit = {},
 ) {
@@ -65,6 +68,8 @@ fun AuthenticationArea(
                         onValueChanged = { uuid, data ->
                             onValueChanged(uuid, data.copy(sectionId = it.sectionId))
                         },
+                        showExtensionError = showExtensionError,
+                        getFileName = getFileName,
                         removeFieldGroup = { groupIndex, uuids ->
                             uuids.forEach { uuid ->
                                 onRemoveFieldGroup(uuid + groupIndex)
@@ -118,6 +123,8 @@ private fun AuthenticationAreaPreview() {
             )
         ),
         isLastItem = false,
+        getFileName = { Pair("", "") },
+        showExtensionError = {},
         onValueChanged = { _, _ -> },
     )
 }
