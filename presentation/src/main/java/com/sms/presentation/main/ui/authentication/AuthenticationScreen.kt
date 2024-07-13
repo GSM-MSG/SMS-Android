@@ -65,9 +65,11 @@ fun AuthenticationScreen(
                     AuthenticationArea(
                         title = it.title,
                         items = it.sections,
+                        isLastItem = index == authenticationForm.contents.lastIndex,
                         onValueChanged = { uuid, data ->
                             userDataMap[uuid] = data
-                        })
+                        }
+                    )
                     if (index != authenticationForm.contents.lastIndex) {
                         Box(
                             modifier = Modifier

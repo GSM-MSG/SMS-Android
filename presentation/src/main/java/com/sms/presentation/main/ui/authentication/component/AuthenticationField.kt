@@ -32,7 +32,7 @@ fun AuthenticationField(
     modifier: Modifier = Modifier,
     fieldType: AuthenticationFieldType,
     values: List<AuthenticationSectionFieldValuesModel>?,
-    placeHolder: String,
+    placeHolder: String?,
     onUpload: () -> Unit,
     scoreDescription: String?,
     onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String,
@@ -63,7 +63,7 @@ fun AuthenticationField(
                     value = it
                     enteredValue(value, selectedId)
                 },
-                placeHolder = placeHolder,
+                placeHolder = placeHolder ?: "",
                 trailingIcon = {
                     IconButton(onClick = {
                         when (fieldType) {
