@@ -1,17 +1,32 @@
 package com.sms.presentation.main.ui.authentication.component
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.segmented_control.SegmentedControl
 import com.msg.sms.design.component.textfield.SmsBasicTextField
@@ -27,6 +42,7 @@ import com.msg.sms.domain.model.authentication.response.AuthenticationFieldType.
 import com.msg.sms.domain.model.authentication.response.AuthenticationFieldType.TEXT
 import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldValuesModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthenticationField(
     modifier: Modifier = Modifier,
@@ -35,7 +51,6 @@ fun AuthenticationField(
     placeHolder: String?,
     onUpload: () -> Unit,
     scoreDescription: String?,
-    onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String,
     enteredValue: (enteredValue: String, selectedId: String) -> Unit,
 ) {
     SMSTheme { _, typography ->
@@ -45,61 +60,114 @@ fun AuthenticationField(
         var selectedId by remember {
             mutableStateOf("")
         }
-        if (fieldType == BOOLEAN) {
-            SegmentedControl(
-                modifier = modifier.fillMaxWidth(),
-                items = values?.map { it.value } ?: listOf(),
-                onItemSelection = { index ->
-                    selectedId = values?.get(index)?.selectId ?: ""
-                    enteredValue(value, selectedId)
-                }
-            )
-        } else {
-            SmsBasicTextField(
-                modifier = modifier.fillMaxWidth(),
-                text = value,
-                readOnly = fieldType == SELECT || fieldType == FILE,
-                onValueChange = {
-                    value = it
-                    enteredValue(value, selectedId)
-                },
-                placeHolder = placeHolder ?: scoreDescription ?: "",
-                trailingIcon = {
-                    IconButton(onClick = {
-                        when (fieldType) {
-                            TEXT, NUMBER -> {
-                                value = ""
+        var bottomSheetState by remember {
+            mutableStateOf(false)
+        }
+
+        SMSTheme { colors, _ ->
+            if (fieldType == SELECT && values != null && bottomSheetState) {
+                ModalBottomSheet(
+                    dragHandle = null,
+                    onDismissRequest = { bottomSheetState = false }
+                ) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .background(colors.WHITE)
+                            .padding(vertical = 16.dp)
+                            .navigationBarsPadding(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        itemsIndexed(values) { _, item ->
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val isPressed by interactionSource.collectIsPressedAsState()
+                            val buttonColor by animateColorAsState(
+                                if (isPressed) colors.N10 else colors.WHITE,
+                                label = "",
+                            )
+
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .fillMaxWidth()
+                                    .background(color = buttonColor)
+                                    .clickable(
+                                        onClick = {
+                                            enteredValue(item.value, item.selectId)
+                                            bottomSheetState = false
+                                            value = item.value
+                                        },
+                                        interactionSource = interactionSource,
+                                        indication = null
+                                    )
+                                    .padding(12.dp),
+                            ) {
+                                Text(
+                                    text = item.value,
+                                    style = typography.body1,
+                                    fontWeight = FontWeight.Normal,
+                                    color = colors.N50
+                                )
                             }
-
-                            FILE -> onUpload()
-
-                            SELECT -> {
-                                selectedId = onSelect(values ?: listOf())
-                                enteredValue(value, selectedId)
-                            }
-
-                            else -> {}
-                        }
-                    }) {
-                        when (fieldType) {
-                            TEXT -> XMarkIcon(modifier = Modifier.size(24.dp))
-
-                            FILE -> FileIcon(modifier = Modifier.size(24.dp))
-
-                            SELECT -> ArrowDownIcon(modifier = Modifier.size(24.dp))
-
-                            else -> {}
                         }
                     }
-                },
-            )
-            if (!scoreDescription.isNullOrBlank()) {
-                Text(
-                    modifier = Modifier.padding(top = 8.dp),
-                    text = scoreDescription,
-                    style = typography.caption1,
-                    color = Color(0xFFA0ACB1)
+                }
+            }
+
+            if (fieldType == BOOLEAN) {
+                SegmentedControl(
+                    modifier = modifier.fillMaxWidth(),
+                    items = values?.map { it.value } ?: listOf(),
+                    onItemSelection = { index ->
+                        selectedId = values?.get(index)?.selectId ?: ""
+                        enteredValue(value, selectedId)
+                    }
                 )
+            } else {
+                SmsBasicTextField(
+                    modifier = modifier.fillMaxWidth(),
+                    text = value,
+                    readOnly = fieldType == SELECT || fieldType == FILE,
+                    onValueChange = {
+                        value = it
+                        enteredValue(value, selectedId)
+                    },
+                    placeHolder = placeHolder ?: "",
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            when (fieldType) {
+                                TEXT, NUMBER -> {
+                                    value = ""
+                                }
+
+                                FILE -> onUpload()
+
+                                SELECT -> {
+                                    bottomSheetState = true
+                                }
+
+                                else -> {}
+                            }
+                        }) {
+                            when (fieldType) {
+                                TEXT -> XMarkIcon(modifier = Modifier.size(24.dp))
+
+                                FILE -> FileIcon(modifier = Modifier.size(24.dp))
+
+                                SELECT -> ArrowDownIcon(modifier = Modifier.size(24.dp))
+
+                                else -> {}
+                            }
+                        }
+                    },
+                )
+                if (!scoreDescription.isNullOrBlank()) {
+                    Text(
+                        modifier = Modifier.padding(top = 8.dp),
+                        text = scoreDescription,
+                        style = typography.caption1,
+                        color = Color(0xFFA0ACB1)
+                    )
+                }
             }
         }
     }
