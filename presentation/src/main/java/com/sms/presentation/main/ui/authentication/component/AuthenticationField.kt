@@ -63,7 +63,7 @@ fun AuthenticationField(
                     value = it
                     enteredValue(value, selectedId)
                 },
-                placeHolder = placeHolder ?: "",
+                placeHolder = placeHolder ?: scoreDescription ?: "",
                 trailingIcon = {
                     IconButton(onClick = {
                         when (fieldType) {
