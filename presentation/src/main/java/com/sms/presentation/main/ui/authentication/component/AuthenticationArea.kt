@@ -2,6 +2,7 @@ package com.sms.presentation.main.ui.authentication.component
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,6 +29,7 @@ fun AuthenticationArea(
     modifier: Modifier = Modifier,
     title: String, // (e.g. 전공 영역, 인문.인성 영역, 외국어 영역), area
     items: List<AuthenticationSectionModel>,
+    isLastItem: Boolean,
     onValueChanged: (uuid: String, data: AtomicAuthenticationFieldModel) -> Unit,
 ) {
     val isExpanded = rememberSaveable {
@@ -67,6 +69,16 @@ fun AuthenticationArea(
                         Spacer(modifier = Modifier.height(24.dp))
                     }
                 }
+                if (isLastItem) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = colors.WHITE)
+                                .height(24.dp)
+                        )
+                    }
+                }
             }
         }
     }
@@ -99,6 +111,7 @@ private fun AuthenticationAreaPreview() {
                 ),
             )
         ),
+        isLastItem = false,
         onValueChanged = { _, _ -> },
     )
 }

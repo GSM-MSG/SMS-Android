@@ -9,7 +9,7 @@ data class AuthenticationSectionFieldResponse(
     val fieldType: String,
     val scoreDescription : String,
     val values: List<AuthenticationSectionFieldValuesResponse>?,
-    val placeholder: String,
+    val placeholder: String?,
 ) {
 
     fun toAuthenticationSectionFieldModel() =
