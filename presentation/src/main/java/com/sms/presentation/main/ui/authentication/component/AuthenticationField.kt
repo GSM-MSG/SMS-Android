@@ -38,7 +38,7 @@ fun AuthenticationField(
     onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String,
     enteredValue: (enteredValue: String, selectedId: String) -> Unit,
 ) {
-    SMSTheme { colors, typography ->
+    SMSTheme { _, typography ->
         var value by rememberSaveable {
             mutableStateOf("")
         }
@@ -47,12 +47,13 @@ fun AuthenticationField(
         }
         if (fieldType == BOOLEAN) {
             SegmentedControl(
-                modifier = modifier,
+                modifier = modifier.fillMaxWidth(),
                 items = values?.map { it.value } ?: listOf(),
                 onItemSelection = { index ->
                     selectedId = values?.get(index)?.selectId ?: ""
                     enteredValue(value, selectedId)
-                })
+                }
+            )
         } else {
             SmsBasicTextField(
                 modifier = modifier.fillMaxWidth(),
@@ -71,6 +72,7 @@ fun AuthenticationField(
                             }
 
                             FILE -> onUpload()
+
                             SELECT -> {
                                 selectedId = onSelect(values ?: listOf())
                                 enteredValue(value, selectedId)
@@ -80,28 +82,18 @@ fun AuthenticationField(
                         }
                     }) {
                         when (fieldType) {
-                            TEXT -> XMarkIcon(
-                                modifier = Modifier.size(
-                                    24.dp
-                                )
-                            )
+                            TEXT -> XMarkIcon(modifier = Modifier.size(24.dp))
 
-                            FILE -> FileIcon(
-                                modifier = Modifier.size(24.dp)
-                            )
+                            FILE -> FileIcon(modifier = Modifier.size(24.dp))
 
-                            SELECT -> ArrowDownIcon(
-                                modifier = Modifier.size(
-                                    24.dp
-                                )
-                            )
+                            SELECT -> ArrowDownIcon(modifier = Modifier.size(24.dp))
 
                             else -> {}
                         }
                     }
                 },
             )
-            if (! scoreDescription.isNullOrBlank()) {
+            if (!scoreDescription.isNullOrBlank()) {
                 Text(
                     modifier = Modifier.padding(top = 8.dp),
                     text = scoreDescription,
