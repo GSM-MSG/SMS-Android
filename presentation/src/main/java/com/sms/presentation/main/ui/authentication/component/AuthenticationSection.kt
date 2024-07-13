@@ -2,7 +2,9 @@ package com.sms.presentation.main.ui.authentication.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -44,10 +46,12 @@ fun AuthenticationSection(
                 // group
                 LazyColumn(modifier = Modifier.heightIn(max = 1000.dp)) {
                     items(groups) { group ->
-                        LazyColumn(modifier = Modifier.heightIn(max = 1000.dp)) {
-                            itemsIndexed(group.fields) { index, item ->
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.heightIn(max = 1000.dp)
+                        ) {
+                            itemsIndexed(group.fields) { _, item ->
                                 AuthenticationField(
-                                    modifier = Modifier.padding(bottom = if (index != group.fields.lastIndex) 8.dp else 0.dp),
                                     fieldType = item.fieldType,
                                     values = item.values,
                                     placeHolder = item.placeholder,

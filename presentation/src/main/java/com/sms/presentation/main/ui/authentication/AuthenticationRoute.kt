@@ -38,7 +38,7 @@ fun AuthenticationRoute(
             leftIcon = { BackButtonIcon() },
             onClickLeftButton = onBackPressed
         )
-        if (verifyAuthenticationState.value is Event.Success && verifyAuthenticationData.value?.markingBoardType == MarkingBoardType.NOT_SUBMITTED) {
+        if (verifyAuthenticationState.value is Event.Success && verifyAuthenticationData.value?.markingBoardType == MarkingBoardType.NOT_SUBMITTED && authenticationForm.value != null) {
             AuthenticationScreen(
                 authenticationForm = authenticationForm.value!!,
                 downloadFile = {

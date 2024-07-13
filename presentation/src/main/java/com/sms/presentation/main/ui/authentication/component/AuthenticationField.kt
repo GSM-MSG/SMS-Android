@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.segmented_control.SegmentedControl
+import com.msg.sms.design.component.textfield.SmsBasicTextField
 import com.msg.sms.design.icon.ArrowDownIcon
 import com.msg.sms.design.icon.FileIcon
 import com.msg.sms.design.icon.XMarkIcon
@@ -39,7 +38,7 @@ fun AuthenticationField(
     onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String,
     enteredValue: (enteredValue: String, selectedId: String) -> Unit,
 ) {
-    SMSTheme { colors, typography ->
+    SMSTheme { _, typography ->
         var value by rememberSaveable {
             mutableStateOf("")
         }
@@ -48,34 +47,23 @@ fun AuthenticationField(
         }
         if (fieldType == BOOLEAN) {
             SegmentedControl(
-                modifier = modifier,
+                modifier = modifier.fillMaxWidth(),
                 items = values?.map { it.value } ?: listOf(),
                 onItemSelection = { index ->
                     selectedId = values?.get(index)?.selectId ?: ""
                     enteredValue(value, selectedId)
-                })
+                }
+            )
         } else {
-            OutlinedTextField(
+            SmsBasicTextField(
                 modifier = modifier.fillMaxWidth(),
-                value = value,
+                text = value,
+                readOnly = fieldType == SELECT || fieldType == FILE,
                 onValueChange = {
                     value = it
                     enteredValue(value, selectedId)
                 },
-                placeholder = {
-                    Text(
-                        text = placeHolder,
-                        style = typography.body1
-                    )
-                },
-                textStyle = typography.body1,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    backgroundColor = colors.N10,
-                    placeholderColor = colors.N30,
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
-                    cursorColor = colors.P2
-                ),
+                placeHolder = placeHolder,
                 trailingIcon = {
                     IconButton(onClick = {
                         when (fieldType) {
@@ -84,6 +72,7 @@ fun AuthenticationField(
                             }
 
                             FILE -> onUpload()
+
                             SELECT -> {
                                 selectedId = onSelect(values ?: listOf())
                                 enteredValue(value, selectedId)
@@ -93,28 +82,18 @@ fun AuthenticationField(
                         }
                     }) {
                         when (fieldType) {
-                            TEXT -> XMarkIcon(
-                                modifier = Modifier.size(
-                                    24.dp
-                                )
-                            )
+                            TEXT -> XMarkIcon(modifier = Modifier.size(24.dp))
 
-                            FILE -> FileIcon(
-                                modifier = Modifier.size(24.dp)
-                            )
+                            FILE -> FileIcon(modifier = Modifier.size(24.dp))
 
-                            SELECT -> ArrowDownIcon(
-                                modifier = Modifier.size(
-                                    24.dp
-                                )
-                            )
+                            SELECT -> ArrowDownIcon(modifier = Modifier.size(24.dp))
 
                             else -> {}
                         }
                     }
                 },
             )
-            if (! scoreDescription.isNullOrBlank()) {
+            if (!scoreDescription.isNullOrBlank()) {
                 Text(
                     modifier = Modifier.padding(top = 8.dp),
                     text = scoreDescription,
