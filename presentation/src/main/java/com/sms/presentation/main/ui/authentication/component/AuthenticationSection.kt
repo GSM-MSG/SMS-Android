@@ -1,5 +1,6 @@
 package com.sms.presentation.main.ui.authentication.component
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +29,8 @@ fun AuthenticationSection(
     sectionName: String,
     maxCount: Int,
     groups: List<AuthenticationSectionGroupModel>,
-    onUpload: () -> Unit = {},
+    getFileName: (uri: Uri) -> Pair<String, String>,
+    showExtensionError: () -> Unit,
     onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String = { _ -> "" },
     removeFieldGroup: (groupIndex: Int, uuids: List<String>) -> Unit = { _, _ -> },
     onValueChanged: (uuid: String, data: AtomicAuthenticationFieldModel) -> Unit,
@@ -55,9 +57,10 @@ fun AuthenticationSection(
                                     values = item.values,
                                     placeHolder = item.placeholder,
                                     scoreDescription = item.scoreDescription,
-                                    onUpload = onUpload,
                                     onSelect = onSelect,
-                                    enteredValue = { enteredValue, selectedId ->
+                                    getFileName = getFileName,
+                                    showExtensionError = showExtensionError,
+                                    enteredValue = { enteredValue, selectedId, uri ->
                                         onValueChanged(
                                             item.uuid + groupIndex,
                                             AtomicAuthenticationFieldModel(
@@ -66,7 +69,8 @@ fun AuthenticationSection(
                                                 selectId = selectedId,
                                                 fieldType = item.fieldType,
                                                 groupId = group.groupId,
-                                                groupIndex = groupIndex
+                                                groupIndex = groupIndex,
+                                                file = uri
                                             )
                                         )
                                     }

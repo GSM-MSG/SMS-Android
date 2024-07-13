@@ -1,5 +1,9 @@
 package com.sms.presentation.main.ui.authentication.component
 
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,11 +37,13 @@ fun AuthenticationField(
     fieldType: AuthenticationFieldType,
     values: List<AuthenticationSectionFieldValuesModel>?,
     placeHolder: String?,
-    onUpload: () -> Unit,
     scoreDescription: String?,
+    getFileName: (uri: Uri) -> Pair<String,String>,
+    showExtensionError: () -> Unit,
     onSelect: (values: List<AuthenticationSectionFieldValuesModel>) -> String,
-    enteredValue: (enteredValue: String, selectedId: String) -> Unit,
+    enteredValue: (enteredValue: String, selectedId: String, uri: Uri?) -> Unit,
 ) {
+
     SMSTheme { _, typography ->
         var value by remember {
             mutableStateOf("")
@@ -45,13 +51,25 @@ fun AuthenticationField(
         var selectedId by remember {
             mutableStateOf("")
         }
+        val launcher =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                uri?.let {
+                    val fileInfo = getFileName(it)
+                    if(listOf("hwp", "hwpx", "pdf").contains(fileInfo.second)) {
+                        value = getFileName(it).first
+                        enteredValue(value, selectedId, it)
+                    } else {
+                        showExtensionError()
+                    }
+                }
+            }
         if (fieldType == BOOLEAN) {
             SegmentedControl(
                 modifier = modifier.fillMaxWidth(),
                 items = values?.map { it.value } ?: listOf(),
                 onItemSelection = { index ->
                     selectedId = values?.get(index)?.selectId ?: ""
-                    enteredValue(value, selectedId)
+                    enteredValue(value, selectedId, null)
                 }
             )
         } else {
@@ -61,7 +79,7 @@ fun AuthenticationField(
                 readOnly = fieldType == SELECT || fieldType == FILE,
                 onValueChange = {
                     value = it
-                    enteredValue(value, selectedId)
+                    enteredValue(value, selectedId, null)
                 },
                 placeHolder = placeHolder ?: scoreDescription ?: "",
                 trailingIcon = {
@@ -71,11 +89,13 @@ fun AuthenticationField(
                                 value = ""
                             }
 
-                            FILE -> onUpload()
+                            FILE -> {
+                                launcher.launch("*/*")
+                            }
 
                             SELECT -> {
                                 selectedId = onSelect(values ?: listOf())
-                                enteredValue(value, selectedId)
+                                enteredValue(value, selectedId, null)
                             }
 
                             else -> {}
