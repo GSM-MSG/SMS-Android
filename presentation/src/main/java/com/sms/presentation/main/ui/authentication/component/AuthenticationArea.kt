@@ -60,7 +60,7 @@ fun AuthenticationArea(
                     AuthenticationSection(
                         modifier = Modifier.padding(start = 20.dp, top = 12.dp, end = 20.dp),
                         sectionName = it.sectionName,
-                        maxCount = it.maxCount,
+                        plusminusVisible = index == items.lastIndex,
                         groups = it.groups,
                         onValueChanged = { uuid, data ->
                             onValueChanged(uuid, data.copy(sectionId = it.sectionId))

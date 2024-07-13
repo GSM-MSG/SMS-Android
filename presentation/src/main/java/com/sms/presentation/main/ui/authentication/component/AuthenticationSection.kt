@@ -25,7 +25,7 @@ import com.msg.sms.domain.model.authentication.response.AuthenticationSectionGro
 fun AuthenticationSection(
     modifier: Modifier = Modifier,
     sectionName: String,
-    maxCount: Int,
+    plusminusVisible: Boolean,
     groups: List<AuthenticationSectionGroupModel>,
     onUpload: () -> Unit = {},
     removeFieldGroup: (groupIndex: Int, uuids: List<String>) -> Unit = { _, _ -> },
@@ -71,7 +71,7 @@ fun AuthenticationSection(
                             }
                         }
                     }
-                    if (maxCount > 1) {
+                    if (plusminusVisible) {
                         item {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
