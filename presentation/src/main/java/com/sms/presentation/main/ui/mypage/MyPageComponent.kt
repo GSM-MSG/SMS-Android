@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.BlackAddItemButton
 import com.msg.sms.design.component.header.TitleHeader
 import com.msg.sms.design.component.spacer.SmsSpacer
-import com.msg.sms.design.component.topbar.TopBarComponent
+import com.msg.sms.design.component.topbar.TopNavigation
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.icon.BlackLogoutIcon
 import com.msg.sms.domain.model.user.response.ActivityDuration
@@ -106,7 +106,7 @@ fun MyPageComponent(
                 .background(color = Color.White)
         ) {
             item {
-                TopBarComponent(
+                TopNavigation(
                     text = "마이페이지",
                     leftIcon = { BackButtonIcon() },
                     rightIcon = { BlackLogoutIcon() },

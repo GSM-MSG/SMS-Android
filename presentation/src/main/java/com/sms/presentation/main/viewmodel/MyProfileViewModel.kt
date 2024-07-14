@@ -119,6 +119,10 @@ class MyProfileViewModel @Inject constructor(
     private val _isProjectPreviewsChanged = mutableStateOf(false)
     val isProjectPreviewChanged: State<Boolean> = _isProjectPreviewsChanged
 
+    init {
+        getMyProfile()
+    }
+
     fun removeTechStack(techStack: String) {
         _techStacks.value = _techStacks.value.minus(techStack)
     }
@@ -484,7 +488,7 @@ class MyProfileViewModel @Inject constructor(
         }
     }
 
-    fun getMyProfile() = viewModelScope.launch {
+    private fun getMyProfile() = viewModelScope.launch {
         getMyProfileUseCase().onSuccess {
             it.catch { remoteError ->
                 _getProfileResponse.value = remoteError.errorHandling()

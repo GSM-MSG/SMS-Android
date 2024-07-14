@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
@@ -19,6 +20,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,23 +32,29 @@ import com.msg.sms.design.component.snackbar.SmsSnackBar
 import com.msg.sms.design.icon.CheckedIcon
 import com.sms.presentation.main.ui.detail.StudentDetailScreen
 import com.sms.presentation.main.ui.main.component.MainScreenTopBar
+import com.sms.presentation.main.ui.main.component.ProfileBottomSheet
 import com.sms.presentation.main.ui.main.component.StudentListComponent
 import com.sms.presentation.main.viewmodel.MyProfileViewModel
 import com.sms.presentation.main.viewmodel.StudentListViewModel
 import com.sms.presentation.main.viewmodel.util.Event
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+private enum class BottomSheetValues {
+    Detail,
+    MyPage
+}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
     myProfileViewModel: MyProfileViewModel,
     viewModel: StudentListViewModel,
-    lifecycleScope: CoroutineScope,
     role: String,
     onFilterClick: () -> Unit,
-    onProfileClick: (role: String) -> Unit,
+    onDeleteToken: () -> Unit,
+    onAuthenticationOpen: () -> Unit,
+    onProfileOpen: () -> Unit,
     onClickBackPressed: () -> Unit,
 ) {
     val listState = rememberLazyListState()
@@ -62,6 +70,10 @@ fun MainScreen(
             initialValue = ModalBottomSheetValue.Hidden,
             skipHalfExpanded = true
         )
+
+    val bottomSheetValue = rememberSaveable {
+        mutableStateOf(BottomSheetValues.Detail)
+    }
 
     val dialogState = remember {
         mutableStateOf(false)
@@ -100,12 +112,10 @@ fun MainScreen(
 
     LaunchedEffect(putProfileChange.value) {
         if (putProfileChange.value is Event.Success) {
-            scope.launch {
-                snackBarVisibility.value = true
-                delay(3000)
-                snackBarVisibility.value = false
-                myProfileViewModel.changeProfileState()
-            }
+            snackBarVisibility.value = true
+            delay(3000)
+            snackBarVisibility.value = false
+            myProfileViewModel.changeProfileState()
         }
     }
 
@@ -154,17 +164,25 @@ fun MainScreen(
 
     ModalBottomSheetLayout(
         sheetContent = {
-            StudentDetailScreen(
-                studentDetailData = userDetail.value,
-                role = role,
-                onDismissButtonClick = {
-                    scope.launch {
-                        bottomSheetState.hide()
-                    }
-                },
-                viewModel = viewModel
-            )
+            if (bottomSheetValue.value == BottomSheetValues.Detail) {
+                StudentDetailScreen(
+                    studentDetailData = userDetail.value,
+                    role = role,
+                    onDismissButtonClick = {
+                        scope.launch {
+                            bottomSheetState.hide()
+                        }
+                    },
+                    viewModel = viewModel
+                )
+            } else if (bottomSheetValue.value == BottomSheetValues.MyPage) {
+                ProfileBottomSheet(
+                    onAuthenticationOpen = onAuthenticationOpen,
+                    onProfileOpen = onProfileOpen
+                )
+            }
         },
+        sheetShape = if(bottomSheetValue.value == BottomSheetValues.MyPage) RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp) else RoundedCornerShape(0.dp),
         sheetState = bottomSheetState,
     ) {
         Box {
@@ -181,18 +199,24 @@ fun MainScreen(
                         filterButtonOnClick = onFilterClick,
                         profileButtonOnClick = {
                             when (role) {
-                                "ROLE_STUDENT" -> onProfileClick(role)
+                                "ROLE_STUDENT" -> {
+                                    scope.launch {
+                                        bottomSheetValue.value = BottomSheetValues.MyPage
+                                        bottomSheetState.show()
+                                    }
+                                }
+
                                 "ROLE_TEACHER" -> {
                                     dialogTitle.value = "게스트모드 종료"
                                     dialogMsg.value = "정말로 게스트 모드를 종료하시겠습니까?"
-                                    dialogOnClick.value = { onProfileClick(role) }
+                                    dialogOnClick.value = { onDeleteToken() }
                                     dialogState.value = true
                                 }
 
                                 else -> {
                                     dialogTitle.value = "게스트모드 종료"
                                     dialogMsg.value = "정말로 게스트 모드를 종료하시겠습니까?"
-                                    dialogOnClick.value = { onProfileClick(role) }
+                                    dialogOnClick.value = { onDeleteToken() }
                                     dialogState.value = true
                                 }
                             }
@@ -206,30 +230,24 @@ fun MainScreen(
                         studentList = viewModel.studentList,
                         listTotalSize = viewModel.studentList.size
                     ) {
-                        lifecycleScope.launch {
+                        scope.launch {
+                            bottomSheetValue.value = BottomSheetValues.Detail
                             when (role) {
                                 "ROLE_TEACHER" -> {
                                     viewModel.saveStudentId(it)
                                     viewModel.getStudentDetailForTeacher(it)
-                                    scope.launch {
-                                        bottomSheetState.show()
-                                    }
                                 }
 
                                 "ROLE_STUDENT" -> {
                                     viewModel.getStudentDetailForStudent(it)
-                                    scope.launch {
-                                        bottomSheetState.show()
-                                    }
                                 }
 
                                 else -> {
                                     viewModel.getStudentDetailForAnonymous(it)
-                                    scope.launch {
-                                        bottomSheetState.show()
-                                    }
                                 }
                             }
+                            bottomSheetState.show()
+
                         }
                     }
                     Box(

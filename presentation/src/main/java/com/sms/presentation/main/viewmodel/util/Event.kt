@@ -4,12 +4,16 @@ sealed class Event<out T>(
     val data: T? = null
 ) {
 
+    object None : Event<Nothing>()
+
     object Loading : Event<Nothing>()
 
     /**
      * 성공
      */
     class Success<T>(data: T? = null) : Event<T>(data = data)
+
+    class ErrorState<T>(data: T? = null) : Event<T>(data = data)
 
     /**
      * 400번 요청이 올바르지 않은 경우

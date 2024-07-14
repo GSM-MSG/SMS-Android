@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.button.SmsBoxButton
-import com.msg.sms.design.component.topbar.TopBarComponent
+import com.msg.sms.design.component.topbar.TopNavigation
 import com.msg.sms.design.icon.DeleteButtonIcon
 import com.msg.sms.design.theme.SMSTheme
 import com.sms.presentation.main.ui.filter.component.FilterSearchTechStackComponent
@@ -99,7 +99,7 @@ fun FilterScreen(
                     .background(colors.WHITE)
                     .verticalScroll(scrollState)
             ) {
-                TopBarComponent(
+                TopNavigation(
                     text = "필터",
                     leftIcon = {
                         Text(
