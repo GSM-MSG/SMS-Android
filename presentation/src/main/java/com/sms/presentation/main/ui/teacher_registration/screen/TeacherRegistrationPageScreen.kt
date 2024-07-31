@@ -28,7 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.msg.sms.design.component.button.SmsRoundedButton
 import com.msg.sms.design.component.header.TitleHeader
 import com.msg.sms.design.component.spacer.SmsSpacer
-import com.msg.sms.design.component.topbar.TopBarComponent
+import com.msg.sms.design.component.topbar.TopNavigation
 import com.sms.presentation.main.ui.teacher_registration.bottomsheet.ClassSelectorBottomSheet
 import com.sms.presentation.main.ui.teacher_registration.bottomsheet.GradeSelectorBottomSheet
 import com.sms.presentation.main.ui.teacher_registration.bottomsheet.PositionSelectorBottomSheet
@@ -123,8 +123,8 @@ fun TeacherRegistrationPageScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(color = Color.White)
-            ) {
-                TopBarComponent(
+            ){
+                TopNavigation(
                     text = "정보입력",
                     leftIcon = {},
                     rightIcon = {}

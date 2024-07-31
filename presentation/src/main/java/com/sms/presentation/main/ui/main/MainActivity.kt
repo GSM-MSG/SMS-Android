@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.msg.sms.design.component.SmsDialog
+import com.sms.presentation.main.ui.authentication.AuthenticationRoute
 import com.sms.presentation.main.ui.base.BaseActivity
 import com.sms.presentation.main.ui.detail_stack_search.DetailStackSearchScreen
 import com.sms.presentation.main.ui.filter.screen.FilterScreen
@@ -34,7 +35,8 @@ private enum class MainPage(val value: String) {
     Main("Main"),
     Filter("Filter"),
     Search("Search"),
-    MyPage("MyPage")
+    MyPage("MyPage"),
+    AuthenticationPage("AuthenticationPage")
 }
 
 private enum class SelectedTechStack {
@@ -101,29 +103,29 @@ class MainActivity : BaseActivity() {
                         }
                         NavHost(
                             navController = navController,
-                            startDestination = "Main"
+                            startDestination = MainPage.Main.value
                         ) {
                             composable(MainPage.Main.value) {
                                 MainScreen(
                                     viewModel = viewModel(LocalContext.current as MainActivity),
                                     myProfileViewModel = viewModel(LocalContext.current as MainActivity),
-                                    lifecycleScope = lifecycleScope,
                                     role = response.data!!,
                                     onFilterClick = { navController.navigate(MainPage.Filter.value) },
-                                    onProfileClick = { role ->
-                                        if (role == "ROLE_STUDENT") {
-                                            myProfileViewModel.getMyProfile()
-                                            navController.navigate(MainPage.MyPage.value)
-                                        } else {
-                                            authViewModel.deleteToken()
-                                            this@MainActivity.startActivity(
-                                                Intent(
-                                                    this@MainActivity,
-                                                    LoginActivity::class.java
-                                                )
+                                    onDeleteToken = {
+                                        authViewModel.deleteToken()
+                                        this@MainActivity.startActivity(
+                                            Intent(
+                                                this@MainActivity,
+                                                LoginActivity::class.java
                                             )
-                                            this@MainActivity.finish()
-                                        }
+                                        )
+                                        this@MainActivity.finish()
+                                    },
+                                    onAuthenticationOpen = {
+                                        navController.navigate(MainPage.AuthenticationPage.value)
+                                    },
+                                    onProfileOpen = {
+                                        navController.navigate(MainPage.MyPage.value)
                                     }
                                 ) {
                                     controlTheStackWhenBackPressed()
@@ -150,10 +152,14 @@ class MainActivity : BaseActivity() {
                                             setFilterMajorList(studentListViewModel.selectedMajorList)
                                             setFilterTypeOfEmploymentList(studentListViewModel.selectedTypeOfEmploymentList)
                                             setFilterGsmScoreSliderValues(studentListViewModel.selectedGsmScoreSliderValues.value)
-                                            setFilterDesiredAnnualSalarySliderValues(studentListViewModel.selectedDesiredAnnualSalarySliderValues.value)
+                                            setFilterDesiredAnnualSalarySliderValues(
+                                                studentListViewModel.selectedDesiredAnnualSalarySliderValues.value
+                                            )
                                             setFilterSchoolNumberAscendingValue(studentListViewModel.selectedSchoolNumberAscendingOrder.value)
                                             setFilterGsmScoreAscendingValue(studentListViewModel.selectedGsmScoreAscendingOrder.value)
-                                            setFilterDesiredAnnualSalaryAscendingValue(studentListViewModel.selectedDesiredAnnualSalaryAscendingOrder.value)
+                                            setFilterDesiredAnnualSalaryAscendingValue(
+                                                studentListViewModel.selectedDesiredAnnualSalaryAscendingOrder.value
+                                            )
                                             setFilterDetailStackList(studentListViewModel.selectedDetailStack)
                                             clearStudentList()
                                         }
@@ -164,7 +170,9 @@ class MainActivity : BaseActivity() {
                                         navController.navigate(MainPage.Search.value)
                                     },
                                     onRightButtonClick = {
-                                        studentListViewModel.setSelectedDetailStackList(studentListViewModel.filterDetailStackList)
+                                        studentListViewModel.setSelectedDetailStackList(
+                                            studentListViewModel.filterDetailStackList
+                                        )
                                         navController.navigate(MainPage.Main.value) {
                                             popUpTo(route = MainPage.Main.value) {
                                                 inclusive = false
@@ -192,35 +200,49 @@ class MainActivity : BaseActivity() {
                                         studentListViewModel.setSelectedClassList(classList)
                                     },
                                     onDepartmentListValueChanged = { departmentList ->
-                                        studentListViewModel.setSelectedDepartmentList(departmentList)
+                                        studentListViewModel.setSelectedDepartmentList(
+                                            departmentList
+                                        )
                                     },
                                     onMajorListValueChanged = { majorList ->
                                         studentListViewModel.setSelectedMajorList(majorList)
                                     },
                                     onTypeOfEmploymentListValueChanged = { typeOfEmploymentList ->
-                                        studentListViewModel.setSelectedTypeOfEmploymentList(typeOfEmploymentList)
+                                        studentListViewModel.setSelectedTypeOfEmploymentList(
+                                            typeOfEmploymentList
+                                        )
                                     },
                                     //Slider
                                     selectedGsmScoreSliderValue = studentListViewModel.filterGsmScoreSliderValues.value,
                                     selectedDesiredAnnualSalarySliderValue = studentListViewModel.filterDesiredAnnualSalarySliderValues.value,
                                     onGsmScoreSliderValueChanged = { gsmScoreSliderValue ->
-                                        studentListViewModel.setSelectedGsmScoreSliderValues(gsmScoreSliderValue)
+                                        studentListViewModel.setSelectedGsmScoreSliderValues(
+                                            gsmScoreSliderValue
+                                        )
                                     },
                                     onDesiredAnnualSalarySliderValueChanged = { desiredAnnualSalarySliderValue ->
-                                        studentListViewModel.setSelectedDesiredAnnualSalarySliderValues(desiredAnnualSalarySliderValue)
+                                        studentListViewModel.setSelectedDesiredAnnualSalarySliderValues(
+                                            desiredAnnualSalarySliderValue
+                                        )
                                     },
                                     //SelectionControl
                                     selectedSchoolNumberAscendingValue = studentListViewModel.filterSchoolNumberAscendingOrder.value,
                                     selectedGsmScoreAscendingValue = studentListViewModel.filterGsmScoreAscendingOrder.value,
                                     selectedDesiredAnnualSalaryAscendingValue = studentListViewModel.filterDesiredAnnualSalaryAscendingOrder.value,
                                     onSchoolNumberAscendingValueChanged = { schoolNumberAscendingValue ->
-                                        studentListViewModel.setSelectedSchoolNumberAscendingValue(schoolNumberAscendingValue)
+                                        studentListViewModel.setSelectedSchoolNumberAscendingValue(
+                                            schoolNumberAscendingValue
+                                        )
                                     },
                                     onGsmScoreAscendingValueChanged = { gsmScoreAscendingValue ->
-                                        studentListViewModel.setSelectedGsmScoreAscendingValue(gsmScoreAscendingValue)
+                                        studentListViewModel.setSelectedGsmScoreAscendingValue(
+                                            gsmScoreAscendingValue
+                                        )
                                     },
                                     onDesiredAnnualSalaryAscendingValueChanged = { desiredAnnualSalaryAscendingValue ->
-                                        studentListViewModel.setSelectedDesiredAnnualSalaryAscendingValue(desiredAnnualSalaryAscendingValue)
+                                        studentListViewModel.setSelectedDesiredAnnualSalaryAscendingValue(
+                                            desiredAnnualSalaryAscendingValue
+                                        )
                                     },
                                     //DetailStack
                                     detailStacks = studentListViewModel.selectedDetailStack,
@@ -404,6 +426,9 @@ class MainActivity : BaseActivity() {
                                         )
                                     }
                                 )
+                            }
+                            composable(MainPage.AuthenticationPage.name) {
+                                AuthenticationRoute(onBackPressed = { navController.popBackStack() })
                             }
                         }
                     }

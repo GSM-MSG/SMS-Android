@@ -1,7 +1,9 @@
 package com.sms.presentation.main.ui.authentication.component
 
+import android.net.Uri
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,16 +19,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.header.TitleHeader
 import com.msg.sms.design.theme.SMSTheme
-import com.sms.presentation.main.ui.authentication.enum.InputItemEnum
+import com.msg.sms.domain.model.authentication.request.AtomicAuthenticationFieldModel
+import com.msg.sms.domain.model.authentication.response.AuthenticationFieldType
+import com.msg.sms.domain.model.authentication.response.AuthenticationSectionFieldModel
+import com.msg.sms.domain.model.authentication.response.AuthenticationSectionGroupModel
+import com.msg.sms.domain.model.authentication.response.AuthenticationSectionModel
 
 @Composable
 fun AuthenticationArea(
     modifier: Modifier = Modifier,
     title: String, // (e.g. 전공 영역, 인문.인성 영역, 외국어 영역), area
-    items: List<SectionItem>,
+    items: List<AuthenticationSectionModel>,
+    isLastItem: Boolean,
+    showExtensionError: () -> Unit,
+    getFileName: (uri: Uri) -> Pair<String, String>,
+    onValueChanged: (uuid: String, data: AtomicAuthenticationFieldModel) -> Unit,
+    onRemoveFieldGroup: (uuid: String) -> Unit = {},
 ) {
     val isExpanded = rememberSaveable {
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
     SMSTheme { colors, _ ->
         LazyColumn(
@@ -51,17 +62,32 @@ fun AuthenticationArea(
                 itemsIndexed(items) { index, it ->
                     AuthenticationSection(
                         modifier = Modifier.padding(start = 20.dp, top = 12.dp, end = 20.dp),
-                        section = it.section,
+                        sectionName = it.sectionName,
                         maxCount = it.maxCount,
-                        fields = it.fields,
-                        description = it.description,
-                        onClickButton = {},
-                        onValueChanged = { changedIndex, changedItem ->
-
+                        groups = it.groups,
+                        onValueChanged = { uuid, data ->
+                            onValueChanged(uuid, data.copy(sectionId = it.sectionId))
+                        },
+                        showExtensionError = showExtensionError,
+                        getFileName = getFileName,
+                        removeFieldGroup = { groupIndex, uuids ->
+                            uuids.forEach { uuid ->
+                                onRemoveFieldGroup(uuid + groupIndex)
+                            }
                         }
                     )
                     if (index != items.size - 1) {
                         Spacer(modifier = Modifier.height(24.dp))
+                    }
+                }
+                if (isLastItem) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = colors.WHITE)
+                                .height(24.dp)
+                        )
                     }
                 }
             }
@@ -75,20 +101,30 @@ private fun AuthenticationAreaPreview() {
     AuthenticationArea(
         title = "전공 영역",
         items = listOf(
-            SectionItem(
-                section = "aa",
-                fieldScore = 50,
-                description = null,
+            AuthenticationSectionModel(
+                sectionName = "aa",
                 maxCount = 10,
-                fields = listOf(
-                    FieldItem(
-                        name = "aa",
-                        type = InputItemEnum.STRING,
-                        values = null,
-                        placeHolder = ""
+                sectionId = "",
+                groups = listOf(
+                    AuthenticationSectionGroupModel(
+                        groupId = "",
+                        maxScore = 50.0,
+                        fields = listOf(
+                            AuthenticationSectionFieldModel(
+                                fieldId = "",
+                                fieldType = AuthenticationFieldType.BOOLEAN,
+                                scoreDescription = "33",
+                                values = null,
+                                placeholder = "placeHolder"
+                            )
+                        )
                     )
-                )
+                ),
             )
         ),
+        isLastItem = false,
+        getFileName = { Pair("", "") },
+        showExtensionError = {},
+        onValueChanged = { _, _ -> },
     )
 }

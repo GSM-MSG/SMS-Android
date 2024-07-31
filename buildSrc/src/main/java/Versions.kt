@@ -1,8 +1,8 @@
 object Versions {
     const val GRADLE = "7.4.2"
-    const val KOTLIN = "1.7.0"
+    const val KOTLIN = "1.8.0"
 
-    const val COMPOSE = "1.2.0"
+    const val COMPOSE = "1.4.0"
     const val APPCOMPAT = "1.6.1"
     const val ACTIVITY_COMPOSE = "1.7.2"
     const val COMPOSE_MATERIAL = "1.4.3"
@@ -19,6 +19,7 @@ object Versions {
     const val ESPRESSO = "3.5.1"
 
     const val HILT = "2.47"
+    const val HILT_NAVIGATION = "1.0.0"
 
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.11.0"
@@ -27,8 +28,6 @@ object Versions {
     const val PREFERENCES = "1.0.0"
 
     const val NAVIGATION = "2.6.0"
-    const val HILT_NAVIGATION = "1.0.0"
-
     const val COIL = "2.4.0"
 
     const val LOTTIE_COMPOSE = "6.1.0"

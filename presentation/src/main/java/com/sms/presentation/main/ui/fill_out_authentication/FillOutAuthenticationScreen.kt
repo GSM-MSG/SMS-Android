@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.msg.sms.design.component.header.TitleHeader
 import com.msg.sms.design.component.spacer.SmsSpacer
-import com.msg.sms.design.component.topbar.TopBarComponent
+import com.msg.sms.design.component.topbar.TopNavigation
 import com.msg.sms.design.icon.BackButtonIcon
 import com.msg.sms.design.icon.BlackLogoutIcon
 import com.sms.presentation.main.ui.fill_out_authentication.section.AuthenticationSection
@@ -37,7 +37,7 @@ fun FillOutAuthenticationScreen(
             .fillMaxSize()
             .background(color = Color.White)
     ) {
-        TopBarComponent(
+        TopNavigation(
             text = "마이페이지",
             leftIcon = { BackButtonIcon() },
             rightIcon = { BlackLogoutIcon() },
