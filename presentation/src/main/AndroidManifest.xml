@@ -8,12 +8,16 @@
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
     <queries>
-        <package android:name="com.sms.presentation.main.ui.login"/>
-        <package android:name="com.sms.presentation.main.ui.detail"/>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
     </queries>
-
 
     <application>
 
