@@ -22,9 +22,11 @@ import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,10 +62,15 @@ fun AuthenticationField(
 ) {
 
     SMSTheme { _, typography ->
-        var value by remember {
-            mutableStateOf("")
+        var value by rememberSaveable {
+            mutableStateOf(
+                when (fieldType) {
+                    SELECT, BOOLEAN -> values?.get(0)?.value ?: ""
+                    else -> ""
+                }
+            )
         }
-        var selectedId by remember {
+        var selectedId by rememberSaveable {
             mutableStateOf("")
         }
         var bottomSheetState by remember {
@@ -81,6 +88,10 @@ fun AuthenticationField(
                     }
                 }
             }
+
+        LaunchedEffect(Unit) {
+            enteredValue(value, selectedId, null)
+        }
 
         SMSTheme { colors, _ ->
             if (fieldType == SELECT && values != null && bottomSheetState) {
