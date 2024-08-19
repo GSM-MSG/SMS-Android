@@ -20,8 +20,8 @@ object ProjectProperties {
         const val MIN_SDK = 26
         const val TARGET_SDK = 34
         const val JVM_TARGET = "1.8"
-        const val VERSION_CODE = 14
-        const val VERSION_NAME = "1.2.1"
+        const val VERSION_CODE = 16
+        const val VERSION_NAME = "1.3.0"
         val JAVA_VERSION = JavaVersion.VERSION_1_9
     }
 
