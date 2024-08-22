@@ -118,7 +118,7 @@ fun StudentDetailComponent(
             }
         )
     }
-    
+
     if (successCreateLinkStatus) {
         CopyLinkDialog(
             title = "만료기간 선택",
